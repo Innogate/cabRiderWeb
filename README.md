@@ -2,6 +2,12 @@
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.15.
 
+## SETUP ENV
+```bash
+cp -p env.ts.bkp env.ts # Modify env.ts if need
+```
+
+
 ## Development server
 
 To start a local development server, run:

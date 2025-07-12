@@ -1,6 +1,10 @@
 # See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
 
 # Compiled output
+<<<<<<< HEAD
+=======
+env.ts
+>>>>>>> 13bb705 (Server problem fixed)
 /dist
 /tmp
 /out-tsc

@@ -5,7 +5,7 @@ import { BehaviorSubject } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { globalRequestHandler } from '../utils/global';
 import { MessageService } from 'primeng/api';
-
+import { environment } from '../../../env';
 type MessageHandler = (msg: any) => boolean;
 
 @Injectable({
@@ -63,7 +63,7 @@ export class WebSocketService implements OnDestroy {
     const token = localStorage.getItem('auth_token') ?? '';
 
     this.socket$ = webSocket({
-      url: 'ws://api.cbr.test',
+      url: environment.wsUrl,
       deserializer: (e) => JSON.parse(e.data),
       serializer: (value) => JSON.stringify(value),
       openObserver: {
