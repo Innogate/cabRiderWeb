@@ -1,0 +1,77 @@
+<div class="card rounded-2xl shadow-lg border border-blue-300 p-6 m-6 bg-gradient-to-r from-blue-50 via-white to-gray-100">
+
+  <!-- Header with Icon -->
+  <div class="flex items-center gap-4 mb-6">
+    <i class="pi pi-car text-blue-600 text-4xl drop-shadow-md"></i>
+    <h2 class="text-3xl font-extrabold text-blue-500 tracking-wide m-0">Fuel Entry</h2>
+  </div>
+
+  <!-- Form Section -->
+  <div class="flex flex-wrap items-center justify-between bg-gradient-to-r from-white to-blue-50 p-6 rounded-2xl shadow-inner gap-6">
+
+    <!-- Vendor Dropdown -->
+    <div class="flex items-center gap-3">
+      <label for="vendor" class="font-semibold text-gray-700 text-base">Vendor:</label>
+      <p-dropdown
+        [options]="vendors"
+        [(ngModel)]="selectedVendor"
+        placeholder="Select Vendor"
+        class="w-44 shadow-sm text-sm">
+      </p-dropdown>
+    </div>
+
+    <!-- Car Dropdown & Submit Button -->
+    <div class="flex items-center gap-3">
+      <label for="car" class="font-semibold text-gray-700 text-base">Car:</label>
+      <p-dropdown
+        [options]="cars"
+        [(ngModel)]="selectedCar"
+        placeholder="Select Car"
+        class="w-44 shadow-sm text-sm">
+      </p-dropdown>
+
+      <!-- Submit Button -->
+      <button
+        pButton
+        pRipple
+        type="button"
+        label="Submit"
+        icon="pi pi-check"
+        class="p-button-info p-button-rounded px-5 py-3 text-sm hover:scale-110 hover:bg-gradient-to-r hover:from-blue-400 hover:to-blue-600 transition-all shadow-lg"
+      ></button>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="flex items-center gap-3 w-[350px] max-w-lg">
+      <span class="p-input-icon-left w-full">
+        <input
+          pInputText
+          type="text"
+          placeholder="Search Invoices..."
+          class="w-full h-12 rounded-xl transition-all focus:ring-2 focus:ring-blue-500 border border-blue-300 text-sm shadow-inner"
+          [(ngModel)]="searchText"
+        />
+      </span>
+
+      <!-- Search Button -->
+      <button
+        pButton
+        type="button"
+        icon="pi pi-search"
+        class="p-button-help p-button-rounded px-3 py-3 text-sm hover:scale-110 hover:bg-gradient-to-r hover:from-purple-400 hover:to-purple-600 transition-all shadow-lg"
+        (click)="searchInvoices()"
+      ></button>
+    </div>
+
+    <!-- Add Fuel Entry Button -->
+    <button
+      pButton
+      pRipple
+      type="button"
+      label="Add Invoice"
+      icon="pi pi-plus"
+      class="p-button-success p-button-rounded px-5 py-3 text-sm hover:scale-110 hover:bg-gradient-to-r hover:from-green-400 hover:to-green-600 transition-all shadow-lg"
+    ></button>
+
+  </div>
+</div>

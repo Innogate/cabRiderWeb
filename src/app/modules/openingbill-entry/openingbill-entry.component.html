@@ -1,0 +1,138 @@
+<div class="card p-6 m-6 rounded-2xl shadow-lg bg-gradient-to-r from-white to-gray-50 border border-blue-400">
+ <div class="flex justify-between items-center mb-6 flex-wrap gap-4">
+    <div class="flex items-center gap-3">
+      <div
+        class="bg-blue-100 text-blue-600 rounded-full p-3 flex items-center justify-center text-2xl shadow-md hover:scale-110 transition-transform"
+      >
+        <i class="pi pi-table"></i>
+      </div>
+      <h2 class="text-2xl font-extrabold text-blue-600 m-0 tracking-wide">
+        Opening Bill Entry List
+      </h2>
+    </div>
+    <button
+      pButton
+      type="button"
+      label="New Opening Bill"
+      icon="pi pi-plus"
+      class="p-button-success p-button-rounded px-5 py-3 text-lg shadow-lg"
+      (click)="addOpeningBill()">
+    </button>
+  </div>
+
+    <!-- Filter Row -->
+  <div
+    class="card p-5 rounded-xl bg-gradient-to-r from-gray-100 to-gray-50 shadow-inner flex items-center justify-between flex-wrap gap-4"
+  >
+    <!-- Show Dropdown -->
+    <div class="flex items-center gap-2 min-w-[250px]">
+      <label class="font-semibold text-gray-700 whitespace-nowrap">Show:</label>
+      <p-dropdown
+        [options]="show"
+        [(ngModel)]="selectedShow"
+        placeholder="Show"
+        [showClear]="true"
+        class="w-full"
+      ></p-dropdown>
+    </div>
+
+    <!-- Search Field with Button -->
+    <div class="flex items-center gap-2 w-full max-w-md">
+      <span class="p-input-icon-left w-full">
+        <input
+          pInputText
+          type="text"
+          placeholder="Search Invoices..."
+          class="w-full transition-all focus:ring-2 focus:ring-primary border border-blue-200"
+          [(ngModel)]="searchText"
+        />
+      </span>
+
+      <!-- Search Button -->
+      <button
+        pButton
+        type="button"
+        icon="pi pi-search"
+        class="p-button-info p-button-rounded px-4 py-3 text-base hover:scale-105 transition-transform shadow-md"
+        (click)="searchOpeningBill()"
+      ></button>
+    </div>
+
+
+  </div>
+
+
+  <div class="card p-4 rounded-xl bg-white mt-6 border ">
+    <p-table
+    [value]="openingBills"
+     [paginator]="true"
+      [rows]="10"
+      [responsiveLayout]="'scroll'"
+      [resizableColumns]="true"
+      [showCurrentPageReport]="true"
+      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+      class="p-datatable-gridlines overflow-hidden shadow-lg rounded-2xl"
+    >
+
+    <ng-template pTemplate="header">
+      <tr class="bg-blue-50 text-gray-700">
+        <th class="py-3 px-4">SL. No.</th>
+        <th class="py-3 px-4">Company</th>
+        <th class="py-3 px-4">Branch</th>
+        <th class="py-3 px-4">Bill Type</th>
+        <th class="py-3 px-4">Op Bill No</th>
+        <th class="py-3 px-4">Op Bill Date</th>
+        <th class="py-3 px-4">Party</th>
+        <th class="py-3 px-4">Bill Amount</th>
+        <th class="py-3 px-4">Due Amount</th>
+        <th class="py-3 px-4">Recv/ Paid Amount</th>
+        <th class="py-3 px-4">Balance</th>
+        <th class="py-3 px-4">Action</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-openingBill let-i="rowIndex">
+      <tr class="hover:bg-gray-50 transition-all">
+        <td class="py-3 px-4">{{ i + 1 }}</td>
+        <td class="py-3 px-4">{{ openingBill.company }}</td>
+        <td class="py-3 px-4">{{ openingBill.branch }}</td>
+        <td class="py-3 px-4">{{ openingBill.billType }}</td>
+        <td class="py-3 px-4">{{ openingBill.opBillNo }}</td>
+        <td class="py-3 px-4">{{ openingBill.opBillDate }}</td>
+        <td class="py-3 px-4">{{ openingBill.party }}</td>
+        <td class="py-3 px-4">{{ openingBill.billAmount }}</td>
+        <td class="py-3 px-4">{{ openingBill.dueAmount }}</td>
+        <td class="py-3 px-4">{{ openingBill.recevAmount }}</td>
+        <td class="py-3 px-4">{{ openingBill.balance }}</td>
+
+          <td>
+            <div class="flex flex-wrap gap-2 justify-center">
+              <!-- Row 1 -->
+              <div class="flex gap-2 mb-1">
+                <button
+                  pButton
+                  icon="pi pi-pencil"
+                  pTooltip="Update"
+                  tooltipStyleClass="text-[10px] !important "
+                  class="p-button-sm p-button-rounded p-button-warning p-2 text-xs hover:scale-105 transition-transform shadow"
+                ></button>
+                <button
+                  pButton
+                  pTooltip="Delete"
+                  tooltipStyleClass="text-[10px] !important "
+                  icon="pi pi-trash"
+                  class="p-button-sm p-button-rounded p-button-danger p-2 text-xs hover:scale-105 transition-transform shadow"
+                ></button>
+
+              </div>
+
+
+            </div>
+          </td>
+      </tr>
+    </ng-template>
+
+  </p-table>
+  </div>
+</div>
+

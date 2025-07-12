@@ -1,0 +1,62 @@
+<div class="card p-6 m-6 rounded-2xl shadow-lg bg-gradient-to-r from-white to-gray-50 border border-blue-400">
+  <!-- Header -->
+  <div class="flex justify-between items-center mb-6 flex-wrap gap-4">
+    <div class="flex items-center gap-3">
+      <div class="bg-blue-100 text-blue-600 rounded-full p-3 flex items-center justify-center text-2xl shadow-md hover:scale-110 transition-transform">
+        <i class="pi pi-table"></i>
+      </div>
+      <h2 class="text-2xl font-extrabold text-blue-600 m-0 tracking-wide">Quotation List</h2>
+    </div>
+    <button pButton type="button" label="Add Quotation" icon="pi pi-plus" class="p-button-success p-button-rounded px-5 py-3 text-lg shadow-lg" (click)="addQuatation()"></button>
+  </div>
+
+  <!-- Filter Row -->
+  <div class="card p-5 rounded-xl bg-gradient-to-r from-gray-100 to-gray-50 shadow-inner flex items-center justify-between flex-wrap gap-4">
+    <div class="flex items-center gap-2 min-w-[250px]">
+      <label class="font-semibold text-gray-700 whitespace-nowrap">Show:</label>
+      <p-dropdown [options]="show" [(ngModel)]="selectedShow" placeholder="Show" [showClear]="true" class="w-full"></p-dropdown>
+    </div>
+    <div class="flex items-center gap-2 w-full max-w-md">
+      <span class="p-input-icon-left w-full">
+        <input pInputText type="text" placeholder="Search Quotation..." class="w-full transition-all focus:ring-2 focus:ring-primary border border-blue-200" [(ngModel)]="searchText"/>
+      </span>
+      <button pButton type="button" icon="pi pi-search" class="p-button-info p-button-rounded px-4 py-3 text-base hover:scale-105 transition-transform shadow-md" (click)="searchquatation()"></button>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="card p-4 rounded-xl bg-white mt-6 border">
+    <p-table [value]="quatations" [paginator]="true" [rows]="10" [responsiveLayout]="'scroll'" [resizableColumns]="true" [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" class="p-datatable-gridlines overflow-hidden shadow-lg rounded-2xl">
+
+      <ng-template pTemplate="header">
+        <tr class="bg-blue-50 text-gray-700">
+          <th class="py-3 px-4"><i class="pi pi-hashtag text-blue-500 mr-1"></i> SL. No.</th>
+          <th class="py-3 px-4"><i class="pi pi-file text-purple-500 mr-1"></i> Quotation No.</th>
+          <th class="py-3 px-4"><i class="pi pi-calendar text-green-500 mr-1"></i> Quotation Date</th>
+          <th class="py-3 px-4"><i class="pi pi-users text-yellow-600 mr-1"></i> Party Name</th>
+          <th class="py-3 px-4"><i class="pi pi-map-marker text-pink-500 mr-1"></i> City Name</th>
+          <th class="py-3 px-4"><i class="pi pi-cog text-indigo-500 mr-1"></i> Action</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-quatation let-i="rowIndex">
+        <tr class="hover:bg-gray-50 transition-all">
+          <td class="py-3 px-4 text-center">{{ i + 1 }}</td>
+          <td class="py-3 px-4">{{ quatation.quatationNo }}</td>
+          <td class="py-3 px-4">{{ quatation.quatationDate }}</td>
+          <td class="py-3 px-4">{{ quatation.party }}</td>
+          <td class="py-3 px-4">{{ quatation.city }}</td>
+          <td>
+            <div class="flex flex-wrap gap-2 justify-center">
+              <div class="flex gap-2 mb-1">
+                <button pButton icon="pi pi-pencil" pTooltip="Update" tooltipStyleClass="text-[10px]" class="p-button-sm p-button-rounded p-button-warning p-2 text-xs hover:scale-105 transition-transform shadow"></button>
+                <button pButton icon="pi pi-trash" pTooltip="Delete" tooltipStyleClass="text-[10px]" class="p-button-sm p-button-rounded p-button-danger p-2 text-xs hover:scale-105 transition-transform shadow"></button>
+                <button pButton icon="pi pi-print" pTooltip="Print" tooltipStyleClass="text-[10px]" class="p-button-sm p-button-rounded p-button-help p-2 text-xs text-red-500 hover:scale-105 transition-transform shadow"></button>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>

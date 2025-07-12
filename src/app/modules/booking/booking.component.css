@@ -1,0 +1,12 @@
+::ng-deep .small-checkbox .p-checkbox-box {
+  width: 16px !important;
+  height: 16px !important;
+}
+
+::ng-deep .small-checkbox .p-checkbox-icon {
+  font-size: 11px !important;
+}
+
+::ng-deep .small-checkbox {
+  transform: scale(1);
+}

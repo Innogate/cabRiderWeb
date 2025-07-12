@@ -1,0 +1,40 @@
+<p-toast />
+<router-outlet />
+<p-dialog
+  [(visible)]="showWsDisconnectedDialog"
+  [modal]="true"
+  [closable]="false"
+  [dismissableMask]="false"
+  [style]="{
+    width: '100%',
+    maxWidth: '400px',
+    boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
+    }"
+  [contentStyle]="{ padding: '0' }">
+  <div class="bg-white p-6">
+    <!-- Icon -->
+    <div class="flex justify-center mb-4">
+      <div class="bg-red-100 text-red-600 rounded-full p-3">
+        <i class="pi pi-exclamation-triangle text-xl"></i>
+      </div>
+    </div>
+
+    <!-- Title -->
+    <h2 class="text-center text-lg font-semibold text-gray-800 mb-1">Connection Lost</h2>
+    <p class="text-center text-sm text-gray-500 mb-4">
+      Your WebSocket connection has been closed. Please try reconnecting.
+    </p>
+
+    <!-- Button -->
+    <div class="flex justify-center">
+      <button
+        pButton
+        type="button"
+        label="Retry"
+        (click)="retryWebSocket()"
+        class="p-button px-5 py-2 bg-indigo-600 text-white rounded-full text-sm font-medium hover:bg-indigo-700 transition"
+      ></button>
+    </div>
+  </div>
+</p-dialog>
+

@@ -1,0 +1,74 @@
+<div class="flex flex-col h-screen font-sans">
+  <!-- Top Navbar -->
+  <p-menubar [model]="menuItems"
+    class="fixed !top-[-20px] !left-[-35px] !right-[-35px] h-[64px] z-50 shadow-sm px-8 py-3 text-sm font-medium transition-all border-b border-gray-200">
+
+    <!-- START: Logo & Brand -->
+    <ng-template #start>
+      <div class="flex items-center gap-3 mr-4">
+        <div class="bg-[#6A38D3] rounded-full p-2 flex justify-center items-center">
+          <img src="/favicon.ico" alt="Logo" class="h-6">
+        </div>
+        <span class="text-xl font-semibold tracking-tight text-gray-900">CabRyder</span>
+      </div>
+    </ng-template>
+
+    <!-- MENU ITEMS -->
+    <ng-template #item let-item let-root="root">
+      <a pRipple class="flex ml-1 items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-100 transition text-gray-700"
+        [routerLink]="item.routerLink">
+        <i *ngIf="item.icon" class="{{ item.icon }}"></i>
+        <span>{{ item.label }}</span>
+        <p-badge *ngIf="item.badge" class="ml-2" [value]="item.badge" severity="info"></p-badge>
+        <span *ngIf="item.shortcut" class="ml-auto text-xs text-gray-400">{{ item.shortcut }}</span>
+        <i *ngIf="item.items" [ngClass]="['ml-auto pi', root ? 'pi-angle-down' : 'pi-angle-right']"></i>
+      </a>
+    </ng-template>
+
+    <!-- END: Search & User -->
+    <ng-template #end>
+      <div class="flex items-center gap-4">
+        <input type="text" pInputText placeholder="Search"
+          class="w-48 text-sm border border-gray-300 rounded-md px-3 py-1.5 focus:ring-2 focus:ring-primary focus:outline-none transition" />
+
+        <!-- <button
+          class="relative px-4 py-2 rounded-md bg-[#6A38D3] text-white text-sm hover:bg-[#5b2fc0] transition focus:outline-none">
+          <i class="pi pi-bell mr-2"></i>
+          <span *ngIf="false"
+            class="absolute -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center shadow-md">
+            3
+          </span>
+        </button> -->
+
+        <!-- Avatar Trigger -->
+        <div #menuTrigger class="flex items-center gap-3 cursor-pointer" (click)="userMenu.toggle($event)">
+          <p-avatar [label]="profileInitials" size="large" shape="circle" styleClass="shadow-sm"
+            [style]="{ backgroundColor: '#ece9fc', color: '#2a1261' }">
+          </p-avatar>
+        </div>
+
+        <!-- Popup Menu -->
+        <p-menu #userMenu [popup]="true" [model]="userMenuItems" styleClass="p-0">
+          <ng-template pTemplate="start">
+            <div class="px-4 py-3 border-b border-gray-200 bg-gray-50 flex items-center gap-3">
+              <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xl">
+                <i class="pi pi-user"></i>
+              </div>
+              <div>
+                <div class="text-sm font-semibold text-gray-800">{{ profileName }}</div>
+                <div class="text-xs text-gray-500">{{ profileRole }}</div>
+              </div>
+            </div>
+          </ng-template>
+        </p-menu>
+
+      </div>
+    </ng-template>
+
+  </p-menubar>
+
+  <!-- Page content -->
+  <div class="flex-1 pt-[64px] p-6">
+    <router-outlet></router-outlet>
+  </div>
+</div>

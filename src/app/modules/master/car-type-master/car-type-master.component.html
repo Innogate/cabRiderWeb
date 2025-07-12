@@ -1,0 +1,54 @@
+<div class="card">
+  <app-dynamic-table [columns]="columns" [data]="users" [headerTitle]="'CAR TYPE LIST'" [rowActions]="actions"
+    (onAction)="handleAction($event)">
+  </app-dynamic-table>
+</div>
+
+<p-dialog header="Add New Car" [(visible)]="showForm" [modal]="true" [style]="{ width: '90vw', maxWidth: '500px' }"
+  [closable]="true" [dismissableMask]="true" [breakpoints]="{ '960px': '75vw', '640px': '90vw' }"
+  styleClass="custom-dialog p-0 overflow-hidden rounded-xl shadow-lg">
+
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="px-2 space-y-4">
+
+    <!-- Car Type -->
+    <div>
+      <div class="flex items-center gap-2 mb-1 text-gray-700">
+        <i class="pi pi-car text-indigo-600"></i>
+        <label for="car_type" class="text-sm font-medium">Car Type</label>
+      </div>
+      <input id="car_type" pInputText type="text" formControlName="car_type"
+        class="w-full border border-indigo-200 rounded-md focus:border-indigo-500 focus:ring-indigo-500" />
+    </div>
+
+    <!-- Index Order -->
+    <div>
+      <div class="flex items-center gap-2 mb-1 text-gray-700">
+        <i class="pi pi-sort-numeric-up text-indigo-600"></i>
+        <label for="index_order" class="text-sm font-medium">Index Order</label>
+      </div>
+      <input id="index_order" pInputText type="number"  formControlName="index_order"
+        class="w-full border border-indigo-200 rounded-md focus:border-indigo-500 focus:ring-indigo-500" />
+    </div>
+
+    <!-- Sitting Capacity -->
+    <div>
+      <div class="flex items-center gap-2 mb-1 text-gray-700">
+        <i class="pi pi-users text-indigo-600"></i>
+        <label for="sitting_capacity" class="text-sm font-medium">Sitting Capacity</label>
+      </div>
+      <input id="sitting_capacity" pInputText type="number" 
+        formControlName="sitting_capacity"
+        class="w-full border border-indigo-200 rounded-md focus:border-indigo-500 focus:ring-indigo-500" />
+    </div>
+
+
+    <!-- Buttons -->
+    <div class="flex justify-end gap-2 mt-4">
+      <button pButton type="button" label="Cancel" class="p-button-secondary" (click)="showForm = false"></button>
+      <button pButton type="submit" label="Save" [disabled]="form.invalid"></button>
+    </div>
+
+  </form>
+
+</p-dialog>

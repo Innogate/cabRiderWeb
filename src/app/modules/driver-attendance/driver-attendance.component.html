@@ -1,0 +1,48 @@
+<div class="card rounded-2xl shadow-2xl border border-blue-300 p-8 m-8 bg-gradient-to-br from-blue-100 via-white to-indigo-100">
+
+  <!-- Header with Icon -->
+  <div class="flex items-center gap-4 mb-8">
+    <i class="pi pi-car text-blue-700 text-4xl drop-shadow-md"></i>
+    <h2 class="text-3xl font-extrabold text-blue-600 tracking-wide m-0">
+      Driver Attendance
+    </h2>
+  </div>
+
+  <!-- Form Section -->
+  <div class="flex flex-wrap items-center justify-between bg-gradient-to-r from-white via-blue-50 to-white p-8 rounded-2xl shadow-inner gap-6 border border-blue-200">
+
+    <!-- Driver name Dropdown -->
+    <div class="flex flex-col gap-2">
+      <label for="driver" class="font-semibold text-gray-700 text-sm">Driver Name</label>
+      <p-dropdown
+        [options]="drivers"
+        [(ngModel)]="selectedDriver"
+        placeholder="Select Driver"
+        class="w-56 shadow-sm text-sm">
+      </p-dropdown>
+    </div>
+
+    <!-- Month & Year -->
+    <div class="flex flex-col gap-2">
+      <label for="monthYear" class="font-semibold text-gray-700 text-sm">Month & Year</label>
+      <input
+      type="month"
+      title="Select Month & Year"
+      [value]="currentMonthYear"
+      class="p-2 border border-gray-300 rounded-lg shadow-sm w-52 text-sm focus:ring-2 focus:ring-blue-400">
+
+    </div>
+
+    <!-- Submit Button -->
+    <div class="mt-4 sm:mt-0">
+      <button
+        pButton
+        pRipple
+        type="button"
+        label="Submit"
+        icon="pi pi-check"
+        class="p-button-info p-button-rounded px-6 py-3 text-sm font-semibold shadow-md hover:scale-105 hover:bg-blue-600 transition-all duration-200 ease-in-out"
+      ></button>
+    </div>
+  </div>
+</div>

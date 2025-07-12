@@ -1,0 +1,161 @@
+<div class="w-full h-full flex flex-col font-sans overflow-hidden  pt-10">
+  <!-- Container -->
+  <div class="flexflex-col sm:p-6 bg-white border border-blue-200 rounded-2xl shadow-xl flex-grow overflow-hidden">
+
+    <!-- Header -->
+    <div
+      class="flex flex-wrap justify-between items-center gap-4 p-4 border-b border-blue-200 bg-gradient-to-r from-blue-100 to-white">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 bg-blue-300 text-blue-800 rounded-full flex items-center justify-center shadow-inner">
+          <i class="pi pi-calendar-plus text-xl animate-pulse"></i>
+        </div>
+        <div class="relative">
+          <h1 class="text-2xl sm:text-3xl font-bold text-blue-700">Booking List</h1>
+          <div class="absolute -bottom-1 left-0 w-24 h-1 bg-gradient-to-r from-blue-500 to-blue-400 rounded-full"></div>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap gap-3 items-center">
+        <!-- Date Range -->
+        <div class="flex items-center gap-2">
+          <i class="pi pi-calendar text-blue-500"></i>
+          <label class="text-sm font-medium text-gray-700">Start</label>
+          <p-calendar [(ngModel)]="startDate" (ngModelChange)="onDateSelect($event)" dateFormat="dd-mm-yy"
+            showIcon="true"
+            inputStyleClass="w-28 text-sm border border-blue-300 rounded-md focus:ring-2 focus:ring-blue-400" />
+        </div>
+        <div class="flex items-center gap-2">
+          <label class="text-sm font-medium text-gray-700">End</label>
+          <p-calendar [(ngModel)]="endDate" (ngModelChange)="onDateSelect($event)" dateFormat="dd-mm-yy" showIcon="true"
+            inputStyleClass="w-28 text-sm border border-blue-300 rounded-md focus:ring-2 focus:ring-blue-400" />
+        </div>
+
+        <!-- Search -->
+        <div class="flex items-center gap-2">
+          <i class="pi pi-search text-blue-500"></i>
+          <input pInputText type="text" placeholder="Search Booking" [(ngModel)]="searchValue" (ngModelChange)="onSearch($event)"
+            class="w-48 text-sm border border-gray-300 rounded-md px-3 py-1.5 focus:ring-2 focus:ring-blue-300" />
+        </div>
+
+        <!-- Actions -->
+        <div class="flex gap-2 mt-2 sm:mt-0">
+          <button pButton icon="pi pi-filter" class="p-button-sm p-button-info"></button>
+          <button pButton label="Reset" icon="pi pi-refresh" (click)="reset()"
+            class="p-button-sm p-button-warning p-button-outlined border-yellow-500 text-yellow-600"></button>
+          <button pButton label="Add" icon="pi pi-plus" (click)="goToAdd()"
+            class="p-button-sm bg-green-500 hover:bg-green-600 border-green-500 text-white"></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab View -->
+    <div class="flex flex-col flex-grow overflow-hidden">
+      <p-tabView (onChange)="onTabChange($event)" class="flex-grow">
+        <p-tabPanel *ngFor="let tab of tabs" [header]="tab">
+          <!-- Tab Header -->
+          <div class="flex justify-between items-center flex-wrap px-4 py-3 border-b border-gray-200">
+            <div class="flex items-center gap-3 text-blue-600">
+              <h2 class="text-lg sm:text-2xl font-bold flex items-center gap-2">
+                <i class="pi pi-table"></i> {{ tab }} Records
+              </h2>
+              <p class="text-sm text-gray-600">Data for <strong class="text-blue-500">{{ tab }}</strong></p>
+            </div>
+            <button pButton label="Custom" icon="pi pi-cog"
+              class="p-button-sm p-button-outlined p-button-help text-blue-600 border-blue-500"
+              (click)="toggleCustomPanel()"></button>
+          </div>
+
+          <!-- Table Section -->
+          <div class="flex-grow overflow-hidden px-4 pb-6">
+            <p-table [value]="tableData" [loading]="tableLoading" [paginator]="true" [rows]="pageSize"
+              [scrollable]="true" scrollHeight="flex" scrollDirection="both" [showGridlines]="true" [stripedRows]="true"
+              [totalRecords]="totalRecords" (onLazyLoad)="loadData($event)" [lazy]="isLazyLoad"
+              class="p-datatable-sm text-sm flex-grow font-sans" [contextMenu]="cm"
+              [(contextMenuSelection)]="selectedRow" selectionMode="single">
+              <!-- Headers -->
+              <ng-template pTemplate="header">
+                <tr
+                  class="bg-gradient-to-r from-blue-200 via-blue-400 to-blue-600 text-white text-xs font-semibold uppercase sticky top-0 z-10">
+                  <th *ngFor="let header of selectedHeaders"
+                    class="text-center px-3 py-2 whitespace-nowrap border-r last:border-r-0">
+                    <div class="flex justify-center items-center gap-2">
+                      <i [ngClass]="[headerIcons[header].icon, headerIcons[header].color]"></i>
+                      {{ header }}
+                    </div>
+                  </th>
+                </tr>
+              </ng-template>
+
+              <!-- Body -->
+              <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
+                <tr [ngClass]="rowIndex % 2 === 0 ? 'bg-white' : 'bg-blue-50'" class="hover:bg-blue-100 cursor-pointer">
+                  <td *ngFor="let header of selectedHeaders" (contextmenu)="cm.show($event); selectedRow = rowData"
+                    class="text-center px-3 py-2 border-b border-gray-200 font-medium"
+                    [ngClass]="header === 'Status' ? statusColors[rowData[header]] : 'text-gray-800'">
+                    <span *ngIf="header === 'Status'; else normalCell"
+                      class="inline-block px-2 py-1 rounded-full text-xs font-semibold"
+                      [ngClass]="statusColors[rowData[header]]" pTooltip="{{ rowData[header] }}">
+                      {{ rowData[header] }}
+                    </span>
+                    <ng-template #normalCell>
+                      <span class="block truncate max-w-[150px]" pTooltip="{{ rowData[header] }}">
+                        {{ rowData[header] }}
+                      </span>
+                    </ng-template>
+                  </td>
+                </tr>
+              </ng-template>
+
+              <!-- Empty -->
+              <ng-template pTemplate="emptymessage">
+                <tr>
+                  <td [attr.colspan]="selectedHeaders.length" class="text-center py-6 text-gray-500 italic">
+                    <i class="pi pi-info-circle mr-2 text-blue-400"></i> No bookings available.
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
+            <p-contextMenu #cm [model]="contextMenuItems"></p-contextMenu>
+          </div>
+        </p-tabPanel>
+      </p-tabView>
+    </div>
+  </div>
+
+  <!-- Column Customization Dialog -->
+  <p-dialog [(visible)]="showCustomPanel" [modal]="true" [closable]="false" [style]="{ width: '64rem' }"
+    class="rounded-xl shadow-xl">
+    <ng-template pTemplate="header">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center">
+          <i class="pi pi-sliders-h text-lg"></i>
+        </div>
+        <div>
+          <h2 class="text-lg font-semibold text-gray-800">Customize Table Headers</h2>
+          <p class="text-sm text-gray-500">Select the columns you want to display.</p>
+        </div>
+      </div>
+    </ng-template>
+
+    <div class="p-4 bg-white space-y-6">
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 max-h-64 overflow-y-auto border p-3 rounded-lg">
+        <div *ngFor="let header of allHeaders" class="flex items-start gap-2 p-2 hover:bg-blue-50 rounded">
+          <p-checkbox [(ngModel)]="selectedHeaders" [value]="header" binary="false" inputId="{{ header }}"
+            (onChange)="filterHeaders()"></p-checkbox>
+          <label [for]="header" class="text-sm text-gray-700 flex gap-2 cursor-pointer">
+            <i [ngClass]="[headerIcons[header].icon, headerIcons[header].color, 'text-base']"></i>
+            {{ header }}
+          </label>
+        </div>
+      </div>
+
+      <div class="flex justify-between pt-2 border-t">
+        <button pButton [label]="areAllSelected() ? 'Deselect All' : 'Select All'"
+          [icon]="areAllSelected() ? 'pi pi-times' : 'pi pi-check'" class="p-button-sm p-button-outlined p-button-info"
+          (click)="toggleSelectAll()"></button>
+        <button pButton label="Close" icon="pi pi-times-circle" class="p-button-sm p-button-secondary"
+          (click)="toggleCustomPanel()"></button>
+      </div>
+    </div>
+  </p-dialog>
+</div>

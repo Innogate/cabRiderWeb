@@ -1,0 +1,97 @@
+<div class="flex mb-2">
+  <h1 class="text-2xl font-bold bg-gradient-to-r from-teal-500 to-indigo-600 text-transparent bg-clip-text mb-4">
+    {{ headerTitle }}
+  </h1>
+  <p-iconfield iconPosition="left" class="ml-auto gap-2">
+    <p-inputicon>
+      <i class="pi pi-search"></i>
+    </p-inputicon>
+    <input pInputText type="text" (input)="emitSearch()" [(ngModel)]="globalFilter" placeholder="Search keyword" />
+    <p-button label="Clear" [outlined]="true" icon="pi pi-filter-slash" (click)="clear(dt)" />
+    <button pButton label="Add New" icon="pi pi-plus"
+      class="ml-4 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition duration-200 shadow-md"
+      (click)="handleAction('add', '')"></button>
+  </p-iconfield>
+</div>
+
+<div class="flex-grow flex flex-col rounded-xl bg-white border border-blue-100 shadow-md overflow-hidden">
+  <div class="overflow-x-auto">
+    <p-table #dt [value]="data" [paginator]="true" [rows]="rows" [globalFilterFields]="globalFilterFields"
+      [rowsPerPageOptions]="[5, 10, 20, 50]" [responsiveLayout]="'stack'" [scrollable]="true" scrollHeight="flex"
+      [loading]="loading" loadingIcon="pi pi-spin pi-spinner"
+      class="p-datatable-sm scroll-show font-sans text-sm flex-grow"
+      styleClass="p-datatable-gridlines p-datatable-sm surface-100 rounded-lg" [style]="{ 'table-layout': 'auto' }">
+
+      <!-- Header -->
+      <ng-template pTemplate="header">
+        <tr
+          class="bg-gradient-to-r from-blue-200 via-blue-400 to-blue-600 text-white uppercase text-xs font-semibold sticky top-0 z-10 shadow-sm">
+
+          <!-- Sl No -->
+          <th
+            class="bg-blue-600 text-white text-sm border border-gray-300 py-1 px-3 text-center whitespace-nowrap">
+            Sl No
+          </th>
+
+          <!-- Dynamic Columns -->
+          <ng-container *ngFor="let col of columns">
+            <th *ngIf="col.field !== 'id'" [pSortableColumn]="col.field"
+              class="bg-blue-600 text-white text-sm border border-gray-300 py-1 px-3 whitespace-nowrap bg-gradient-to-r from-blue-200 via-blue-400 to-blue-600">
+              <i *ngIf="col.icon" [class]="col.icon" [ngClass]="col.styleClass" class="mr-1"></i>
+              {{ col.header }}
+              <p-sortIcon [field]="col.field"></p-sortIcon>
+            </th>
+            <th *ngIf="col.field === 'id'" class="hidden"></th>
+          </ng-container>
+
+          <!-- Actions Column (Sticky Right) -->
+          <th
+            class="bg-blue-600 text-white text-sm border border-gray-300 py-1 px-3 text-center whitespace-nowrap sticky right-0 z-20 shadow-md">
+            Actions
+          </th>
+        </tr>
+      </ng-template>
+
+
+      <!-- Body -->
+      <ng-template pTemplate="body" let-row let-i="rowIndex">
+        <tr class="hover:bg-blue-100 transition duration-200 cursor-pointer">
+          <td class="text-center border border-gray-300 py-1 px-3 whitespace-nowrap">{{ i + 1 }}</td>
+          <ng-container *ngFor="let col of columns">
+            <td *ngIf="col.field !== 'id'"
+              class="px-3 py-2 text-center text-gray-800 font-medium border-b border-gray-200 whitespace-nowrap">
+              <span [pTooltip]="row[col.field]" tooltipPosition="top"
+                [ngClass]="getTextColor(col.field, row[col.field])">
+                <i *ngIf="row[col.field]" [class]="row[col.field] + ' ' + getIconColor(col.field, row[col.field])"></i>
+                {{ row[col.field] }}
+              </span>
+            </td>
+            <td *ngIf="col.field === 'id'" class="hidden">{{ row[col.field] }}</td>
+          </ng-container>
+          <td class="border border-gray-300 text-center py-1 px-3 whitespace-nowrap sticky right-0 z-20 shadow-md">
+            <div class="flex justify-center gap-2">
+              <ng-container *ngFor="let btn of rowActions">
+                <button pButton [icon]="btn.icon" [label]="btn.label || ''"
+                  [ngClass]="btn.styleClass || 'p-button-outlined p-button-sm'" class="p-button-rounded"
+                  (click)="handleAction(btn.action, row)" tooltipPosition="top">
+                </button>
+              </ng-container>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+
+      <!-- Empty -->
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td [attr.colspan]="columns.length + 2" class="text-center py-5">
+            <div class="flex flex-col items-center text-gray-400">
+              <i class="pi pi-database text-3xl"></i>
+              <p class="mt-2 text-base">No records found</p>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>

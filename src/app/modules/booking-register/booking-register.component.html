@@ -1,0 +1,113 @@
+<!-- report-parameters.component.html -->
+<div class="p-6 m-6 rounded-2xl shadow-2xl border border-blue-300 bg-gradient-to-r from-white via-gray-50 to-blue-50">
+
+<!-- Header Bar -->
+<div class="flex justify-between items-center mb-6">
+  <div class="flex gap-6 text-sm font-medium text-gray-600">
+    <span
+      *ngFor="let tab of tabs"
+      (click)="activeTab = tab"
+      class="cursor-pointer transition-all"
+      [ngClass]="{
+        'text-blue-600 font-semibold border-b-2 border-blue-500 pb-1': activeTab === tab,
+        'text-gray-500 hover:text-blue-600': activeTab !== tab
+      }"
+    >
+      {{ tab }}
+    </span>
+  </div>
+</div>
+
+<!-- Tabs Content -->
+<div *ngIf="activeTab === 'Home'" class="p-2 mb-4 rounded-2xl  border  bg-gradient-to-r from-white via-gray-50 to-blue-50">
+  <!-- 🔷 Parameters Form (Same as before) -->
+  <h3 class="text-lg font-bold text-gray-500 mb-4">
+    <i class="pi pi-filter mr-2 text-blue-500"></i> Filter Parameters
+  </h3>
+</div>
+
+<!-- 📁 File Tab Content -->
+<div *ngIf="activeTab === 'File'" class="p-2 mb-4 rounded-2xl  border  bg-gradient-to-br from-gray-50 via-white to-gray-100">
+  <h3 class="text-lg font-bold text-gray-500 mb-4">
+    <i class="pi pi-lock mr-2 text-gray-400"></i> Preview Features (Disabled)
+  </h3>
+  <p class="text-sm text-gray-400 italic mb-3">
+    This feature is currently disabled. Preview & export options will be available in the next version.
+  </p>
+  <div class="flex gap-4">
+    <button pButton label="Preview PDF" icon="pi pi-file-pdf" class="p-button-secondary" disabled></button>
+    <button pButton label="Export Excel" icon="pi pi-file-excel" class="p-button-secondary" disabled></button>
+  </div>
+</div>
+
+<!-- 👁️ View Tab Content (Placeholder) -->
+<div *ngIf="activeTab === 'View'" class="p-6 mb-4 rounded-2xl border bg-white ">
+  <h3 class="text-lg font-bold text-gray-600 mb-2">
+    <i class="pi pi-eye mr-2 text-gray-500"></i> View Report
+  </h3>
+  <p class="text-gray-500 text-sm">No report generated yet. Select parameters and click "View Report".</p>
+</div>
+
+
+
+  <!-- Date Filters -->
+  <div class="grid grid-cols-3 gap-6 mb-6">
+    <div>
+      <label class="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-2">
+        <i class="pi pi-calendar text-pink-500"></i> Start Date
+      </label>
+      <p-calendar [(ngModel)]="filters.startDate" dateFormat="dd/mm/yy" class="w-full" inputClass="w-full p-inputtext-sm" showIcon />
+    </div>
+    <div>
+      <label class="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-2">
+        <i class="pi pi-calendar text-orange-500"></i> End Date
+      </label>
+      <p-calendar [(ngModel)]="filters.endDate" dateFormat="dd/mm/yy" class="w-full" inputClass="w-full p-inputtext-sm" showIcon />
+    </div>
+    <div>
+      <label class="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-2">
+        <i class="pi pi-briefcase text-indigo-500"></i> Project
+      </label>
+      <p-dropdown [options]="projects" [(ngModel)]="filters.project" optionLabel="name" placeholder="Select Project" class="w-full p-inputtext-sm" />
+    </div>
+  </div>
+
+  <!-- Dropdown Filters -->
+  <div class="grid grid-cols-3 gap-6 mb-6">
+    <div>
+      <label class="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-2">
+        <i class="pi pi-users text-green-600"></i> Party
+      </label>
+      <p-dropdown [options]="parties" [(ngModel)]="filters.party" optionLabel="name" placeholder="Select Party" class="w-full p-inputtext-sm" />
+    </div>
+    <div>
+      <label class="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-2">
+        <i class="pi pi-globe text-purple-600"></i> City
+      </label>
+      <p-dropdown [options]="cities" [(ngModel)]="filters.city" placeholder="Required" class="w-full p-inputtext-sm" />
+    </div>
+    <div>
+      <label class="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-2">
+        <i class="pi pi-print text-yellow-600"></i> Print Invoice No.
+      </label>
+      <p-dropdown [options]="yesNoOptions" [(ngModel)]="filters.printInvoice" class="w-full p-inputtext-sm" />
+    </div>
+  </div>
+
+  <!-- Print Project Name -->
+  <div class="grid grid-cols-3 gap-6 mb-6">
+    <div>
+      <label class="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-2">
+        <i class="pi pi-tags text-blue-700"></i> Print Project Name
+      </label>
+      <p-dropdown [options]="yesNoOptions" [(ngModel)]="filters.printProjectName" class="w-full p-inputtext-sm" />
+    </div>
+  </div>
+
+  <!-- View Report Button -->
+  <div class="text-right">
+    <button pButton type="button" label="View Report" icon="pi pi-chart-bar"
+      class="p-button-success p-button-rounded px-5 py-2 text-sm shadow-lg" (click)="viewReport()">
+    </button>
+  </div>
+</div>

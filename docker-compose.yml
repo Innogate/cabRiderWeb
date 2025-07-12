@@ -1,0 +1,17 @@
+services:
+  web:
+    image:  tuhinsu/angular:lts
+    container_name: ${PROJECT_DOMAIN}
+    restart: unless-stopped
+    user: vscode
+    environment:
+      - PRODUCTION=${PRODUCTION}
+      - VERSION=${VERSION}
+      - API_URL=${API_URL}
+    volumes:
+      - dotfiles:/home/vscode
+      - .:/app
+
+volumes:
+  dotfiles:
+    external: true

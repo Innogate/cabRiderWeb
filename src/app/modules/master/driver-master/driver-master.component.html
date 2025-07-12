@@ -1,0 +1,186 @@
+<div class="card">
+    <app-dynamic-table [columns]="columns" [loading]="isLoading" [data]="users" [headerTitle]="'DRIVER LIST'"
+        [rowActions]="actions" (onAction)="handleAction($event)">
+    </app-dynamic-table>
+</div>
+
+<p-dialog [header]="header" [(visible)]="showForm" [modal]="true" [style]="{ width: '90vw', maxWidth: '700px' }"
+    [closable]="true" [dismissableMask]="true" [breakpoints]="{ '960px': '75vw', '640px': '90vw' }"
+    styleClass="custom-dialog p-0 overflow-hidden rounded-xl shadow-lg">
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="p-4 space-y-4">
+
+        <!-- Driver Name Address -->
+        <div class="flex gap-4">
+            <div class="w-1/2">
+                <!-- Label and Icon Row -->
+                <div class="flex items-center gap-2 mb-1 text-gray-700">
+                    <i class="pi pi-user text-red-600"></i>
+                    <label class="text-sm font-medium text-gray-700">
+                        Driver Name <span class="text-red-500">*</span>
+                    </label>
+                </div>
+                <!-- Input Field -->
+                <input pInputText type="text" formControlName="drv_name"
+                    class="w-full border border-indigo-200 rounded-md focus:border-indigo-500 focus:ring-indigo-500" />
+            </div>
+
+
+
+            <div class="w-1/2">
+                <div class="flex items-center gap-2 mb-1 text-gray-700">
+                    <i class="pi pi-map text-green-600"></i>
+                    <label class="block mb-1 text-sm font-medium text-gray-700">Address</label>
+                </div>
+                <textarea pInputTextarea formControlName="address" rows="2"
+                    class="w-full border border-indigo-200 rounded-md"></textarea>
+            </div>
+        </div>
+
+
+
+        <!-- City & Pin Code -->
+        <div class="flex gap-4">
+            <div class="w-1/2">
+                <div class="flex items-center gap-2 mb-1 text-gray-700">
+                    <i class="pi pi-map-marker text-yellow-600"></i>
+                    <label class="block mb-1 text-sm font-medium text-gray-700">City</label>
+                </div>
+                <p-autoComplete formControlName="city_id" [suggestions]="filteredCities"
+                    (completeMethod)="filterCity($event)" field="CityName" [dropdown]="true" placeholder="Select City"
+                    class="w-full border border-indigo-200 rounded-md">
+                </p-autoComplete>
+
+            </div>
+
+            <div class="w-1/2">
+                <div class="flex items-center gap-2 mb-1 text-gray-700">
+                    <i class="pi pi-sort-numeric-up text-yellow-600"></i>
+                    <label class="block mb-1 text-sm font-medium text-gray-700">Pin Code</label>
+                </div>
+                <input pInputText type="text" formControlName="pin_code"
+                    class="w-full border border-indigo-200 rounded-md" />
+            </div>
+        </div>
+
+        <!-- Mobile & WhatsApp -->
+        <div class="flex gap-4">
+            <div class="w-1/2">
+                <label class="block mb-1 text-sm font-medium text-gray-700">Mobile No *</label>
+                <input pInputText type="number" formControlName="mobileno"
+                    class="w-full border border-indigo-200 rounded-md" />
+            </div>
+            <div class="w-1/2">
+                <label class="block mb-1 text-sm font-medium text-gray-700">What's App No</label>
+                <input pInputText type="number" formControlName="whatsappno"
+                    class="w-full border border-indigo-200 rounded-md" />
+            </div>
+        </div>
+
+        <!-- License No & Expiry Date -->
+        <div class="flex gap-4">
+            <div class="w-1/2">
+                <label class="block mb-1 text-sm font-medium text-gray-700">Driver License No</label>
+                <input pInputText type="text" formControlName="drv_licenseno"
+                    class="w-full border border-indigo-200 rounded-md" />
+            </div>
+            <div class="w-1/2">
+                <label class="block mb-1 text-sm font-medium text-gray-700">License Expiry Date</label>
+                <input pInputText type="date" formControlName="drv_license_expdate"
+                    class="w-full border border-indigo-200 rounded-md" />
+            </div>
+        </div>
+
+        <!-- Aadhar No -->
+        <div class="flex gap-4">
+            <div class="w-1/2">
+                <label class="block mb-1 text-sm font-medium text-gray-700">Aadhar Card No</label>
+                <input pInputText type="text" formControlName="aadhar_cardno"
+                    class="w-full border border-indigo-200 rounded-md" />
+            </div>
+            <div class="w-1/2">
+                <label class="block mb-1 text-sm font-medium text-gray-700">Bank Name</label>
+                <input pInputText type="text" formControlName="bank_name"
+                    class="w-full border border-indigo-200 rounded-md" />
+            </div>
+        </div>
+
+        <!-- Bank Details -->
+        <div class="flex gap-4">
+            <div class="w-1/2">
+                <label class="block mb-1 text-sm font-medium text-gray-700">Bank Branch</label>
+                <input pInputText type="text" formControlName="bank_branch"
+                    class="w-full border border-indigo-200 rounded-md" />
+            </div>
+            <div class="w-1/2">
+                <label class="block mb-1 text-sm font-medium text-gray-700">Bank Ifsc</label>
+                <input pInputText type="text" formControlName="bank_ifsc"
+                    class="w-full border border-indigo-200 rounded-md" />
+            </div>
+        </div>
+
+        <div class="flex gap-4">
+            <div class="w-1/2">
+                <label class="block mb-1 text-sm font-medium text-gray-700">Bank Account No</label>
+                <input pInputText type="text" formControlName="bank_acno"
+                    class="w-full border border-indigo-200 rounded-md" />
+            </div>
+            <div class="w-1/2">
+                <label class="block mb-1 text-sm font-medium text-gray-700">Account Type</label>
+                <p-dropdown [options]="accountTypes" formControlName="bank_actype" optionLabel="label"
+                    placeholder="Select Account Type" class="w-full border border-indigo-200 rounded-md">
+                </p-dropdown>
+            </div>
+
+        </div>
+
+        <!-- Enable Mobile Login -->
+        <div class="flex items-center gap-2">
+            <p-checkbox binary="true" formControlName="enable_login"></p-checkbox>
+            <label class="text-sm font-medium text-gray-700">Enable Mobile Login</label>
+        </div>
+
+        <!-- Username and Password fields shown conditionally -->
+        <div *ngIf="form.get('enable_login')?.value" class="mt-4 space-y-4">
+            <div class="flex gap-4">
+
+                <div class="w-1/2">
+                    <label class="block mb-1 text-sm font-medium text-gray-700">Username</label>
+                    <input pInputText formControlName="username" class="w-full border border-indigo-200 rounded-md" />
+                </div>
+
+                <div class="w-1/2">
+                    <label class="block mb-1 text-sm font-medium text-gray-700">Password</label>
+                    <input pInputText type="password" formControlName="password"
+                        class="w-full border border-indigo-200 rounded-md" />
+                </div>
+            </div>
+        </div>
+
+
+        <!-- File Uploads -->
+        <div class="flex gap-6">
+            <!-- License Image Upload -->
+            <div class="w-1/2">
+                <label class="block mb-1 text-sm font-medium text-black">License Image</label>
+                <p-fileUpload name="license" mode="basic" chooseIcon="pi pi-upload" customUpload="true"
+                    (uploadHandler)="onFileSelect($event, 'license')" class="w-full">
+                </p-fileUpload>
+            </div>
+
+            <!-- Aadhar Image Upload -->
+            <div class="w-1/2">
+                <label class="block mb-1 text-sm font-medium text-black">Aadhar Image</label>
+                <p-fileUpload name="aadhar" mode="basic" chooseIcon="pi pi-upload" customUpload="true"
+                    (uploadHandler)="onFileSelect($event, 'aadhar')" class="w-full">
+                </p-fileUpload>
+            </div>
+        </div>
+
+        <!-- Submit & Cancel -->
+        <div class="flex justify-end gap-2 pt-4">
+            <button pButton type="button" label="Cancel" class="p-button-secondary" (click)="showForm = false"></button>
+            <button pButton type="submit" label="Save" [disabled]="form.invalid"></button>
+        </div>
+    </form>
+</p-dialog>
