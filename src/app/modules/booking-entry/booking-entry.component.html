@@ -42,8 +42,8 @@
         <label class="font-medium flex text-gray-700 items-center gap-2">
           <i class="pi pi-file text-xl text-green-700"></i> Slip No
         </label>
-        <input type="text" pInputText [(ngModel)]="booking.slipNo" name="slipNo" placeholder="Slip No *"
-          class="w-full" />
+        <input type="text" pInputText [(ngModel)]="booking.slipNo" name="slipNo" placeholder="Slip No *" class="w-full"
+          readonly="true" />
       </div>
 
       <!-- Rental Date -->
@@ -187,9 +187,9 @@
         <!-- Party Rate Type and Select Rate -->
         <div class="grid grid-cols-3 gap-4 mb-6">
           <p-dropdown [(ngModel)]="booking.PartyRateType" name="partyRateType" [options]="partyRateTypes"
-            optionLabel="name" placeholder="Party Rate Type *" class="w-full"></p-dropdown>
+            optionLabel="party_name" optionValue="party_id" placeholder="Party Rate Type *" class="w-full"></p-dropdown>
 
-          <p-dropdown [(ngModel)]="booking.selectRate" name="selectRate" [options]="selectRates" optionLabel="name"
+          <p-dropdown [(ngModel)]="booking.selectRate" name="selectRate" [options]="selectRates" optionLabel="party_name" optionValue="id"
             placeholder="Select Rate *" class="w-full"></p-dropdown>
 
           <button pButton type="button" label="Get Price" class="p-button-success w-full"></button>
@@ -739,7 +739,8 @@
         <label class="font-semibold text-gray-800 flex items-center gap-2">
           <i class="pi pi-file-edit text-xl text-green-600"></i> Slip No
         </label>
-        <input type="text" pInputText [(ngModel)]="booking.slipNo" placeholder="Slip No *" class="w-full" />
+        <input type="text" pInputText [(ngModel)]="booking.slipNo" placeholder="Slip No *" class="w-full"
+          readonly="true" />
       </div>
 
       <!-- Rental Date -->
@@ -894,7 +895,7 @@
         <label class="font-semibold text-gray-800 flex items-center gap-2">
           <i class="pi pi-money-bill text-xl text-blue-600"></i> Party Rate Type
         </label>
-        <p-dropdown [(ngModel)]="booking.PartyRateType" [options]="partyRateTypes" optionLabel="name"
+        <p-dropdown [(ngModel)]="booking.PartyRateType" [options]="partyRateTypes" optionLabel="party_name" optionValue="party_id"
           placeholder="Party Rate Type *" class="w-full"></p-dropdown>
       </div>
 
@@ -945,8 +946,11 @@
         <label class="font-semibold text-gray-800 flex items-center gap-2">
           <i class="pi pi-clock text-xl text-blue-600"></i> Entry Time
         </label>
-        <input type="text" pInputText [(ngModel)]="booking.EntryTime" placeholder="Entry Time" class="w-full" />
+        <input type="text" pInputText [(ngModel)]="booking.EntryTime" placeholder="Entry Time" class="w-full"
+          readonly />
+
       </div>
+
 
       <!-- Cash & Advanced -->
       <div class="flex flex-col gap-2">

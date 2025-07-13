@@ -1,3 +1,4 @@
+import { partyRateMasterService } from './../../services/partyRateMaster.service';
 import { carTypeMasterService } from './../../services/carTypeMaster.service';
 import { CheckboxModule } from 'primeng/checkbox';
 import { CommonModule } from '@angular/common';
@@ -43,7 +44,8 @@ export class BookingEntryComponent implements OnInit {
     private messageService: MessageService,
     private router: Router,
     private commonApiService: commonService,
-    private partyMasterService: partyMasterService
+    private partyMasterService: partyMasterService,
+    private partyRateMasterService: partyRateMasterService
   ) { }
   totalHours = 0;
   totalKM = 0;
@@ -197,11 +199,11 @@ export class BookingEntryComponent implements OnInit {
 
   carTypeSearch = '';
 
-  partyRateTypes = [{ name: 'Hourly' }, { name: 'KM Based' }];
+  partyRateTypes?: any[];
 
   vendorRateTypes = [{ name: 'Hourly' }, { name: 'KM Based' }];
 
-  selectRates = [{ name: 'Standard' }, { name: 'Premium' }];
+  selectRates?: any[];
 
   selectVendorRates = [{ name: 'Vendor Standard' }, { name: 'Vendor Premium' }];
 
@@ -287,17 +289,19 @@ export class BookingEntryComponent implements OnInit {
         }
         else if (msg.for === "getAllCityDropdown") {
           this.cities = msg.data;
-          // console.log(this.cities);
           rt = true;
         }
         else if (msg.for === "getAllBranchDropdown") {
           this.branches = msg.data;
-          // console.log(this.branches);
           rt = true;
         }
         else if (msg.for === "getAllParty") {
           this.PartyName = msg.data;
-          console.log(this.PartyName);
+          rt = true;
+        }
+        else if (msg.for === "getallpartyrate") {
+          this.partyRateTypes = msg.data;
+          console.log(this.partyRateTypes);
           rt = true;
         }
       }
@@ -307,11 +311,20 @@ export class BookingEntryComponent implements OnInit {
       return rt;
     });
 
+    this.setCurrentTime();
     this.getCarTypeName();
     this.getAllCity();
     this.getAllBranches();
     this.getAllPraty();
+    this.getAllPartyRate();
   }
+
+  setCurrentTime() {
+  const now = new Date();
+  const hours = String(now.getHours()).padStart(2, '0');
+  const minutes = String(now.getMinutes()).padStart(2, '0');
+  this.booking.EntryTime = `${hours}:${minutes}`;
+}
 
   searchVendors(event: any) {
     const query = event.query.toLowerCase();
@@ -450,5 +463,9 @@ export class BookingEntryComponent implements OnInit {
 
   getAllPraty() {
     this.partyMasterService.GatAllParty({});
+  }
+
+  getAllPartyRate(){
+    this.partyRateMasterService.GatAllPartyRate({});
   }
 }
