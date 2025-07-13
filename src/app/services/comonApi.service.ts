@@ -25,6 +25,9 @@ export class comonApiService extends BaseService {
     this.post('/comonapi/gatAllDriverDropDown', payload);
   }
 
+    GatAllBranchDropDown(payload: any) {
+    this.post('/comonapi/gatAllBranchDropDown', payload);
+  }
 
   protected handleMessage(msg: any): boolean {
     return false;
