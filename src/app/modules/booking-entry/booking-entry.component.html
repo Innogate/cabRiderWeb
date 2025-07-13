@@ -1,27 +1,19 @@
 <!-- Add full booking -->
 <div *ngIf="booking.fullBooking" class="flex justify-center">
-  <div
-    class="p-6 m-6 rounded-2xl shadow-xl border border-blue-300 bg-gradient-to-r from-white to-blue-50"
-  >
+  <div class="p-6 m-6 rounded-2xl shadow-xl border border-blue-300 bg-gradient-to-r from-white to-blue-50">
     <div class="flex items-center justify-between mb-6">
-  <!-- Heading -->
-  <h2 class="text-4xl font-extrabold text-blue-600 flex items-center gap-3 m-0">
-    <i class="pi pi-calendar-plus text-blue-700 text-3xl"></i>
-    Add Full Booking Information
-  </h2>
+      <!-- Heading -->
+      <h2 class="text-4xl font-extrabold text-blue-600 flex items-center gap-3 m-0">
+        <i class="pi pi-calendar-plus text-blue-700 text-3xl"></i>
+        Add Full Booking Information
+      </h2>
 
-  <!-- Toggle Button -->
-  <div class="flex items-center gap-3">
-    <p-toggleButton
-      [(ngModel)]="booking.fullBooking"
-      onLabel="fullBooking"
-      offLabel="Booking"
-      onIcon="pi-check-square"
-      offIcon="pi pi-box"
-      styleClass="w-48 h-10"
-    ></p-toggleButton>
-  </div>
-</div>
+      <!-- Toggle Button -->
+      <div class="flex items-center gap-3">
+        <p-toggleButton [(ngModel)]="booking.fullBooking" onLabel="fullBooking" offLabel="Booking"
+          onIcon="pi-check-square" offIcon="pi pi-box" styleClass="w-48 h-10"></p-toggleButton>
+      </div>
+    </div>
 
     <div class="grid grid-cols-3 gap-6 mb-8 bg-white p-6 rounded-xl shadow-md">
       <!-- Branch -->
@@ -29,14 +21,8 @@
         <label class="font-medium text-gray-700 flex items-center gap-2">
           <i class="pi pi-building text-xl text-blue-700"></i> Branch
         </label>
-        <p-dropdown
-          [(ngModel)]="booking.branch"
-          name="branch"
-          [options]="branches"
-          optionLabel="name"
-          placeholder="Select Branch *"
-          class="w-full"
-        ></p-dropdown>
+        <p-dropdown [(ngModel)]="booking.branch" name="branch" [options]="branches" optionLabel="name"
+          placeholder="Select Branch *" class="w-full"></p-dropdown>
       </div>
 
       <!-- Slip No -->
@@ -44,14 +30,8 @@
         <label class="font-medium flex text-gray-700 items-center gap-2">
           <i class="pi pi-file text-xl text-green-700"></i> Slip No
         </label>
-        <input
-          type="text"
-          pInputText
-          [(ngModel)]="booking.slipNo"
-          name="slipNo"
-          placeholder="Slip No *"
-          class="w-full"
-        />
+        <input type="text" pInputText [(ngModel)]="booking.slipNo" name="slipNo" placeholder="Slip No *"
+          class="w-full" />
       </div>
 
       <!-- Rental Date -->
@@ -59,12 +39,7 @@
         <label class="font-medium text-gray-700 flex items-center gap-2">
           <i class="pi pi-calendar text-xl text-purple-700"></i> Rental Date
         </label>
-        <input
-          type="date"
-          [(ngModel)]="booking.RentalDate"
-          name="RentalDate"
-          class="w-full border rounded-lg p-2"
-        />
+        <input type="date" [(ngModel)]="booking.RentalDate" name="RentalDate" class="w-full border rounded-lg p-2" />
       </div>
 
       <!-- Reporting Time -->
@@ -72,30 +47,19 @@
         <label class="font-medium text-gray-700 flex items-center gap-2">
           <i class="pi pi-clock text-xl text-pink-700"></i> Reporting Time
         </label>
-        <input
-          type="text"
-          pInputText
-          [(ngModel)]="booking.ReportingDatetime"
-          name="reportingTime"
-          placeholder="Reporting Time *"
-          class="w-full"
-        />
+        <input type="text" pInputText [(ngModel)]="booking.ReportingDatetime" name="reportingTime"
+          placeholder="Reporting Time *" class="w-full" />
       </div>
 
       <!-- Car Type Request -->
       <div class="flex flex-col gap-2">
-        <label class="font-medium text-gray-700 flex items-center gap-2">
-          <i class="pi pi-car text-xl text-orange-700"></i> Car Type Request
+        <label class="font-semibold text-gray-800 flex items-center gap-2">
+          <i class="pi pi-car text-xl text-orange-600"></i> Car Type Request
         </label>
-        <p-dropdown
-          [(ngModel)]="booking.carTypeRequest"
-          name="carTypeRequest"
-          [options]="carTypes"
-          optionLabel="car_type"
-          optionValue="id"
-          placeholder="Car Type Request *"
-          class="w-full"
-        ></p-dropdown>
+        <p-autoComplete [(ngModel)]="booking.carTypeRequest" name="carTypeRequest" [suggestions]="filteredCarTypes"
+          (completeMethod)="filterCarTypes($event)" field="car_type" [dropdown]="true" [forceSelection]="true"
+          placeholder="Car Type Request *" class="w-full" inputStyleClass="w-full"
+          panelStyleClass="w-full"></p-autoComplete>
       </div>
 
       <!-- Car Type Send -->
@@ -103,30 +67,19 @@
         <label class="font-medium text-gray-700 flex items-center gap-2">
           <i class="pi pi-car text-xl text-cyan-700"></i> Car Type Send
         </label>
-        <p-dropdown
-          [(ngModel)]="booking.carTypeSend"
-          name="carTypeSend"
-          [options]="carTypes"
-          optionLabel="car_type"
-          optionValue="id"
-          placeholder="Car Type Send *"
-          class="w-full"
-        ></p-dropdown>
+        <p-autoComplete [(ngModel)]="booking.carTypeSend" name="carTypeSend" [suggestions]="filteredCarTypeSend"
+          (completeMethod)="filterCarTypeSend($event)" field="car_type" [dropdown]="true" [forceSelection]="true"
+          placeholder="Car Type Send *" class="w-full" inputStyleClass="w-full"
+          panelStyleClass="w-full"></p-autoComplete>
       </div>
+
 
       <!-- Car No -->
       <div class="flex flex-col gap-2">
         <label class="font-medium text-gray-700 flex items-center gap-2">
           <i class="pi pi-car text-xl text-yellow-700"></i> Car No
         </label>
-        <input
-          type="text"
-          pInputText
-          [(ngModel)]="booking.carNo"
-          name="carNo"
-          placeholder="Car No *"
-          class="w-full"
-        />
+        <input type="text" pInputText [(ngModel)]="booking.carNo" name="carNo" placeholder="Car No *" class="w-full" />
       </div>
 
       <!-- Driver -->
@@ -134,46 +87,27 @@
         <label class="font-medium text-gray-700 flex items-center gap-2">
           <i class="pi pi-user text-xl text-blue-500"></i> Driver
         </label>
-        <input
-          type="text"
-          pInputText
-          [(ngModel)]="booking.driver"
-          name="driver"
-          placeholder="Driver"
-          class="w-full"
-        />
+        <input type="text" pInputText [(ngModel)]="booking.driver" name="driver" placeholder="Driver" class="w-full" />
       </div>
 
       <!-- From City -->
       <div class="flex flex-col gap-2">
-        <label class="font-medium text-gray-700 flex items-center gap-2">
-          <i class="pi pi-map-marker text-xl text-purple-500"></i> From City
+        <label class="font-semibold text-gray-800 flex items-center gap-2">
+          <i class="pi pi-map-marker text-xl text-purple-600"></i> From City
         </label>
-        <p-dropdown
-          [(ngModel)]="booking.fromCity"
-          name="fromCity"
-          [options]="cities"
-          optionLabel="CityName"
-          optionValue="Id"
-          placeholder="From City"
-          class="w-full"
-        ></p-dropdown>
+        <p-autoComplete [(ngModel)]="booking.fromCity" name="fromCity" [suggestions]="filteredCities"
+          (completeMethod)="filterCities($event)" field="CityName" [dropdown]="true" [forceSelection]="true"
+          placeholder="From City" class="w-full" inputStyleClass="w-full" panelStyleClass="w-full"></p-autoComplete>
       </div>
 
       <!-- To City -->
       <div class="flex flex-col gap-2">
-        <label class="font-medium text-gray-700 flex items-center gap-2">
-          <i class="pi pi-map-marker text-xl text-green-500"></i> To City
+        <label class="font-semibold text-gray-800 flex items-center gap-2">
+          <i class="pi pi-map text-xl text-green-600"></i> To City
         </label>
-        <p-dropdown
-          [(ngModel)]="booking.toCity"
-          name="toCity"
-          [options]="cities"
-          optionLabel="CityName"
-          optionValue="Id"
-          placeholder="To City *"
-          class="w-full"
-        ></p-dropdown>
+        <p-autoComplete [(ngModel)]="booking.toCity" name="toCity" [suggestions]="filteredToCities"
+          (completeMethod)="filterToCities($event)" field="CityName" [dropdown]="true" [forceSelection]="true"
+          placeholder="To City *" class="w-full" inputStyleClass="w-full" panelStyleClass="w-full"></p-autoComplete>
       </div>
 
       <!-- Party -->
@@ -181,15 +115,8 @@
         <label class="font-medium text-gray-700 flex items-center gap-2">
           <i class="pi pi-users text-xl text-pink-500"></i> Party
         </label>
-        <p-autoComplete
-          [(ngModel)]="booking.Party"
-          name="Party"
-          [suggestions]="filteredParties"
-          (completeMethod)="searchParties($event)"
-          field="name"
-          placeholder="Party *"
-          class="w-full"
-        ></p-autoComplete>
+        <p-autoComplete [(ngModel)]="booking.Party" name="Party" [suggestions]="filteredParties"
+          (completeMethod)="searchParties($event)" field="name" placeholder="Party *" class="w-full"></p-autoComplete>
       </div>
 
       <!-- Project -->
@@ -197,14 +124,8 @@
         <label class="font-medium text-gray-700 flex items-center gap-2">
           <i class="pi pi-briefcase text-xl text-cyan-500"></i> Project
         </label>
-        <input
-          type="text"
-          pInputText
-          [(ngModel)]="booking.Project"
-          name="Project"
-          placeholder="Project"
-          class="w-full"
-        />
+        <input type="text" pInputText [(ngModel)]="booking.Project" name="Project" placeholder="Project"
+          class="w-full" />
       </div>
 
       <!-- Booked By -->
@@ -212,14 +133,8 @@
         <label class="font-medium text-gray-700 flex items-center gap-2">
           <i class="pi pi-user-plus text-xl text-yellow-500"></i> Booked By
         </label>
-        <input
-          type="text"
-          pInputText
-          [(ngModel)]="booking.BookedBy"
-          name="BookedBy"
-          placeholder="Booked By"
-          class="w-full"
-        />
+        <input type="text" pInputText [(ngModel)]="booking.BookedBy" name="BookedBy" placeholder="Booked By"
+          class="w-full" />
       </div>
 
       <!-- Vendor -->
@@ -227,15 +142,8 @@
         <label class="font-medium text-gray-700 flex items-center gap-2">
           <i class="pi pi-briefcase text-xl text-purple-500"></i> Vendor
         </label>
-        <p-autoComplete
-          [(ngModel)]="booking.vendor"
-          name="vendor"
-          [suggestions]="filteredVendors"
-          (completeMethod)="searchVendors($event)"
-          field="name"
-          placeholder="Vendor *"
-          class="w-full"
-        ></p-autoComplete>
+        <p-autoComplete [(ngModel)]="booking.vendor" name="vendor" [suggestions]="filteredVendors"
+          (completeMethod)="searchVendors($event)" field="name" placeholder="Vendor *" class="w-full"></p-autoComplete>
       </div>
 
       <!-- Duty Type -->
@@ -243,14 +151,8 @@
         <label class="font-medium text-gray-700 flex items-center gap-2">
           <i class="pi pi-check-circle text-xl text-green-700"></i> Duty Type
         </label>
-        <p-dropdown
-          [(ngModel)]="booking.DutyType"
-          name="dutyType"
-          [options]="dutyTypes"
-          optionLabel="name"
-          placeholder="Duty Type *"
-          class="w-full"
-        ></p-dropdown>
+        <p-dropdown [(ngModel)]="booking.DutyType" name="dutyType" [options]="dutyTypes" optionLabel="name"
+          placeholder="Duty Type *" class="w-full"></p-dropdown>
       </div>
 
       <!-- Contact No -->
@@ -258,14 +160,8 @@
         <label class="font-medium text-gray-700 flex items-center gap-2">
           <i class="pi pi-phone text-xl text-blue-600"></i> Contact No
         </label>
-        <input
-          type="text"
-          pInputText
-          [(ngModel)]="booking.ContactNo"
-          name="ContactNo"
-          placeholder="Contact No"
-          class="w-full"
-        />
+        <input type="text" pInputText [(ngModel)]="booking.ContactNo" name="ContactNo" placeholder="Contact No"
+          class="w-full" />
       </div>
     </div>
 
@@ -278,30 +174,13 @@
 
         <!-- Party Rate Type and Select Rate -->
         <div class="grid grid-cols-3 gap-4 mb-6">
-          <p-dropdown
-            [(ngModel)]="booking.PartyRateType"
-            name="partyRateType"
-            [options]="partyRateTypes"
-            optionLabel="name"
-            placeholder="Party Rate Type *"
-            class="w-full"
-          ></p-dropdown>
+          <p-dropdown [(ngModel)]="booking.PartyRateType" name="partyRateType" [options]="partyRateTypes"
+            optionLabel="name" placeholder="Party Rate Type *" class="w-full"></p-dropdown>
 
-          <p-dropdown
-            [(ngModel)]="booking.selectRate"
-            name="selectRate"
-            [options]="selectRates"
-            optionLabel="name"
-            placeholder="Select Rate *"
-            class="w-full"
-          ></p-dropdown>
+          <p-dropdown [(ngModel)]="booking.selectRate" name="selectRate" [options]="selectRates" optionLabel="name"
+            placeholder="Select Rate *" class="w-full"></p-dropdown>
 
-          <button
-            pButton
-            type="button"
-            label="Get Price"
-            class="p-button-success w-full"
-          ></button>
+          <button pButton type="button" label="Get Price" class="p-button-success w-full"></button>
         </div>
 
         <!-- Main Section: Date/Time & Cash Side by Side -->
@@ -311,25 +190,14 @@
             <ng-container *ngFor="let field of dateFields">
               <div>
                 <label class="font-medium">{{ field.label }}</label>
-                <input
-                  type="datetime-local"
-                  [(ngModel)]="booking[field.dateModel]"
-                  name="{{ field.dateModel }}"
-                  class="w-full border border-gray-300 p-2 rounded"
-                  (change)="calculateTotals()"
-                />
+                <input type="datetime-local" [(ngModel)]="booking[field.dateModel]" name="{{ field.dateModel }}"
+                  class="w-full border border-gray-300 p-2 rounded" (change)="calculateTotals()" />
               </div>
 
               <div>
                 <label class="font-medium">{{ field.kmLabel }}</label>
-                <input
-                  type="number"
-                  pInputText
-                  [(ngModel)]="booking[field.kmModel]"
-                  name="{{ field.kmModel }}"
-                  class="w-full border border-gray-300 p-2 rounded"
-                  (input)="calculateTotals()"
-                />
+                <input type="number" pInputText [(ngModel)]="booking[field.kmModel]" name="{{ field.kmModel }}"
+                  class="w-full border border-gray-300 p-2 rounded" (input)="calculateTotals()" />
               </div>
             </ng-container>
           </div>
@@ -341,67 +209,39 @@
                 <tr class="border-b border-gray-300">
                   <td class="p-2 font-medium">Cash</td>
                   <td class="p-2">
-                    <p-checkbox
-                      [(ngModel)]="booking.cash"
-                      binary="true"
-                      name="cash"
-                    ></p-checkbox>
+                    <p-checkbox [(ngModel)]="booking.cash" binary="true" name="cash"></p-checkbox>
                   </td>
                 </tr>
 
                 <tr class="border-b border-gray-300 bg-gray-200">
                   <td class="font-medium">KM Rate</td>
                   <td class="">
-                    <input
-                      type="number"
-                      pInputText
-                      [(ngModel)]="booking.KMRate"
-                      name="KMRate"
-                      class="w-full"
-                      (input)="calculateTotals()"
-                    />
+                    <input type="number" pInputText [(ngModel)]="booking.KMRate" name="KMRate" class="w-full"
+                      (input)="calculateTotals()" />
                   </td>
                 </tr>
 
                 <tr class="border-b border-gray-300">
                   <td class="font-medium">Hour Rate</td>
                   <td class="">
-                    <input
-                      type="number"
-                      pInputText
-                      [(ngModel)]="booking.HourRate"
-                      name="HourRate"
-                      class="w-full"
-                      (input)="calculateTotals()"
-                    />
+                    <input type="number" pInputText [(ngModel)]="booking.HourRate" name="HourRate" class="w-full"
+                      (input)="calculateTotals()" />
                   </td>
                 </tr>
 
                 <tr class="border-b border-gray-300">
                   <td class="font-medium">Price</td>
                   <td class="">
-                    <input
-                      type="number"
-                      pInputText
-                      [(ngModel)]="booking.Price"
-                      name="Price"
-                      class="w-full"
-                      (input)="calculateTotals()"
-                    />
+                    <input type="number" pInputText [(ngModel)]="booking.Price" name="Price" class="w-full"
+                      (input)="calculateTotals()" />
                   </td>
                 </tr>
 
                 <tr class="border-b border-gray-300">
                   <td class="font-medium">Advance</td>
                   <td class="">
-                    <input
-                      type="number"
-                      pInputText
-                      [(ngModel)]="booking.Advance"
-                      name="Advance"
-                      class="w-full"
-                      (input)="calculateTotals()"
-                    />
+                    <input type="number" pInputText [(ngModel)]="booking.Advance" name="Advance" class="w-full"
+                      (input)="calculateTotals()" />
                   </td>
                 </tr>
 
@@ -449,66 +289,28 @@
             <tbody>
               <tr>
                 <td class="p-2">Extra Hour
-                  <input
-                    type="number"
-                    pInputText
-                    [(ngModel)]="booking.extraHour"
-                    name="extraHour"
-                    class="w-full"
-
-                  />
+                  <input type="number" pInputText [(ngModel)]="booking.extraHour" name="extraHour" class="w-full" />
                 </td>
                 <td class="p-2">
-                  <input
-                    type="number"
-                    pInputText
-                    [(ngModel)]="booking.extraHourRate"
-                    name="extraHourRate"
-                    class="w-full"
-                    (input)="calculateTotals()"
-                  />
+                  <input type="number" pInputText [(ngModel)]="booking.extraHourRate" name="extraHourRate"
+                    class="w-full" (input)="calculateTotals()" />
                 </td>
                 <td class="p-2">
-                  <input
-                    type="number"
-                    pInputText
-                    [(ngModel)]="booking.extraHourAmount"
-                    name="extraHourAmount"
-                    class="w-full"
-                    (input)="calculateTotals()"
-                  />
+                  <input type="number" pInputText [(ngModel)]="booking.extraHourAmount" name="extraHourAmount"
+                    class="w-full" (input)="calculateTotals()" />
                 </td>
               </tr>
               <tr>
                 <td class="p-2">Extra KM
-                  <input
-                    type="number"
-                    pInputText
-                    [(ngModel)]="booking.extraKm"
-                    name="extraKm"
-                    class="w-full"
-
-                  />
+                  <input type="number" pInputText [(ngModel)]="booking.extraKm" name="extraKm" class="w-full" />
                 </td>
                 <td class="p-2">
-                  <input
-                    type="number"
-                    pInputText
-                    [(ngModel)]="booking.extraKmRate"
-                    name="extraKmRate"
-                    class="w-full"
-                    (input)="calculateTotals()"
-                  />
+                  <input type="number" pInputText [(ngModel)]="booking.extraKmRate" name="extraKmRate" class="w-full"
+                    (input)="calculateTotals()" />
                 </td>
                 <td class="p-2">
-                  <input
-                    type="number"
-                    pInputText
-                    [(ngModel)]="booking.extraKmAmount"
-                    name="extraKmAmount"
-                    class="w-full"
-                    (input)="calculateTotals()"
-                  />
+                  <input type="number" pInputText [(ngModel)]="booking.extraKmAmount" name="extraKmAmount"
+                    class="w-full" (input)="calculateTotals()" />
                 </td>
               </tr>
             </tbody>
@@ -531,46 +333,23 @@
             <tbody>
               <tr *ngFor="let charge of charges; let i = index">
                 <td class="p-2">
-                  <input
-                    type="text"
-                    pInputText
-                    [(ngModel)]="charge.name"
-                    [name]="'chargeName' + i"
-                    class="w-full"
-                  />
+                  <input type="text" pInputText [(ngModel)]="charge.name" [name]="'chargeName' + i" class="w-full" />
                 </td>
                 <td class="p-2">
-                  <input
-                    type="number"
-                    pInputText
-                    [(ngModel)]="charge.amount"
-                    [name]="'chargeAmount' + i"
-                    class="w-full"
-                    (input)="calculateTotals()"
-                  />
+                  <input type="number" pInputText [(ngModel)]="charge.amount" [name]="'chargeAmount' + i" class="w-full"
+                    (input)="calculateTotals()" />
                 </td>
                 <td class="p-2">
                   <input type="file" (change)="onFileSelected($event, i)" />
                 </td>
                 <td class="p-2">
-                  <button
-                    pButton
-                    type="button"
-                    icon="pi pi-trash"
-                    class="p-button-danger"
-                    (click)="removeCharge(i)"
-                  ></button>
+                  <button pButton type="button" icon="pi pi-trash" class="p-button-danger"
+                    (click)="removeCharge(i)"></button>
                 </td>
               </tr>
             </tbody>
           </table>
-          <button
-            pButton
-            type="button"
-            icon="pi pi-plus"
-            class="mt-4 p-button-success"
-            (click)="addCharge()"
-          ></button>
+          <button pButton type="button" icon="pi pi-plus" class="mt-4 p-button-success" (click)="addCharge()"></button>
         </div>
       </div>
 
@@ -582,30 +361,13 @@
 
         <!-- Vendor Rate Type and Select Rate -->
         <div class="grid grid-cols-3 gap-4 mb-6">
-          <p-dropdown
-            [(ngModel)]="vendorBooking.vendorRateType"
-            name="vendorRateType"
-            [options]="vendorRateTypes"
-            optionLabel="name"
-            placeholder="Vendor Rate Type *"
-            class="w-full"
-          ></p-dropdown>
+          <p-dropdown [(ngModel)]="vendorBooking.vendorRateType" name="vendorRateType" [options]="vendorRateTypes"
+            optionLabel="name" placeholder="Vendor Rate Type *" class="w-full"></p-dropdown>
 
-          <p-dropdown
-            [(ngModel)]="vendorBooking.selectedRate"
-            name="selectRate"
-            [options]="selectRates"
-            optionLabel="name"
-            placeholder="Select Rate *"
-            class="w-full"
-          ></p-dropdown>
+          <p-dropdown [(ngModel)]="vendorBooking.selectedRate" name="selectRate" [options]="selectRates"
+            optionLabel="name" placeholder="Select Rate *" class="w-full"></p-dropdown>
 
-          <button
-            pButton
-            type="button"
-            label="Get Price"
-            class="p-button-success w-full"
-          ></button>
+          <button pButton type="button" label="Get Price" class="p-button-success w-full"></button>
         </div>
 
         <!-- Main Section: Date/Time & Cash Side by Side -->
@@ -615,25 +377,14 @@
             <ng-container *ngFor="let field of vendorDateFields">
               <div>
                 <label class="font-medium">{{ field.label }}</label>
-                <input
-                  type="datetime-local"
-                  [(ngModel)]="booking[field.dateModel]"
-                  name="{{ field.dateModel }}"
-                  class="w-full border border-gray-300 p-2 rounded"
-                  (change)="calculateVendorTotals()"
-                />
+                <input type="datetime-local" [(ngModel)]="booking[field.dateModel]" name="{{ field.dateModel }}"
+                  class="w-full border border-gray-300 p-2 rounded" (change)="calculateVendorTotals()" />
               </div>
 
               <div>
                 <label class="font-medium">{{ field.kmLabel }}</label>
-                <input
-                  type="number"
-                  pInputText
-                  [(ngModel)]="booking[field.kmModel]"
-                  name="{{ field.kmModel }}"
-                  class="w-full border border-gray-300 p-2 rounded"
-                  (input)="calculateVendorTotals()"
-                />
+                <input type="number" pInputText [(ngModel)]="booking[field.kmModel]" name="{{ field.kmModel }}"
+                  class="w-full border border-gray-300 p-2 rounded" (input)="calculateVendorTotals()" />
               </div>
             </ng-container>
           </div>
@@ -645,67 +396,39 @@
                 <tr class="border-b border-gray-300">
                   <td class="p-2 font-medium">Cash</td>
                   <td class="p-2">
-                    <p-checkbox
-                      [(ngModel)]="vendorBooking.cash"
-                      binary="true"
-                      name="cash"
-                    ></p-checkbox>
+                    <p-checkbox [(ngModel)]="vendorBooking.cash" binary="true" name="cash"></p-checkbox>
                   </td>
                 </tr>
 
                 <tr class="border-b border-gray-300 bg-gray-200">
                   <td class="font-medium">KM Rate</td>
                   <td class="">
-                    <input
-                      type="number"
-                      pInputText
-                      [(ngModel)]="vendorBooking.kmRate"
-                      name="kmRate"
-                      class="w-full"
-                      (input)="calculateVendorTotals()"
-                    />
+                    <input type="number" pInputText [(ngModel)]="vendorBooking.kmRate" name="kmRate" class="w-full"
+                      (input)="calculateVendorTotals()" />
                   </td>
                 </tr>
 
                 <tr class="border-b border-gray-300">
                   <td class="font-medium">Hour Rate</td>
                   <td class="">
-                    <input
-                      type="number"
-                      pInputText
-                      [(ngModel)]="vendorBooking.hourRate"
-                      name="hourRate"
-                      class="w-full"
-                      (input)="calculateVendorTotals()"
-                    />
+                    <input type="number" pInputText [(ngModel)]="vendorBooking.hourRate" name="hourRate" class="w-full"
+                      (input)="calculateVendorTotals()" />
                   </td>
                 </tr>
 
                 <tr class="border-b border-gray-300">
                   <td class="font-medium">Price</td>
                   <td class="">
-                    <input
-                      type="number"
-                      pInputText
-                      [(ngModel)]="vendorBooking.price"
-                      name="price"
-                      class="w-full"
-                      (input)="calculateVendorTotals()"
-                    />
+                    <input type="number" pInputText [(ngModel)]="vendorBooking.price" name="price" class="w-full"
+                      (input)="calculateVendorTotals()" />
                   </td>
                 </tr>
 
                 <tr class="border-b border-gray-300">
                   <td class="font-medium">Advance</td>
                   <td class="">
-                    <input
-                      type="number"
-                      pInputText
-                      [(ngModel)]="vendorBooking.advance"
-                      name="advance"
-                      class="w-full"
-                      (input)="calculateVendorTotals()"
-                    />
+                    <input type="number" pInputText [(ngModel)]="vendorBooking.advance" name="advance" class="w-full"
+                      (input)="calculateVendorTotals()" />
                   </td>
                 </tr>
 
@@ -756,67 +479,29 @@
             </thead>
             <tbody>
               <tr>
-               <td class="p-2">Extra Hour
-                  <input
-                    type="number"
-                    pInputText
-                    [(ngModel)]="booking.extraHour"
-                    name="extraKm"
-                    class="w-full"
-
-                  />
+                <td class="p-2">Extra Hour
+                  <input type="number" pInputText [(ngModel)]="booking.extraHour" name="extraKm" class="w-full" />
                 </td>
                 <td class="p-2">
-                  <input
-                    type="number"
-                    pInputText
-                    [(ngModel)]="vendorBooking.extraHourRate"
-                    name="extraHourRate"
-                    class="w-full"
-                    (input)="calculateVendorTotals()"
-                  />
+                  <input type="number" pInputText [(ngModel)]="vendorBooking.extraHourRate" name="extraHourRate"
+                    class="w-full" (input)="calculateVendorTotals()" />
                 </td>
                 <td class="p-2">
-                  <input
-                    type="number"
-                    pInputText
-                    [(ngModel)]="vendorBooking.extraHourAmount"
-                    name="extraHourAmount"
-                    class="w-full"
-                    (input)="calculateVendorTotals()"
-                  />
+                  <input type="number" pInputText [(ngModel)]="vendorBooking.extraHourAmount" name="extraHourAmount"
+                    class="w-full" (input)="calculateVendorTotals()" />
                 </td>
               </tr>
               <tr>
                 <td class="p-2">Extra KM
-                  <input
-                    type="number"
-                    pInputText
-                    [(ngModel)]="booking.extraKm"
-                    name="extraKm"
-                    class="w-full"
-
-                  />
+                  <input type="number" pInputText [(ngModel)]="booking.extraKm" name="extraKm" class="w-full" />
                 </td>
                 <td class="p-2">
-                  <input
-                    type="number"
-                    pInputText
-                    [(ngModel)]="vendorBooking.extraKmRate"
-                    name="extraKmRate"
-                    class="w-full"
-                    (input)="calculateVendorTotals()"
-                  />
+                  <input type="number" pInputText [(ngModel)]="vendorBooking.extraKmRate" name="extraKmRate"
+                    class="w-full" (input)="calculateVendorTotals()" />
                 </td>
                 <td class="p-2">
-                  <input
-                    type="number"
-                    pInputText
-                    [(ngModel)]="vendorBooking.extraKmAmount"
-                    name="extraKmAmount"
-                    class="w-full"
-                    (input)="calculateVendorTotals()"
-                  />
+                  <input type="number" pInputText [(ngModel)]="vendorBooking.extraKmAmount" name="extraKmAmount"
+                    class="w-full" (input)="calculateVendorTotals()" />
                 </td>
               </tr>
             </tbody>
@@ -839,49 +524,24 @@
             <tbody>
               <tr *ngFor="let charge of vendorCharges; let i = index">
                 <td class="p-2">
-                  <input
-                    type="text"
-                    pInputText
-                    [(ngModel)]="charge.name"
-                    [name]="'chargeName' + i"
-                    class="w-full"
-                  />
+                  <input type="text" pInputText [(ngModel)]="charge.name" [name]="'chargeName' + i" class="w-full" />
                 </td>
                 <td class="p-2">
-                  <input
-                    type="number"
-                    pInputText
-                    [(ngModel)]="charge.amount"
-                    [name]="'chargeAmount' + i"
-                    class="w-full"
-                    (input)="calculateVendorTotals()"
-                  />
+                  <input type="number" pInputText [(ngModel)]="charge.amount" [name]="'chargeAmount' + i" class="w-full"
+                    (input)="calculateVendorTotals()" />
                 </td>
                 <td class="p-2">
-                  <input
-                    type="file"
-                    (change)="onVendorFileSelected($event, i)"
-                  />
+                  <input type="file" (change)="onVendorFileSelected($event, i)" />
                 </td>
                 <td class="p-2">
-                  <button
-                    pButton
-                    type="button"
-                    icon="pi pi-trash"
-                    class="p-button-danger"
-                    (click)="removeVendorCharge(i)"
-                  ></button>
+                  <button pButton type="button" icon="pi pi-trash" class="p-button-danger"
+                    (click)="removeVendorCharge(i)"></button>
                 </td>
               </tr>
             </tbody>
           </table>
-          <button
-            pButton
-            type="button"
-            icon="pi pi-plus"
-            class="mt-4 p-button-success"
-            (click)="addVendorCharge()"
-          ></button>
+          <button pButton type="button" icon="pi pi-plus" class="mt-4 p-button-success"
+            (click)="addVendorCharge()"></button>
         </div>
       </div>
     </div>
@@ -909,201 +569,99 @@
             <ng-template pTemplate="body" let-guest let-i="rowIndex">
               <tr>
                 <td>
-                  <input
-                    type="text"
-                    pInputText
-                    [(ngModel)]="guest.name"
-                    name="guestName{{ i }}"
-                    class="w-full"
-                    placeholder="Guest Name"
-                  />
+                  <input type="text" pInputText [(ngModel)]="guest.name" name="guestName{{ i }}" class="w-full"
+                    placeholder="Guest Name" />
                 </td>
                 <td>
-                  <input
-                    type="text"
-                    pInputText
-                    [(ngModel)]="guest.contactNo"
-                    name="contactNo{{ i }}"
-                    class="w-full"
-                    placeholder="Contact No"
-                  />
+                  <input type="text" pInputText [(ngModel)]="guest.contactNo" name="contactNo{{ i }}" class="w-full"
+                    placeholder="Contact No" />
                 </td>
                 <td>
-                  <input
-                    type="text"
-                    pInputText
-                    [(ngModel)]="guest.additionalContactNo"
-                    name="additionalContactNo{{ i }}"
-                    class="w-full"
-                    placeholder="Additional Contact No"
-                  />
+                  <input type="text" pInputText [(ngModel)]="guest.additionalContactNo"
+                    name="additionalContactNo{{ i }}" class="w-full" placeholder="Additional Contact No" />
                 </td>
                 <td>
-                  <textarea
-                    pInputTextarea
-                    [(ngModel)]="guest.pickupAddress"
-                    name="pickupAddress{{ i }}"
-                    class="w-full p-inputtext"
-                    placeholder="Pickup Address"
-                  ></textarea>
+                  <textarea pInputTextarea [(ngModel)]="guest.pickupAddress" name="pickupAddress{{ i }}"
+                    class="w-full p-inputtext" placeholder="Pickup Address"></textarea>
                 </td>
                 <td>
-                  <textarea
-                    pInputTextarea
-                    [(ngModel)]="guest.dropAddress"
-                    name="dropAddress{{ i }}"
-                    class="w-full p-inputtext"
-                    placeholder="Drop Address"
-                  ></textarea>
+                  <textarea pInputTextarea [(ngModel)]="guest.dropAddress" name="dropAddress{{ i }}"
+                    class="w-full p-inputtext" placeholder="Drop Address"></textarea>
                 </td>
                 <td>
-                  <textarea
-                    pInputTextarea
-                    [(ngModel)]="guest.remarks"
-                    name="remarks{{ i }}"
-                    class="w-full p-inputtext"
-                    placeholder="Remarks"
-                  ></textarea>
+                  <textarea pInputTextarea [(ngModel)]="guest.remarks" name="remarks{{ i }}" class="w-full p-inputtext"
+                    placeholder="Remarks"></textarea>
                 </td>
                 <td class="text-center">
-                  <button
-                    pButton
-                    icon="pi pi-trash"
-                    class="p-button-danger"
-                    (click)="removeGuest(i)"
-                  ></button>
+                  <button pButton icon="pi pi-trash" class="p-button-danger" (click)="removeGuest(i)"></button>
                 </td>
               </tr>
             </ng-template>
           </p-table>
-          <button
-            pButton
-            type="button"
-            label="Add Guest"
-            icon="pi pi-plus"
-            class="mt-4 p-button-success"
-            (click)="addGuest()"
-          ></button>
+          <button pButton type="button" label="Add Guest" icon="pi pi-plus" class="mt-4 p-button-success"
+            (click)="addGuest()"></button>
         </div>
       </p-tabPanel>
 
       <!-- Others Tab -->
       <p-tabPanel header="Others">
-        <div
-          class="mt-4 bg-white p-4 rounded-xl shadow-md grid grid-cols-3 gap-4"
-        >
+        <div class="mt-4 bg-white p-4 rounded-xl shadow-md grid grid-cols-3 gap-4">
           <div>
             <label class="font-medium">Report At</label>
-            <p-dropdown
-              [options]="reportOptions"
-              [(ngModel)]="others.reportAt"
-              name="reportAt"
-              placeholder="Select option"
-              class="w-full"
-            ></p-dropdown>
+            <p-dropdown [options]="reportOptions" [(ngModel)]="others.reportAt" name="reportAt"
+              placeholder="Select option" class="w-full"></p-dropdown>
           </div>
 
           <div>
             <label class="font-medium">Booking Mode</label>
-            <p-dropdown
-              [options]="bookingModes"
-              [(ngModel)]="others.bookingMode"
-              name="bookingMode"
-              placeholder="Select option"
-              class="w-full"
-            ></p-dropdown>
+            <p-dropdown [options]="bookingModes" [(ngModel)]="others.bookingMode" name="bookingMode"
+              placeholder="Select option" class="w-full"></p-dropdown>
           </div>
 
           <div>
             <label class="font-medium">Bill To</label>
-            <p-dropdown
-              [options]="billToOptions"
-              [(ngModel)]="others.billTo"
-              name="billTo"
-              placeholder="Bill To"
-              class="w-full"
-            ></p-dropdown>
+            <p-dropdown [options]="billToOptions" [(ngModel)]="others.billTo" name="billTo" placeholder="Bill To"
+              class="w-full"></p-dropdown>
           </div>
 
           <div>
             <label class="font-medium">Email</label>
-            <input
-              type="email"
-              pInputText
-              [(ngModel)]="others.email"
-              name="email"
-              class="w-full"
-              placeholder="Email"
-            />
+            <input type="email" pInputText [(ngModel)]="others.email" name="email" class="w-full" placeholder="Email" />
           </div>
 
           <div>
             <label class="font-medium">Booked By Email</label>
-            <input
-              type="email"
-              pInputText
-              [(ngModel)]="others.bookedByEmail"
-              name="bookedByEmail"
-              class="w-full"
-              placeholder="Booked By Email"
-            />
+            <input type="email" pInputText [(ngModel)]="others.bookedByEmail" name="bookedByEmail" class="w-full"
+              placeholder="Booked By Email" />
           </div>
 
           <div>
             <label class="font-medium">Flight / Train No</label>
-            <input
-              type="text"
-              pInputText
-              [(ngModel)]="others.flightTrainNo"
-              name="flightTrainNo"
-              class="w-full"
-              placeholder="Flight / Train No"
-            />
+            <input type="text" pInputText [(ngModel)]="others.flightTrainNo" name="flightTrainNo" class="w-full"
+              placeholder="Flight / Train No" />
           </div>
 
           <div>
             <label class="font-medium">Drop At</label>
-            <input
-              type="text"
-              pInputText
-              [(ngModel)]="others.dropAt"
-              name="dropAt"
-              class="w-full"
-              placeholder="Drop At"
-            />
+            <input type="text" pInputText [(ngModel)]="others.dropAt" name="dropAt" class="w-full"
+              placeholder="Drop At" />
           </div>
 
           <div>
             <label class="font-medium">Report At</label>
-            <input
-              type="text"
-              pInputText
-              [(ngModel)]="others.otherReportAt"
-              name="otherReportAt"
-              class="w-full"
-              placeholder="Report At"
-            />
+            <input type="text" pInputText [(ngModel)]="others.otherReportAt" name="otherReportAt" class="w-full"
+              placeholder="Report At" />
           </div>
 
           <div>
             <label class="font-medium">Release At</label>
-            <input
-              type="text"
-              pInputText
-              [(ngModel)]="others.releaseAt"
-              name="releaseAt"
-              class="w-full"
-              placeholder="Release At"
-            />
+            <input type="text" pInputText [(ngModel)]="others.releaseAt" name="releaseAt" class="w-full"
+              placeholder="Release At" />
           </div>
 
           <div>
             <label class="font-medium">Attach Duty Slip</label>
-            <input
-              type="file"
-              (change)="onFileSelectedGuest($event)"
-              class="w-full"
-            />
+            <input type="file" (change)="onFileSelectedGuest($event)" class="w-full" />
           </div>
         </div>
       </p-tabPanel>
@@ -1111,19 +669,8 @@
 
     <!-- Action Buttons -->
     <div class="flex justify-end mt-6 gap-4">
-      <button
-        pButton
-        type="button"
-        label="Close"
-        class="p-button-secondary"
-      ></button>
-      <button
-        pButton
-        type="button"
-        label="Save"
-        class="p-button-success"
-        (click)="saveBooking()"
-      ></button>
+      <button pButton type="button" label="Close" class="p-button-secondary"></button>
+      <button pButton type="button" label="Save" class="p-button-success" (click)="saveBooking()"></button>
     </div>
   </div>
 </div>
@@ -1134,27 +681,20 @@
 
 <!-- Add Booking-->
 <div *ngIf="!booking.fullBooking"
-  class="p-6 m-6 rounded-2xl shadow-xl border border-blue-300 bg-gradient-to-r from-white to-blue-50"
->
+  class="p-6 m-6 rounded-2xl shadow-xl border border-blue-300 bg-gradient-to-r from-white to-blue-50">
   <div class="flex items-center justify-between mb-6">
-  <!-- Heading -->
-  <h2 class="text-4xl font-extrabold text-blue-600 flex items-center gap-3 m-0">
-    <i class="pi pi-calendar-plus text-blue-700 text-3xl"></i>
-    Add Booking Information
-  </h2>
+    <!-- Heading -->
+    <h2 class="text-4xl font-extrabold text-blue-600 flex items-center gap-3 m-0">
+      <i class="pi pi-calendar-plus text-blue-700 text-3xl"></i>
+      Add Booking Information
+    </h2>
 
-  <!-- Toggle Button -->
-  <div class="flex items-center gap-3">
-    <p-toggleButton
-      [(ngModel)]="booking.fullBooking"
-      onLabel="fullBooking"
-      offLabel="Booking"
-      onIcon="pi-check-square"
-      offIcon="pi pi-clone"
-      styleClass="w-48 h-10"
-    ></p-toggleButton>
+    <!-- Toggle Button -->
+    <div class="flex items-center gap-3">
+      <p-toggleButton [(ngModel)]="booking.fullBooking" onLabel="fullBooking" offLabel="Booking"
+        onIcon="pi-check-square" offIcon="pi pi-clone" styleClass="w-48 h-10"></p-toggleButton>
+    </div>
   </div>
-</div>
 
 
   <!-- Booking Section -->
@@ -1165,13 +705,8 @@
         <label class="font-semibold text-gray-800 flex items-center gap-2">
           <i class="pi pi-building text-xl text-blue-700"></i> Branch
         </label>
-        <p-dropdown
-          [(ngModel)]="booking.branch"
-          [options]="branches"
-          optionLabel="name"
-          placeholder="Select Branch *"
-          class="w-full"
-        ></p-dropdown>
+        <p-dropdown [(ngModel)]="booking.branch" [options]="branches" optionLabel="name" placeholder="Select Branch *"
+          class="w-full"></p-dropdown>
       </div>
 
       <!-- Slip No -->
@@ -1179,13 +714,7 @@
         <label class="font-semibold text-gray-800 flex items-center gap-2">
           <i class="pi pi-file-edit text-xl text-green-600"></i> Slip No
         </label>
-        <input
-          type="text"
-          pInputText
-          [(ngModel)]="booking.slipNo"
-          placeholder="Slip No *"
-          class="w-full"
-        />
+        <input type="text" pInputText [(ngModel)]="booking.slipNo" placeholder="Slip No *" class="w-full" />
       </div>
 
       <!-- Rental Date -->
@@ -1193,11 +722,7 @@
         <label class="font-semibold text-gray-800 flex items-center gap-2">
           <i class="pi pi-calendar text-xl text-purple-600"></i> Rental Date
         </label>
-        <input
-          type="date"
-          [(ngModel)]="booking.RentalDate"
-          class="w-full p-2 border rounded-lg"
-        />
+        <input type="date" [(ngModel)]="booking.RentalDate" class="w-full p-2 border rounded-lg" />
       </div>
 
       <!-- Reporting Time -->
@@ -1205,13 +730,8 @@
         <label class="font-semibold text-gray-800 flex items-center gap-2">
           <i class="pi pi-clock text-xl text-pink-600"></i> Reporting Time
         </label>
-        <input
-          type="text"
-          pInputText
-          [(ngModel)]="booking.ReportingDatetime"
-          placeholder="Reporting Time *"
-          class="w-full"
-        />
+        <input type="text" pInputText [(ngModel)]="booking.ReportingDatetime" placeholder="Reporting Time *"
+          class="w-full" />
       </div>
 
       <!-- Car Type Request -->
@@ -1219,27 +739,22 @@
         <label class="font-semibold text-gray-800 flex items-center gap-2">
           <i class="pi pi-car text-xl text-orange-600"></i> Car Type Request
         </label>
-        <p-dropdown
-          [(ngModel)]="booking.carTypeRequest"
-          [options]="carTypes"
-          optionLabel="name"
-          placeholder="Car Type Request *"
-          class="w-full"
-        ></p-dropdown>
+        <p-autoComplete [(ngModel)]="booking.carTypeRequest" name="carTypeRequest" [suggestions]="filteredCarTypes"
+          (completeMethod)="filterCarTypes($event)" field="car_type" [dropdown]="true" [forceSelection]="true"
+          placeholder="Car Type Request *" class="w-full" inputStyleClass="w-full"
+          panelStyleClass="w-full"></p-autoComplete>
       </div>
+
 
       <!-- Car Type Send -->
       <div class="flex flex-col gap-2">
-        <label class="font-semibold text-gray-800 flex items-center gap-2">
-          <i class="pi pi-send text-xl text-cyan-600"></i> Car Type Send
+        <label class="font-medium text-gray-700 flex items-center gap-2">
+          <i class="pi pi-car text-xl text-cyan-700"></i> Car Type Send
         </label>
-        <p-dropdown
-          [(ngModel)]="booking.carTypeSend"
-          [options]="carTypes"
-          optionLabel="name"
-          placeholder="Car Type Send *"
-          class="w-full"
-        ></p-dropdown>
+        <p-autoComplete [(ngModel)]="booking.carTypeSend" name="carTypeSend" [suggestions]="filteredCarTypeSend"
+          (completeMethod)="filterCarTypeSend($event)" field="car_type" [dropdown]="true" [forceSelection]="true"
+          placeholder="Car Type Send *" class="w-full" inputStyleClass="w-full"
+          panelStyleClass="w-full"></p-autoComplete>
       </div>
 
       <!-- Car No -->
@@ -1247,13 +762,7 @@
         <label class="font-semibold text-gray-800 flex items-center gap-2">
           <i class="pi pi-id-card text-xl text-yellow-600"></i> Car No
         </label>
-        <input
-          type="text"
-          pInputText
-          [(ngModel)]="booking.carNo"
-          placeholder="Car No *"
-          class="w-full"
-        />
+        <input type="text" pInputText [(ngModel)]="booking.carNo" placeholder="Car No *" class="w-full" />
       </div>
 
       <!-- Driver -->
@@ -1261,13 +770,7 @@
         <label class="font-semibold text-gray-800 flex items-center gap-2">
           <i class="pi pi-user text-xl text-blue-600"></i> Driver
         </label>
-        <input
-          type="text"
-          pInputText
-          [(ngModel)]="booking.driver"
-          placeholder="Driver"
-          class="w-full"
-        />
+        <input type="text" pInputText [(ngModel)]="booking.driver" placeholder="Driver" class="w-full" />
       </div>
 
       <!-- From City -->
@@ -1275,42 +778,31 @@
         <label class="font-semibold text-gray-800 flex items-center gap-2">
           <i class="pi pi-map-marker text-xl text-purple-600"></i> From City
         </label>
-        <p-dropdown
-          [(ngModel)]="booking.fromCity"
-          [options]="cities"
-          optionLabel="name"
-          placeholder="From City"
-          class="w-full"
-        ></p-dropdown>
+        <p-autoComplete [(ngModel)]="booking.fromCity" name="fromCity" [suggestions]="filteredCities"
+          (completeMethod)="filterCities($event)" field="CityName" [dropdown]="true" [forceSelection]="true"
+          placeholder="From City" class="w-full" inputStyleClass="w-full" panelStyleClass="w-full"></p-autoComplete>
       </div>
+
+
 
       <!-- To City -->
       <div class="flex flex-col gap-2">
         <label class="font-semibold text-gray-800 flex items-center gap-2">
           <i class="pi pi-map text-xl text-green-600"></i> To City
         </label>
-        <p-dropdown
-          [(ngModel)]="booking.toCity"
-          [options]="cities"
-          optionLabel="name"
-          placeholder="To City *"
-          class="w-full"
-        ></p-dropdown>
+        <p-autoComplete [(ngModel)]="booking.toCity" name="toCity" [suggestions]="filteredToCities"
+          (completeMethod)="filterToCities($event)" field="CityName" [dropdown]="true" [forceSelection]="true"
+          placeholder="To City *" class="w-full" inputStyleClass="w-full" panelStyleClass="w-full"></p-autoComplete>
       </div>
+
 
       <!-- Party -->
       <div class="flex flex-col gap-2">
         <label class="font-semibold text-gray-800 flex items-center gap-2">
           <i class="pi pi-users text-xl text-pink-600"></i> Party
         </label>
-        <p-autoComplete
-          [(ngModel)]="booking.Party"
-          [suggestions]="filteredParties"
-          (completeMethod)="searchParties($event)"
-          field="name"
-          placeholder="Party *"
-          class="w-full"
-        ></p-autoComplete>
+        <p-autoComplete [(ngModel)]="booking.Party" [suggestions]="filteredParties"
+          (completeMethod)="searchParties($event)" field="name" placeholder="Party *" class="w-full"></p-autoComplete>
       </div>
 
       <!-- Project -->
@@ -1318,13 +810,7 @@
         <label class="font-semibold text-gray-800 flex items-center gap-2">
           <i class="pi pi-briefcase text-xl text-cyan-600"></i> Project
         </label>
-        <input
-          type="text"
-          pInputText
-          [(ngModel)]="booking.Project"
-          placeholder="Project"
-          class="w-full"
-        />
+        <input type="text" pInputText [(ngModel)]="booking.Project" placeholder="Project" class="w-full" />
       </div>
 
       <!-- Booked By -->
@@ -1332,13 +818,7 @@
         <label class="font-semibold text-gray-800 flex items-center gap-2">
           <i class="pi pi-user-plus text-xl text-yellow-600"></i> Booked By
         </label>
-        <input
-          type="text"
-          pInputText
-          [(ngModel)]="booking.BookedBy"
-          placeholder="Booked By"
-          class="w-full"
-        />
+        <input type="text" pInputText [(ngModel)]="booking.BookedBy" placeholder="Booked By" class="w-full" />
       </div>
 
       <!-- Vendor -->
@@ -1346,14 +826,8 @@
         <label class="font-semibold text-gray-800 flex items-center gap-2">
           <i class="pi pi-building text-xl text-purple-700"></i> Vendor
         </label>
-        <p-autoComplete
-          [(ngModel)]="booking.vendor"
-          [suggestions]="filteredVendors"
-          (completeMethod)="searchVendors($event)"
-          field="name"
-          placeholder="Vendor *"
-          class="w-full"
-        ></p-autoComplete>
+        <p-autoComplete [(ngModel)]="booking.vendor" [suggestions]="filteredVendors"
+          (completeMethod)="searchVendors($event)" field="name" placeholder="Vendor *" class="w-full"></p-autoComplete>
       </div>
 
       <!-- Duty Type -->
@@ -1361,13 +835,8 @@
         <label class="font-semibold text-gray-800 flex items-center gap-2">
           <i class="pi pi-check-circle text-xl text-green-700"></i> Duty Type
         </label>
-        <p-dropdown
-          [(ngModel)]="booking.DutyType"
-          [options]="dutyTypes"
-          optionLabel="name"
-          placeholder="Duty Type *"
-          class="w-full"
-        ></p-dropdown>
+        <p-dropdown [(ngModel)]="booking.DutyType" [options]="dutyTypes" optionLabel="name" placeholder="Duty Type *"
+          class="w-full"></p-dropdown>
       </div>
 
       <!-- Contact No -->
@@ -1375,13 +844,7 @@
         <label class="font-semibold text-gray-800 flex items-center gap-2">
           <i class="pi pi-phone text-xl text-blue-600"></i> Contact No
         </label>
-        <input
-          type="text"
-          pInputText
-          [(ngModel)]="booking.ContactNo"
-          placeholder="Contact No"
-          class="w-full"
-        />
+        <input type="text" pInputText [(ngModel)]="booking.ContactNo" placeholder="Contact No" class="w-full" />
       </div>
 
       <!-- Email -->
@@ -1389,13 +852,7 @@
         <label class="font-semibold text-gray-800 flex items-center gap-2">
           <i class="pi pi-envelope text-xl text-blue-600"></i> Email
         </label>
-        <input
-          type="email"
-          pInputText
-          [(ngModel)]="booking.Email"
-          placeholder="Email"
-          class="w-full"
-        />
+        <input type="email" pInputText [(ngModel)]="booking.Email" placeholder="Email" class="w-full" />
       </div>
 
       <!-- Booked by Email -->
@@ -1403,13 +860,8 @@
         <label class="font-semibold text-gray-800 flex items-center gap-2">
           <i class="pi pi-envelope text-xl text-blue-600"></i> Booked By Email
         </label>
-        <input
-          type="email"
-          pInputText
-          [(ngModel)]="others.bookedByEmail"
-          placeholder="Booked By Email"
-          class="w-full"
-        />
+        <input type="email" pInputText [(ngModel)]="others.bookedByEmail" placeholder="Booked By Email"
+          class="w-full" />
       </div>
 
       <!-- Party Rate Type -->
@@ -1417,13 +869,8 @@
         <label class="font-semibold text-gray-800 flex items-center gap-2">
           <i class="pi pi-money-bill text-xl text-blue-600"></i> Party Rate Type
         </label>
-        <p-dropdown
-          [(ngModel)]="booking.PartyRateType"
-          [options]="partyRateTypes"
-          optionLabel="name"
-          placeholder="Party Rate Type *"
-          class="w-full"
-        ></p-dropdown>
+        <p-dropdown [(ngModel)]="booking.PartyRateType" [options]="partyRateTypes" optionLabel="name"
+          placeholder="Party Rate Type *" class="w-full"></p-dropdown>
       </div>
 
       <!-- Select Rate -->
@@ -1431,13 +878,8 @@
         <label class="font-semibold text-gray-800 flex items-center gap-2">
           <i class="pi pi-percentage text-xl text-blue-600"></i> Select Rate
         </label>
-        <p-dropdown
-          [(ngModel)]="booking.selectRate"
-          [options]="selectRates"
-          optionLabel="name"
-          placeholder="Select Rate *"
-          class="w-full"
-        ></p-dropdown>
+        <p-dropdown [(ngModel)]="booking.selectRate" [options]="selectRates" optionLabel="name"
+          placeholder="Select Rate *" class="w-full"></p-dropdown>
       </div>
 
       <!-- Drop At -->
@@ -1445,13 +887,8 @@
         <label class="font-semibold text-gray-800 flex items-center gap-2">
           <i class="pi pi-map-marker-plus text-xl text-blue-600"></i> Drop At
         </label>
-        <p-dropdown
-          [(ngModel)]="booking.dropAt"
-          [options]="dropAt"
-          optionLabel="name"
-          placeholder="Drop At"
-          class="w-full"
-        ></p-dropdown>
+        <p-dropdown [(ngModel)]="booking.dropAt" [options]="dropAt" optionLabel="name" placeholder="Drop At"
+          class="w-full"></p-dropdown>
       </div>
 
       <!-- Booking Mode -->
@@ -1459,13 +896,7 @@
         <label class="font-semibold text-gray-800 flex items-center gap-2">
           <i class="pi pi-directions text-xl text-blue-600"></i> Booking Mode
         </label>
-        <input
-          type="text"
-          pInputText
-          [(ngModel)]="booking.BookingModes"
-          placeholder="Booking Mode"
-          class="w-full"
-        />
+        <input type="text" pInputText [(ngModel)]="booking.BookingModes" placeholder="Booking Mode" class="w-full" />
       </div>
 
       <!-- Travel Mode -->
@@ -1473,13 +904,7 @@
         <label class="font-semibold text-gray-800 flex items-center gap-2">
           <i class="pi pi-send text-xl text-blue-600"></i> Flight/Train
         </label>
-        <input
-          type="text"
-          pInputText
-          [(ngModel)]="booking.Flight_train_No"
-          placeholder="Train/Flight"
-          class="w-full"
-        />
+        <input type="text" pInputText [(ngModel)]="booking.Flight_train_No" placeholder="Train/Flight" class="w-full" />
       </div>
 
       <!-- Entry Date -->
@@ -1487,13 +912,7 @@
         <label class="font-semibold text-gray-800 flex items-center gap-2">
           <i class="pi pi-calendar-times text-xl text-blue-600"></i> Entry Date
         </label>
-        <input
-          type="date"
-          pInputText
-          [(ngModel)]="booking.EntryDate"
-          placeholder="Entry Date"
-          class="w-full"
-        />
+        <input type="date" pInputText [(ngModel)]="booking.EntryDate" placeholder="Entry Date" class="w-full" />
       </div>
 
       <!-- Entry Time -->
@@ -1501,13 +920,7 @@
         <label class="font-semibold text-gray-800 flex items-center gap-2">
           <i class="pi pi-clock text-xl text-blue-600"></i> Entry Time
         </label>
-        <input
-          type="text"
-          pInputText
-          [(ngModel)]="booking.EntryTime"
-          placeholder="Entry Time"
-          class="w-full"
-        />
+        <input type="text" pInputText [(ngModel)]="booking.EntryTime" placeholder="Entry Time" class="w-full" />
       </div>
 
       <!-- Cash & Advanced -->
@@ -1516,21 +929,9 @@
           <i class="pi pi-wallet text-xl text-blue-600"></i> Payment
         </label>
         <div class="flex items-center gap-4">
-          <p-checkbox
-            [(ngModel)]="booking.cash"
-            binary="true"
-            inputId="cash"
-          ></p-checkbox>
-          <label for="cash" class="text-gray-800 text-sm font-medium"
-            >Cash</label
-          >
-          <input
-            type="text"
-            pInputText
-            [(ngModel)]="booking.Advanced"
-            placeholder="Advanced"
-            class="w-full"
-          />
+          <p-checkbox [(ngModel)]="booking.cash" binary="true" inputId="cash"></p-checkbox>
+          <label for="cash" class="text-gray-800 text-sm font-medium">Cash</label>
+          <input type="text" pInputText [(ngModel)]="booking.Advanced" placeholder="Advanced" class="w-full" />
         </div>
       </div>
 
@@ -1539,13 +940,7 @@
         <label class="font-semibold text-gray-800 flex items-center gap-2">
           <i class="pi pi-dollar text-xl text-blue-600"></i> Price
         </label>
-        <input
-          type="text"
-          pInputText
-          [(ngModel)]="booking.Price"
-          placeholder="Price"
-          class="w-full"
-        />
+        <input type="text" pInputText [(ngModel)]="booking.Price" placeholder="Price" class="w-full" />
       </div>
 
       <!-- Hour Rate -->
@@ -1553,13 +948,7 @@
         <label class="font-semibold text-gray-800 flex items-center gap-2">
           <i class="pi pi-stopwatch text-xl text-blue-600"></i> Hour Rate
         </label>
-        <input
-          type="text"
-          pInputText
-          [(ngModel)]="booking.HourRate"
-          placeholder="Hour Rate"
-          class="w-full"
-        />
+        <input type="text" pInputText [(ngModel)]="booking.HourRate" placeholder="Hour Rate" class="w-full" />
       </div>
 
       <!-- KM Rate -->
@@ -1567,20 +956,12 @@
         <label class="font-semibold text-gray-800 flex items-center gap-2">
           <i class="pi pi-compass text-xl text-blue-600"></i> KM Rate
         </label>
-        <input
-          type="text"
-          pInputText
-          [(ngModel)]="booking.KmRate"
-          placeholder="KM Rate"
-          class="w-full"
-        />
+        <input type="text" pInputText [(ngModel)]="booking.KmRate" placeholder="KM Rate" class="w-full" />
       </div>
     </div>
 
     <!-- Summary -->
-    <div
-      class="mt-6 grid grid-cols-3 gap-4 text-gray-800 text-lg font-semibold px-4"
-    >
+    <div class="mt-6 grid grid-cols-3 gap-4 text-gray-800 text-lg font-semibold px-4">
       <div>Min Hours: {{ totalHours }}</div>
       <div>Night Halt Time: {{ totalKM }}</div>
       <div>Night Halt Amount: {{ totalKM }}</div>
@@ -1605,97 +986,42 @@
       <ng-template pTemplate="body" let-guest let-i="rowIndex">
         <tr>
           <td>
-            <input
-              type="text"
-              pInputText
-              [(ngModel)]="guest.name"
-              name="guestName{{ i }}"
-              class="w-full"
-              placeholder="Guest Name"
-            />
+            <input type="text" pInputText [(ngModel)]="guest.name" name="guestName{{ i }}" class="w-full"
+              placeholder="Guest Name" />
           </td>
           <td>
-            <input
-              type="text"
-              pInputText
-              [(ngModel)]="guest.contactNo"
-              name="contactNo{{ i }}"
-              class="w-full"
-              placeholder="Contact No"
-            />
+            <input type="text" pInputText [(ngModel)]="guest.contactNo" name="contactNo{{ i }}" class="w-full"
+              placeholder="Contact No" />
           </td>
           <td>
-            <input
-              type="text"
-              pInputText
-              [(ngModel)]="guest.additionalContactNo"
-              name="additionalContactNo{{ i }}"
-              class="w-full"
-              placeholder="Additional Contact No"
-            />
+            <input type="text" pInputText [(ngModel)]="guest.additionalContactNo" name="additionalContactNo{{ i }}"
+              class="w-full" placeholder="Additional Contact No" />
           </td>
           <td>
-            <textarea
-              pInputTextarea
-              [(ngModel)]="guest.pickupAddress"
-              name="pickupAddress{{ i }}"
-              class="w-full p-inputtext"
-              placeholder="Pickup Address"
-            ></textarea>
+            <textarea pInputTextarea [(ngModel)]="guest.pickupAddress" name="pickupAddress{{ i }}"
+              class="w-full p-inputtext" placeholder="Pickup Address"></textarea>
           </td>
           <td>
-            <textarea
-              pInputTextarea
-              [(ngModel)]="guest.dropAddress"
-              name="dropAddress{{ i }}"
-              class="w-full p-inputtext"
-              placeholder="Drop Address"
-            ></textarea>
+            <textarea pInputTextarea [(ngModel)]="guest.dropAddress" name="dropAddress{{ i }}"
+              class="w-full p-inputtext" placeholder="Drop Address"></textarea>
           </td>
           <td>
-            <textarea
-              pInputTextarea
-              [(ngModel)]="guest.remarks"
-              name="remarks{{ i }}"
-              class="w-full p-inputtext"
-              placeholder="Remarks"
-            ></textarea>
+            <textarea pInputTextarea [(ngModel)]="guest.remarks" name="remarks{{ i }}" class="w-full p-inputtext"
+              placeholder="Remarks"></textarea>
           </td>
           <td class="text-center">
-            <button
-              pButton
-              icon="pi pi-trash"
-              class="p-button-danger"
-              (click)="removeGuest(i)"
-            ></button>
+            <button pButton icon="pi pi-trash" class="p-button-danger" (click)="removeGuest(i)"></button>
           </td>
         </tr>
       </ng-template>
     </p-table>
-    <button
-      pButton
-      type="button"
-      label="Add Guest"
-      icon="pi pi-plus"
-      class="mt-4 p-button-success"
-      (click)="addGuest()"
-    ></button>
+    <button pButton type="button" label="Add Guest" icon="pi pi-plus" class="mt-4 p-button-success"
+      (click)="addGuest()"></button>
   </div>
 
-   <!-- Action Buttons -->
-    <div class="flex justify-end mt-6 gap-4">
-      <button
-        pButton
-        type="button"
-        label="Close"
-        class="p-button-secondary"
-      ></button>
-      <button
-        pButton
-        type="button"
-        label="Save"
-        class="p-button-success"
-        (click)="saveBooking()"
-      ></button>
-    </div>
+  <!-- Action Buttons -->
+  <div class="flex justify-end mt-6 gap-4">
+    <button pButton type="button" label="Close" class="p-button-secondary"></button>
+    <button pButton type="button" label="Save" class="p-button-success" (click)="saveBooking()"></button>
+  </div>
 </div>

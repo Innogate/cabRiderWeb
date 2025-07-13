@@ -55,76 +55,76 @@ export class BookingEntryComponent implements OnInit {
 
 
   booking: any = {
-  // Existing extras
-  fullBooking: false,
-  slipNo: 'NEW',
-  id: 0,
+    // Existing extras
+    fullBooking: false,
+    slipNo: 'NEW',
+    id: 0,
 
-  // Real fields with updated names and matching mappings
-  EntryDate: '',
-  EntryTime: '',
-  RentalDate: new Date(),
-  ReportingDatetime: '',
-  DutyType: '',
-  Party: '',
-  ReportAt: '',
-  Email: '',
-  Flight_train_No: '',
-  Project: '',
-  CarType: '',
-  DropAt: '',
-  BookingMode: '',
-  BookedBy: '',
-  FromCityID: '',
-  ToCityID: '',
-  ContactNo: '',
-  postJsonData: null,
-  PartyRateType: '',
-  PartyRate: null,
-  Price: null,
-  KMRate: null,
-  HourRate: null,
-  BookedEmail: '',
-  branch_id: '',
-  isCash: 0,
-  Advance: 0,
+    // Real fields with updated names and matching mappings
+    EntryDate: '',
+    EntryTime: '',
+    RentalDate: new Date(),
+    ReportingDatetime: '',
+    DutyType: '',
+    Party: '',
+    ReportAt: '',
+    Email: '',
+    Flight_train_No: '',
+    Project: '',
+    CarType: '',
+    DropAt: '',
+    BookingMode: '',
+    BookedBy: '',
+    FromCityID: '',
+    ToCityID: '',
+    ContactNo: '',
+    postJsonData: null,
+    PartyRateType: '',
+    PartyRate: null,
+    Price: null,
+    KMRate: null,
+    HourRate: null,
+    BookedEmail: '',
+    branch_id: '',
+    isCash: 0,
+    Advance: 0,
 
-  // Existing extras retained as requested
-  branch: '',
-  reportingTime: '',
-  carTypeRequest: '',
-  carTypeSend: '',
-  carNo: '',
-  driver: '',
-  fromCity: '',
-  toCity: '',
-  vendor: '',
-  travelMode: '',
+    // Existing extras retained as requested
+    branch: '',
+    reportingTime: '',
+    carTypeRequest: '',
+    carTypeSend: '',
+    carNo: '',
+    driver: '',
+    fromCity: '',
+    toCity: '',
+    vendor: '',
+    travelMode: '',
 
-  selectRate: null,
-  garageOut: null,
-  garageOutKM: null,
-  reportDate: null,
-  reportKM: null,
-  releasingDate: null,
-  releasingKM: null,
-  garageInDate: null,
-  garageInKM: null,
+    selectRate: null,
+    garageOut: null,
+    garageOutKM: null,
+    reportDate: null,
+    reportKM: null,
+    releasingDate: null,
+    releasingKM: null,
+    garageInDate: null,
+    garageInKM: null,
 
-  cash: false,
-  netAmount: null,
-  otherCharges: null,
-  totalAmount: null,
-  extraHourRate: null,
-  extraHour: null,
-  extraKm: null,
-  extraHourAmount: null,
-  extraKmRate: null,
-  extraKmAmount: null,
+    cash: false,
+    netAmount: null,
+    otherCharges: null,
+    totalAmount: null,
+    extraHourRate: null,
+    extraHour: null,
+    extraKm: null,
+    extraHourAmount: null,
+    extraKmRate: null,
+    extraKmAmount: null,
 
-  // Optional guest section if used
-  guests: []
-};
+    // Optional guest section if used
+    guests: []
+  };
 
 
   dateFields = [
@@ -209,30 +209,74 @@ export class BookingEntryComponent implements OnInit {
 
   dropAt = [{ name: 'kolkata' }, { name: 'Haldia' }];
 
+  // AutoComplete
+  filteredCities: any[] = [];
+
+  filterCities(event: any) {
+    if (!this.cities) return;
+    const query = event.query.toLowerCase();
+    this.filteredCities = this.cities.filter(city =>
+      city.CityName.toLowerCase().includes(query)
+    );
+  }
+
+  filteredToCities: any[] = [];
+
+  filterToCities(event: any) {
+    if (!this.cities) return;
+    const query = event.query.toLowerCase();
+    this.filteredToCities = this.cities.filter(city =>
+      city.CityName.toLowerCase().includes(query)
+    );
+  }
+
+
+  filteredCarTypes: any[] = [];
+
+  filterCarTypes(event: any) {
+    if (!this.carTypes) return;
+    const query = event.query.toLowerCase();
+    this.filteredCarTypes = this.carTypes.filter(type =>
+      type.car_type.toLowerCase().includes(query)
+    );
+  }
+
+  filteredCarTypeSend: any[] = [];
+
+  filterCarTypeSend(event: any) {
+    if (!this.carTypes) return;
+    const query = event.query.toLowerCase();
+    this.filteredCarTypeSend = this.carTypes.filter(type =>
+      type.car_type.toLowerCase().includes(query)
+    );
+  }
+
+
+
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
       this.booking.fullBooking = params['isFullBooking'] === 'true';
     });
 
     this.carTypeMaster.registerPageHandler((msg) => {
-          let rt = false;
-          rt = globalRequestHandler(msg, this.router, this.messageService);
-          if (msg.for) {
-            if (msg.for === "CarTypeGate") {
-              this.carTypes = msg.data;
-              rt=true;
-            }
-            else if (msg.for === "getAllCityDropdown") {
-              this.cities = msg.data;
-              console.log(this.cities);
-              rt = true;
-            }
-          }
-          if (rt == false) {
-            console.log(msg);
-          }
-          return rt;
-        });
+      let rt = false;
+      rt = globalRequestHandler(msg, this.router, this.messageService);
+      if (msg.for) {
+        if (msg.for === "CarTypeGate") {
+          this.carTypes = msg.data;
+          rt = true;
+        }
+        else if (msg.for === "getAllCityDropdown") {
+          this.cities = msg.data;
+          console.log(this.cities);
+          rt = true;
+        }
+      }
+      if (rt == false) {
+        console.log(msg);
+      }
+      return rt;
+    });
 
     this.getCarTypeName();
     this.getAllCity();
