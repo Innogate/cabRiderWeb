@@ -350,7 +350,7 @@ export class BookingComponent implements OnInit, OnDestroy, AfterViewInit {
 
   goToAdd() {
     this.router.navigate(['/add-booking'], {
-      queryParams: { isFullBooking: true }
+      queryParams: { isFullBooking: this.isFullBooking }
     });
   }
 
