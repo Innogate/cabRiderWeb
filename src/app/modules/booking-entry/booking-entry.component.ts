@@ -15,6 +15,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { globalRequestHandler } from '../../utils/global';
 import { MessageService } from 'primeng/api';
 import { commonService } from '../../services/comonApi.service';
+import { partyMasterService } from '../../services/partyMaster.service';
 @Component({
   selector: 'app-booking-entry',
   imports: [
@@ -41,11 +42,11 @@ export class BookingEntryComponent implements OnInit {
     private carTypeMaster: carTypeMasterService,
     private messageService: MessageService,
     private router: Router,
-    private commonApiService: commonService
+    private commonApiService: commonService,
+    private partyMasterService: partyMasterService
   ) { }
   totalHours = 0;
   totalKM = 0;
-  filteredParties: any[] = [];
   filteredVendors: any[] = [];
   availableRates: any[] | undefined;
   charges: any[] = [];
@@ -190,11 +191,10 @@ export class BookingEntryComponent implements OnInit {
   billToOptions = [{ label: 'Bill To Company', value: 'Bill To Company' }, { label: 'Bill To Guest', value: 'Bill To Guest' }];
 
 
-  branches = [{ name: 'NEW MARKET' }, { name: 'NEW DELHI-KAROL BAGH' }, { name: 'MUMBAI - ANDHERI WEST' }];
-
+  branches?: any[];
   cities?: any[];
-
   carTypes?: any[];
+
   carTypeSearch = '';
 
   partyRateTypes = [{ name: 'Hourly' }, { name: 'KM Based' }];
@@ -251,6 +251,25 @@ export class BookingEntryComponent implements OnInit {
     );
   }
 
+  filteredBranches: any[] = [];
+
+  filterBranches(event: any) {
+    if (!this.branches) return;
+    const query = event.query.toLowerCase();
+    this.filteredBranches = this.branches.filter(branch =>
+      branch.branch_name.toLowerCase().includes(query)
+    );
+  }
+
+  // AutoComplete
+  PartyName: any[] = [];
+  filterPartyName(event: any) {
+    if (!this.PartyName) return;
+    const query = event.query.toLowerCase();
+    this.PartyName = this.PartyName.filter(party =>
+      party.PartyName.toLowerCase().includes(query)
+    );
+  }
 
 
   ngOnInit(): void {
@@ -268,7 +287,17 @@ export class BookingEntryComponent implements OnInit {
         }
         else if (msg.for === "getAllCityDropdown") {
           this.cities = msg.data;
-          console.log(this.cities);
+          // console.log(this.cities);
+          rt = true;
+        }
+        else if (msg.for === "getAllBranchDropdown") {
+          this.branches = msg.data;
+          // console.log(this.branches);
+          rt = true;
+        }
+        else if (msg.for === "getAllParty") {
+          this.PartyName = msg.data;
+          console.log(this.PartyName);
           rt = true;
         }
       }
@@ -280,14 +309,8 @@ export class BookingEntryComponent implements OnInit {
 
     this.getCarTypeName();
     this.getAllCity();
-  }
-
-
-  searchParties(event: any) {
-    const query = event.query.toLowerCase();
-    this.filteredParties = [{ name: 'ABC Corp' }, { name: 'XYZ Ltd' }].filter(
-      (party) => party.name.toLowerCase().includes(query)
-    );
+    this.getAllBranches();
+    this.getAllPraty();
   }
 
   searchVendors(event: any) {
@@ -419,5 +442,13 @@ export class BookingEntryComponent implements OnInit {
 
   getAllCity() {
     this.commonApiService.GatAllCityDropDown({});
+  }
+
+  getAllBranches() {
+    this.commonApiService.GatAllBranchDropDown({});
+  }
+
+  getAllPraty() {
+    this.partyMasterService.GatAllParty({});
   }
 }

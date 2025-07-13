@@ -21,8 +21,20 @@
         <label class="font-medium text-gray-700 flex items-center gap-2">
           <i class="pi pi-building text-xl text-blue-700"></i> Branch
         </label>
-        <p-dropdown [(ngModel)]="booking.branch" name="branch" [options]="branches" optionLabel="name"
-          placeholder="Select Branch *" class="w-full"></p-dropdown>
+
+        <p-autoComplete [(ngModel)]="booking.branch" name="branch" [suggestions]="filteredBranches"
+          (completeMethod)="filterBranches($event)" field="branch_name" [dropdown]="true" [forceSelection]="true"
+          placeholder="Select Branch *" class="w-full" inputStyleClass="w-full" panelStyleClass="w-full">
+          <!-- 👇 Custom Template for Suggestions -->
+          <ng-template let-branch pTemplate="item">
+            {{ branch.branch_name }} - {{ branch.city }}, {{ branch.state }}
+          </ng-template>
+
+          <!-- 👇 Optional: Custom Template for Selected Item -->
+          <ng-template let-branch pTemplate="selectedItem">
+            {{ branch.branch_name }}
+          </ng-template>
+        </p-autoComplete>
       </div>
 
       <!-- Slip No -->
@@ -115,8 +127,8 @@
         <label class="font-medium text-gray-700 flex items-center gap-2">
           <i class="pi pi-users text-xl text-pink-500"></i> Party
         </label>
-        <p-autoComplete [(ngModel)]="booking.Party" name="Party" [suggestions]="filteredParties"
-          (completeMethod)="searchParties($event)" field="name" placeholder="Party *" class="w-full"></p-autoComplete>
+        <p-autoComplete [(ngModel)]="booking.Party" name="Party" [suggestions]="PartyName"
+          (completeMethod)="filterPartyName($event)" field="name" placeholder="Party *" class="w-full"></p-autoComplete>
       </div>
 
       <!-- Project -->
@@ -702,12 +714,25 @@
     <div class="grid grid-cols-3 gap-6 mb-8 bg-white p-6 rounded-xl shadow-md">
       <!-- Branch -->
       <div class="flex flex-col gap-2">
-        <label class="font-semibold text-gray-800 flex items-center gap-2">
+        <label class="font-medium text-gray-700 flex items-center gap-2">
           <i class="pi pi-building text-xl text-blue-700"></i> Branch
         </label>
-        <p-dropdown [(ngModel)]="booking.branch" [options]="branches" optionLabel="name" placeholder="Select Branch *"
-          class="w-full"></p-dropdown>
+
+        <p-autoComplete [(ngModel)]="booking.branch" name="branch" [suggestions]="filteredBranches"
+          (completeMethod)="filterBranches($event)" field="branch_name" [dropdown]="true" [forceSelection]="true"
+          placeholder="Select Branch *" class="w-full" inputStyleClass="w-full" panelStyleClass="w-full">
+          <!-- 👇 Custom Template for Suggestions -->
+          <ng-template let-branch pTemplate="item">
+            {{ branch.branch_name }} - {{ branch.city }}, {{ branch.state }}
+          </ng-template>
+
+          <!-- 👇 Optional: Custom Template for Selected Item -->
+          <ng-template let-branch pTemplate="selectedItem">
+            {{ branch.branch_name }}
+          </ng-template>
+        </p-autoComplete>
       </div>
+
 
       <!-- Slip No -->
       <div class="flex flex-col gap-2">
@@ -798,11 +823,11 @@
 
       <!-- Party -->
       <div class="flex flex-col gap-2">
-        <label class="font-semibold text-gray-800 flex items-center gap-2">
-          <i class="pi pi-users text-xl text-pink-600"></i> Party
+        <label class="font-medium text-gray-700 flex items-center gap-2">
+          <i class="pi pi-users text-xl text-pink-500"></i> Party
         </label>
-        <p-autoComplete [(ngModel)]="booking.Party" [suggestions]="filteredParties"
-          (completeMethod)="searchParties($event)" field="name" placeholder="Party *" class="w-full"></p-autoComplete>
+        <p-autoComplete [(ngModel)]="booking.Party" name="Party" [suggestions]="PartyName"
+          (completeMethod)="filterPartyName($event)" field="name" placeholder="Party *" class="w-full"></p-autoComplete>
       </div>
 
       <!-- Project -->
