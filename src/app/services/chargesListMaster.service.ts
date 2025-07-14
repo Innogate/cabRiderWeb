@@ -11,15 +11,15 @@ export class chargesListMasterService extends BaseService {
   }
 
   GatAllChargesList(payload: any) {
-    this.post('/master/gatAllChargesList', payload);
+    this.call('master.gatAllChargesList', payload);
   }
 
   CreateUpdate(payload: any){
-    this.post('/master/createUpdateChargesMaster', payload);
+    this.call('master.createUpdateChargesMaster', payload);
   }
 
   Delete(payload: any){
-    this.post('/master/deleteCharges', payload);
+    this.call('master.deleteCharges', payload);
   }
 
   protected handleMessage(msg: any): boolean {

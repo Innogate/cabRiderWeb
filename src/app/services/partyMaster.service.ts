@@ -11,11 +11,11 @@ export class partyMasterService extends BaseService {
   }
 
   GatAllParty(payload: any) {
-    this.post('/master/gatAllParty', payload);
+    this.call('master.gatAllParty', payload);
   }
 
   CreateUpdateParty(payload: any){
-    this.post('/master/createUpdatePart', payload);
+    this.call('master.createUpdatePart', payload);
   }
 
 //   Delete(payload: any){

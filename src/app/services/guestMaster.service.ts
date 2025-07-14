@@ -11,7 +11,7 @@ export class guestMasterService extends BaseService {
   }
 
   GetAllGuest(payload: any) {
-    this.post('/master/gatAllGuestMaster', payload);
+    this.call('master.gatAllGuestMaster', payload);
   }
 
 //   CreateUpdateParty(payload: any){

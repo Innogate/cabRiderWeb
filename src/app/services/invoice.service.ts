@@ -11,7 +11,7 @@ export class InvoiceService extends BaseService {
   }
 
   search(payload: any) {
-    this.post('/invoice/search', payload);
+    this.call('invoice.search', payload);
   }
 
   protected handleMessage(msg: any): boolean {

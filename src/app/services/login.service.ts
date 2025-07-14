@@ -11,11 +11,11 @@ export class LoginService extends BaseService {
   }
 
   login(payload: any) {
-    this.post('/user/login', payload);
+    this.call('user.login', payload);
   }
 
   logout() {
-    this.post('/user/logout', {});
+    this.call('user.logout', {});
     localStorage.clear();
   }
 

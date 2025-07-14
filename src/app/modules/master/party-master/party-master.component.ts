@@ -10,7 +10,7 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
-import { comonApiService } from '../../../services/comonApi.service';
+import { commonService } from '../../../services/comonApi.service';
 
 @Component({
   selector: 'app-party-master',
@@ -51,7 +51,7 @@ export class PartyMasterComponent implements OnInit, OnDestroy, AfterViewInit {
     private router: Router,
     private messageService: MessageService,
     private fb: FormBuilder,
-    private comonApiService: comonApiService
+    private commonService: commonService
   ) {
     this.createForm();
   }
@@ -114,7 +114,7 @@ export class PartyMasterComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnDestroy(): void {
     this.partyMasterService.unregisterPageHandler();
-    this.comonApiService.unregisterPageHandler();
+    this.commonService.unregisterPageHandler();
   }
 
   ngAfterViewInit(): void {
@@ -125,7 +125,7 @@ export class PartyMasterComponent implements OnInit, OnDestroy, AfterViewInit {
       Search: "",
     };
     this.partyMasterService.GatAllParty(payload);
-    this.comonApiService.GatAllCityDropDown({});
+    this.commonService.GatAllCityDropDown({});
   }
 
   // Define the columns for the dynamic table
@@ -224,6 +224,6 @@ export class PartyMasterComponent implements OnInit, OnDestroy, AfterViewInit {
       column_name: "id",
       column_value: "" + party.id,
     }
-    this.comonApiService.deleteData(payload)
+    this.commonService.deleteData(payload)
   }
 }

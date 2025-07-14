@@ -11,16 +11,16 @@ export class carTypeMasterService extends BaseService {
   }
 
   GateAllCarType(payload: any) {
-    this.post('/master/getCarTypes', payload);
+    this.call('master.getCarTypes', payload);
   }
 
   CreateUpdate(payload: any){
-    this.post('/master/createCartype', payload);
+    this.call('master.createCartype', payload);
   }
 
   DeleteCartype(payload: any){
     console.log("payload", payload)
-    this.post('/master/deleteCartype', payload);
+    this.call('master.deleteCartype', payload);
   }
 
   protected handleMessage(msg: any): boolean {

@@ -75,10 +75,10 @@ export class WebSocketService implements OnDestroy {
 
           if (this.socket$) {
             this.socket$.next({
-              type: 'auth',
-              command: 'authenticate',
-              token: token,
-              body: {},
+              command: 'user.auth',
+              body: {
+                token: token
+              },
             });
           }
 

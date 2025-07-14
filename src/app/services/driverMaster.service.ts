@@ -11,11 +11,11 @@ export class driverMasterService extends BaseService {
   }
 
   GatAllDriver(payload: any) {
-    this.post('/master/gatAllDriver', payload);
+    this.call('master.gatAllDriver', payload);
   }
 
   CreateUpdateDriver(payload: any){
-    this.post('/master/createUpdateDriver', payload);
+    this.call('master.createUpdateDriver', payload);
   }
 
 //   Delete(payload: any){
