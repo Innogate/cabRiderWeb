@@ -95,7 +95,7 @@
             </label>
 
             <p-autoComplete
-              formControlName="branch_id"
+
               (onSelect)="onBranchSelect($event)"
               name="branch"
               [suggestions]="filteredBranches"
@@ -108,15 +108,7 @@
               inputStyleClass="w-full"
               panelStyleClass="w-full"
             >
-              <!-- 👇 Custom Template for Suggestions -->
-              <ng-template let-branch pTemplate="item">
-                {{ branch.branch_name }} - {{ branch.city }}, {{ branch.state }}
-              </ng-template>
 
-              <!-- 👇 Optional: Custom Template for Selected Item -->
-              <ng-template let-branch pTemplate="selectedItem">
-                {{ branch.branch_name }}
-              </ng-template>
             </p-autoComplete>
           </div>
         </div>

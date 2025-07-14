@@ -1,3 +1,4 @@
+import { Value } from './../../../../node_modules/regjsparser/parser.d';
 import { partyRateMasterService } from './../../services/partyRateMaster.service';
 import { carTypeMasterService } from './../../services/carTypeMaster.service';
 import { CheckboxModule } from 'primeng/checkbox';
@@ -307,6 +308,7 @@ export class BookingEntryComponent implements OnInit {
           rt = true;
         } else if (msg.for === 'getAllBranchDropdown') {
           this.branches = msg.data;
+          console.log(this.branches)
           rt = true;
         } else if (msg.for === 'getAllParty') {
           this.PartyName = msg.data;
@@ -613,8 +615,9 @@ export class BookingEntryComponent implements OnInit {
 
   // OnSelect Functions
   onBranchSelect(branch: any) {
-    if (!this.bookingFrom) return;
-    this.bookingFrom.get('branch_id')?.setValue(branch.id);
+    if (this.bookingFrom){
+    this.bookingFrom.get('branch_id').setValue(branch.value.Id);
+    }
   }
 
   submitBooking() {
