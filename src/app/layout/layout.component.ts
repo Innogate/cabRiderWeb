@@ -93,7 +93,7 @@ export class LayoutComponent {
         { label: 'Driver Salary Setup', icon: 'pi pi-wallet', routerLink: 'master/driverSalary' },
         { label: 'Party', icon: 'pi pi-users', routerLink: 'master/party' },
         { label: 'Party Rate', icon: 'pi pi-percentage', routerLink: 'master/partyRate' },
-        { label: 'Vendor', icon: 'pi pi-briefcase' },
+        { label: 'Vendor', icon: 'pi pi-briefcase', routerLink: 'master/vendor-master' },
         { label: 'Vendor Rate', icon: 'pi pi-percentage' },
         { label: 'Guest', icon: 'pi pi-user-plus' },
         { label: 'Network', icon: 'pi pi-sitemap' },
