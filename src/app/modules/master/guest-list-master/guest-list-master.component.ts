@@ -50,7 +50,7 @@ export class GuestListMasterComponent implements OnInit,OnDestroy,AfterViewInit 
         PageSize: 1000,
         Search: "",
       };
-      this.guestlistMasterService.GetAllGuest(payload)
+      this.guestlistMasterService.getAllGuest(payload)
     }
       // Define the columns for the dynamic table
   columns = [
