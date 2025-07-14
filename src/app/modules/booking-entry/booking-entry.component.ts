@@ -3,7 +3,7 @@ import { carTypeMasterService } from './../../services/carTypeMaster.service';
 import { CheckboxModule } from 'primeng/checkbox';
 import { CommonModule } from '@angular/common';
 import { Component, NgModule, OnInit } from '@angular/core';
-import { FormsModule, NgModel, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormsModule, NgModel, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
@@ -13,7 +13,7 @@ import { TableModule } from 'primeng/table';
 import { TabPanel, TabViewModule } from 'primeng/tabview';
 import { ToggleButton } from 'primeng/togglebutton';
 import { ActivatedRoute, Router } from '@angular/router';
-import { globalRequestHandler } from '../../utils/global';
+import { getCurrentDate, getCurrentTime, globalRequestHandler } from '../../utils/global';
 import { MessageService } from 'primeng/api';
 import { commonService } from '../../services/comonApi.service';
 import { partyMasterService } from '../../services/partyMaster.service';
@@ -33,6 +33,8 @@ import { partyMasterService } from '../../services/partyMaster.service';
     TabPanel,
     TabViewModule,
     ToggleButton,
+    ReactiveFormsModule,
+    FormsModule
   ],
   templateUrl: './booking-entry.component.html',
   styleUrl: './booking-entry.component.css',
@@ -45,7 +47,8 @@ export class BookingEntryComponent implements OnInit {
     private router: Router,
     private commonApiService: commonService,
     private partyMasterService: partyMasterService,
-    private partyRateMasterService: partyRateMasterService
+    private partyRateMasterService: partyRateMasterService,
+    private fb: FormBuilder
   ) { }
   totalHours = 0;
   totalKM = 0;
@@ -56,78 +59,11 @@ export class BookingEntryComponent implements OnInit {
   totalVendorHours = 0;
   totalVendorKM = 0;
 
+  isFullBooking: boolean = false;
 
-  booking: any = {
-    // Existing extras
-    fullBooking: false,
-    slipNo: 'NEW',
-    id: 0,
+  bookingFrom?: any;
+  fullBookingFrom?: any;
 
-    // Real fields with updated names and matching mappings
-    EntryDate: '',
-    EntryTime: '',
-    RentalDate: new Date(),
-    ReportingDatetime: '',
-    DutyType: '',
-    Party: '',
-    ReportAt: '',
-    Email: '',
-    Flight_train_No: '',
-    Project: '',
-    CarType: '',
-    DropAt: '',
-    BookingMode: '',
-    BookedBy: '',
-    FromCityID: '',
-    ToCityID: '',
-    ContactNo: '',
-    postJsonData: null,
-    PartyRateType: '',
-    PartyRate: null,
-    Price: null,
-    KMRate: null,
-    HourRate: null,
-    BookedEmail: '',
-    branch_id: '',
-    isCash: 0,
-    Advance: 0,
-
-    // Existing extras retained as requested
-    branch: '',
-    reportingTime: '',
-    carTypeRequest: '',
-    carTypeSend: '',
-    carNo: '',
-    driver: '',
-    fromCity: '',
-    toCity: '',
-    vendor: '',
-    travelMode: '',
-
-    selectRate: null,
-    garageOut: null,
-    garageOutKM: null,
-    reportDate: null,
-    reportKM: null,
-    releasingDate: null,
-    releasingKM: null,
-    garageInDate: null,
-    garageInKM: null,
-
-    cash: false,
-    netAmount: null,
-    otherCharges: null,
-    totalAmount: null,
-    extraHourRate: null,
-    extraHour: null,
-    extraKm: null,
-    extraHourAmount: null,
-    extraKmRate: null,
-    extraKmAmount: null,
-
-    // Optional guest section if used
-    guests: []
-  };
 
 
   dateFields = [
@@ -199,7 +135,22 @@ export class BookingEntryComponent implements OnInit {
 
   carTypeSearch = '';
 
-  partyRateTypes?: any[];
+  partyRateTypes: any[] = [{
+    label: 'Normal',
+    value: 'Normal'
+  },
+  {
+    label: 'Hrs',
+    value: 'Hrs'
+  },
+  {
+    label: 'DayKM',
+    value: 'DayKM'
+  },
+  {
+    label: 'Trn',
+    value: 'Trn'
+  }];
 
   vendorRateTypes = [{ name: 'Hourly' }, { name: 'KM Based' }];
 
@@ -276,7 +227,7 @@ export class BookingEntryComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
-      this.booking.fullBooking = params['isFullBooking'] === 'true';
+      this.isFullBooking = params['isFullBooking'] === 'true';
     });
 
     this.carTypeMaster.registerPageHandler((msg) => {
@@ -299,11 +250,6 @@ export class BookingEntryComponent implements OnInit {
           this.PartyName = msg.data;
           rt = true;
         }
-        else if (msg.for === "getallpartyrate") {
-          this.partyRateTypes = msg.data;
-          console.log(this.partyRateTypes);
-          rt = true;
-        }
       }
       if (rt == false) {
         console.log(msg);
@@ -311,20 +257,160 @@ export class BookingEntryComponent implements OnInit {
       return rt;
     });
 
-    this.setCurrentTime();
     this.getCarTypeName();
     this.getAllCity();
     this.getAllBranches();
     this.getAllPraty();
-    this.getAllPartyRate();
   }
 
-  setCurrentTime() {
-  const now = new Date();
-  const hours = String(now.getHours()).padStart(2, '0');
-  const minutes = String(now.getMinutes()).padStart(2, '0');
-  this.booking.EntryTime = `${hours}:${minutes}`;
-}
+  init() {
+    this.bookingFrom = this.fb.group({
+      id: [0],
+      branch_id: [null, Validators.required],
+      EntryDate: [getCurrentDate(), Validators.required],
+      EntryTime: [getCurrentTime(), Validators.required],
+      RentalDate: ["2025-06-30"],
+      SlipNo: ["LC30062025-66"],
+      FromCityID: [1],
+      ReportingDatetime: ["15:01"],
+      ToCityID: [1],
+      DutyType: [1],
+      Party: [2],
+      ReportAt: ["Office"],
+      Email: [""],
+      Flight_train_No: [""],
+      Project: [""],
+      DropAt: [""],
+      CarType: [25],
+      BookingMode: ["SMS"],
+      BookedBy: ["SURESH BAJAJ"],
+      ContactNo: ["9051471725"],
+      BookedEmail: [""],
+      Advance: [0],
+      PartyRateType: ["Normal"],
+      PartyRate: [29],
+      Price: [0],
+      HourRate: [170],
+      KMRate: [17.5],
+      LGustName: this.fb.array(["AMIT SHAH"]),
+      lid: this.fb.array([113097, 0]),
+      LContactNo: this.fb.array(["1234567890"]),
+      LContactNo2: this.fb.array([""]),
+      LAddress: this.fb.array(["B.G. THAPAR HOUSE, 12TH FLOOR,ROOM NO, 1205,KOLKATA - 700001"]),
+      LDropAddress: this.fb.array([""]),
+      LRemarks: this.fb.array([""]),
+      discount_amount: this.fb.array([""]),
+      isCash: [0]
+    });
+
+    this.fullBookingFrom = this.fb.group({
+      bookingStatus: ["auto"],
+      Calon: ["M"],
+      minHour: ["8.50"],
+      minKm: ["0"],
+      EntryTime: ["14:38"],
+      id: ["85805"],
+      EntryDate: ["14-07-2025"],
+      branch_id: ["17"],
+      SlipNo: ["LC06032025-56"],
+      RentalDate: ["2025-03-06"],
+      ReportingDatetime: ["21:00"],
+      CarType: ["25"],
+      CarTypeSend: ["25"],
+      Party: ["2"],
+      party_name: ["INTAS PHARMA LIMITED"],
+      vendor_id: ["3"],
+      VendorContact: ["780566895"],
+      vendor_name: ["RAMESHWAR CAR RENTALS"],
+      CarNo: ["WB-04-A-1221"],
+      DriverName: ["RAM YADAV"],
+      DriverContact: ["9966525250"],
+      Project: [""],
+      DutyType: ["1"],
+      FromCityID: ["1"],
+      ToCityID: ["1"],
+      BookedBy: ["SURESH BAJAJ"],
+      ContactNo: ["9051471725"],
+      PartyRateType: ["Normal"],
+      PartyRate: ["29"],
+      GarageOutDate: ["2025-03-06T20:30"],
+      GarageOutKm: ["0"],
+      ReportDate: ["2025-03-06T21:00"],
+      ReportKm: ["0"],
+      ReleasingDate: ["2025-03-06T21:00"],
+      ReleaseKm: ["0"],
+      GarageInDate: ["2025-03-06T21:00"],
+      GarageInKm: ["0"],
+      totalhrsvalue: ["0.00"],
+      totalkmvalue: ["0"],
+      ExtraHrs: [""],
+      ExtraHrsRate: [""],
+      ExtraHrsAmount: [""],
+      ExtraKM: [""],
+      ExtraKMRate: [""],
+      ExtraKMAmount: [""],
+      KMRate: ["17.5"],
+      Hrs_km: ["17"],
+      hrs_hrs: ["0"],
+      HigherRate: ["N"],
+      HourRate: ["170"],
+      Price: ["0"],
+      Advance: ["0.00"],
+      TotalAmt: ["1445"],
+      TotalOtherCharge: ["0"],
+      NetAmt: ["1445"],
+      VendorRateType: ["Normal"],
+      VendorRate: ["1"],
+      VendorGarageOutDate: ["2025-03-06T21:00"],
+      VendorGarageOutKm: ["0"],
+      VendorReportDate: ["2025-03-06T21:00"],
+      VendorReportKm: ["0"],
+      VendorReleasingDate: ["2025-03-06T21:00"],
+      VendorReleaseKm: ["0"],
+      VendorGarageInDate: ["2025-03-06T21:00"],
+      VendorGarageInKm: ["0"],
+      Vendortotalhrsvalue: ["0.00"],
+      Vendortotalkmvalue: ["0"],
+      VendorExtraHrs: [""],
+      VendorExtraHrsRate: [""],
+      VendorExtraHrsAmount: [""],
+      VendorExtraKM: [""],
+      VendorExtraKMRate: [""],
+      VendorExtraKMAmount: ["0.00"],
+      VendorKMRate: ["14.00"],
+      VendorHrs_km: ["0"],
+      Vendorhrs_hrs: ["0"],
+      VendorHigherRate: ["N"],
+      VendorHourRate: ["140.00"],
+      VendorPrice: ["0.00"],
+      VendorTotalAmt: ["1120"],
+      VendorTotalOtherCharge: ["0"],
+      VendorNetAmt: ["1120"],
+      LGustName: this.fb.array(["AMIT SHAH"]),
+      LContactNo: this.fb.array(["1234567890"]),
+      LContactNo2: this.fb.array([""]),
+      LAddress: this.fb.array(["B.G. THAPAR HOUSE, 12TH FLOOR,ROOM NO, 1205,KOLKATA - 700001"]),
+      LAddressLat: this.fb.array([""]),
+      LAddressLng: this.fb.array([""]),
+      LDropAddress: this.fb.array([""]),
+      LDropAddressLat: this.fb.array([""]),
+      LDropAddressLng: this.fb.array([""]),
+      LRemarks: this.fb.array([""]),
+      lid: this.fb.array(["85533"]),
+      discount_amount: this.fb.array([""]),
+      ReportAt: ["RAILWAY STATION"],
+      Email: [""],
+      Flight_train_No: [""],
+      DropAt: [""],
+      BookingMode: [""],
+      BookedEmail: [""],
+      ReleaseAt: [""],
+      BillingMode: [""],
+      attachment: [""],
+      isCash: ["0"],
+      item_image: ["undefined"]
+    });
+  }
 
   searchVendors(event: any) {
     const query = event.query.toLowerCase();
@@ -444,6 +530,7 @@ export class BookingEntryComponent implements OnInit {
     // Handle file selection logic
   }
 
+  // API CALLS
   getCarTypeName() {
     console.log('getCarTypeName');
     this.carTypeMaster.GateAllCarType({
@@ -465,7 +552,18 @@ export class BookingEntryComponent implements OnInit {
     this.partyMasterService.GatAllParty({});
   }
 
-  getAllPartyRate(){
-    this.partyRateMasterService.GatAllPartyRate({});
+  // Change Functions
+  changePartyRateType() {
+    // console.log('city_id : ', this.booking.FromCityID.Id);
+    // console.log('party_id : ', this.booking.Party);
+    // console.log('car_type_id : ', this.booking.CarType.id);
+    // console.log('duty_type : ', this.booking.PartyRateType);
   }
+
+  // OnSelect Functions
+  onBranchSelect(branch: any) {
+    if (!this.bookingFrom) return;
+    this.bookingFrom.get('branch_id')?.setValue(branch.id);
+  }
+
 }
