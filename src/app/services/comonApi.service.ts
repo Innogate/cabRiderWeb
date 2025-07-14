@@ -5,28 +5,28 @@ import { BaseService } from './base.service';
 @Injectable({
   providedIn: 'root',
 })
-export class comonApiService extends BaseService {
+export class commonService extends BaseService {
   constructor(ws: WebSocketService) {
     super(ws);
   }
 
   GatAllCityDropDown(payload: any) {
-    this.post('/comonapi/gatAllCityDropDown', payload);
+    this.call('common.gatAllCityDropDown', payload);
   }
 
 
    // universal delete
   deleteData(payload: any) {
-    this.post('/comonapi/deleteData', payload);
+    this.call('common.deleteData', payload);
   }
 
 
   GatAllDriverDropDown(payload: any) {
-    this.post('/comonapi/gatAllDriverDropDown', payload);
+    this.call('common.gatAllDriverDropDown', payload);
   }
 
     GatAllBranchDropDown(payload: any) {
-    this.post('/comonapi/gatAllBranchDropDown', payload);
+    this.call('common.gatAllBranchDropDown', payload);
   }
 
   protected handleMessage(msg: any): boolean {

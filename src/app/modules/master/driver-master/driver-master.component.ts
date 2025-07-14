@@ -12,7 +12,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { driverMasterService } from '../../../services/driverMaster.service';
 import { StyleClass } from 'primeng/styleclass';
 import { CheckboxModule } from 'primeng/checkbox';
-import { comonApiService } from '../../../services/comonApi.service'
+import { commonService } from '../../../services/comonApi.service'
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { FileUploadModule } from 'primeng/fileupload';
 import { CommonModule } from '@angular/common';
@@ -57,7 +57,7 @@ export class DriverMasterComponent implements OnInit, OnDestroy, AfterViewInit {
 
   constructor(
     private driverMasterService: driverMasterService,
-    private comonApiService: comonApiService,
+    private commonService: commonService,
     private messageService: MessageService,
     private router: Router,
     private fb: FormBuilder
@@ -118,7 +118,7 @@ export class DriverMasterComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnDestroy(): void {
     this.driverMasterService.unregisterPageHandler();
-    this.comonApiService.unregisterPageHandler();
+    this.commonService.unregisterPageHandler();
   }
 
   async ngAfterViewInit(): Promise<void> {
@@ -131,7 +131,7 @@ export class DriverMasterComponent implements OnInit, OnDestroy, AfterViewInit {
     const data = {
     }
     this.driverMasterService.GatAllDriver(payload);
-    this.comonApiService.GatAllCityDropDown(data);
+    this.commonService.GatAllCityDropDown(data);
   }
 
   filterCity(event: any) {
@@ -220,7 +220,7 @@ export class DriverMasterComponent implements OnInit, OnDestroy, AfterViewInit {
       column_name: "id",
       column_value: "" + user.id,
     }
-    this.comonApiService.deleteData(payload)
+    this.commonService.deleteData(payload)
   }
 
   private add(data: any) {

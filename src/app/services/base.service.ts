@@ -5,29 +5,15 @@ export abstract class BaseService {
     this.ws.setServiceHandler(this.handleMessage.bind(this));
   }
 
-  protected async get(command: string, body: any = {}) {
+  protected async call(command: string, body: any = {}) {
     try {
-      await this.ws.ensureConnected(); // ✅ Ensure connection before sending
+      await this.ws.ensureConnected();
       this.ws.send({
-        type: 'GET',
         command,
         body,
       });
     } catch (error) {
       console.error(`[BaseService] Failed to send GET "${command}":`, error);
-    }
-  }
-
-  protected async post(command: string, body: any = {}) {
-    try {
-      await this.ws.ensureConnected(); // ✅ Ensure connection before sending
-      this.ws.send({
-        type: 'POST',
-        command,
-        body,
-      });
-    } catch (error) {
-      console.error(`[BaseService] Failed to send POST "${command}":`, error);
     }
   }
 

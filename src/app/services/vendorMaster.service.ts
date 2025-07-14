@@ -11,7 +11,7 @@ export class vendorMasterService extends BaseService {
   }
 
   GatAllVendor(payload: any) {
-    this.post('/master/gatAllVendorMaster', payload);
+    this.call('master.gatAllVendorMaster', payload);
   }
 
 //   CreateUpdateParty(payload: any){

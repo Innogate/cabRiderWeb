@@ -11,7 +11,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { driverMasterService } from '../../../services/driverMaster.service';
 import { StyleClass } from 'primeng/styleclass';
 import { CheckboxModule } from 'primeng/checkbox';
-import { comonApiService } from '../../../services/comonApi.service'
+import { commonService } from '../../../services/comonApi.service'
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { FileUploadModule } from 'primeng/fileupload';
 import { CommonModule } from '@angular/common';
@@ -65,7 +65,7 @@ export class DriverSalarySetupMasterComponent implements OnInit, OnDestroy, Afte
 
   constructor(
     private driverMasterService: driverMasterService,
-    private comonApiService: comonApiService,
+    private commonService: commonService,
     private driverSalaryService: driverSalarySetupMasterService,
     private messageService: MessageService,
     private router: Router,
@@ -128,7 +128,7 @@ export class DriverSalarySetupMasterComponent implements OnInit, OnDestroy, Afte
 
   ngOnDestroy(): void {
     this.driverSalaryService.unregisterPageHandler();
-    this.comonApiService.unregisterPageHandler();
+    this.commonService.unregisterPageHandler();
   }
 
 
@@ -147,7 +147,7 @@ export class DriverSalarySetupMasterComponent implements OnInit, OnDestroy, Afte
       Search: "",
     };
     this.driverSalaryService.GatAllDriverSalary(payload);
-    this.comonApiService.GatAllDriverDropDown({ vendor_id: 0})
+    this.commonService.GatAllDriverDropDown({ vendor_id: 0})
   }
 
   filterCity(event: any) {
@@ -240,7 +240,7 @@ export class DriverSalarySetupMasterComponent implements OnInit, OnDestroy, Afte
       column_name: "id",
       column_value: "" + user.id,
     }
-    this.comonApiService.deleteData(payload)
+    this.commonService.deleteData(payload)
   }
 
   private add(data: any) {

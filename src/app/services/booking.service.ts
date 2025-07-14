@@ -11,7 +11,7 @@ export class BookingService extends BaseService {
   }
 
   search(payload: any) {
-    this.post('/booking/search', payload);
+    this.call('booking.search', payload);
   }
 
   protected handleMessage(msg: any): boolean {

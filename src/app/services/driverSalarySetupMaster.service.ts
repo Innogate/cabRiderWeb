@@ -11,7 +11,7 @@ export class driverSalarySetupMasterService extends BaseService {
   }
 
   GatAllDriverSalary(payload: any) {
-    this.post('/master/gatAllDriverSalary', payload);
+    this.call('master.gatAllDriverSalary', payload);
   }
 
 //   CreateUpdateDriver(payload: any){

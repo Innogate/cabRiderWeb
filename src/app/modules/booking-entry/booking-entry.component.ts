@@ -14,7 +14,7 @@ import { ToggleButton } from 'primeng/togglebutton';
 import { ActivatedRoute, Router } from '@angular/router';
 import { globalRequestHandler } from '../../utils/global';
 import { MessageService } from 'primeng/api';
-import { comonApiService } from '../../services/comonApi.service';
+import { commonService } from '../../services/comonApi.service';
 @Component({
   selector: 'app-booking-entry',
   imports: [
@@ -41,7 +41,7 @@ export class BookingEntryComponent implements OnInit {
     private carTypeMaster: carTypeMasterService,
     private messageService: MessageService,
     private router: Router,
-    private commonApiService: comonApiService
+    private commonApiService: commonService
   ) { }
   totalHours = 0;
   totalKM = 0;

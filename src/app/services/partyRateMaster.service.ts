@@ -11,7 +11,7 @@ export class partyRateMasterService extends BaseService {
   }
 
   GatAllPartyRate(payload: any) {
-    this.post('/master/gatAllPartyRate', payload);
+    this.call('master.gatAllPartyRate', payload);
   }
 
 //   CreateUpdateParty(payload: any){
