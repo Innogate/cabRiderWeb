@@ -44,7 +44,6 @@ import { DividerModule } from 'primeng/divider';
     ReactiveFormsModule,
     SelectModule,
     CheckboxModule,
-    TabPanel,
     TabViewModule,
     ToggleButton,
     ReactiveFormsModule,
