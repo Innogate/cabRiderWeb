@@ -5,22 +5,15 @@ import { BaseService } from './base.service';
 @Injectable({
   providedIn: 'root',
 })
-export class partyMasterService extends BaseService {
+export class userMasterService extends BaseService {
   constructor(ws: WebSocketService) {
     super(ws);
   }
 
-  GatAllParty(payload: any) {
-    this.call('master.gatAllParty', payload);
+  getAllUser(payload: any) {
+    this.call('master.getAllUserMaster', payload);
   }
 
-  CreateUpdateParty(payload: any){
-    this.call('master.createUpdateParty', payload);
-  }
-
-//   Delete(payload: any){
-//     this.post('/master/deleteCharges', payload);
-//   }
 
   protected handleMessage(msg: any): boolean {
     return false;
