@@ -5,16 +5,20 @@ import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { DynamicTableComponent } from '../../../components/dynamic-table/dynamic-table.component';
 import { globalRequestHandler } from '../../../utils/global';
+import { AutoComplete } from 'primeng/autocomplete';
+import { DropdownModule } from 'primeng/dropdown';
 
 @Component({
   selector: 'app-vendor-master',
-  imports: [CommonModule, DynamicTableComponent],
+  imports: [CommonModule, DynamicTableComponent, DropdownModule, AutoComplete],
   templateUrl: './vendor-master.component.html',
   styleUrl: './vendor-master.component.css'
 })
 export class VendorMasterComponent implements OnInit, OnDestroy, AfterViewInit {
+  showForm: boolean = false;
   isLoading: boolean = true;
   data: any[] = [];
+  heading: string ='';
 
   constructor(
     private vendorMasterService:vendorMasterService,
@@ -75,12 +79,16 @@ export class VendorMasterComponent implements OnInit, OnDestroy, AfterViewInit {
   handleAction(event: { action: string, data: any }) {
     switch (event.action) {
       case 'edit':
+        this.showForm = true;
+        this.heading = 'UPDATE VENDOR';
         console.log("edit");
         break;
       case 'delete':
         console.log("delete");
         break;
       case 'add':
+        this.heading = 'ADD VENDOR';
+        this.showForm = !this.showForm;
         console.log("add");
         break
     }
