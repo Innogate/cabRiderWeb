@@ -100,6 +100,7 @@ export class PartyMasterComponent implements OnInit, OnDestroy, AfterViewInit {
         this.messageService.add({ severity: 'success', summary: 'Success', detail: msg.StatusMessage });
         this.showForm = false;
         this.form.reset();
+        console.log("data", msg.data)
       } else if (msg.for === "deleteData") {
         if (msg.StatusMessage === "success") {
           this.messageService.add({ severity: 'success', summary: 'Success', detail: msg.StatusMessage })

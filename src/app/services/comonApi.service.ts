@@ -15,7 +15,7 @@ export class commonService extends BaseService {
   }
 
 
-   // universal delete
+  // universal delete
   deleteData(payload: any) {
     this.call('common.deleteData', payload);
   }
@@ -25,8 +25,12 @@ export class commonService extends BaseService {
     this.call('common.gatAllDriverDropDown', payload);
   }
 
-    GatAllBranchDropDown(payload: any) {
+  GatAllBranchDropDown(payload: any) {
     this.call('common.gatAllBranchDropDown', payload);
+  }
+
+  gateAllPartyNameDropdown() {
+    this.call('common.getAllPartyNameDropdown', {});
   }
 
   protected handleMessage(msg: any): boolean {
