@@ -95,7 +95,6 @@
             </label>
 
             <p-autoComplete
-
               (onSelect)="onBranchSelect($event)"
               name="branch"
               [suggestions]="filteredBranches"
@@ -156,8 +155,7 @@
               <i class="pi pi-map-marker text-xl text-purple-600"></i> From City
             </label>
             <p-autoComplete
-              formControlName="FromCityID"
-              (onSelect)="onBranchSelect($event)"
+              (onSelect)="onCitySelect($event)"
               name="FromCityID"
               [suggestions]="filteredCities"
               (completeMethod)="filterCities($event)"
@@ -181,8 +179,7 @@
               <i class="pi pi-map text-xl text-green-600"></i> To City
             </label>
             <p-autoComplete
-              formControlName="ToCityID"
-              (onSelect)="onBranchSelect($event)"
+              (onSelect)="onToCitySelect($event)"
               name="ToCityID"
               [suggestions]="filteredToCities"
               (completeMethod)="filterToCities($event)"
@@ -210,6 +207,7 @@
               formControlName="DutyType"
               [options]="dutyTypes"
               optionLabel="name"
+              optionValue="name"
               placeholder="Duty Type *"
               class="w-full"
             ></p-dropdown>
@@ -226,11 +224,11 @@
             </label>
             <p-autoComplete
               formControlName="Party"
-              (onSelect)="onBranchSelect($event)"
+              (onSelect)="onPartyNameSelect($event)"
               name="Party"
               [suggestions]="PartyName"
               (completeMethod)="filterPartyName($event)"
-              field="name"
+              field="PartyName"
               [dropdown]="true"
               placeholder="Party *"
               class="w-full"
@@ -246,19 +244,14 @@
             <label class="font-semibold text-gray-800 flex items-center gap-2">
               <i class="pi pi-map text-xl text-purple-600"></i> Report At
             </label>
-            <p-autoComplete
+            <p-dropdown
               formControlName="ReportAt"
-              name="ReportAt"
-              [suggestions]="filteredToCities"
-              (completeMethod)="filterToCities($event)"
-              field="CityName"
-              [dropdown]="true"
-              [forceSelection]="true"
-              placeholder="To City *"
+              [options]="reportOptions"
+              optionLabel="label"
+              optionValue="value"
+              placeholder="Duty Type *"
               class="w-full"
-              inputStyleClass="w-full"
-              panelStyleClass="w-full"
-            ></p-autoComplete>
+            ></p-dropdown>
           </div>
         </div>
 
@@ -361,9 +354,9 @@
               <i class="pi pi-car text-xl text-orange-600"></i> Car Type
             </label>
             <p-autoComplete
-              formControlName="CarType"
-              (onSelect)="onBranchSelect($event)"
-              name="carType"
+
+              (onSelect)="onCarTypeSelect($event)"
+              name="CarType"
               [suggestions]="filteredCarTypes"
               (completeMethod)="filterCarTypes($event)"
               field="car_type"
@@ -448,6 +441,7 @@
               formControlName="SelectRate"
               [options]="selectRates"
               optionLabel="name"
+              optionValue="id"
               placeholder="Select Rate *"
               class="w-full"
             ></p-dropdown>
@@ -665,7 +659,7 @@
         type="button"
         label="Save"
         class="p-button-success"
-        (click)="saveBooking()"
+        (click)="submitBooking()"
       ></button>
     </div>
   </form>

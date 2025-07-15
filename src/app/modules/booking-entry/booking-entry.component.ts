@@ -77,6 +77,7 @@ export class BookingEntryComponent implements OnInit {
   bookingFrom?: any;
   fullBookingFrom?: any;
 
+
   dateFields = [
     {
       label: 'Garage Out',
@@ -221,7 +222,11 @@ export class BookingEntryComponent implements OnInit {
 
   vendorRateTypes = [{ name: 'Hourly' }, { name: 'KM Based' }];
 
-  selectRates?: any[];
+ selectRates: any[] = [
+  { id: 1, name: 'Standard Rate' },
+  { id: 2, name: 'Corporate Rate' },
+  { id: 3, name: 'Special Event Rate' }
+];
 
   selectVendorRates = [{ name: 'Vendor Standard' }, { name: 'Vendor Premium' }];
 
@@ -232,141 +237,46 @@ export class BookingEntryComponent implements OnInit {
   // AutoComplete
   filteredCities: any[] = [];
 
-  filterCities(event: any) {
-    if (!this.cities) return;
-    const query = event.query.toLowerCase();
-    this.filteredCities = this.cities.filter((city) =>
-      city.CityName.toLowerCase().includes(query)
-    );
-  }
-
-  filteredToCities: any[] = [];
-
-  filterToCities(event: any) {
-    if (!this.cities) return;
-    const query = event.query.toLowerCase();
-    this.filteredToCities = this.cities.filter((city) =>
-      city.CityName.toLowerCase().includes(query)
-    );
-  }
-
-  filteredCarTypes: any[] = [];
-
-  filterCarTypes(event: any) {
-    if (!this.carTypes) return;
-    const query = event.query.toLowerCase();
-    this.filteredCarTypes = this.carTypes.filter((type) =>
-      type.car_type.toLowerCase().includes(query)
-    );
-  }
-
-  filteredCarTypeSend: any[] = [];
-
-  filterCarTypeSend(event: any) {
-    if (!this.carTypes) return;
-    const query = event.query.toLowerCase();
-    this.filteredCarTypeSend = this.carTypes.filter((type) =>
-      type.car_type.toLowerCase().includes(query)
-    );
-  }
-
-  filteredBranches: any[] = [];
-
-  filterBranches(event: any) {
-    if (!this.branches) return;
-    const query = event.query.toLowerCase();
-    this.filteredBranches = this.branches.filter((branch) =>
-      branch.branch_name.toLowerCase().includes(query)
-    );
-  }
-
-  // AutoComplete
-  PartyName: any[] = [];
-  filterPartyName(event: any) {
-    if (!this.PartyName) return;
-    const query = event.query.toLowerCase();
-    this.PartyName = this.PartyName.filter((party) =>
-      party.PartyName.toLowerCase().includes(query)
-    );
-  }
-
-  ngOnInit(): void {
-    this.route.queryParams.subscribe((params) => {
-      this.isFullBooking = params['isFullBooking'] === 'true';
-    });
-
-    this.carTypeMaster.registerPageHandler((msg) => {
-      let rt = false;
-      rt = globalRequestHandler(msg, this.router, this.messageService);
-      if (msg.for) {
-        if (msg.for === 'CarTypeGate') {
-          this.carTypes = msg.data;
-          rt = true;
-        } else if (msg.for === 'getAllCityDropdown') {
-          this.cities = msg.data;
-          rt = true;
-        } else if (msg.for === 'getAllBranchDropdown') {
-          this.branches = msg.data;
-          console.log(this.branches)
-          rt = true;
-        } else if (msg.for === 'getAllParty') {
-          this.PartyName = msg.data;
-          rt = true;
-        }
-      }
-      if (rt == false) {
-        console.log(msg);
-      }
-      return rt;
-    });
-
-    this.getCarTypeName();
-    this.getAllCity();
-    this.getAllBranches();
-    this.getAllPraty();
-    this.init();
-  }
-
   init() {
     this.bookingFrom = this.fb.group({
       id: [0],
       branch_id: [null, Validators.required],
-      EntryDate: [getCurrentDate(),Validators.required],
+      EntryDate: [getCurrentDate(), Validators.required],
       EntryTime: [getCurrentTime(), Validators.required],
       RentalDate: [''],
       SlipNo: ['NEW'],
       FromCityID: [''],
       ReportingDatetime: [getCurrentTime(), Validators.required],
       ToCityID: [''],
-      DutyType: [null, Validators.required],
-      Party: [null, Validators.required],
+      DutyType: [''], // null, Validators.required
+      Party: [''],
       ReportAt: [''],
       Email: [''],
       Flight_train_No: [''],
       Project: [''],
       DropAt: [''],
-      CarType: [null, Validators.required],
+      CarType: [''], //null, Validators.required
       BookingMode: [''],
       BookedBy: [''],
       ContactNo: [''],
       BookedEmail: [''],
       Advance: [0],
-      PartyRateType: [null, Validators.required],
+      PartyRateType: [''],   // null, Validators.required
       PartyRate: [0],
       Price: [0],
       HourRate: [0],
       KMRate: [0],
-      LGustName:[''],
+      LGustName: [''],
       lid: [''],
       LContactNo: [''],
       LContactNo2: [''],
       LAddress: [''],
       LDropAddress: [''],
       LRemarks: [''],
-      discount_amount:[''],
+      discount_amount: [''],
       isCash: [0],
       // missing
-      SelectRate :[0]
+      SelectRate: [0],
     });
 
     this.fullBookingFrom = this.fb.group({
@@ -383,7 +293,7 @@ export class BookingEntryComponent implements OnInit {
       ReportingDatetime: ['21:00'],
       CarType: ['25'],
       CarTypeSend: ['25'],
-      Party: [null,Validators.required],
+      Party: [null, Validators.required],
       party_name: ['INTAS PHARMA LIMITED'],
       vendor_id: ['3'],
       VendorContact: ['780566895'],
@@ -478,6 +388,105 @@ export class BookingEntryComponent implements OnInit {
       isCash: ['0'],
       item_image: ['undefined'],
     });
+  }
+
+
+;
+
+
+  filterCities(event: any) {
+    if (!this.cities) return;
+    const query = event.query.toLowerCase();
+    this.filteredCities = this.cities.filter((city) =>
+      city.CityName.toLowerCase().includes(query)
+    );
+  }
+
+  filteredToCities: any[] = [];
+
+  filterToCities(event: any) {
+    if (!this.cities) return;
+    const query = event.query.toLowerCase();
+    this.filteredToCities = this.cities.filter((city) =>
+      city.CityName.toLowerCase().includes(query)
+    );
+  }
+
+  filteredCarTypes: any[] = [];
+
+  filterCarTypes(event: any) {
+    if (!this.carTypes) return;
+    const query = event.query.toLowerCase();
+    this.filteredCarTypes = this.carTypes.filter((type) =>
+      type.car_type.toLowerCase().includes(query)
+    );
+    console.log(this.filteredCarTypes)
+  }
+
+  filteredCarTypeSend: any[] = [];
+
+  filterCarTypeSend(event: any) {
+    if (!this.carTypes) return;
+    const query = event.query.toLowerCase();
+    this.filteredCarTypeSend = this.carTypes.filter((type) =>
+      type.car_type.toLowerCase().includes(query)
+    );
+  }
+
+  filteredBranches: any[] = [];
+
+  filterBranches(event: any) {
+    if (!this.branches) return;
+    const query = event.query.toLowerCase();
+    this.filteredBranches = this.branches.filter((branch) =>
+      branch.branch_name.toLowerCase().includes(query)
+    );
+  }
+
+  // AutoComplete
+  PartyName: any[] = [];
+  filterPartyName(event: any) {
+    if (!this.PartyName) return;
+    const query = event.query.toLowerCase();
+    this.PartyName = this.PartyName.filter((party) =>
+      party.PartyName.toLowerCase().includes(query)
+    );
+  }
+
+  ngOnInit(): void {
+    this.route.queryParams.subscribe((params) => {
+      this.isFullBooking = params['isFullBooking'] === 'true';
+    });
+
+    this.carTypeMaster.registerPageHandler((msg) => {
+      let rt = false;
+      rt = globalRequestHandler(msg, this.router, this.messageService);
+      if (msg.for) {
+        if (msg.for === 'CarTypeGate') {
+          this.carTypes = msg.data;
+          rt = true;
+        } else if (msg.for === 'getAllCityDropdown') {
+          this.cities = msg.data;
+          rt = true;
+        } else if (msg.for === 'getAllBranchDropdown') {
+          this.branches = msg.data;
+          rt = true;
+        } else if (msg.for === 'getAllParty') {
+          this.PartyName = msg.data;
+          rt = true;
+        }
+      }
+      if (rt == false) {
+        console.log(msg);
+      }
+      return rt;
+    });
+
+    this.getCarTypeName();
+    this.getAllCity();
+    this.getAllBranches();
+    this.getAllPraty();
+    this.init();
   }
 
   searchVendors(event: any) {
@@ -614,19 +623,50 @@ export class BookingEntryComponent implements OnInit {
 
   // OnSelect Functions
   onBranchSelect(branch: any) {
-    if (this.bookingFrom){
-    this.bookingFrom.get('branch_id').setValue(branch.value.Id);
+    if (this.bookingFrom) {
+      this.bookingFrom.get('branch_id').setValue(branch.value.Id);
+      console.log(branch);
     }
   }
 
-  submitBooking() {
-  if (this.bookingFrom.valid) {
-    console.log('Submitted Form Values:', this.bookingFrom.value);
-  } else {
-    // Show validation errors
-    console.warn('Form is invalid');
-    this.bookingFrom.markAllAsTouched(); // Mark all fields as touched to show errors
+  onCitySelect(city: any) {
+    if (this.bookingFrom) {
+      this.bookingFrom.get('FromCityID').setValue(city.value.Id);
+    }
+    console.log(city);
+  }
+
+  onToCitySelect(city: any){
+     if (this.bookingFrom) {
+      this.bookingFrom.get('ToCityID').setValue(city.value.Id);
+    }
+    console.log(city);
+  }
+
+
+  onPartyNameSelect(party: any){
+     if (this.bookingFrom) {
+      this.bookingFrom.get('').setValue(party.Id);
+    }
+    console.log(party);
+  }
+
+
+  onCarTypeSelect(cartype: any) {
+  if (this.bookingFrom) {
+    this.bookingFrom.get('CarType').setValue(cartype);
   }
 }
 
+
+
+  submitBooking() {
+    if (this.bookingFrom.valid) {
+      console.log('Submitted Form Values:', this.bookingFrom.value);
+    } else {
+      // Show validation errors
+      console.warn('Form is invalid');
+      this.bookingFrom.markAllAsTouched(); // Mark all fields as touched to show errors
+    }
+  }
 }
