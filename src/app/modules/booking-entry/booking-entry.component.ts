@@ -4,13 +4,7 @@ import { carTypeMasterService } from './../../services/carTypeMaster.service';
 import { CheckboxModule } from 'primeng/checkbox';
 import { CommonModule } from '@angular/common';
 import { Component, NgModule, OnInit } from '@angular/core';
-import {
-  FormBuilder,
-  FormsModule,
-  NgModel,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import {FormBuilder,FormsModule,NgModel,ReactiveFormsModule,Validators,} from '@angular/forms';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
@@ -20,11 +14,7 @@ import { TableModule } from 'primeng/table';
 import { TabPanel, TabViewModule } from 'primeng/tabview';
 import { ToggleButton } from 'primeng/togglebutton';
 import { ActivatedRoute, Router } from '@angular/router';
-import {
-  getCurrentDate,
-  getCurrentTime,
-  globalRequestHandler,
-} from '../../utils/global';
+import {getCurrentDate,getCurrentTime,globalRequestHandler,} from '../../utils/global';
 import { MessageService } from 'primeng/api';
 import { commonService } from '../../services/comonApi.service';
 import { partyMasterService } from '../../services/partyMaster.service';
@@ -80,59 +70,64 @@ export class BookingEntryComponent implements OnInit {
 
   dateFields = [
     {
-      label: 'Garage Out',
-      dateModel: 'garageOut',
+      label: 'Garage Out Date',
+      dateModel: 'GarageOutDate',
       kmLabel: 'Garage Out KM',
-      kmModel: 'garageOutKM',
+      kmModel: 'GarageOutKm',
     },
     {
       label: 'Report Date',
-      dateModel: 'reportDate',
+      dateModel: 'ReportDate',
       kmLabel: 'Report KM',
-      kmModel: 'reportKM',
+      kmModel: 'ReportKm',
     },
     {
       label: 'Releasing Date',
-      dateModel: 'releasingDate',
+      dateModel: 'ReleasingDate',
       kmLabel: 'Releasing KM',
-      kmModel: 'releasingKM',
+      kmModel: 'ReleaseKm',
     },
     {
       label: 'Garage In Date',
-      dateModel: 'garageInDate',
+      dateModel: 'GarageInDate',
       kmLabel: 'Garage In KM',
-      kmModel: 'garageInKM',
+      kmModel: 'GarageInKm',
     },
   ];
 
   vendorDateFields = [
     {
-      label: 'Vendor Out',
-      dateModel: 'vendorOut',
-      kmLabel: 'Vendor Out KM',
-      kmModel: 'vendorOutKM',
+      label: 'Garage Out Date',
+      dateModel: 'VendorGarageOutDate',
+      kmLabel: 'Garage Out Km',
+      kmModel: 'VendorGarageOutKm',
     },
     {
       label: 'Report Date',
-      dateModel: 'reportDate',
+      dateModel: 'VendorReportDate',
       kmLabel: 'Report KM',
-      kmModel: 'reportKM',
+      kmModel: 'VendorReportKm',
     },
     {
       label: 'Release Date',
-      dateModel: 'releaseDate',
+      dateModel: 'VendorReleasingDate',
       kmLabel: 'Release KM',
-      kmModel: 'releaseKM',
+      kmModel: 'VendorReleaseKm',
     },
     {
-      label: 'Vendor In',
-      dateModel: 'vendorIn',
-      kmLabel: 'Vendor In KM',
-      kmModel: 'vendorInKM',
+      label: 'Garage In Date',
+      dateModel: 'VendorGarageInDate',
+      kmLabel: 'Garage In Km',
+      kmModel: 'VendorGarageInKm',
     },
   ];
 
-  booking: any;
+  booking = {
+  netAmount: 0,
+  otherCharges: 0,
+  totalAmount: 0
+};
+
 
   vendorBooking = {
     vendorRateType: null,
@@ -280,26 +275,26 @@ export class BookingEntryComponent implements OnInit {
     });
 
     this.fullBookingFrom = this.fb.group({
-      bookingStatus: ['auto'],
-      Calon: ['M'],
-      minHour: ['8.50'],
-      minKm: ['0'],
-      EntryTime: ['14:38'],
-      id: ['85805'],
-      EntryDate: ['14-07-2025'],
-      branch_id: ['17'],
-      SlipNo: ['LC06032025-56'],
-      RentalDate: ['2025-03-06'],
-      ReportingDatetime: ['21:00'],
-      CarType: ['25'],
-      CarTypeSend: ['25'],
+      bookingStatus: [''],
+      Calon: [''],
+      minHour: [''],
+      minKm: [''],
+      EntryTime: [''],
+      id: [''],
+      EntryDate: [''],
+      branch_id: [''],
+      SlipNo: [''],
+      RentalDate: [''],
+      ReportingDatetime: [''],
+      CarType: [''],
+      CarTypeSend: [''],
       Party: [null, Validators.required],
-      party_name: ['INTAS PHARMA LIMITED'],
-      vendor_id: ['3'],
-      VendorContact: ['780566895'],
-      vendor_name: ['RAMESHWAR CAR RENTALS'],
+      party_name: [''],
+      vendor_id: [''],
+      VendorContact: [''],
+      vendor_name: [''],
       CarNo: [null, Validators.required],
-      DriverName: ['RAM YADAV'],
+      DriverName: [''],
       DriverContact: ['9966525250'],
       Project: [''],
       DutyType: ['1'],
@@ -307,16 +302,16 @@ export class BookingEntryComponent implements OnInit {
       ToCityID: ['1'],
       BookedBy: ['SURESH BAJAJ'],
       ContactNo: ['9051471725'],
-      PartyRateType: ['Normal'],
+      PartyRateType: [''],
       PartyRate: ['29'],
-      GarageOutDate: ['2025-03-06T20:30'],
-      GarageOutKm: ['0'],
-      ReportDate: ['2025-03-06T21:00'],
-      ReportKm: ['0'],
-      ReleasingDate: ['2025-03-06T21:00'],
-      ReleaseKm: ['0'],
-      GarageInDate: ['2025-03-06T21:00'],
-      GarageInKm: ['0'],
+      GarageOutDate: [''],
+      GarageOutKm: [''],
+      ReportDate: [''],
+      ReportKm: [''],
+      ReleasingDate: [''],
+      ReleaseKm: [''],
+      GarageInDate: [''],
+      GarageInKm: [''],
       totalhrsvalue: ['0.00'],
       totalkmvalue: ['0'],
       ExtraHrs: [''],
@@ -332,18 +327,18 @@ export class BookingEntryComponent implements OnInit {
       HourRate: ['170'],
       Price: ['0'],
       Advance: ['0.00'],
-      TotalAmt: ['1445'],
+      TotalAmt: ['0'],
       TotalOtherCharge: ['0'],
-      NetAmt: ['1445'],
-      VendorRateType: ['Normal'],
+      NetAmt: [''],
+      VendorRateType: [''],
       VendorRate: [null, Validators.required],
-      VendorGarageOutDate: ['2025-03-06T21:00'],
+      VendorGarageOutDate: [''],
       VendorGarageOutKm: ['0'],
-      VendorReportDate: ['2025-03-06T21:00'],
+      VendorReportDate: [''],
       VendorReportKm: ['0'],
-      VendorReleasingDate: ['2025-03-06T21:00'],
+      VendorReleasingDate: [''],
       VendorReleaseKm: ['0'],
-      VendorGarageInDate: ['2025-03-06T21:00'],
+      VendorGarageInDate: [''],
       VendorGarageInKm: ['0'],
       Vendortotalhrsvalue: ['0.00'],
       Vendortotalkmvalue: ['0'],
@@ -356,27 +351,25 @@ export class BookingEntryComponent implements OnInit {
       VendorKMRate: ['14.00'],
       VendorHrs_km: ['0'],
       Vendorhrs_hrs: ['0'],
-      VendorHigherRate: ['N'],
-      VendorHourRate: ['140.00'],
-      VendorPrice: ['0.00'],
-      VendorTotalAmt: ['1120'],
+      VendorHigherRate: [''],
+      VendorHourRate: ['0'],
+      VendorPrice: ['0'],
+      VendorTotalAmt: ['0'],
       VendorTotalOtherCharge: ['0'],
-      VendorNetAmt: ['1120'],
-      LGustName: this.fb.array(['AMIT SHAH']),
-      LContactNo: this.fb.array(['1234567890']),
-      LContactNo2: this.fb.array(['']),
-      LAddress: this.fb.array([
-        'B.G. THAPAR HOUSE, 12TH FLOOR,ROOM NO, 1205,KOLKATA - 700001',
-      ]),
-      LAddressLat: this.fb.array(['']),
-      LAddressLng: this.fb.array(['']),
-      LDropAddress: this.fb.array(['']),
-      LDropAddressLat: this.fb.array(['']),
-      LDropAddressLng: this.fb.array(['']),
-      LRemarks: this.fb.array(['']),
-      lid: this.fb.array(['85533']),
-      discount_amount: this.fb.array(['']),
-      ReportAt: ['RAILWAY STATION'],
+      VendorNetAmt: ['0'],
+      LGustName: [''],
+      LContactNo: [''],
+      LContactNo2: [''],
+      LAddress: [''],
+      LAddressLat: [''],
+      LAddressLng: [''],
+      LDropAddress: [''],
+      LDropAddressLat: [''],
+      LDropAddressLng: [''],
+      LRemarks: [''],
+      lid: [''],
+      discount_amount: [''],
+      ReportAt: [''],
       Email: [''],
       Flight_train_No: [''],
       DropAt: [''],
@@ -386,12 +379,9 @@ export class BookingEntryComponent implements OnInit {
       BillingMode: [''],
       attachment: [''],
       isCash: ['0'],
-      item_image: ['undefined'],
+      item_image: [''],
     });
   }
-
-
-;
 
 
   filterCities(event: any) {
@@ -467,6 +457,7 @@ export class BookingEntryComponent implements OnInit {
           rt = true;
         } else if (msg.for === 'getAllCityDropdown') {
           this.cities = msg.data;
+          console.log(this.cities)
           rt = true;
         } else if (msg.for === 'getAllBranchDropdown') {
           this.branches = msg.data;
@@ -509,13 +500,6 @@ export class BookingEntryComponent implements OnInit {
 
   removeGuest(index: number) {
     this.guests.splice(index, 1);
-  }
-
-  saveBooking() {
-    // console.log('Booking Data:', this.booking);
-    // console.log('Guest List:', this.guests);
-    // console.log('vendor data:', this.vendorBooking);
-    // Add service call to save the data here
   }
 
   closeForm() {
@@ -658,6 +642,10 @@ export class BookingEntryComponent implements OnInit {
   }
 }
 
+onToggleBooking(event: any) {
+  this.isFullBooking = !this.isFullBooking;
+}
+
 
 
   submitBooking() {
@@ -667,6 +655,16 @@ export class BookingEntryComponent implements OnInit {
       // Show validation errors
       console.warn('Form is invalid');
       this.bookingFrom.markAllAsTouched(); // Mark all fields as touched to show errors
+    }
+  }
+
+  submitFullBooking() {
+    if (this.fullBookingFrom.valid) {
+      console.log('Submitted Form Values:', this.fullBookingFrom.value);
+    } else {
+      // Show validation errors
+      console.warn('Form is invalid');
+      this.fullBookingFrom.markAllAsTouched(); // Mark all fields as touched to show errors
     }
   }
 }
