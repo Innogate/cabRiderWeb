@@ -13,9 +13,15 @@ import { DynamicTableComponent } from '../../../components/dynamic-table/dynamic
   styleUrl: './guest-list-master.component.css'
 })
 export class GuestListMasterComponent implements OnInit,OnDestroy,AfterViewInit {
-  isLoading: boolean=true;
+  showFrom: boolean= false;
+  isLoading: boolean= true;
   data: any[]=[];
-  constructor(private guestlistMasterService:guestMasterService, private router:Router,private messageService:MessageService){}
+  heading: string='';
+
+  constructor(
+    private guestlistMasterService:guestMasterService, 
+    private router:Router,
+    private messageService:MessageService){}
 
 
     ngOnInit(): void {
@@ -71,12 +77,16 @@ export class GuestListMasterComponent implements OnInit,OnDestroy,AfterViewInit 
   handleAction(event: { action: string, data: any }) {
     switch (event.action) {
       case 'edit':
+        this.showFrom = true;
+        this.heading = 'UPDATE GUEST'
         console.log("edit")
         break;
       case 'delete':
         console.log("delite")
         break;
       case 'add':
+        this.showFrom = true;
+        this.heading = 'EDIT GUEST'
         console.log("add")
         break
     }
