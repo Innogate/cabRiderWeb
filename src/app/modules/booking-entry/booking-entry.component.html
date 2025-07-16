@@ -4,31 +4,42 @@
     class="p-6 m-6 rounded-2xl shadow-xl border border-blue-300 bg-gradient-to-r from-white to-blue-50"
   >
     <div class="flex items-center justify-between mb-6">
-      <!-- Heading -->
-      <h2
-        class="text-4xl font-extrabold text-blue-600 flex items-center gap-3 m-0"
+  <!-- Heading with Icon -->
+  <div class="border-b border-blue-200 pb-4">
+    <h2 class="text-3xl md:text-4xl font-bold text-blue-700 flex items-center gap-4">
+      <span
+        class="bg-blue-100 text-blue-700 w-12 h-12 rounded-full flex items-center justify-center shadow-md"
       >
-        <i class="pi pi-calendar-plus text-blue-700 text-3xl"></i>
-        Add Full Booking Information
-      </h2>
+        <i class="pi pi-book text-2xl"></i>
+      </span>
+      <span class="leading-tight">
+        Add <span class="text-blue-900">Full Booking</span> Information
+      </span>
+    </h2>
+  </div>
 
-      <!-- Toggle Button -->
-      <div class="flex items-center gap-3">
-        <p-toggleButton
-          (onChange)="onToggleBooking($event)"
-          onLabel="FullBooking"
-          offLabel="Booking"
-          onIcon="pi-check-square"
-          offIcon="pi pi-box"
-          styleClass="w-48 h-10"
-        >
-        </p-toggleButton>
-      </div>
-    </div>
+  <!-- Toggle Button -->
+  <div class="flex items-center gap-3">
+    <p-toggleButton
+      [(ngModel)]="isFullBooking"
+      onLabel="FullBooking"
+      offLabel="Booking Only"
+      onIcon="pi-calendar-check"
+      offIcon="pi pi-calendar-times"
+      styleClass="w-52 h-12 text-white rounded-full border-none"
+      [style]="{
+        'background-color': isFullBooking ? '#2563eb' : '#6b7280',
+        'transition': 'all 0.3s ease'
+      }"
+    >
+    </p-toggleButton>
+  </div>
+</div>
+
 
     <form [formGroup]="fullBookingFrom">
       <!-- Full Booking Section -->
-      <div class="p-6 m-6 rounded-2xl bg-gradient-to-r from-white to-blue-50">
+      <div class="p-6 m-6 rounded-2xl bg-gradient-to-r from-[#ffffff] to-[#e6f3ff] border">
         <!-- Wrap every 3 items -->
         <div class="flex flex-col md:flex-row gap-6 mb-6">
           <div class="flex-1">
@@ -402,13 +413,13 @@
 
       <!-- Party & Vendor Rate Sections -->
       <div class="grid grid-cols-2 gap-6">
-        <div class="bg-white p-2 rounded-xl shadow-md">
+        <div class="bg-white p-2 rounded-xl border">
           <h3 class="text-xl font-semibold text-green-600 mb-4">
             Party Rate Details
           </h3>
 
           <!-- Party Rate Type and Select Rate -->
-          <div class="grid grid-cols-3 gap-4 mb-6">
+          <div class="grid grid-cols-3 gap-4 mb-6 ">
             <p-dropdown
               formControlName="PartyRateType"
               [options]="partyRateTypes"
@@ -442,21 +453,21 @@
             <div class="col-span-2 grid grid-cols-2 gap-4">
               <ng-container *ngFor="let field of dateFields">
                 <div>
-                  <label class="font-medium">{{ field.label }}</label>
+                  <label class="font-medium text-gray-800">{{ field.label }}</label>
                   <input
                     type="datetime-local"
                     [formControlName]="field.dateModel"
-                    class="w-full border border-gray-300 p-2 rounded"
+                    class="w-full border border-gray-300 p-2 rounded text-gray-800"
                   />
                 </div>
 
                 <div>
-                  <label class="font-medium">{{ field.kmLabel }}</label>
+                  <label class="font-medium text-gray-800">{{ field.kmLabel }}</label>
                   <input
                     type="number"
                     pInputText
                     [formControlName]="field.kmModel"
-                    class="w-full border border-gray-300 p-2 rounded"
+                    class="w-full border border-gray-300 p-2 rounded text-gray-800"
                   />
                 </div>
               </ng-container>
@@ -467,7 +478,7 @@
               <table class="w-full text-left">
                 <tbody>
                   <tr class="border-b border-gray-300">
-                    <td class="p-2 font-medium">Cash</td>
+                    <td class="p-2 font-medium text-gray-800">Cash</td>
                     <td class="p-2">
                       <p-checkbox
                         formControlName="isCash"
@@ -477,7 +488,7 @@
                   </tr>
 
                   <tr class="border-b border-gray-300 bg-gray-200">
-                    <td class="font-medium">KM Rate</td>
+                    <td class="font-medium text-gray-800">KM Rate</td>
                     <td class="">
                       <input
                         type="number"
@@ -489,7 +500,7 @@
                   </tr>
 
                   <tr class="border-b border-gray-300">
-                    <td class="font-medium">Hour Rate</td>
+                    <td class="font-medium text-gray-800">Hour Rate</td>
                     <td class="">
                       <input
                         type="number"
@@ -501,7 +512,7 @@
                   </tr>
 
                   <tr class="border-b border-gray-300">
-                    <td class="font-medium">Price</td>
+                    <td class="font-medium text-gray-800">Price</td>
                     <td class="">
                       <input
                         type="number"
@@ -513,7 +524,7 @@
                   </tr>
 
                   <tr class="border-b border-gray-300">
-                    <td class="font-medium">Advance</td>
+                    <td class="font-medium text-gray-800">Advance</td>
                     <td class="">
                       <input
                         type="number"
@@ -525,21 +536,21 @@
                   </tr>
 
                   <tr class="border-b border-gray-300">
-                    <td class="p-2 font-medium">Net Amount</td>
+                    <td class="p-2 font-medium text-gray-800">Net Amount</td>
                     <td class="p-2 text-center">
                       {{ booking.netAmount || 0 }}
                     </td>
                   </tr>
 
                   <tr class="border-b border-gray-300">
-                    <td class="p-2 font-medium">Other Charges</td>
+                    <td class="p-2 font-medium text-gray-800">Other Charges</td>
                     <td class="p-2 text-center">
                       {{ booking.otherCharges || 0 }}
                     </td>
                   </tr>
 
                   <tr>
-                    <td class="p-2 font-medium">Total Amount</td>
+                    <td class="p-2 font-medium text-gray-800">Total Amount</td>
                     <td class="p-2 text-center font-semibold text-green-600">
                       {{ booking.totalAmount || 0 }}
                     </td>
@@ -683,8 +694,8 @@
         </div>
 
         <!-- Vendor Rate Section -->
-        <div class="bg-white p-2 rounded-xl shadow-md">
-          <h3 class="text-xl font-semibold text-blue-600 mb-4">
+        <div class="bg-white p-2 rounded-xl border">
+          <h3 class="text-xl font-semibold text-blue-600 mb-4 ">
             Vendor Rate Details
           </h3>
 
@@ -720,16 +731,16 @@
             <div class="col-span-2 grid grid-cols-2 gap-4">
               <ng-container *ngFor="let field of vendorDateFields">
                 <div>
-                  <label class="font-medium">{{ field.label }}</label>
+                  <label class="font-medium text-gray-800">{{ field.label }}</label>
                   <input
                     type="datetime-local"
                     [formControlName]="field.dateModel"
-                    class="w-full border border-gray-300 p-2 rounded"
+                    class="w-full border border-gray-300 p-2 rounded text-gray-800"
                   />
                 </div>
 
                 <div>
-                  <label class="font-medium">{{ field.kmLabel }}</label>
+                  <label class="font-medium text-gray-800">{{ field.kmLabel }}</label>
                   <input
                     type="number"
                     pInputText
@@ -745,7 +756,7 @@
               <table class="w-full text-left">
                 <tbody>
                   <tr class="border-b border-gray-300">
-                    <td class="p-2 font-medium">Cash</td>
+                    <td class="p-2 font-medium text-gray-800">Cash</td>
                     <td class="p-2">
                       <p-checkbox
                         formControlName="isCash"
@@ -755,7 +766,7 @@
                   </tr>
 
                   <tr class="border-b border-gray-300 bg-gray-200">
-                    <td class="font-medium">KM Rate</td>
+                    <td class="font-medium text-gray-800">KM Rate</td>
                     <td class="">
                       <input
                         type="number"
@@ -767,7 +778,7 @@
                   </tr>
 
                   <tr class="border-b border-gray-300">
-                    <td class="font-medium">Hour Rate</td>
+                    <td class="font-medium text-gray-800">Hour Rate</td>
                     <td class="">
                       <input
                         type="number"
@@ -779,7 +790,7 @@
                   </tr>
 
                   <tr class="border-b border-gray-300">
-                    <td class="font-medium">Price</td>
+                    <td class="font-medium text-gray-800">Price</td>
                     <td class="">
                       <input
                         type="number"
@@ -791,7 +802,7 @@
                   </tr>
 
                   <tr class="border-b border-gray-300">
-                    <td class="font-medium">Advance</td>
+                    <td class="font-medium text-gray-800">Advance</td>
                     <td class="">
                       <input
                         type="number"
@@ -803,21 +814,21 @@
                   </tr>
 
                   <tr class="border-b border-gray-300">
-                    <td class="p-2 font-medium">Net Amount</td>
+                    <td class="p-2 font-medium text-gray-800">Net Amount</td>
                     <td class="p-2 text-center">
                       {{ vendorBooking.netAmount || 0 }}
                     </td>
                   </tr>
 
                   <tr class="border-b border-gray-300">
-                    <td class="p-2 font-medium">Other Charges</td>
+                    <td class="p-2 font-medium text-gray-800">Other Charges</td>
                     <td class="p-2 text-center">
                       {{ vendorBooking.otherCharges || 0 }}
                     </td>
                   </tr>
 
                   <tr>
-                    <td class="p-2 font-medium">Total Amount</td>
+                    <td class="p-2 font-medium text-gray-800">Total Amount</td>
                     <td class="p-2 text-center font-semibold text-blue-600">
                       {{ vendorBooking.totalAmount || 0 }}
                     </td>
@@ -829,7 +840,7 @@
 
           <!-- Summary -->
           <div class="mt-4 grid grid-cols-2 gap-4">
-            <div class="text-gray-700 font-medium">
+            <div class="text-gray-700 font-medium ">
               Total Hours: {{ totalVendorHours }}
             </div>
             <div class="text-gray-700 font-medium">
@@ -970,7 +981,7 @@
       <p-tabView>
         <!-- Guest Name Tab -->
         <p-tabPanel header="Guest Name">
-          <div class="mt-4 bg-white p-4 rounded-xl shadow-md">
+          <div class="mt-4 bg-white p-4 rounded-xl  border">
             <h3 class="text-xl font-semibold text-purple-600 mb-4">
               Guest Details
             </h3>
@@ -1070,7 +1081,7 @@
         <!-- Others Tab -->
         <p-tabPanel header="Others">
           <div
-            class="mt-4 bg-white p-4 rounded-xl shadow-md grid grid-cols-3 gap-4"
+            class="mt-4 bg-white p-4 rounded-xl border shadow-md grid grid-cols-3 gap-4"
           >
             <div>
               <label class="font-medium">Booking Mode</label>
@@ -1185,31 +1196,43 @@
   *ngIf="!isFullBooking && bookingFrom"
   class="p-6 m-6 rounded-2xl shadow-xl border border-blue-300 bg-gradient-to-r from-white to-blue-50"
 >
-  <div class="flex items-center justify-between mb-6">
-    <!-- Heading -->
-    <h2
-      class="text-4xl font-extrabold text-blue-600 flex items-center gap-3 m-0"
-    >
-      <i class="pi pi-calendar-plus text-blue-700 text-3xl"></i>
-      Add Booking Information
+    <div class="flex items-center justify-between mb-6">
+  <!-- Heading with Icon -->
+  <div class="border-b border-blue-200 pb-4">
+    <h2 class="text-3xl md:text-4xl font-bold text-blue-700 flex items-center gap-4">
+      <span
+        class="bg-blue-100 text-blue-700 w-12 h-12 rounded-full flex items-center justify-center shadow-md"
+      >
+        <i class="pi pi-book text-2xl"></i>
+      </span>
+      <span class="leading-tight">
+        Add <span class="text-blue-900">Booking</span> Information
+      </span>
     </h2>
-
-    <!-- Toggle Button -->
-    <div class="flex items-center gap-3">
-      <p-toggleButton
-         (onChange)="onToggleBooking($event)"
-          onLabel="Booking"
-          offLabel="FullBooking"
-          onIcon="pi-square"
-          offIcon="pi pi-box"
-          styleClass="w-48 h-10"
-      ></p-toggleButton>
-    </div>
   </div>
+
+  <!-- Toggle Button -->
+  <div class="flex items-center gap-3">
+    <p-toggleButton
+      [(ngModel)]="isFullBooking"
+      onLabel="FullBooking"
+      offLabel="Booking Only"
+      onIcon="pi-calendar-check"
+      offIcon="pi pi-calendar-times"
+      styleClass="w-52 h-12 text-white rounded-full border-none"
+      [style]="{
+        'background-color': isFullBooking ? '#2563eb' : '#6b7280',
+        'transition': 'all 0.3s ease'
+      }"
+    >
+    </p-toggleButton>
+  </div>
+</div>
+
 
   <form [formGroup]="bookingFrom" (ngSubmit)="submitBooking()">
     <!-- Booking Section -->
-    <div class="p-6 m-6 rounded-2xl bg-gradient-to-r from-white to-blue-50">
+    <div class="p-6 m-6 rounded-2xl bg-gradient-to-r from-white to-blue-50 border">
       <!-- Wrap every 3 items -->
       <div class="flex flex-col md:flex-row gap-6 mb-6">
         <!-- Slip No -->
@@ -1733,7 +1756,7 @@
     </div>
 
     <!-- Guest section -->
-    <div class="mt-4 bg-white p-4 rounded-xl">
+    <div class="mt-4 bg-white p-4 rounded-xl border">
       <h3 class="text-xl font-semibold text-purple-600 mb-4">Guest Details</h3>
       <p-table [value]="guests" responsiveLayout="scroll">
         <ng-template pTemplate="header">

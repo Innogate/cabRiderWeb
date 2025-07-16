@@ -457,7 +457,6 @@ export class BookingEntryComponent implements OnInit {
           rt = true;
         } else if (msg.for === 'getAllCityDropdown') {
           this.cities = msg.data;
-          console.log(this.cities)
           rt = true;
         } else if (msg.for === 'getAllBranchDropdown') {
           this.branches = msg.data;
