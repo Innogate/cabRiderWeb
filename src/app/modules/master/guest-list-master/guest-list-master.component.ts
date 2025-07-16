@@ -5,15 +5,18 @@ import { guestMasterService } from '../../../services/guestMaster.service';
 import { globalRequestHandler } from '../../../utils/global';
 import { MessageService } from 'primeng/api';
 import { DynamicTableComponent } from '../../../components/dynamic-table/dynamic-table.component';
+import { AutoCompleteModule } from 'primeng/autocomplete';
+import { DragDropModule } from 'primeng/dragdrop';
+import { DropdownModule } from 'primeng/dropdown';
 
 @Component({
   selector: 'app-guest-list-master',
-  imports: [CommonModule,DynamicTableComponent],
+  imports: [CommonModule,DynamicTableComponent, AutoCompleteModule, DropdownModule],
   templateUrl: './guest-list-master.component.html',
   styleUrl: './guest-list-master.component.css'
 })
 export class GuestListMasterComponent implements OnInit,OnDestroy,AfterViewInit {
-  showFrom: boolean= false;
+  showForm: boolean= false;
   isLoading: boolean= true;
   data: any[]=[];
   heading: string='';
@@ -77,7 +80,7 @@ export class GuestListMasterComponent implements OnInit,OnDestroy,AfterViewInit 
   handleAction(event: { action: string, data: any }) {
     switch (event.action) {
       case 'edit':
-        this.showFrom = true;
+        this.showForm = true;
         this.heading = 'UPDATE GUEST'
         console.log("edit")
         break;
@@ -85,7 +88,7 @@ export class GuestListMasterComponent implements OnInit,OnDestroy,AfterViewInit 
         console.log("delite")
         break;
       case 'add':
-        this.showFrom = true;
+        this.showForm = true;
         this.heading = 'EDIT GUEST'
         console.log("add")
         break
