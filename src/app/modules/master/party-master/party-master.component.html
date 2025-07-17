@@ -7,8 +7,10 @@
     <form [formGroup]="form" (ngSubmit)="saveParty()"
         class="max-w-7xl mx-auto bg-white rounded-xl shadow-md overflow-hidden">
         <!-- Header -->
-        <div class="bg-blue-600 px-6 py-4 rounded-t-lg flex justify-between items-center">
-            <h1 class="text-2xl font-semibold text-white">gjfghj</h1>
+        <div class="bg-sky-700 px-6 py-4 rounded-t-lg flex justify-between items-center">
+            <h1 class="text-2xl font-semibold text-white">
+                {{header}}
+            </h1>
             <button type="button" class="text-white hover:text-gray-200 focus:outline-none" aria-label="Close"
                 (click)="showForm = false">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -19,41 +21,55 @@
         </div>
 
         <!-- Main Form Content -->
-        <div class="p-6 grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div class="p-6 grid grid-cols-1 lg:grid-cols-2 gap-8 bg-sky-200">
             <!-- Left Column -->
             <div class="space-y-6">
                 <!-- Basic Information Card -->
-                <div class="bg-gray-50 p-5 rounded-lg border border-gray-200">
-                    <h2 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-200">
+                <div class="bg-sky-100 p-5 rounded-lg border border-sky-400">
+                    <h2 class="text-lg font-semibold text-slate-950 mb-4 pb-2 border-b border-sky-400">
                         <i class="pi pi-user mr-2"></i>Basic Information
                     </h2>
                     <div class="space-y-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Party Name*</label>
+                            <div class="flex items-center space-x-2">
+                                <i class="pi pi-crown text-yellow-300"></i>
+                            <label class="block text-sm font-medium text-slate-950 mb-1">Party Name*</label>
+                            </div>
                             <input type="text" formControlName="party_name" pInputText (blur)="aliasName()"
                                 class="w-full border border-gray-300 rounded-lg p-3 text-uppercase" placeholder="Enter Party Name">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Alias</label>
+                            <div class="flex items-center space-x-2">
+                                <i class="pi pi-database text-green-400"></i>
+                            <label class="block text-sm font-medium text-slate-950 mb-1">Alias</label>
+                            </div>
                             <input type="text" formControlName="alias" pInputText
                                 class="w-full border border-gray-300 rounded-lg p-3 text-uppercase" placeholder="Enter Alias">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Address</label>
+                            <div class="flex items-center space-x-2">
+                                <i class="pi pi-home text-indigo-700"></i>
+                            <label class="block text-sm font-medium text-slate-950 mb-1">Address</label>
+                            </div>
                             <textarea formControlName="address" pInputTextarea
                                 class="w-full border border-gray-300 rounded-lg p-3" placeholder="Enter Address"
                                 rows="3"></textarea>
                         </div>
                         <div class="grid grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">City</label>
+                                <div class="flex items-center space-x-2">
+                                <i class="pi pi-building text-rose-500"></i>
+                                <label class="block text-sm font-medium text-slate-950 mb-1">City</label>
+                                </div>
                                 <p-autoComplete formControlName="city_id" [suggestions]="filteredCities"
                                     (completeMethod)="filterCity($event)" field="CityName" [dropdown]="true"
                                     placeholder="Select City" class="w-full border border-indigo-200 rounded-md">
                                 </p-autoComplete>
                             </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Pin Code</label>
+                            <div><div class="flex items-center space-x-2">
+                                <i class="pi pi-book text-green-400"></i>
+                                <label class="block text-sm font-medium text-slate-950 mb-1">Pin Code</label>
+                                </div>
                                 <input type="number" formControlName="pin_code" pInputText
                                     class="w-full border border-gray-300 rounded-lg p-3" placeholder="Pin Code">
                             </div>
@@ -62,30 +78,42 @@
                 </div>
 
                 <!-- Contact Information Card -->
-                <div class="bg-gray-50 p-5 rounded-lg border border-gray-200">
-                    <h2 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-200">
+                <div class="bg-sky-100 p-5 rounded-lg border border-sky-400">
+                    <h2 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b border-sky-400">
                         <i class="pi pi-phone mr-2"></i>Contact Information
                     </h2>
                     <div class="space-y-4">
                         <div class="grid grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Mobile No*</label>
+                                <div class="flex items-center space-x-2">
+                                <i class="pi pi-phone text-indigi-200"></i>
+                                <label class="block text-sm font-medium text-slate-950 mb-1">Mobile No*</label>
+                                </div>
                                 <input type="number" formControlName="mobileno" pInputText
                                     class="w-full border border-gray-300 rounded-lg p-3" placeholder="Mobile No">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">WhatsApp No</label>
+                                <div class="flex items-center space-x-2">
+                                <i class="pi pi-phone text-green-400"></i>
+                                <label class="block text-sm font-medium text-slate-950 mb-1">WhatsApp No</label>
+                                </div>
                                 <input type="number" formControlName="whatsappno" pInputText
                                     class="w-full border border-gray-300 rounded-lg p-3" placeholder="WhatsApp No">
                             </div>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                            <div class="flex items-center space-x-2">
+                                <i class="pi pi-google text-sky-700"></i>
+                            <label class="block text-sm font-medium text-slate-950 mb-1">Email</label>
+                            </div>
                             <input type="email" formControlName="email" pInputText
                                 class="w-full border border-gray-300 rounded-lg p-3" placeholder="Email">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Refer By</label>
+                            <div class="flex items-center space-x-2">
+                                <i class="pi pi-info text-red-500"></i>
+                            <label class="block text-sm font-medium text-slate-950 mb-1">Refer By</label>
+                            </div>
                             <input type="text" formControlName="refby" pInputText
                                 class="w-full border border-gray-300 rounded-lg p-3" placeholder="Refer By">
                         </div>
@@ -96,13 +124,16 @@
             <!-- Right Column -->
             <div class="space-y-6">
                 <!-- Tax Information Card -->
-                <div class="bg-gray-50 p-5 rounded-lg border border-gray-200">
-                    <h2 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-200">
+                <div class="bg-sky-100 p-5 rounded-lg border border-sky-400">
+                    <h2 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b border-sky-400">
                         <i class="pi pi-file mr-2"></i>Tax Information
                     </h2>
                     <div class="space-y-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Tax Type</label>
+                            <div class="flex items-center space-x-2">
+                                <i class="pi pi-comments text-indigo-700"></i>
+                            <label class="block text-sm font-medium text-slate-950 mb-1">Tax Type</label>
+                            </div>
                             <p-dropdown formControlName="tax_type" [options]="taxTypes" optionLabel="label" (onChange)="changeTaxType($event)"
                                 optionValue="value" placeholder="Select Tax Type" [showClear]="true"
                                 class="w-full border border-gray-300 rounded-lg">
@@ -111,48 +142,72 @@
                         </div>
                         <div class="grid grid-cols-3 gap-4">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">CGST (%)</label>
+                                <div class="flex items-center space-x-2">
+                                <i class="pi pi-check-square text-green-400"></i>
+                                <label class="block text-sm font-medium text-slate-950 mb-1">CGST (%)</label>
+                                </div>
                                 <input type="number" formControlName="CGST" pInputText
                                     class="w-full border border-gray-300 rounded-lg p-3" placeholder="CGST">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">SGST (%)</label>
+                                <div class="flex items-center space-x-2">
+                                <i class="pi pi-check-circle text-yellow-300"></i>
+                                <label class="block text-sm font-medium text-slate-950 mb-1">SGST (%)</label>
+                                </div>
                                 <input type="number" formControlName="SGST" pInputText
                                     class="w-full border border-gray-300 rounded-lg p-3" placeholder="SGST">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">IGST (%)</label>
+                                <div class="flex items-center space-x-2">
+                                <i class="pi pi-money-bill text-orange-500"></i>
+                                <label class="block text-sm font-medium text-slate-950 mb-1">IGST (%)</label>
+                                </div>
                                 <input type="number" formControlName="IGST" pInputText
                                     class="w-full border border-gray-300 rounded-lg p-3" placeholder="IGST">
                             </div>
                         </div>
                         <div class="grid grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">RCM Applicable</label>
+                                <div class="flex items-center space-x-2">
+                                <i class="pi pi-paperclip text-indigo-700"></i>
+                                <label class="block text-sm font-medium text-slate-950 mb-1">RCM Applicable</label>
+                                </div>
                                 <p-dropdown formControlName="rcm" optionLabel="label" [options]="rcmOptions"
                                     optionValue="label" optionValue="value" placeholder="Select..."
                                     class="w-full border border-gray-300 rounded-lg"></p-dropdown>
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">GST No</label>
+                                <div class="flex items-center space-x-2">
+                                <i class="pi pi-slack text-yellow-400"></i>
+                                <label class="block text-sm font-medium text-slate-950 mb-1">GST No</label>
+                                </div>
                                 <input type="text" formControlName="gstno" pInputText
                                     class="w-full border border-gray-300 rounded-lg p-3" placeholder="GST No">
                             </div>
                         </div>
                         <div class="grid grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">PAN No</label>
+                                <div class="flex items-center space-x-2">
+                                <i class="pi pi-align-center text-indigo-700"></i>
+                                <label class="block text-sm font-medium text-slate-950 mb-1">PAN No</label>
+                                </div>
                                 <input type="text" formControlName="panno" pInputText
                                     class="w-full border border-gray-300 rounded-lg p-3" placeholder="PAN No">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">CIN No</label>
+                                <div class="flex items-center space-x-2">
+                                <i class="pi pi-align-left text-green-400"></i>
+                                <label class="block text-sm font-medium text-slate-950 mb-1">CIN No</label>
+                                </div>
                                 <input type="text" formControlName="cinno" pInputText
                                     class="w-full border border-gray-300 rounded-lg p-3" placeholder="CIN No">
                             </div>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">MSME No</label>
+                            <div class="flex items-center space-x-2">
+                                <i class="pi pi-align-right text-red-700"></i>
+                            <label class="block text-sm font-medium text-slate-950 mb-1">MSME No</label>
+                            </div>
                             <input type="text" formControlName="msmeno" pInputText
                                 class="w-full border border-gray-300 rounded-lg p-3" placeholder="MSME No">
                         </div>
@@ -160,25 +215,33 @@
                 </div>
 
                 <!-- Credit Information Card -->
-                <div class="bg-gray-50 p-5 rounded-lg border border-gray-200">
-                    <h2 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-200">
+                <div class="bg-sky-100 p-5 rounded-lg border border-sky-400">
+                    <h2 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b border-sky-400">
                         <i class="pi pi-credit-card mr-2"></i>Credit Information
                     </h2>
                     <div class="space-y-4">
                         <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Credit Days</label>
+                            <div><div class="flex items-center space-x-2">
+                                <i class="pi pi-calendar text-green-400"></i>
+                                <label class="block text-sm font-medium text-slate-950 mb-1">Credit Days</label>
+                                </div>
                                 <input type="number" formControlName="crdays" pInputText
                                     class="w-full border border-gray-300 rounded-lg p-3" placeholder="Days">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Credit Limit (₹)</label>
+                                <div class="flex items-center space-x-2">
+                                <i class="pi pi-hourglass text-yellow-700"></i>
+                                <label class="block text-sm font-medium text-slate-950 mb-1">Credit Limit (₹)</label>
+                                </div>
                                 <input type="number" formControlName="crlimit" pInputText
                                     class="w-full border border-gray-300 rounded-lg p-3" placeholder="Amount">
                             </div>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Billing Instruction</label>
+                            <div class="flex items-center space-x-2">
+                                <i class="pi pi-indian-rupee  text-green-400"></i>
+                            <label class="block text-sm font-medium text-slate-950 mb-1">Billing Instruction</label>
+                            </div>
                             <textarea formControlName="billing_instruction" pInputTextarea
                                 class="w-full border border-gray-300 rounded-lg p-3" placeholder="Special instructions"
                                 rows="3"></textarea>
@@ -189,9 +252,9 @@
         </div>
 
         <!-- Footer with Submit Button -->
-        <div class="bg-gray-50 px-6 py-4 border-t border-gray-200 flex justify-end">
+        <div class=" bg-sky-400 px-6 py-4 border-t border-gray-200 flex justify-end">
             <button type="submit" [disabled]="form.invalid"
-                class="px-6 py-3 bg-indigo-600 text-white font-medium rounded-lg shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
+                class="px-6 py-3 bg-sky-700 text-white font-medium rounded-lg shadow-sm hover:bg-sky-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
                 Save Party Information
             </button>
         </div>
