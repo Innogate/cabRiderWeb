@@ -11,6 +11,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
 import { commonService } from '../../../services/comonApi.service';
+import { StyleClass } from 'primeng/styleclass';
 
 @Component({
   selector: 'app-party-master',
@@ -133,15 +134,15 @@ export class PartyMasterComponent implements OnInit, OnDestroy, AfterViewInit {
   columns = [
     { header: 'ID', field: 'id' },
     { header: 'Party Name', field: 'party_name', icon: 'pi pi-user', styleClass: 'text-red-600' },
-    // { header: 'Address', field: 'address', icon: 'pi pi-map', styleClass: 'text-green-600' },
-    // { header: 'City', field: 'CityName', icon: 'pi pi-map-marker', styleClass: 'text-yellow-600' },
-    // { header: 'Pin Code', field: 'pin_code', icon: 'pi pi-slack' },
-    // { header: 'Mobile No', field: 'mobileno', icon: 'pi pi-slack' },
-    // { header: 'Driver Licenseno', field: 'drv_licenseno', icon: 'pi pi-slack' },
-    // { header: 'Bank Name', field: 'bank_name', icon: 'pi pi-slack' },
-    // { header: 'Bank Branch', field: 'bank_branch', icon: 'pi pi-slack' },
-    // { header: 'Bank Account No', field: 'bank_acno', icon: 'pi pi-slack' },
-    // { header: 'Bank Account Type', field: 'bank_actype', icon: 'pi pi-slack' },
+    { header: 'Address', field: 'address', icon: 'pi pi-map', styleClass: 'text-green-600' },
+    { header: 'City', field: 'CityName', icon: 'pi pi-map-marker', styleClass: 'text-green-600' },
+    { header: 'Pin Code', field: 'pin_code', icon: 'pi pi-book',StyleClass: 'text-indigo-700' },
+    { header: 'Mobile No', field: 'mobileno', icon: 'pi pi-phone',StyleClass: 'text-yellow-400' },
+    { header: 'whatsappno', field: 'whatsappno', icon: 'pi pi-phone',StyleClass: 'text-green-700' },
+    { header: 'email', field: 'email', icon: 'pi pi-Google',StyleClass: 'text-indigo-500' },
+    { header: 'CGST', field: 'CGST', icon: 'pi pi-check-square ',StyleClass: 'text-yellow-300' },
+    { header: 'IGST', field: 'IGST', icon: 'pi pi-check-circle',StyleClass: 'text-indigo-400' },
+    { header: 'SGST', field: 'SGST', icon: 'pi pi-money-bill',StyleClass: 'text-rose-500' },
   ];
 
   actions = [
