@@ -4,7 +4,7 @@
     </app-dynamic-table>
 </div>
 <div class="min-h-screen p-4" *ngIf="showForm">
-    <form class="max-w-7xl mx-auto bg-white rounded-xl shadow-md overflow-hidden">
+    <form class="max-w-7xl mx-auto bg-white rounded-xl shadow-md overflow-hidden" [formGroup]="form" (ngSubmit)="saveVendor()">
         <!-- Header -->
         <div class="bg-sky-600 px-6 py-4 rounded-t-lg flex justify-between items-center">
             <h1 class="text-2xl font-semibold text-white">{{heading}}</h1>
@@ -23,7 +23,7 @@
             <!-- Left Column -->
             <div class="space-y-6">
                 <!-- Basic Information Card -->
-                <div class="bg-sky-100 p-5 rounded-lg border border-sky-400">
+                <div class="bg-sky-100 p-5 rounded-lg border border-sky-400 shadow-xl">
                     <h2 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b border-sky-400">
                         <i class="text-blue-600 pi pi-user mr-2"></i>Personal Information
                     </h2>
@@ -31,19 +31,41 @@
                         <div>
                             <div class="flex items-center space-x-2">
                                 <i class="pi pi-user text-orange-600"></i>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Vendor Name*</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Vendor Name</label>
+                                <span class="text-red-600">*</span>
                             </div>
                             <input type="text" class="w-full border border-gray-300 rounded-lg p-3 text-uppercase"
-                                placeholder="Enter Vendor Name">
+                               formControlName="vendor_name" placeholder="Enter Vendor Name">
+                            <span *ngIf="form.get('vendor_name')?.touched && form.get('vendor_name')?.errors?.['required']"
+                                class="text-sm text-red-600">
+                                Vendor Name is required.
+                            </span>
+                            <span *ngIf="form.get('vendor_name')?.touched && form.get('vendor_name')?.errors?.['minlength']"
+                                class="text-sm text-red-600">
+                                Vendor Name must be at least 3 characters.
+                            </span>
+                            <span *ngIf="form.get('vendor_name')?.touched && form.get('vendor_name')?.errors?.['pattern']"
+                                class="text-sm text-red-600">
+                                Only letters and spaces are allowed.
+                            </span>
                         </div>
+                        <div>
+                            <div class="flex items-center space-x-2">
+                                <i class="pi pi-map text-red-600"></i>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Address</label>
+                            </div>
+                            <textarea pInputTextarea class="w-full border border-gray-300 rounded-lg p-3"
+                               formControlName="address" placeholder="Enter Address" rows="3"></textarea>
+                        </div>
+                    </div>
                         <div class="grid grid-cols-2 gap-4">
                             <div>
                                 <div class="flex items-center space-x-2">
                                     <i class="pi pi-building text-yellow-500"></i>
                                     <label class="block text-sm font-medium text-gray-700 mb-1">City</label>
                                 </div>
-                                <p-autoComplete field="CityName" [dropdown]="true" placeholder="Select City"
-                                    class="w-full border border-indigo-200 rounded-md">
+                                <p-autoComplete field="CityName" [dropdown]="true" placeholder="Select City" formControlName="city_id" [suggestions]="filteredCities"
+                                    (completeMethod)="filterCity($event)" class="w-full border border-indigo-200 rounded-md">
                                 </p-autoComplete>
                             </div>
                             <div>
@@ -52,23 +74,14 @@
                                     <label class="block text-sm font-medium text-gray-700 mb-1">Pin Code</label>
                                 </div>
                                 <input type="number" pInputText class="w-full border border-gray-300 rounded-lg p-3"
-                                    placeholder="Pin Code">
+                                   formControlName="pin_code" placeholder="Pin Code">
                             </div>
                         </div>
-                        <div>
-                            <div class="flex items-center space-x-2">
-                                <i class="pi pi-map text-red-600"></i>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Address</label>
-                            </div>
-                            <textarea pInputTextarea class="w-full border border-gray-300 rounded-lg p-3"
-                                placeholder="Enter Address" rows="3"></textarea>
-                        </div>
-                    </div>
                 </div>
         
         
                 <!-- Banking Information Card -->
-                <div class="bg-sky-100 p-5 rounded-lg border border-sky-400">
+                <div class="bg-sky-100 p-5 rounded-lg border border-sky-400 shadow-xl">
                     <h2 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b border-sky-400">
                         <i class="pi pi-file mr-2 text-amber-950"></i>Banking Information
                     </h2>
@@ -79,16 +92,16 @@
                                     <i class="pi pi-building-columns text-yellow-500"></i>
                                     <label class="block text-sm font-medium text-gray-700 mb-1">Bank Name</label>
                                 </div>
-                                <input type="number" pInputText class="w-full border border-gray-300 rounded-lg p-3"
-                                    placeholder="Bank Name">
+                                <input type="text" pInputText class="w-full border border-gray-300 rounded-lg p-3"
+                                   formControlName="bank_name" placeholder="Bank Name">
                             </div>
                             <div>
                                 <div class="flex items-center space-x-2">
                                     <i class="pi pi-building text-orange-500"></i>
                                     <label class="block text-sm font-medium text-gray-700 mb-1">Bank Branch</label>
                                 </div>
-                                <input type="number" pInputText class="w-full border border-gray-300 rounded-lg p-3"
-                                    placeholder="Bank Branch">
+                                <input type="text" pInputText class="w-full border border-gray-300 rounded-lg p-3"
+                                   formControlName="bank_branch" placeholder="Bank Branch">
                             </div>
                         </div>
                         <div class="grid grid-cols-2 gap-4">
@@ -98,15 +111,15 @@
                                     <label class="block text-sm font-medium text-gray-700 mb-1">Bank Account No</label>
                                 </div>
                                 <input type="number" pInputText class="w-full border border-gray-300 rounded-lg p-3"
-                                    placeholder="Bank Account No">
+                                   formControlName="bank_acno" placeholder="Bank Account No">
                             </div>
                             <div>
                                 <div class="flex items-center space-x-2">
                                     <i class="pi pi-credit-card text-blue-600"></i>
                                     <label class="block text-sm font-medium text-gray-700 mb-1">Bank Account Type</label>
                                 </div>
-                                <input type="number" pInputText class="w-full border border-gray-300 rounded-lg p-3"
-                                    placeholder="Bank Account Type">
+                                <input type="text" pInputText class="w-full border border-gray-300 rounded-lg p-3"
+                                   formControlName="bank_actype" placeholder="Bank Account Type">
                             </div>
                         </div>
                         <div>
@@ -114,8 +127,8 @@
                                 <i class="pi pi-hashtag text-green-600"></i>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">IFSC Code</label>
                             </div>
-                            <input type="number" pInputText class="w-full border border-gray-300 rounded-lg p-3"
-                                placeholder="Bank IFSC Code">
+                            <input type="text" pInputText class="w-full border border-gray-300 rounded-lg p-3"
+                               formControlName="bank_ifsc" placeholder="Bank IFSC Code">
                         </div>
                     </div>
                 </div>
@@ -127,7 +140,7 @@
             <div class="space-y-6">
         
                 <!-- Contact Information Card -->
-                <div class="bg-sky-100 p-5 rounded-lg border border-sky-400">
+                <div class="bg-sky-100 p-5 rounded-lg border border-sky-400 shadow-xl">
                     <h2 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b border-sky-400">
                         <i class="pi pi-phone mr-2 text-green-800"></i>Contact Information
                     </h2>
@@ -136,27 +149,44 @@
                             <div>
                                 <div class="flex items-center space-x-2">
                                     <i class="pi pi-phone text-green-600"></i>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Mobile No*</label>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Mobile No</label>
+                                    <span class="text-red-600">*</span>
                                 </div>
                                 <input type="number" pInputText class="w-full border border-gray-300 rounded-lg p-3"
-                                    placeholder="Mobile No">
+                                   formControlName="mobileno" placeholder="Mobile No" (blur)="autoFillNo()">
+                                <span *ngIf="form.get('mobileno')?.touched && form.get('mobileno')?.errors?.['required']" class="text-sm text-red-600">
+                                    Mobile No is required.
+                                </span>
+                                <span *ngIf="form.get('mobileno')?.touched && form.get('mobileno')?.errors?.['pattern']" class="text-sm text-red-600">
+                                    Mobile No must be exactly 10 digits.
+                                </span>
                             </div>
                             <div>
                                 <div class="flex items-center space-x-2">
                                     <i class="pi pi-whatsapp text-green-600"></i>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">WhatsApp No*</label>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">WhatsApp No</label>
+                                    <span class="text-red-600">*</span>
                                 </div>
                                 <input type="number" pInputText class="w-full border border-gray-300 rounded-lg p-3"
-                                    placeholder="WhatsApp No">
+                                   formControlName="whatsappno" placeholder="WhatsApp No">
+                                <span *ngIf="form.get('whatsappno')?.touched && form.get('whatsappno')?.errors?.['required']" class="text-sm text-red-600">
+                                    WhatsApp No is required.
+                                </span>
+                                <span *ngIf="form.get('whatsappno')?.touched && form.get('whatsappno')?.errors?.['pattern']" class="text-sm text-red-600">
+                                    WhatsApp No must be exactly 10 digits.
+                                </span>
                             </div>
                         </div>
                         <div>
                             <div class="flex items-center space-x-2">
                                 <i class="pi pi-address-book text-yellow-500"></i>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Additional No*</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Additional No</label>
                             </div>
-                            <input type="number" pInputText class="w-full border border-gray-300 rounded-lg p-3"
-                                placeholder="Additional No">
+                            <input type="number" pInputText class="w-full border border-gray-300 rounded-lg p-3" formControlName="phone_no" placeholder="Additional No">
+                            <span *ngIf="form.get('phone_no')?.touched && form.get('phone_no')?.errors?.['pattern']"
+                                class="text-sm text-red-600">
+                                Additional No must be exactly 10 digits.
+                            </span>
                         </div>
                         <div>
                             <div class="flex items-center space-x-2">
@@ -164,7 +194,7 @@
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
                             </div>
                             <input type="email" pInputText class="w-full border border-gray-300 rounded-lg p-3"
-                                placeholder="Email">
+                               formControlName="email" placeholder="Email">
                         </div>
                     </div>
                 </div>
@@ -172,7 +202,7 @@
                 <!-- Right Column -->
                 <div class="space-y-6">
                     <!-- Tax Information Card -->
-                    <div class="bg-sky-100 p-5 rounded-lg border border-sky-400">
+                    <div class="bg-sky-100 p-5 rounded-lg border border-sky-400 shadow-xl">
                         <h2 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b border-sky-400">
                             <i class="pi pi-receipt mr-2"></i>Tax Information
                         </h2>
@@ -182,9 +212,9 @@
                                     <i class="pi pi-receipt text-yellow-500"></i>
                                     <label class="block text-sm font-medium text-gray-700 mb-1">Tax Type</label>
                                 </div>
-                            <p-dropdown formControlName="tax_type" 
+                            <p-dropdown [options]="taxTypes" (onChange)="changeTaxType($event)"
                                 optionValue="value" placeholder="Select Tax Type" [showClear]="true"
-                                class="w-full border border-gray-300 rounded-lg">
+                               formControlName="tax_type" class="w-full border border-gray-300 rounded-lg">
                             </p-dropdown>
 
                         </div>
@@ -194,23 +224,23 @@
                                     <i class="pi pi-slack text-green-700"></i>
                                     <label class="block text-sm font-medium text-gray-700 mb-1">CGST (%)</label>
                                 </div>
-                                <input type="number" formControlName="CGST" pInputText
-                                    class="w-full border border-gray-300 rounded-lg p-3" placeholder="CGST">
+                                <input type="number" formControlName="cgst" pInputText
+                                     class="w-full border border-gray-300 rounded-lg p-3" placeholder="CGST">
                             </div>
                             <div>
                                 <div class="flex items-center space-x-2">
                                     <i class="pi pi-slack text-green-700"></i>
                                     <label class="block text-sm font-medium text-gray-700 mb-1">SGST (%)</label>
                                 </div>
-                                <input type="number" formControlName="SGST" pInputText
-                                    class="w-full border border-gray-300 rounded-lg p-3" placeholder="SGST">
+                                <input type="number" formControlName="sgst" pInputText
+                                   class="w-full border border-gray-300 rounded-lg p-3" placeholder="SGST">
                             </div>
                             <div>
                                 <div class="flex items-center space-x-2">
                                     <i class="pi pi-slack text-green-700"></i>
                                     <label class="block text-sm font-medium text-gray-700 mb-1">IGST (%)</label>
                                 </div>
-                                <input type="number" formControlName="IGST" pInputText
+                                <input type="number" formControlName="igst" pInputText
                                     class="w-full border border-gray-300 rounded-lg p-3" placeholder="IGST">
                             </div>
                         </div>
@@ -220,8 +250,8 @@
                                         <i class="pi pi-wallet text-orange-900"></i>
                                         <label class="block text-sm font-medium text-gray-700 mb-1">Pan No</label>
                                     </div>
-                                    <input type="number" pInputText class="w-full border border-gray-300 rounded-lg p-3"
-                                        placeholder="Pan No">
+                                    <input type="text" pInputText class="w-full border border-gray-300 rounded-lg p-3"
+                                       formControlName="panno" placeholder="Pan No">
                                 </div>
                                 <div>
                                     <div class="flex items-center space-x-2">
@@ -229,15 +259,31 @@
                                         <label class="block text-sm font-medium text-gray-700 mb-1">GST No</label>
                                     </div>
                                     <input type="text" pInputText class="w-full border border-gray-300 rounded-lg p-3"
-                                        placeholder="GST No">
+                                       formControlName="gstno" placeholder="GST No">
                                 </div>
                             </div>
-                            <div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
                                 <div class="flex items-center space-x-2">
                                     <i class="pi pi-file text-slate-500"></i>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Party Type*</label>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Party Type</label>
+                                    <span class="text-red-600">*</span>
                                 </div>
-                                <p-dropdown placeholder="Select..." class="w-full border border-gray-300 rounded-lg"></p-dropdown>
+                                <p-dropdown [options]="partyTypes" formControlName="party_type" optionLabel="label" optionValue="value"
+                                    placeholder="Select Party Type" class="w-full border border-indigo-200 rounded-md">
+                                </p-dropdown>
+                                <span *ngIf="form.get('party_type')?.invalid && form.get('party_type')?.touched" class="text-sm text-red-600">
+                                Party Type is required.
+                            </span>
+                            </div>
+                                <div>
+                                    <div class="flex items-center space-x-2">
+                                        <i class="pi pi-slack text-green-700"></i>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">TDS(%)</label>
+                                    </div>
+                                    <input type="number" pInputText class="w-full border border-gray-300 rounded-lg p-3"
+                                       formControlName="tds" placeholder="TDS No">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -250,13 +296,9 @@
 
                 <!-- Footer with Submit Button -->
         <div class="bg-sky-400 px-6 py-4 border-t border-gray-200 flex justify-end gap-3">
-            <button type="submit" 
+            <button type="submit" [disabled]="form.invalid"
                 class="px-6 py-3 bg-sky-600 text-white font-medium rounded-lg shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
                 Save
-            </button>
-            <button type="submit" 
-                class="px-6 py-3 bg-sky-600 text-white font-medium rounded-lg shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
-                Save & Add Another
             </button>
         </div>
     </form>
