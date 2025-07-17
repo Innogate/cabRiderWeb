@@ -34,6 +34,7 @@ export class PartyMasterComponent implements OnInit, OnDestroy, AfterViewInit {
   filteredCities: any[] = [];
   cityList: any[] = [{ Id: 0, CityName: '' }];
   tax: boolean = true;
+  header: string = '';
 
 
 
@@ -135,14 +136,14 @@ export class PartyMasterComponent implements OnInit, OnDestroy, AfterViewInit {
     { header: 'ID', field: 'id' },
     { header: 'Party Name', field: 'party_name', icon: 'pi pi-user', styleClass: 'text-red-600' },
     { header: 'Address', field: 'address', icon: 'pi pi-map', styleClass: 'text-green-600' },
-    { header: 'City', field: 'CityName', icon: 'pi pi-map-marker', styleClass: 'text-green-600' },
-    { header: 'Pin Code', field: 'pin_code', icon: 'pi pi-book',StyleClass: 'text-indigo-700' },
-    { header: 'Mobile No', field: 'mobileno', icon: 'pi pi-phone',StyleClass: 'text-yellow-400' },
-    { header: 'whatsappno', field: 'whatsappno', icon: 'pi pi-phone',StyleClass: 'text-green-700' },
-    { header: 'email', field: 'email', icon: 'pi pi-Google',StyleClass: 'text-indigo-500' },
-    { header: 'CGST', field: 'CGST', icon: 'pi pi-check-square ',StyleClass: 'text-yellow-300' },
-    { header: 'IGST', field: 'IGST', icon: 'pi pi-check-circle',StyleClass: 'text-indigo-400' },
-    { header: 'SGST', field: 'SGST', icon: 'pi pi-money-bill',StyleClass: 'text-rose-500' },
+    { header: 'City', field: 'CityName', icon: 'pi pi-map-marker', styleClass: 'text-yellow-600' },
+    { header: 'Pin Code', field: 'pin_code', icon: 'pi pi-book', styleClass: 'text-indigo-700' },
+    { header: 'Mobile No', field: 'mobileno', icon: 'pi pi-phone', styleClass: 'text-yellow-400' },
+    { header: 'whatsappno', field: 'whatsappno', icon: 'pi pi-phone', styleClass: 'text-green-700' },
+    { header: 'email', field: 'email', icon: 'pi pi-google', styleClass: 'text-indigo-500' },
+    { header: 'CGST', field: 'CGST', icon: 'pi pi-check-square', styleClass: 'text-yellow-300' },
+    { header: 'IGST', field: 'IGST', icon: 'pi pi-check-circle', styleClass: 'text-indigo-400' },
+    { header: 'SGST', field: 'SGST', icon: 'pi pi-money-bill', styleClass: 'text-rose-500' },
   ];
 
   actions = [
@@ -155,8 +156,8 @@ export class PartyMasterComponent implements OnInit, OnDestroy, AfterViewInit {
   handleAction(event: { action: string, data: any }) {
     switch (event.action) {
       case 'edit':
+        this.header = 'UPDATE PARTY'
         this.showForm = true;
-        console.log(event.data);
         this.form.reset();
         const city = this.cityList.find(city => city.Id == event.data.city_id);
         this.form.patchValue({
@@ -170,16 +171,20 @@ export class PartyMasterComponent implements OnInit, OnDestroy, AfterViewInit {
       case 'add':
         this.createForm();
         this.changeTaxType({ value: this.form.get('tax_type')?.value });
-
+        this.header = 'ADD PARTY';
         this.showForm = !this.showForm;
         break
     }
   }
 
   aliasName() {
-    const value = this.form.get('alias')?.value || '';
-  this.form.patchValue({ alias: value.toUpperCase() });
+    const partyName = this.form.get('party_name')?.value || '';
+    const alias = this.form.get('alias')?.value || '';
+    if (!alias) {
+      this.form.get('alias')?.setValue(partyName);
+    }
   }
+
 
   filterCity(event: any) {
     const query = event.query.toLowerCase();
