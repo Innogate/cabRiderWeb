@@ -76,7 +76,7 @@ export class VendorMasterComponent implements OnInit, OnDestroy, AfterViewInit {
       ref_by: [''],
       vendor_name: ['', [Validators.required, Validators.minLength(3), Validators.pattern(/^[A-Za-z\s]+$/)]],
       whatsappno: ['', [Validators.required, Validators.pattern(/^[6-9]\d{9}$/)]],
-      tax_type: ['cgst/sgst'],
+      tax_type: [],
       cgst: [0],
       sgst: [0],
       igst: [0],
@@ -164,6 +164,7 @@ export class VendorMasterComponent implements OnInit, OnDestroy, AfterViewInit {
           ...event.data,
           city_id: city
         });
+        this.changeTaxType({ value: event.data.tax_type });
         console.log("edit");
         break;
       case 'delete':
@@ -181,20 +182,31 @@ export class VendorMasterComponent implements OnInit, OnDestroy, AfterViewInit {
 
 
   changeTaxType(event: any) {
-    const selectedValue = event?.value;
-    this.tax = selectedValue === 'igst';
-    if (this.tax) {
-      this.form.patchValue({ cgst: 0, sgst: 0 });
-      this.form.get('cgst')?.disable();
-      this.form.get('sgst')?.disable();
-      this.form.get('igst')?.enable();
-    } else {
-      this.form.patchValue({ igst: 0 });
-      this.form.get('cgst')?.enable();
-      this.form.get('sgst')?.enable();
-      this.form.get('igst')?.disable();
-    }
+  const selectedValue = event?.value;
+
+  if (!selectedValue) {
+    // No selection → keep all fields enabled
+    this.form.get('cgst')?.enable();
+    this.form.get('sgst')?.enable();
+    this.form.get('igst')?.enable();
+    return;
   }
+
+  if (selectedValue === 'igst') {
+    // IGST selected → disable CGST/SGST
+    this.form.patchValue({ cgst: 0, sgst: 0 });
+    this.form.get('cgst')?.disable();
+    this.form.get('sgst')?.disable();
+    this.form.get('igst')?.enable();
+  } else {
+    // CGST/SGST selected → disable IGST
+    this.form.patchValue({ igst: 0 });
+    this.form.get('cgst')?.enable();
+    this.form.get('sgst')?.enable();
+    this.form.get('igst')?.disable();
+  }
+}
+
 
 
   filterCity(event: any) {
