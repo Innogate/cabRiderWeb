@@ -37,6 +37,7 @@ export class VendorMasterComponent implements OnInit, OnDestroy, AfterViewInit {
   form!: FormGroup;
   tax: boolean = true;
   validationMessage: string = '';
+  tablevalue: any;
 
   partyTypes = [
     { label: 'Cab Vendor', value: 'c' },
@@ -109,6 +110,8 @@ export class VendorMasterComponent implements OnInit, OnDestroy, AfterViewInit {
           const index = this.data.findIndex((v: any) => v.id == updated.id);
           if (index !== -1) {
             this.data[index] = { ...updated };
+          } else {
+            this.data.push(updated)
           }
         } else {
           this.messageService.add({ severity: 'error', summary: 'Error', detail: msg.StatusMessage });
@@ -116,6 +119,10 @@ export class VendorMasterComponent implements OnInit, OnDestroy, AfterViewInit {
 
       } else if (msg.for === "deleteData") {
         if (msg.StatusMessage === "success") {
+          const index = this.data.findIndex((v: any) => v.id == this.tablevalue.id);
+          if (index !== -1) {
+            this.data.splice(index, 1);
+          } 
           this.messageService.add({ severity: 'success', summary: 'Success', detail: msg.StatusMessage })
         } else {
           this.messageService.add({ severity: 'error', summary: 'Error', detail: "Cannot Delete data" })
@@ -182,7 +189,8 @@ export class VendorMasterComponent implements OnInit, OnDestroy, AfterViewInit {
         console.log("edit");
         break;
       case 'delete':
-        console.log("delete");
+        this.deleteVendor(event.data)
+        this.tablevalue=event.data
         break;
       case 'add':
         this.heading = 'ADD VENDOR';
@@ -248,6 +256,17 @@ export class VendorMasterComponent implements OnInit, OnDestroy, AfterViewInit {
       whatsappno: "" + this.form.value.whatsappno,
     }
     this.vendorMasterService.createUpdateVendor(payload)
+  }
+
+
+  private deleteVendor(vendor: any) {
+    this.messageService.add({ severity: 'contrast', summary: 'Info', detail: 'Please wait processing...' });
+    const payload = {
+      table_name: "vendor_mast",
+      column_name: "id",
+      column_value: "" + vendor.id,
+    }
+    this.commonService.deleteData(payload)
   }
 
 }
