@@ -10,17 +10,13 @@ export class vendorMasterService extends BaseService {
     super(ws);
   }
 
-  GatAllVendor(payload: any) {
+  getAllVendor(payload: any) {
     this.call('master.gatAllVendorMaster', payload);
   }
 
-//   CreateUpdateParty(payload: any){
-//     this.post('/master/createUpdatePart', payload);
-//   }
-
-//   Delete(payload: any){
-//     this.post('/master/deleteCharges', payload);
-//   }
+  createUpdateVendor(payload: any){
+    this.call('master.createUpdateVendor', payload)
+  }
 
   protected handleMessage(msg: any): boolean {
     return false;
