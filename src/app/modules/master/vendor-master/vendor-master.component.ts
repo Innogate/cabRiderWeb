@@ -14,7 +14,8 @@ import { commonService } from '../../../services/comonApi.service';
 
 @Component({
   selector: 'app-vendor-master',
-  imports: [CommonModule, 
+  imports: [
+    CommonModule, 
     DynamicTableComponent, 
     DropdownModule, 
     AutoComplete,
@@ -43,9 +44,9 @@ export class VendorMasterComponent implements OnInit, OnDestroy, AfterViewInit {
   ];
 
   taxTypes: any[] = [
-    { label: 'CGST/SGST', value: 'cgst/sgst' },
-    { label: 'IGST', value: 'igst' },
-  ]
+    { label: 'CGST/SGST', value: 'c/s' },
+    { label: 'IGST', value: 'i' },
+  ];
 
   constructor(
     private vendorMasterService:vendorMasterService,
@@ -61,28 +62,28 @@ export class VendorMasterComponent implements OnInit, OnDestroy, AfterViewInit {
     this.form = this.fb.group({
       active: ['Y'],
       address: [''],
-      bank_acno: [''],
-      bank_actype: [''],
-      bank_branch: [''],
-      bank_ifsc: [''],
-      bank_name: [''],
+      bank_acno: ['', [Validators.pattern(/^\d{9,18}$/)]],
+      bank_actype: ['', [Validators.pattern(/^[A-Za-z\s]+$/)]],
+      bank_branch: ['', [Validators.pattern(/^[A-Za-z\s]+$/)]],
+      bank_ifsc: ['', [Validators.pattern(/^[A-Z]{4}0[A-Z0-9]{6}$/)]],
+      bank_name: ['', [Validators.pattern(/^[A-Za-z\s]+$/)]],
       city_id: [],
-      email: [''],
-      gstno: [''],
+      email: ['', [Validators.email]],
+      gstno: ['', [Validators.pattern(/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/)]],
       id: [0],
-      mobileno: ['', [Validators.required, Validators.pattern(/^[6-9]\d{9}$/)]],
-      panno: [''],
-      pin_code: [''],
+      mobileno: ['', [Validators.pattern(/^[6-9]\d{9}$/)]],
+      panno: ['', [Validators.pattern(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/)]],
+      pin_code: ['', [Validators.pattern(/^[1-9][0-9]{5}$/)]],
       ref_by: [''],
       vendor_name: ['', [Validators.required, Validators.minLength(3), Validators.pattern(/^[A-Za-z\s]+$/)]],
-      whatsappno: ['', [Validators.required, Validators.pattern(/^[6-9]\d{9}$/)]],
-      tax_type: [],
+      whatsappno: ['', [Validators.pattern(/^[6-9]\d{9}$/)]],
+      tax_type: ['c/s'],
       cgst: [0],
       sgst: [0],
       igst: [0],
       phone_no: ['', [Validators.pattern(/^[6-9]\d{9}$/)]],
-      party_type: ['', Validators.required],
-      tds: [''],
+      party_type: [''],
+      tds: ['', [Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
     });
   }
 
@@ -97,10 +98,21 @@ export class VendorMasterComponent implements OnInit, OnDestroy, AfterViewInit {
         this.isLoading = false
       } else if (msg.for == 'getAllCityDropdown') {
         this.cityList = msg.data;
-      } else if (msg.for == 'createUpdateVendor') {
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: msg.StatusMessage });
-        this.showForm = false;
-        this.form.reset();
+      } else if (msg.for == 'createUpdateVendorMaster') {
+        if (msg.StatusID === 1){
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: msg.StatusMessage });
+          this.showForm = false;
+          this.form.reset();
+          const index = this.data.findIndex((v: any) => v.id == msg.data.id);
+          console.log("index", index)
+          if (index !== -1) {
+            this.data[index] = {  ...msg.data };
+          } else {
+            this.data.push(msg.data); // Optional: add if not found
+          }
+        } else {
+          this.messageService.add({ severity: 'error', summary: 'error', detail: msg.StatusMessage });
+        }
       } else if (msg.for === "deleteData") {
         if (msg.StatusMessage === "success") {
           this.messageService.add({ severity: 'success', summary: 'Success', detail: msg.StatusMessage })
@@ -110,6 +122,7 @@ export class VendorMasterComponent implements OnInit, OnDestroy, AfterViewInit {
       }
       return true;
     });
+    this.changeTaxType({ value: this.form.get('tax_type')?.value });
   }
   
   
@@ -125,7 +138,7 @@ export class VendorMasterComponent implements OnInit, OnDestroy, AfterViewInit {
         PageSize: 1000,
         Search: "",
       };
-      this.vendorMasterService.GatAllVendor(payload);
+      this.vendorMasterService.getAllVendor(payload);
       this.commonService.GatAllCityDropDown({});
     }
 
@@ -174,7 +187,12 @@ export class VendorMasterComponent implements OnInit, OnDestroy, AfterViewInit {
         this.heading = 'ADD VENDOR';
         this.showForm = !this.showForm;
         this.form.reset();
-        this.changeTaxType({ value: this.form.get('tax_type')?.value });
+
+        const defaultTaxType = 'c/s';
+        this.form.patchValue({
+          tax_type: defaultTaxType
+        });
+        this.changeTaxType({ value: defaultTaxType });
         console.log("add");
         break
     }
@@ -183,16 +201,8 @@ export class VendorMasterComponent implements OnInit, OnDestroy, AfterViewInit {
 
   changeTaxType(event: any) {
   const selectedValue = event?.value;
-
-  if (!selectedValue) {
-    // No selection → keep all fields enabled
-    this.form.get('cgst')?.enable();
-    this.form.get('sgst')?.enable();
-    this.form.get('igst')?.enable();
-    return;
-  }
-
-  if (selectedValue === 'igst') {
+    console.log(event)
+  if (selectedValue === 'i') {
     // IGST selected → disable CGST/SGST
     this.form.patchValue({ cgst: 0, sgst: 0 });
     this.form.get('cgst')?.disable();
@@ -225,11 +235,18 @@ export class VendorMasterComponent implements OnInit, OnDestroy, AfterViewInit {
 
   saveVendor() {
   if (this.form.invalid) {
-    console.log('Form is invalid, form values:', this.form.value);
+    this.form.touched
+    this.messageService.add({severity: "warning", summary: "warning", detail: 'Invalid Form Data'})
   return;
-  } else {
-    console.log('Form is valid, form values:', this.form.value);
+  } 
+  const payload={
+    ...this.form.value,
+    city_id: this.form.value.city_id?.Id,
+    pin_code: ""+this.form.value.pin_code,
+    mobileno: ""+this.form.value.mobileno,
+    whatsappno: ""+this.form.value.whatsappno,
   }
+  this.vendorMasterService.createUpdateVendor(payload)
 }
 
 }
