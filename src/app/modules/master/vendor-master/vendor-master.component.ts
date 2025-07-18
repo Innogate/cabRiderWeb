@@ -15,9 +15,9 @@ import { commonService } from '../../../services/comonApi.service';
 @Component({
   selector: 'app-vendor-master',
   imports: [
-    CommonModule, 
-    DynamicTableComponent, 
-    DropdownModule, 
+    CommonModule,
+    DynamicTableComponent,
+    DropdownModule,
     AutoComplete,
     ReactiveFormsModule,
     InputTextModule,
@@ -30,7 +30,7 @@ export class VendorMasterComponent implements OnInit, OnDestroy, AfterViewInit {
   showForm: boolean = false;
   isLoading: boolean = true;
   data: any[] = [];
-  heading: string ='';
+  heading: string = '';
   cities: any[] = [];
   filteredCities: any[] = [];
   cityList: any[] = [{ Id: 0, CityName: '' }];
@@ -49,12 +49,12 @@ export class VendorMasterComponent implements OnInit, OnDestroy, AfterViewInit {
   ];
 
   constructor(
-    private vendorMasterService:vendorMasterService,
-    private router:Router,
-    private messageService:MessageService,
+    private vendorMasterService: vendorMasterService,
+    private router: Router,
+    private messageService: MessageService,
     private fb: FormBuilder,
     private commonService: commonService,
-  ){
+  ) {
     this.createForm();
   }
 
@@ -99,20 +99,21 @@ export class VendorMasterComponent implements OnInit, OnDestroy, AfterViewInit {
       } else if (msg.for == 'getAllCityDropdown') {
         this.cityList = msg.data;
       } else if (msg.for == 'createUpdateVendorMaster') {
-        if (msg.StatusID === 1){
+        if (msg.StatusID === 1) {
+          const updated = msg.data[0];  // access the first item in data array
+
           this.messageService.add({ severity: 'success', summary: 'Success', detail: msg.StatusMessage });
           this.showForm = false;
           this.form.reset();
-          const index = this.data.findIndex((v: any) => v.id == msg.data.id);
-          console.log("index", index)
+
+          const index = this.data.findIndex((v: any) => v.id == updated.id);
           if (index !== -1) {
-            this.data[index] = {  ...msg.data };
-          } else {
-            this.data.push(msg.data); // Optional: add if not found
+            this.data[index] = { ...updated };
           }
         } else {
-          this.messageService.add({ severity: 'error', summary: 'error', detail: msg.StatusMessage });
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: msg.StatusMessage });
         }
+
       } else if (msg.for === "deleteData") {
         if (msg.StatusMessage === "success") {
           this.messageService.add({ severity: 'success', summary: 'Success', detail: msg.StatusMessage })
@@ -124,23 +125,23 @@ export class VendorMasterComponent implements OnInit, OnDestroy, AfterViewInit {
     });
     this.changeTaxType({ value: this.form.get('tax_type')?.value });
   }
-  
-  
-    ngOnDestroy(): void {
-      this.vendorMasterService.unregisterPageHandler();
-      this.commonService.unregisterPageHandler();
-    }
-  
-    ngAfterViewInit(): void {
-      const payload = {
-        id: 0,
-        PageNo: 1,
-        PageSize: 1000,
-        Search: "",
-      };
-      this.vendorMasterService.getAllVendor(payload);
-      this.commonService.GatAllCityDropDown({});
-    }
+
+
+  ngOnDestroy(): void {
+    this.vendorMasterService.unregisterPageHandler();
+    this.commonService.unregisterPageHandler();
+  }
+
+  ngAfterViewInit(): void {
+    const payload = {
+      id: 0,
+      PageNo: 1,
+      PageSize: 1000,
+      Search: "",
+    };
+    this.vendorMasterService.getAllVendor(payload);
+    this.commonService.GatAllCityDropDown({});
+  }
 
   columns = [
     { header: 'ID', field: 'id' },
@@ -200,22 +201,22 @@ export class VendorMasterComponent implements OnInit, OnDestroy, AfterViewInit {
 
 
   changeTaxType(event: any) {
-  const selectedValue = event?.value;
+    const selectedValue = event?.value;
     console.log(event)
-  if (selectedValue === 'i') {
-    // IGST selected → disable CGST/SGST
-    this.form.patchValue({ cgst: 0, sgst: 0 });
-    this.form.get('cgst')?.disable();
-    this.form.get('sgst')?.disable();
-    this.form.get('igst')?.enable();
-  } else {
-    // CGST/SGST selected → disable IGST
-    this.form.patchValue({ igst: 0 });
-    this.form.get('cgst')?.enable();
-    this.form.get('sgst')?.enable();
-    this.form.get('igst')?.disable();
+    if (selectedValue === 'i') {
+      // IGST selected → disable CGST/SGST
+      this.form.patchValue({ cgst: 0, sgst: 0 });
+      this.form.get('cgst')?.disable();
+      this.form.get('sgst')?.disable();
+      this.form.get('igst')?.enable();
+    } else {
+      // CGST/SGST selected → disable IGST
+      this.form.patchValue({ igst: 0 });
+      this.form.get('cgst')?.enable();
+      this.form.get('sgst')?.enable();
+      this.form.get('igst')?.disable();
+    }
   }
-}
 
 
 
@@ -227,26 +228,26 @@ export class VendorMasterComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
 
-  autoFillNo(){
+  autoFillNo() {
     const whatsappno = this.form.get("mobileno")?.value;
     this.form.get('whatsappno')?.setValue(whatsappno);
   }
 
 
   saveVendor() {
-  if (this.form.invalid) {
-    this.form.touched
-    this.messageService.add({severity: "warning", summary: "warning", detail: 'Invalid Form Data'})
-  return;
-  } 
-  const payload={
-    ...this.form.value,
-    city_id: this.form.value.city_id?.Id,
-    pin_code: ""+this.form.value.pin_code,
-    mobileno: ""+this.form.value.mobileno,
-    whatsappno: ""+this.form.value.whatsappno,
+    if (this.form.invalid) {
+      this.form.touched
+      this.messageService.add({ severity: "warning", summary: "warning", detail: 'Invalid Form Data' })
+      return;
+    }
+    const payload = {
+      ...this.form.value,
+      city_id: this.form.value.city_id?.Id,
+      pin_code: "" + this.form.value.pin_code,
+      mobileno: "" + this.form.value.mobileno,
+      whatsappno: "" + this.form.value.whatsappno,
+    }
+    this.vendorMasterService.createUpdateVendor(payload)
   }
-  this.vendorMasterService.createUpdateVendor(payload)
-}
 
 }
