@@ -8,23 +8,50 @@ import { DynamicTableComponent } from '../../../components/dynamic-table/dynamic
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { DragDropModule } from 'primeng/dragdrop';
 import { DropdownModule } from 'primeng/dropdown';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { InputTextModule } from 'primeng/inputtext';
+
+
 
 @Component({
   selector: 'app-guest-list-master',
-  imports: [CommonModule,DynamicTableComponent, AutoCompleteModule, DropdownModule],
+  imports: [CommonModule,DynamicTableComponent, AutoCompleteModule, DropdownModule, ReactiveFormsModule, InputTextModule],
   templateUrl: './guest-list-master.component.html',
   styleUrl: './guest-list-master.component.css'
 })
 export class GuestListMasterComponent implements OnInit,OnDestroy,AfterViewInit {
   showForm: boolean= false;
   isLoading: boolean= true;
+  isEditMode: boolean = false;
   data: any[]=[];
   heading: string='';
+  form!: FormGroup;
 
   constructor(
     private guestlistMasterService:guestMasterService, 
     private router:Router,
-    private messageService:MessageService){}
+    private messageService:MessageService,
+    private fb: FormBuilder,
+  ){
+      this.createForm();
+    }
+
+    createForm(){
+      this.form = this.fb.group({
+        active: ['Y'],
+        AddrType: [''],
+        Address: [''],
+        AditionalContactNo: ['', [Validators.pattern(/^[6-9]\d{9}$/)]],
+        ContactNo: ['', [Validators.pattern(/^[6-9]\d{9}$/)]],
+        EmailID: ['', [Validators.email]],
+        GuestName: ['', [Validators.required, Validators.minLength(3), Validators.pattern(/^[A-Za-z\s]+$/)]],
+        Honorific: [''],
+        PartyID: [''],
+        id: [0],
+        party_name: [''],
+
+      })
+    }
 
 
     ngOnInit(): void {
@@ -81,17 +108,18 @@ export class GuestListMasterComponent implements OnInit,OnDestroy,AfterViewInit 
     switch (event.action) {
       case 'edit':
         this.showForm = true;
-        this.heading = 'UPDATE GUEST'
+        this.isEditMode = true;
         console.log("edit")
         break;
       case 'delete':
-        console.log("delite")
+        console.log("delete")
         break;
       case 'add':
         this.showForm = true;
-        this.heading = 'EDIT GUEST'
+        this.isEditMode = false;
         console.log("add")
-        break
+      break;
     }
   }
+  
 }
