@@ -4,7 +4,7 @@ import { carTypeMasterService } from './../../services/carTypeMaster.service';
 import { CheckboxModule } from 'primeng/checkbox';
 import { CommonModule } from '@angular/common';
 import { Component, NgModule, OnInit } from '@angular/core';
-import {FormBuilder,FormsModule,NgModel,ReactiveFormsModule,Validators,} from '@angular/forms';
+import { FormBuilder, FormsModule, NgModel, ReactiveFormsModule, Validators, } from '@angular/forms';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
@@ -14,12 +14,12 @@ import { TableModule } from 'primeng/table';
 import { TabPanel, TabViewModule } from 'primeng/tabview';
 import { ToggleButton } from 'primeng/togglebutton';
 import { ActivatedRoute, Router } from '@angular/router';
-import {getCurrentDate,getCurrentTime,globalRequestHandler,} from '../../utils/global';
+import { getCurrentDate, getCurrentTime, globalRequestHandler, } from '../../utils/global';
 import { MessageService } from 'primeng/api';
 import { commonService } from '../../services/comonApi.service';
 import { partyMasterService } from '../../services/partyMaster.service';
 import { DividerModule } from 'primeng/divider';
-
+import { PanelModule } from 'primeng/panel';
 @Component({
   selector: 'app-booking-entry',
   imports: [
@@ -38,6 +38,7 @@ import { DividerModule } from 'primeng/divider';
     ToggleButton,
     ReactiveFormsModule,
     FormsModule,
+    PanelModule,
   ],
   templateUrl: './booking-entry.component.html',
   styleUrl: './booking-entry.component.css',
@@ -52,7 +53,7 @@ export class BookingEntryComponent implements OnInit {
     private partyMasterService: partyMasterService,
     private partyRateMasterService: partyRateMasterService,
     private fb: FormBuilder
-  ) {}
+  ) { }
   totalHours = 0;
   totalKM = 0;
   filteredVendors: any[] = [];
@@ -123,10 +124,10 @@ export class BookingEntryComponent implements OnInit {
   ];
 
   booking = {
-  netAmount: 0,
-  otherCharges: 0,
-  totalAmount: 0
-};
+    netAmount: 0,
+    otherCharges: 0,
+    totalAmount: 0
+  };
 
 
   vendorBooking = {
@@ -217,11 +218,11 @@ export class BookingEntryComponent implements OnInit {
 
   vendorRateTypes = [{ name: 'Hourly' }, { name: 'KM Based' }];
 
- selectRates: any[] = [
-  { id: 1, name: 'Standard Rate' },
-  { id: 2, name: 'Corporate Rate' },
-  { id: 3, name: 'Special Event Rate' }
-];
+  selectRates: any[] = [
+    { id: 1, name: 'Standard Rate' },
+    { id: 2, name: 'Corporate Rate' },
+    { id: 3, name: 'Special Event Rate' }
+  ];
 
   selectVendorRates = [{ name: 'Vendor Standard' }, { name: 'Vendor Premium' }];
 
@@ -235,6 +236,7 @@ export class BookingEntryComponent implements OnInit {
   init() {
     this.bookingFrom = this.fb.group({
       id: [0],
+      Branch: ['', Validators.required], // -> Added
       branch_id: [null, Validators.required],
       EntryDate: [getCurrentDate(), Validators.required],
       EntryTime: [getCurrentTime(), Validators.required],
@@ -410,7 +412,7 @@ export class BookingEntryComponent implements OnInit {
     this.filteredCarTypes = this.carTypes.filter((type) =>
       type.car_type.toLowerCase().includes(query)
     );
-    console.log(this.filteredCarTypes)
+    // console.log(this.filteredCarTypes)
   }
 
   filteredCarTypeSend: any[] = [];
@@ -434,13 +436,15 @@ export class BookingEntryComponent implements OnInit {
   }
 
   // AutoComplete
-  PartyName: any[] = [];
+  PartyName: any[] = []; // original full list
+  filteredPartyName: any[] = []; // used by the autocomplete
+
   filterPartyName(event: any) {
-    if (!this.PartyName) return;
-    const query = event.query.toLowerCase();
-    this.PartyName = this.PartyName.filter((party) =>
-      party.PartyName.toLowerCase().includes(query)
-    );
+    const query = event.query?.toLowerCase() || '';
+    this.filteredPartyName = this.PartyName.filter((party) => {
+      const name = party.party_name?.toLowerCase() || '';
+      return name.includes(query);
+    });
   }
 
   ngOnInit(): void {
@@ -461,7 +465,7 @@ export class BookingEntryComponent implements OnInit {
         } else if (msg.for === 'getAllBranchDropdown') {
           this.branches = msg.data;
           rt = true;
-        } else if (msg.for === 'getAllParty') {
+        } else if (msg.for === 'getAllPartyDropdown') {
           this.PartyName = msg.data;
           rt = true;
         }
@@ -475,7 +479,7 @@ export class BookingEntryComponent implements OnInit {
     this.getCarTypeName();
     this.getAllCity();
     this.getAllBranches();
-    this.getAllPraty();
+    this.getAllParty();
     this.init();
   }
 
@@ -576,7 +580,7 @@ export class BookingEntryComponent implements OnInit {
 
   // API CALLS
   getCarTypeName() {
-    console.log('getCarTypeName');
+    // console.log('getCarTypeName');
     this.carTypeMaster.GateAllCarType({
       PageNo: 1,
       PageSize: 10,
@@ -592,8 +596,8 @@ export class BookingEntryComponent implements OnInit {
     this.commonApiService.GatAllBranchDropDown({});
   }
 
-  getAllPraty() {
-    this.partyMasterService.GatAllParty({});
+  getAllParty() {
+    this.commonApiService.gateAllPartyNameDropdown();
   }
 
   // Change Functions
@@ -608,7 +612,7 @@ export class BookingEntryComponent implements OnInit {
   onBranchSelect(branch: any) {
     if (this.bookingFrom) {
       this.bookingFrom.get('branch_id').setValue(branch.value.Id);
-      console.log(branch);
+      // console.log(branch);
     }
   }
 
@@ -616,34 +620,34 @@ export class BookingEntryComponent implements OnInit {
     if (this.bookingFrom) {
       this.bookingFrom.get('FromCityID').setValue(city.value.Id);
     }
-    console.log(city);
+    // console.log(city);
   }
 
-  onToCitySelect(city: any){
-     if (this.bookingFrom) {
+  onToCitySelect(city: any) {
+    if (this.bookingFrom) {
       this.bookingFrom.get('ToCityID').setValue(city.value.Id);
     }
-    console.log(city);
+    // console.log(city);
   }
 
 
-  onPartyNameSelect(party: any){
-     if (this.bookingFrom) {
-      this.bookingFrom.get('').setValue(party.Id);
+  onPartyNameSelect(party: any) {
+    if (this.bookingFrom) {
+      this.bookingFrom.get('Party').setValue(party.id);
     }
-    console.log(party);
+    // console.log(party);
   }
 
 
   onCarTypeSelect(cartype: any) {
-  if (this.bookingFrom) {
-    this.bookingFrom.get('CarType').setValue(cartype);
+    if (this.bookingFrom) {
+      this.bookingFrom.get('CarType').setValue(cartype);
+    }
   }
-}
 
-onToggleBooking(event: any) {
-  this.isFullBooking = !this.isFullBooking;
-}
+  onToggleBooking(event: any) {
+    this.isFullBooking = !this.isFullBooking;
+  }
 
 
 

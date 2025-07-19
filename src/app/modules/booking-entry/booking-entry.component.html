@@ -1,41 +1,30 @@
 <!-- Add full booking -->
 <div *ngIf="isFullBooking && fullBookingFrom" class="flex justify-center">
-  <div
-    class="p-6 m-6 rounded-2xl shadow-xl border border-blue-300 bg-gradient-to-r from-white to-blue-50"
-  >
+  <div class="p-6 m-6 rounded-2xl shadow-xl border border-blue-300 bg-gradient-to-r from-white to-blue-50">
     <div class="flex items-center justify-between mb-6">
-  <!-- Heading with Icon -->
-  <div class="border-b border-blue-200 pb-4">
-    <h2 class="text-3xl md:text-4xl font-bold text-blue-700 flex items-center gap-4">
-      <span
-        class="bg-blue-100 text-blue-700 w-12 h-12 rounded-full flex items-center justify-center shadow-md"
-      >
-        <i class="pi pi-book text-2xl"></i>
-      </span>
-      <span class="leading-tight">
-        Add <span class="text-blue-900">Full Booking</span> Information
-      </span>
-    </h2>
-  </div>
+      <!-- Heading with Icon -->
+      <div class="border-b border-blue-200 pb-4">
+        <h2 class="text-3xl md:text-4xl font-bold text-blue-700 flex items-center gap-4">
+          <span class="bg-blue-100 text-blue-700 w-12 h-12 rounded-full flex items-center justify-center shadow-md">
+            <i class="pi pi-book text-2xl"></i>
+          </span>
+          <span class="leading-tight">
+            Add <span class="text-blue-900">Full Booking</span> Information
+          </span>
+        </h2>
+      </div>
 
-  <!-- Toggle Button -->
-  <div class="flex items-center gap-3">
-    <p-toggleButton
-      [(ngModel)]="isFullBooking"
-      onLabel="FullBooking"
-      offLabel="Booking Only"
-      onIcon="pi-calendar-check"
-      offIcon="pi pi-calendar-times"
-      styleClass="w-52 h-12 text-white rounded-full border-none"
-      [style]="{
-        'background-color': isFullBooking ? '#2563eb' : '#6b7280',
-        'transition': 'all 0.3s ease'
-      }"
-    >
-    </p-toggleButton>
-  </div>
-</div>
-
+      <!-- Toggle Button -->
+      <div class="flex items-center gap-3">
+        <p-toggleButton [(ngModel)]="isFullBooking" onLabel="FullBooking" offLabel="Booking Only"
+          onIcon="pi-calendar-check" offIcon="pi pi-calendar-times"
+          styleClass="w-52 h-12 text-white rounded-full border-none" [style]="{
+            'background-color': isFullBooking ? '#2563eb' : '#6b7280',
+            transition: 'all 0.3s ease'
+          }">
+        </p-toggleButton>
+      </div>
+    </div>
 
     <form [formGroup]="fullBookingFrom">
       <!-- Full Booking Section -->
@@ -43,46 +32,27 @@
         <!-- Wrap every 3 items -->
         <div class="flex flex-col md:flex-row gap-6 mb-6">
           <div class="flex-1">
-
             <!-- Slip No -->
             <div class="flex flex-col gap-2 max-w-md w-full">
-              <label
-                class="font-semibold text-gray-800 flex items-center gap-2"
-              >
+              <label class="font-semibold text-gray-800 flex items-center gap-2">
                 <i class="pi pi-file-edit text-xl text-green-600"></i> Slip No
               </label>
-              <input
-                type="text"
-                pInputText
-                formControlName="SlipNo"
-                placeholder="Slip No *"
-                class="w-full !bg-gray-200"
-                readonly="true"
-              />
+              <input type="text" pInputText formControlName="SlipNo" placeholder="Slip No *" class="w-full !bg-gray-200"
+                readonly="true" />
             </div>
           </div>
 
           <p-divider layout="vertical"></p-divider>
 
           <div class="flex-1">
-             <!-- Branch -->
+            <!-- Branch -->
             <div class="flex flex-col gap-2 max-w-md w-full">
               <label class="font-medium text-gray-700 flex items-center gap-2">
                 <i class="pi pi-building text-xl text-blue-700"></i> Branch
               </label>
-              <p-autoComplete
-                (onSelect)="onBranchSelect($event)"
-                name="branch"
-                [suggestions]="filteredBranches"
-                (completeMethod)="filterBranches($event)"
-                field="branch_name"
-                [dropdown]="true"
-                [forceSelection]="true"
-                placeholder="Select Branch *"
-                class="w-full"
-                inputStyleClass="w-full"
-                panelStyleClass="w-full"
-              >
+              <p-autoComplete (onSelect)="onBranchSelect($event)" name="branch" [suggestions]="filteredBranches"
+                (completeMethod)="filterBranches($event)" field="branch_name" [dropdown]="true" [forceSelection]="true"
+                placeholder="Select Branch *" class="w-full" inputStyleClass="w-full" panelStyleClass="w-full">
               </p-autoComplete>
             </div>
           </div>
@@ -91,17 +61,11 @@
           <div class="flex-1">
             <!-- Rental Date -->
             <div class="flex flex-col gap-2">
-              <label
-                class="font-semibold text-gray-800 flex items-center gap-2"
-              >
+              <label class="font-semibold text-gray-800 flex items-center gap-2">
                 <i class="pi pi-calendar text-xl text-purple-600"></i> Rental
                 Date
               </label>
-              <input
-                type="date"
-                formControlName="RentalDate"
-                class="w-full p-2 border rounded-lg"
-              />
+              <input type="date" formControlName="RentalDate" class="w-full p-2 border rounded-lg" />
             </div>
           </div>
         </div>
@@ -110,18 +74,11 @@
           <div class="flex-1">
             <!-- Reporting Time -->
             <div class="flex flex-col gap-2">
-              <label
-                class="font-semibold text-gray-800 flex items-center gap-2"
-              >
+              <label class="font-semibold text-gray-800 flex items-center gap-2">
                 <i class="pi pi-clock text-xl text-pink-600"></i> Reporting Time
               </label>
-              <input
-                type="text"
-                pInputText
-                formControlName="ReportingDatetime"
-                placeholder="Reporting Time *"
-                class="w-full"
-              />
+              <input type="text" pInputText formControlName="ReportingDatetime" placeholder="Reporting Time *"
+                class="w-full" />
             </div>
           </div>
 
@@ -130,25 +87,14 @@
           <div class="flex-1">
             <!-- Car Type Request -->
             <div class="flex flex-col gap-2">
-              <label
-                class="font-semibold text-gray-800 flex items-center gap-2"
-              >
+              <label class="font-semibold text-gray-800 flex items-center gap-2">
                 <i class="pi pi-car text-xl text-orange-600"></i> Car Type
                 Request
               </label>
-              <p-autoComplete
-                (onSelect)="onCarTypeSelect($event)"
-                name="CarType"
-                [suggestions]="filteredCarTypes"
-                (completeMethod)="filterCarTypes($event)"
-                field="car_type"
-                [dropdown]="true"
-                [forceSelection]="true"
-                placeholder="Car Type *"
-                class="w-full"
-                inputStyleClass="w-full"
-                panelStyleClass="w-full"
-              ></p-autoComplete>
+              <p-autoComplete (onSelect)="onCarTypeSelect($event)" name="CarType" [suggestions]="filteredCarTypes"
+                (completeMethod)="filterCarTypes($event)" field="car_type" [dropdown]="true" [forceSelection]="true"
+                placeholder="Car Type *" class="w-full" inputStyleClass="w-full"
+                panelStyleClass="w-full"></p-autoComplete>
             </div>
           </div>
 
@@ -157,24 +103,13 @@
           <div class="flex-1">
             <!-- car type send -->
             <div class="flex flex-col gap-2">
-              <label
-                class="font-semibold text-gray-800 flex items-center gap-2"
-              >
+              <label class="font-semibold text-gray-800 flex items-center gap-2">
                 <i class="pi pi-car text-xl text-orange-600"></i> Car Type Send
               </label>
-              <p-autoComplete
-                (onSelect)="onCarTypeSelect($event)"
-                name="CarTypeSend"
-                [suggestions]="filteredCarTypes"
-                (completeMethod)="filterCarTypes($event)"
-                field="car_type"
-                [dropdown]="true"
-                [forceSelection]="true"
-                placeholder="Car Type *"
-                class="w-full"
-                inputStyleClass="w-full"
-                panelStyleClass="w-full"
-              ></p-autoComplete>
+              <p-autoComplete (onSelect)="onCarTypeSelect($event)" name="CarTypeSend" [suggestions]="filteredCarTypes"
+                (completeMethod)="filterCarTypes($event)" field="car_type" [dropdown]="true" [forceSelection]="true"
+                placeholder="Car Type *" class="w-full" inputStyleClass="w-full"
+                panelStyleClass="w-full"></p-autoComplete>
             </div>
           </div>
         </div>
@@ -184,19 +119,11 @@
             <!-- Party -->
             <div class="flex flex-col gap-2">
               <label class="font-medium text-gray-700 flex items-center gap-2">
-                <i class="pi pi-users text-xl text-pink-500"></i> Party
+                <i class="pi pi-users text-xl text-pink-500"></i> Party Name
               </label>
-              <p-autoComplete
-                formControlName="Party"
-                (onSelect)="onPartyNameSelect($event)"
-                name="Party"
-                [suggestions]="PartyName"
-                (completeMethod)="filterPartyName($event)"
-                field="PartyName"
-                [dropdown]="true"
-                placeholder="Party *"
-                class="w-full"
-              ></p-autoComplete>
+              <p-autoComplete formControlName="Party" name="Party" [suggestions]="filteredPartyName"
+                (completeMethod)="filterPartyName($event)" (onSelect)="onPartyNameSelect($event)" field="party_name"
+                [dropdown]="true" placeholder="Party *" class="w-full"></p-autoComplete>
             </div>
           </div>
 
@@ -208,15 +135,9 @@
               <label class="font-medium text-gray-700 flex items-center gap-2">
                 <i class="pi pi-briefcase text-xl text-purple-500"></i> Vendor
               </label>
-              <p-autoComplete
-                formControlName="vendor_id"
-                [suggestions]="filteredVendors"
-                (completeMethod)="searchVendors($event)"
-                dropdown="true"
-                field="vendor_name"
-                placeholder="Vendor *"
-                class="w-full"
-              ></p-autoComplete>
+              <p-autoComplete formControlName="vendor_id" [suggestions]="filteredVendors"
+                (completeMethod)="searchVendors($event)" dropdown="true" field="vendor_name" placeholder="Vendor *"
+                class="w-full"></p-autoComplete>
             </div>
           </div>
 
@@ -228,13 +149,7 @@
               <label class="font-medium text-gray-700 flex items-center gap-2">
                 <i class="pi pi-car text-xl text-yellow-700"></i> Car No
               </label>
-              <input
-                type="text"
-                pInputText
-                formControlName="CarNo"
-                placeholder="Car No *"
-                class="w-full"
-              />
+              <input type="text" pInputText formControlName="CarNo" placeholder="Car No *" class="w-full" />
             </div>
           </div>
         </div>
@@ -246,13 +161,7 @@
               <label class="font-medium text-gray-700 flex items-center gap-2">
                 <i class="pi pi-user text-xl text-blue-500"></i> Driver
               </label>
-              <input
-                type="text"
-                pInputText
-                formControlName="DriverName"
-                placeholder="Driver"
-                class="w-full"
-              />
+              <input type="text" pInputText formControlName="DriverName" placeholder="Driver" class="w-full" />
             </div>
           </div>
 
@@ -261,18 +170,10 @@
           <div class="flex-1">
             <!-- Project -->
             <div class="flex flex-col gap-2">
-              <label
-                class="font-semibold text-gray-800 flex items-center gap-2"
-              >
+              <label class="font-semibold text-gray-800 flex items-center gap-2">
                 <i class="pi pi-briefcase text-xl text-cyan-600"></i> Project
               </label>
-              <input
-                type="text"
-                pInputText
-                formControlName="Project"
-                placeholder="Project"
-                class="w-full"
-              />
+              <input type="text" pInputText formControlName="Project" placeholder="Project" class="w-full" />
             </div>
           </div>
 
@@ -281,20 +182,12 @@
           <div class="flex-1">
             <!-- Duty Type -->
             <div class="flex flex-col gap-2">
-              <label
-                class="font-semibold text-gray-800 flex items-center gap-2"
-              >
+              <label class="font-semibold text-gray-800 flex items-center gap-2">
                 <i class="pi pi-check-circle text-xl text-green-700"></i> Duty
                 Type
               </label>
-              <p-dropdown
-                formControlName="DutyType"
-                [options]="dutyTypes"
-                optionLabel="name"
-                optionValue="name"
-                placeholder="Duty Type *"
-                class="w-full"
-              ></p-dropdown>
+              <p-dropdown formControlName="DutyType" [options]="dutyTypes" optionLabel="name" optionValue="name"
+                placeholder="Duty Type *" class="w-full"></p-dropdown>
             </div>
           </div>
         </div>
@@ -303,25 +196,14 @@
           <div class="flex-1">
             <!-- From City -->
             <div class="flex flex-col gap-2">
-              <label
-                class="font-semibold text-gray-800 flex items-center gap-2"
-              >
+              <label class="font-semibold text-gray-800 flex items-center gap-2">
                 <i class="pi pi-map-marker text-xl text-purple-600"></i> From
                 City
               </label>
-              <p-autoComplete
-                (onSelect)="onCitySelect($event)"
-                name="FromCityID"
-                [suggestions]="filteredCities"
-                (completeMethod)="filterCities($event)"
-                field="CityName"
-                [dropdown]="true"
-                [forceSelection]="true"
-                placeholder="From City"
-                class="w-full"
-                inputStyleClass="w-full"
-                panelStyleClass="w-full"
-              ></p-autoComplete>
+              <p-autoComplete (onSelect)="onCitySelect($event)" name="FromCityID" [suggestions]="filteredCities"
+                (completeMethod)="filterCities($event)" field="CityName" [dropdown]="true" [forceSelection]="true"
+                placeholder="From City" class="w-full" inputStyleClass="w-full"
+                panelStyleClass="w-full"></p-autoComplete>
             </div>
           </div>
 
@@ -330,24 +212,13 @@
           <div class="flex-1">
             <!-- To City -->
             <div class="flex flex-col gap-2">
-              <label
-                class="font-semibold text-gray-800 flex items-center gap-2"
-              >
+              <label class="font-semibold text-gray-800 flex items-center gap-2">
                 <i class="pi pi-map text-xl text-green-600"></i> To City
               </label>
-              <p-autoComplete
-                (onSelect)="onToCitySelect($event)"
-                name="ToCityID"
-                [suggestions]="filteredToCities"
-                (completeMethod)="filterToCities($event)"
-                field="CityName"
-                [dropdown]="true"
-                [forceSelection]="true"
-                placeholder="To City *"
-                class="w-full"
-                inputStyleClass="w-full"
-                panelStyleClass="w-full"
-              ></p-autoComplete>
+              <p-autoComplete (onSelect)="onToCitySelect($event)" name="ToCityID" [suggestions]="filteredToCities"
+                (completeMethod)="filterToCities($event)" field="CityName" [dropdown]="true" [forceSelection]="true"
+                placeholder="To City *" class="w-full" inputStyleClass="w-full"
+                panelStyleClass="w-full"></p-autoComplete>
             </div>
           </div>
 
@@ -356,19 +227,11 @@
           <div class="flex-1">
             <!-- Booked By -->
             <div class="flex flex-col gap-2">
-              <label
-                class="font-semibold text-gray-800 flex items-center gap-2"
-              >
+              <label class="font-semibold text-gray-800 flex items-center gap-2">
                 <i class="pi pi-user-plus text-xl text-yellow-600"></i> Booked
                 By
               </label>
-              <input
-                type="text"
-                pInputText
-                formControlName="BookedBy"
-                placeholder="Booked By"
-                class="w-full"
-              />
+              <input type="text" pInputText formControlName="BookedBy" placeholder="Booked By" class="w-full" />
             </div>
           </div>
         </div>
@@ -381,18 +244,10 @@
           <div class="flex-1">
             <!-- Contact No -->
             <div class="flex flex-col gap-2">
-              <label
-                class="font-semibold text-gray-800 flex items-center gap-2"
-              >
+              <label class="font-semibold text-gray-800 flex items-center gap-2">
                 <i class="pi pi-phone text-xl text-blue-600"></i> Contact No
               </label>
-              <input
-                type="text"
-                pInputText
-                formControlName="ContactNo"
-                placeholder="Contact No"
-                class="w-full"
-              />
+              <input type="text" pInputText formControlName="ContactNo" placeholder="Contact No" class="w-full" />
             </div>
           </div>
 
@@ -402,9 +257,7 @@
         </div>
 
         <!-- Summary -->
-        <div
-          class="mt-6 grid grid-cols-3 gap-4 text-gray-800 text-lg font-semibold px-4"
-        >
+        <div class="mt-6 grid grid-cols-3 gap-4 text-gray-800 text-lg font-semibold px-4">
           <div>Min Hours: {{ totalHours }}</div>
           <div>Night Halt Time: {{ totalKM }}</div>
           <div>Night Halt Amount: {{ totalKM }}</div>
@@ -419,32 +272,15 @@
           </h3>
 
           <!-- Party Rate Type and Select Rate -->
-          <div class="grid grid-cols-3 gap-4 mb-6 ">
-            <p-dropdown
-              formControlName="PartyRateType"
-              [options]="partyRateTypes"
-              optionLabel="label"
-              optionValue="value"
-              placeholder="Party Rate Type *"
-              class="w-full"
-              (onChange)="changePartyRateType()"
-            ></p-dropdown>
+          <div class="grid grid-cols-3 gap-4 mb-6">
+            <p-dropdown formControlName="PartyRateType" [options]="partyRateTypes" optionLabel="label"
+              optionValue="value" placeholder="Party Rate Type *" class="w-full"
+              (onChange)="changePartyRateType()"></p-dropdown>
 
-            <p-dropdown
-              formControlName="PartyRate"
-              [options]="selectRates"
-              optionLabel="name"
-              optionValue="id"
-              placeholder="Select Rate *"
-              class="w-full"
-            ></p-dropdown>
+            <p-dropdown formControlName="PartyRate" [options]="selectRates" optionLabel="name" optionValue="id"
+              placeholder="Select Rate *" class="w-full"></p-dropdown>
 
-            <button
-              pButton
-              type="button"
-              label="Get Price"
-              class="p-button-success w-full"
-            ></button>
+            <button pButton type="button" label="Get Price" class="p-button-success w-full"></button>
           </div>
 
           <!-- Main Section: Date/Time & Cash Side by Side -->
@@ -453,22 +289,19 @@
             <div class="col-span-2 grid grid-cols-2 gap-4">
               <ng-container *ngFor="let field of dateFields">
                 <div>
-                  <label class="font-medium text-gray-800">{{ field.label }}</label>
-                  <input
-                    type="datetime-local"
-                    [formControlName]="field.dateModel"
-                    class="w-full border border-gray-300 p-2 rounded text-gray-800"
-                  />
+                  <label class="font-medium text-gray-800">{{
+                    field.label
+                    }}</label>
+                  <input type="datetime-local" [formControlName]="field.dateModel"
+                    class="w-full border border-gray-300 p-2 rounded text-gray-800" />
                 </div>
 
                 <div>
-                  <label class="font-medium text-gray-800">{{ field.kmLabel }}</label>
-                  <input
-                    type="number"
-                    pInputText
-                    [formControlName]="field.kmModel"
-                    class="w-full border border-gray-300 p-2 rounded text-gray-800"
-                  />
+                  <label class="font-medium text-gray-800">{{
+                    field.kmLabel
+                    }}</label>
+                  <input type="number" pInputText [formControlName]="field.kmModel"
+                    class="w-full border border-gray-300 p-2 rounded text-gray-800" />
                 </div>
               </ng-container>
             </div>
@@ -480,58 +313,35 @@
                   <tr class="border-b border-gray-300">
                     <td class="p-2 font-medium text-gray-800">Cash</td>
                     <td class="p-2">
-                      <p-checkbox
-                        formControlName="isCash"
-                        binary="true"
-                      ></p-checkbox>
+                      <p-checkbox formControlName="isCash" binary="true"></p-checkbox>
                     </td>
                   </tr>
 
                   <tr class="border-b border-gray-300 bg-gray-200">
                     <td class="font-medium text-gray-800">KM Rate</td>
                     <td class="">
-                      <input
-                        type="number"
-                        pInputText
-                        formControlName="KMRate"
-                        class="w-full"
-                      />
+                      <input type="number" pInputText formControlName="KMRate" class="w-full" />
                     </td>
                   </tr>
 
                   <tr class="border-b border-gray-300">
                     <td class="font-medium text-gray-800">Hour Rate</td>
                     <td class="">
-                      <input
-                        type="number"
-                        pInputText
-                        formControlName="HourRate"
-                        class="w-full"
-                      />
+                      <input type="number" pInputText formControlName="HourRate" class="w-full" />
                     </td>
                   </tr>
 
                   <tr class="border-b border-gray-300">
                     <td class="font-medium text-gray-800">Price</td>
                     <td class="">
-                      <input
-                        type="number"
-                        pInputText
-                        formControlName="Price"
-                        class="w-full"
-                      />
+                      <input type="number" pInputText formControlName="Price" class="w-full" />
                     </td>
                   </tr>
 
                   <tr class="border-b border-gray-300">
                     <td class="font-medium text-gray-800">Advance</td>
                     <td class="">
-                      <input
-                        type="number"
-                        pInputText
-                        formControlName="Advance"
-                        class="w-full"
-                      />
+                      <input type="number" pInputText formControlName="Advance" class="w-full" />
                     </td>
                   </tr>
 
@@ -582,55 +392,25 @@
                 <tr>
                   <td class="p-2">
                     Extra Hour
-                    <input
-                      type="number"
-                      pInputText
-                      formControlName="ExtraHrs"
-                      class="w-full"
-                    />
+                    <input type="number" pInputText formControlName="ExtraHrs" class="w-full" />
                   </td>
                   <td class="p-2">
-                    <input
-                      type="number"
-                      pInputText
-                      formControlName="ExtraHrsRate"
-                      class="w-full"
-                    />
+                    <input type="number" pInputText formControlName="ExtraHrsRate" class="w-full" />
                   </td>
                   <td class="p-2">
-                    <input
-                      type="number"
-                      pInputText
-                      formControlName="ExtraHrsAmount"
-                      class="w-full"
-                    />
+                    <input type="number" pInputText formControlName="ExtraHrsAmount" class="w-full" />
                   </td>
                 </tr>
                 <tr>
                   <td class="p-2">
                     Extra KM
-                    <input
-                      type="number"
-                      pInputText
-                      formControlName="ExtraKM"
-                      class="w-full"
-                    />
+                    <input type="number" pInputText formControlName="ExtraKM" class="w-full" />
                   </td>
                   <td class="p-2">
-                    <input
-                      type="number"
-                      pInputText
-                      formControlName="ExtraKMRate"
-                      class="w-full"
-                    />
+                    <input type="number" pInputText formControlName="ExtraKMRate" class="w-full" />
                   </td>
                   <td class="p-2">
-                    <input
-                      type="number"
-                      pInputText
-                      formControlName="ExtraKMAmount"
-                      class="w-full"
-                    />
+                    <input type="number" pInputText formControlName="ExtraKMAmount" class="w-full" />
                   </td>
                 </tr>
               </tbody>
@@ -653,76 +433,41 @@
               <tbody>
                 <tr *ngFor="let charge of charges; let i = index">
                   <td class="p-2">
-                    <input
-                      type="text"
-                      pInputText
-                      [name]="'chargeName' + i"
-                      class="w-full"
-                    />
+                    <input type="text" pInputText [name]="'chargeName' + i" class="w-full" />
                   </td>
                   <td class="p-2">
-                    <input
-                      type="number"
-                      pInputText
-                      [name]="'chargeAmount' + i"
-                      class="w-full"
-                    />
+                    <input type="number" pInputText [name]="'chargeAmount' + i" class="w-full" />
                   </td>
                   <td class="p-2">
                     <input type="file" (change)="onFileSelected($event, i)" />
                   </td>
                   <td class="p-2">
-                    <button
-                      pButton
-                      type="button"
-                      icon="pi pi-trash"
-                      class="p-button-danger"
-                      (click)="removeCharge(i)"
-                    ></button>
+                    <button pButton type="button" icon="pi pi-trash" class="p-button-danger"
+                      (click)="removeCharge(i)"></button>
                   </td>
                 </tr>
               </tbody>
             </table>
-            <button
-              pButton
-              type="button"
-              icon="pi pi-plus"
-              class="mt-4 p-button-success"
-              (click)="addCharge()"
-            ></button>
+            <button pButton type="button" icon="pi pi-plus" class="mt-4 p-button-success"
+              (click)="addCharge()"></button>
           </div>
         </div>
 
         <!-- Vendor Rate Section -->
         <div class="bg-white p-2 rounded-xl border">
-          <h3 class="text-xl font-semibold text-blue-600 mb-4 ">
+          <h3 class="text-xl font-semibold text-blue-600 mb-4">
             Vendor Rate Details
           </h3>
 
           <!-- Vendor Rate Type and Select Rate -->
           <div class="grid grid-cols-3 gap-4 mb-6">
-            <p-dropdown
-              formControlName="VendorRateType"
-              [options]="vendorRateTypes"
-              optionLabel="name"
-              placeholder="Vendor Rate Type *"
-              class="w-full"
-            ></p-dropdown>
+            <p-dropdown formControlName="VendorRateType" [options]="vendorRateTypes" optionLabel="name"
+              placeholder="Vendor Rate Type *" class="w-full"></p-dropdown>
 
-            <p-dropdown
-              formControlName="VendorRate"
-              [options]="selectRates"
-              optionLabel="name"
-              placeholder="Select Rate *"
-              class="w-full"
-            ></p-dropdown>
+            <p-dropdown formControlName="VendorRate" [options]="selectRates" optionLabel="name"
+              placeholder="Select Rate *" class="w-full"></p-dropdown>
 
-            <button
-              pButton
-              type="button"
-              label="Get Price"
-              class="p-button-success w-full"
-            ></button>
+            <button pButton type="button" label="Get Price" class="p-button-success w-full"></button>
           </div>
 
           <!-- Main Section: Date/Time & Cash Side by Side -->
@@ -731,22 +476,19 @@
             <div class="col-span-2 grid grid-cols-2 gap-4">
               <ng-container *ngFor="let field of vendorDateFields">
                 <div>
-                  <label class="font-medium text-gray-800">{{ field.label }}</label>
-                  <input
-                    type="datetime-local"
-                    [formControlName]="field.dateModel"
-                    class="w-full border border-gray-300 p-2 rounded text-gray-800"
-                  />
+                  <label class="font-medium text-gray-800">{{
+                    field.label
+                    }}</label>
+                  <input type="datetime-local" [formControlName]="field.dateModel"
+                    class="w-full border border-gray-300 p-2 rounded text-gray-800" />
                 </div>
 
                 <div>
-                  <label class="font-medium text-gray-800">{{ field.kmLabel }}</label>
-                  <input
-                    type="number"
-                    pInputText
-                    [formControlName]="field.kmModel"
-                    class="w-full border border-gray-300 p-2 rounded"
-                  />
+                  <label class="font-medium text-gray-800">{{
+                    field.kmLabel
+                    }}</label>
+                  <input type="number" pInputText [formControlName]="field.kmModel"
+                    class="w-full border border-gray-300 p-2 rounded" />
                 </div>
               </ng-container>
             </div>
@@ -758,58 +500,35 @@
                   <tr class="border-b border-gray-300">
                     <td class="p-2 font-medium text-gray-800">Cash</td>
                     <td class="p-2">
-                      <p-checkbox
-                        formControlName="isCash"
-                        binary="true"
-                      ></p-checkbox>
+                      <p-checkbox formControlName="isCash" binary="true"></p-checkbox>
                     </td>
                   </tr>
 
                   <tr class="border-b border-gray-300 bg-gray-200">
                     <td class="font-medium text-gray-800">KM Rate</td>
                     <td class="">
-                      <input
-                        type="number"
-                        pInputText
-                        formControlName="VendorKMRate"
-                        class="w-full"
-                      />
+                      <input type="number" pInputText formControlName="VendorKMRate" class="w-full" />
                     </td>
                   </tr>
 
                   <tr class="border-b border-gray-300">
                     <td class="font-medium text-gray-800">Hour Rate</td>
                     <td class="">
-                      <input
-                        type="number"
-                        pInputText
-                        formControlName="VendorHourRate"
-                        class="w-full"
-                      />
+                      <input type="number" pInputText formControlName="VendorHourRate" class="w-full" />
                     </td>
                   </tr>
 
                   <tr class="border-b border-gray-300">
                     <td class="font-medium text-gray-800">Price</td>
                     <td class="">
-                      <input
-                        type="number"
-                        pInputText
-                        formControlName="VendorPrice"
-                        class="w-full"
-                      />
+                      <input type="number" pInputText formControlName="VendorPrice" class="w-full" />
                     </td>
                   </tr>
 
                   <tr class="border-b border-gray-300">
                     <td class="font-medium text-gray-800">Advance</td>
                     <td class="">
-                      <input
-                        type="number"
-                        pInputText
-                        formControlName="Advance"
-                        class="w-full"
-                      />
+                      <input type="number" pInputText formControlName="Advance" class="w-full" />
                     </td>
                   </tr>
 
@@ -840,7 +559,7 @@
 
           <!-- Summary -->
           <div class="mt-4 grid grid-cols-2 gap-4">
-            <div class="text-gray-700 font-medium ">
+            <div class="text-gray-700 font-medium">
               Total Hours: {{ totalVendorHours }}
             </div>
             <div class="text-gray-700 font-medium">
@@ -862,55 +581,25 @@
                 <tr>
                   <td class="p-2">
                     Extra Hour
-                    <input
-                      type="number"
-                      pInputText
-                      formControlName="VendorExtraHrs"
-                      class="w-full"
-                    />
+                    <input type="number" pInputText formControlName="VendorExtraHrs" class="w-full" />
                   </td>
                   <td class="p-2">
-                    <input
-                      type="number"
-                      pInputText
-                      formControlName="VendorExtraHrsRate"
-                      class="w-full"
-                    />
+                    <input type="number" pInputText formControlName="VendorExtraHrsRate" class="w-full" />
                   </td>
                   <td class="p-2">
-                    <input
-                      type="number"
-                      pInputText
-                      formControlName="VendorExtraHrsAmount"
-                      class="w-full"
-                    />
+                    <input type="number" pInputText formControlName="VendorExtraHrsAmount" class="w-full" />
                   </td>
                 </tr>
                 <tr>
                   <td class="p-2">
                     Extra KM
-                    <input
-                      type="number"
-                      pInputText
-                      formControlName="VendorExtraKM"
-                      class="w-full"
-                    />
+                    <input type="number" pInputText formControlName="VendorExtraKM" class="w-full" />
                   </td>
                   <td class="p-2">
-                    <input
-                      type="number"
-                      pInputText
-                      formControlName="VendorExtraKMRate"
-                      class="w-full"
-                    />
+                    <input type="number" pInputText formControlName="VendorExtraKMRate" class="w-full" />
                   </td>
                   <td class="p-2">
-                    <input
-                      type="number"
-                      pInputText
-                      formControlName="VendorExtraKMAmount"
-                      class="w-full"
-                    />
+                    <input type="number" pInputText formControlName="VendorExtraKMAmount" class="w-full" />
                   </td>
                 </tr>
               </tbody>
@@ -933,46 +622,23 @@
               <tbody>
                 <tr *ngFor="let charge of vendorCharges; let i = index">
                   <td class="p-2">
-                    <input
-                      type="text"
-                      pInputText
-                      [name]="'chargeName' + i"
-                      class="w-full"
-                    />
+                    <input type="text" pInputText [name]="'chargeName' + i" class="w-full" />
                   </td>
                   <td class="p-2">
-                    <input
-                      type="number"
-                      pInputText
-                      [name]="'chargeAmount' + i"
-                      class="w-full"
-                    />
+                    <input type="number" pInputText [name]="'chargeAmount' + i" class="w-full" />
                   </td>
                   <td class="p-2">
-                    <input
-                      type="file"
-                      (change)="onVendorFileSelected($event, i)"
-                    />
+                    <input type="file" (change)="onVendorFileSelected($event, i)" />
                   </td>
                   <td class="p-2">
-                    <button
-                      pButton
-                      type="button"
-                      icon="pi pi-trash"
-                      class="p-button-danger"
-                      (click)="removeVendorCharge(i)"
-                    ></button>
+                    <button pButton type="button" icon="pi pi-trash" class="p-button-danger"
+                      (click)="removeVendorCharge(i)"></button>
                   </td>
                 </tr>
               </tbody>
             </table>
-            <button
-              pButton
-              type="button"
-              icon="pi pi-plus"
-              class="mt-4 p-button-success"
-              (click)="addVendorCharge()"
-            ></button>
+            <button pButton type="button" icon="pi pi-plus" class="mt-4 p-button-success"
+              (click)="addVendorCharge()"></button>
           </div>
         </div>
       </div>
@@ -981,7 +647,7 @@
       <p-tabView>
         <!-- Guest Name Tab -->
         <p-tabPanel header="Guest Name">
-          <div class="mt-4 bg-white p-4 rounded-xl  border">
+          <div class="mt-4 bg-white p-4 rounded-xl border">
             <h3 class="text-xl font-semibold text-purple-600 mb-4">
               Guest Details
             </h3>
@@ -1000,172 +666,85 @@
               <ng-template pTemplate="body" let-guest let-i="rowIndex">
                 <tr>
                   <td>
-                    <input
-                      type="text"
-                      pInputText
-                      formControlName="LGustName"
-                      name="guestName{{ i }}"
-                      class="w-full"
-                      placeholder="Guest Name"
-                    />
+                    <input type="text" pInputText formControlName="LGustName" name="guestName{{ i }}" class="w-full"
+                      placeholder="Guest Name" />
                   </td>
                   <td>
-                    <input
-                      type="text"
-                      pInputText
-                      formControlName="LContactNo"
-                      name="contactNo{{ i }}"
-                      class="w-full"
-                      placeholder="Contact No"
-                    />
+                    <input type="text" pInputText formControlName="LContactNo" name="contactNo{{ i }}" class="w-full"
+                      placeholder="Contact No" />
                   </td>
                   <td>
-                    <input
-                      type="text"
-                      pInputText
-                      formControlName="LContactNo2"
-                      name="additionalContactNo{{ i }}"
-                      class="w-full"
-                      placeholder="Additional Contact No"
-                    />
+                    <input type="text" pInputText formControlName="LContactNo2" name="additionalContactNo{{ i }}"
+                      class="w-full" placeholder="Additional Contact No" />
                   </td>
                   <td>
-                    <textarea
-                      pInputTextarea
-                      formControlName="LAddress"
-                      name="pickupAddress{{ i }}"
-                      class="w-full p-inputtext"
-                      placeholder="Pickup Address"
-                    ></textarea>
+                    <textarea pInputTextarea formControlName="LAddress" name="pickupAddress{{ i }}"
+                      class="w-full p-inputtext" placeholder="Pickup Address"></textarea>
                   </td>
                   <td>
-                    <textarea
-                      pInputTextarea
-                      formControlName="LDropAddress"
-                      name="dropAddress{{ i }}"
-                      class="w-full p-inputtext"
-                      placeholder="Drop Address"
-                    ></textarea>
+                    <textarea pInputTextarea formControlName="LDropAddress" name="dropAddress{{ i }}"
+                      class="w-full p-inputtext" placeholder="Drop Address"></textarea>
                   </td>
                   <td>
-                    <textarea
-                      pInputTextarea
-                      formControlName="LRemarks"
-                      name="remarks{{ i }}"
-                      class="w-full p-inputtext"
-                      placeholder="Remarks"
-                    ></textarea>
+                    <textarea pInputTextarea formControlName="LRemarks" name="remarks{{ i }}" class="w-full p-inputtext"
+                      placeholder="Remarks"></textarea>
                   </td>
                   <td class="text-center">
-                    <button
-                      pButton
-                      icon="pi pi-trash"
-                      class="p-button-danger"
-                      (click)="removeGuest(i)"
-                    ></button>
+                    <button pButton icon="pi pi-trash" class="p-button-danger" (click)="removeGuest(i)"></button>
                   </td>
                 </tr>
               </ng-template>
             </p-table>
-            <button
-              pButton
-              type="button"
-              label="Add Guest"
-              icon="pi pi-plus"
-              class="mt-4 p-button-success"
-              (click)="addGuest()"
-            ></button>
+            <button pButton type="button" label="Add Guest" icon="pi pi-plus" class="mt-4 p-button-success"
+              (click)="addGuest()"></button>
           </div>
         </p-tabPanel>
 
         <!-- Others Tab -->
         <p-tabPanel header="Others">
-          <div
-            class="mt-4 bg-white p-4 rounded-xl border shadow-md grid grid-cols-3 gap-4"
-          >
+          <div class="mt-4 bg-white p-4 rounded-xl border shadow-md grid grid-cols-3 gap-4">
             <div>
               <label class="font-medium">Booking Mode</label>
-              <p-dropdown
-                [options]="bookingModes"
-                formControlName="BookingMode"
-                placeholder="Select option"
-                class="w-full"
-              ></p-dropdown>
+              <p-dropdown [options]="bookingModes" formControlName="BookingMode" placeholder="Select option"
+                class="w-full"></p-dropdown>
             </div>
 
             <div>
               <label class="font-medium">Bill To</label>
-              <p-dropdown
-                [options]="billToOptions"
-                formControlName="BillingMode"
-                placeholder="Bill To"
-                class="w-full"
-              ></p-dropdown>
+              <p-dropdown [options]="billToOptions" formControlName="BillingMode" placeholder="Bill To"
+                class="w-full"></p-dropdown>
             </div>
 
             <div>
               <label class="font-medium">Email</label>
-              <input
-                type="email"
-                pInputText
-                formControlName="Email"
-                class="w-full"
-                placeholder="Email"
-              />
+              <input type="email" pInputText formControlName="Email" class="w-full" placeholder="Email" />
             </div>
 
             <div>
               <label class="font-medium">Booked By Email</label>
-              <input
-                type="email"
-                pInputText
-                formControlName="BookedEmail"
-                class="w-full"
-                placeholder="Booked By Email"
-              />
+              <input type="email" pInputText formControlName="BookedEmail" class="w-full"
+                placeholder="Booked By Email" />
             </div>
 
             <div>
               <label class="font-medium">Flight / Train No</label>
-              <input
-                type="text"
-                pInputText
-                formControlName="Flight_train_No"
-                class="w-full"
-                placeholder="Flight / Train No"
-              />
+              <input type="text" pInputText formControlName="Flight_train_No" class="w-full"
+                placeholder="Flight / Train No" />
             </div>
 
             <div>
               <label class="font-medium">Report At</label>
-              <input
-                type="text"
-                pInputText
-                formControlName="ReportAt"
-                class="w-full"
-                placeholder="Report At"
-              />
+              <input type="text" pInputText formControlName="ReportAt" class="w-full" placeholder="Report At" />
             </div>
 
             <div>
               <label class="font-medium">Release At</label>
-              <input
-                type="text"
-                pInputText
-                formControlName="ReleaseAt"
-                class="w-full"
-                placeholder="Release At"
-              />
+              <input type="text" pInputText formControlName="ReleaseAt" class="w-full" placeholder="Release At" />
             </div>
 
             <div>
               <label class="font-medium">Attach Duty Slip</label>
-              <input
-                type="file"
-                formControlName="item_image"
-                (change)="onFileSelectedGuest($event)"
-                class="w-full"
-              />
+              <input type="file" formControlName="item_image" (change)="onFileSelectedGuest($event)" class="w-full" />
             </div>
           </div>
         </p-tabPanel>
@@ -1173,698 +752,187 @@
 
       <!-- Action Buttons -->
       <div class="flex justify-end mt-6 gap-4">
-        <button
-          pButton
-          type="button"
-          label="Close"
-          class="p-button-secondary"
-        ></button>
-        <button
-          pButton
-          type="button"
-          label="Save"
-          class="p-button-success"
-          (click)="submitFullBooking()"
-        ></button>
+        <button pButton type="button" label="Close" class="p-button-secondary"></button>
+        <button pButton type="button" label="Save" class="p-button-success" (click)="submitFullBooking()"></button>
       </div>
     </form>
   </div>
 </div>
 
 <!-- Add Booking-->
-<div
-  *ngIf="!isFullBooking && bookingFrom"
-  class="p-6 m-6 rounded-2xl shadow-xl border border-blue-300 bg-gradient-to-r from-white to-blue-50"
->
-    <div class="flex items-center justify-between mb-6">
-  <!-- Heading with Icon -->
-  <div class="border-b border-blue-200 pb-4">
-    <h2 class="text-3xl md:text-4xl font-bold text-blue-700 flex items-center gap-4">
-      <span
-        class="bg-blue-100 text-blue-700 w-12 h-12 rounded-full flex items-center justify-center shadow-md"
-      >
-        <i class="pi pi-book text-2xl"></i>
-      </span>
-      <span class="leading-tight">
-        Add <span class="text-blue-900">Booking</span> Information
-      </span>
-    </h2>
-  </div>
+<!-- Booking Form Grouped like Indecab UI -->
+<div *ngIf="!isFullBooking && bookingFrom"
+  class="p-6 m-6 rounded-2xl shadow-xl border border-blue-300 bg-gradient-to-r from-white to-blue-50">
 
-  <!-- Toggle Button -->
-  <div class="flex items-center gap-3">
-    <p-toggleButton
-      [(ngModel)]="isFullBooking"
-      onLabel="FullBooking"
-      offLabel="Booking Only"
-      onIcon="pi-calendar-check"
-      offIcon="pi pi-calendar-times"
-      styleClass="w-52 h-12 text-white rounded-full border-none"
-      [style]="{
-        'background-color': isFullBooking ? '#2563eb' : '#6b7280',
-        'transition': 'all 0.3s ease'
-      }"
-    >
-    </p-toggleButton>
+  <div class="flex items-center justify-between mb-6">
+    <div class="border-b border-blue-200 pb-4">
+      <h2 class="text-3xl md:text-4xl font-bold text-blue-700 flex items-center gap-4">
+        <span class="bg-blue-100 text-blue-700 w-12 h-12 rounded-full flex items-center justify-center shadow-md">
+          <i class="pi pi-book text-2xl"></i>
+        </span>
+        <span class="leading-tight">
+          Add <span class="text-blue-900">Booking</span> Information
+        </span>
+      </h2>
+    </div>
+    <div class="flex items-center gap-3">
+      <p-toggleButton [(ngModel)]="isFullBooking" onLabel="FullBooking" offLabel="Booking Only"
+        onIcon="pi-calendar-check" offIcon="pi pi-calendar-times"
+        styleClass="w-52 h-12 text-white rounded-full border-none" [style]="{
+          'background-color': isFullBooking ? '#2563eb' : '#6b7280',
+          transition: 'all 0.3s ease'
+        }">
+      </p-toggleButton>
+    </div>
   </div>
-</div>
-
 
   <form [formGroup]="bookingFrom" (ngSubmit)="submitBooking()">
-    <!-- Booking Section -->
-    <div class="p-6 m-6 rounded-2xl bg-gradient-to-r from-white to-blue-50 border">
-      <!-- Wrap every 3 items -->
-      <div class="flex flex-col md:flex-row gap-6 mb-6">
-        <!-- Slip No -->
-        <div class="flex-1">
-          <div class="flex flex-col gap-2 max-w-md w-full">
-            <label class="font-semibold text-gray-800 flex items-center gap-2">
-              <i class="pi pi-file-edit text-xl text-green-600"></i> Slip No
-            </label>
-            <input
-              type="text"
-              pInputText
-              formControlName="SlipNo"
-              placeholder="Slip No *"
-              class="w-full !bg-gray-200"
-              readonly="true"
-            />
+
+    <!-- Booking Details -->
+    <div class="mb-6">
+      <p-panel header="Booking Details" [toggleable]="true" collapsed="false" class="mb-16">
+        <div class="grid md:grid-cols-3 gap-6">
+          <div>
+            <label class="label-icon"><i class="pi pi-file-edit text-green-600"></i> Slip No</label>
+            <input type="text" pInputText formControlName="SlipNo" class="w-full !bg-gray-100" readonly />
+          </div>
+          <div>
+            <label class="label-icon"><i class="pi pi-calendar-times text-blue-600"></i> Entry Date</label>
+            <input type="text" pInputText formControlName="EntryDate" class="w-full !bg-gray-100" readonly />
+          </div>
+          <div>
+            <label class="label-icon"><i class="pi pi-clock text-blue-600"></i> Entry Time</label>
+            <input type="text" pInputText formControlName="EntryTime" class="w-full !bg-gray-100" readonly />
           </div>
         </div>
+      </p-panel>
+    </div>
 
-        <p-divider layout="vertical"></p-divider>
-
-        <!-- Entry Time -->
-        <div class="flex-1">
-          <div class="flex flex-col gap-2 max-w-md w-full">
-            <label class="font-semibold text-gray-800 flex items-center gap-2">
-              <i class="pi pi-clock text-xl text-blue-600"></i> Entry Time
-            </label>
-            <input
-              type="text"
-              pInputText
-              formControlName="EntryTime"
-              placeholder="Entry Time"
-              class="w-full !bg-gray-200"
-              readonly
-            />
+    <!-- Travel & Party Info -->
+    <div class="mb-6">
+      <p-panel header="Travel & Party Info" [toggleable]="true" collapsed="false">
+        <div class="grid md:grid-cols-3 gap-6">
+          <div>
+            <label class="label-icon"><i class="pi pi-building text-blue-700"></i> Branch</label>
+            <p-autoComplete formControlName="Branch" [suggestions]="filteredBranches"
+              (completeMethod)="filterBranches($event)" field="branch_name" [dropdown]="true"
+              [forceSelection]="true"></p-autoComplete>
+          </div>
+          <div>
+            <label class="label-icon"><i class="pi pi-calendar text-purple-600"></i> Rental Date</label>
+            <input type="date" formControlName="RentalDate" class="w-full p-inputtext" />
+          </div>
+          <div>
+            <label class="label-icon"><i class="pi pi-clock text-pink-600"></i> Reporting Time</label>
+            <input type="text" pInputText formControlName="ReportingDatetime" class="w-full" />
           </div>
         </div>
-
-        <p-divider layout="vertical"></p-divider>
-
-        <!-- Entry Date -->
-        <div class="flex-1">
-          <div class="flex flex-col gap-2 max-w-md w-full">
-            <label class="font-semibold text-gray-800 flex items-center gap-2">
-              <i class="pi pi-calendar-times text-xl text-blue-600"></i> Entry
-              Date
-            </label>
-            <input
-              type="text"
-              pInputText
-              formControlName="EntryDate"
-              placeholder="Entry Date"
-              class="w-full !bg-gray-200"
-              readonly
-            />
+        <div class="grid md:grid-cols-3 gap-6 mt-6">
+          <div>
+            <label class="label-icon"><i class="pi pi-map-marker text-purple-600"></i> From City</label>
+            <p-autoComplete formControlName="FromCityID" [suggestions]="filteredCities"
+              (completeMethod)="filterCities($event)" field="CityName" [dropdown]="true"
+              [forceSelection]="true"></p-autoComplete>
+          </div>
+          <div>
+            <label class="label-icon"><i class="pi pi-map text-green-600"></i> To City</label>
+            <p-autoComplete formControlName="ToCityID" [suggestions]="filteredToCities"
+              (completeMethod)="filterToCities($event)" field="CityName" [dropdown]="true"
+              [forceSelection]="true"></p-autoComplete>
+          </div>
+          <div>
+            <label class="label-icon"><i class="pi pi-check-circle text-green-700"></i> Duty Type</label>
+            <p-dropdown formControlName="DutyType" [options]="dutyTypes" optionLabel="name" class="w-full"></p-dropdown>
           </div>
         </div>
-      </div>
+      </p-panel>
+    </div>
 
-      <div class="flex flex-col md:flex-row gap-6 mb-6">
-        <div class="flex-1">
-          <!-- Branch -->
-          <div class="flex flex-col gap-2 max-w-md w-full">
-            <label class="font-medium text-gray-700 flex items-center gap-2">
-              <i class="pi pi-building text-xl text-blue-700"></i> Branch
-            </label>
-
-            <p-autoComplete
-              (onSelect)="onBranchSelect($event)"
-              name="branch"
-              [suggestions]="filteredBranches"
-              (completeMethod)="filterBranches($event)"
-              field="branch_name"
-              [dropdown]="true"
-              [forceSelection]="true"
-              placeholder="Select Branch *"
-              class="w-full"
-              inputStyleClass="w-full"
-              panelStyleClass="w-full"
-            >
-            </p-autoComplete>
-          </div>
-        </div>
-
-        <p-divider layout="vertical"></p-divider>
-
-        <div class="flex-1">
-          <!-- Rental Date -->
-          <div class="flex flex-col gap-2">
-            <label class="font-semibold text-gray-800 flex items-center gap-2">
-              <i class="pi pi-calendar text-xl text-purple-600"></i> Rental Date
-            </label>
-            <input
-              type="date"
-              formControlName="RentalDate"
-              class="w-full p-2 border rounded-lg"
-            />
-          </div>
-        </div>
-
-        <p-divider layout="vertical"></p-divider>
-
-        <div class="flex-1">
-          <!-- Reporting Time -->
-          <div class="flex flex-col gap-2">
-            <label class="font-semibold text-gray-800 flex items-center gap-2">
-              <i class="pi pi-clock text-xl text-pink-600"></i> Reporting Time
-            </label>
-            <input
-              type="text"
-              pInputText
-              formControlName="ReportingDatetime"
-              placeholder="Reporting Time *"
-              class="w-full"
-            />
-          </div>
-        </div>
-      </div>
-
-      <div class="flex flex-col md:flex-row gap-6 mb-6">
-        <div class="flex-1">
-          <!-- From City -->
-          <div class="flex flex-col gap-2">
-            <label class="font-semibold text-gray-800 flex items-center gap-2">
-              <i class="pi pi-map-marker text-xl text-purple-600"></i> From City
-            </label>
-            <p-autoComplete
-              (onSelect)="onCitySelect($event)"
-              name="FromCityID"
-              [suggestions]="filteredCities"
-              (completeMethod)="filterCities($event)"
-              field="CityName"
-              [dropdown]="true"
-              [forceSelection]="true"
-              placeholder="From City"
-              class="w-full"
-              inputStyleClass="w-full"
-              panelStyleClass="w-full"
-            ></p-autoComplete>
-          </div>
-        </div>
-
-        <p-divider layout="vertical"></p-divider>
-
-        <div class="flex-1">
-          <!-- To City -->
-          <div class="flex flex-col gap-2">
-            <label class="font-semibold text-gray-800 flex items-center gap-2">
-              <i class="pi pi-map text-xl text-green-600"></i> To City
-            </label>
-            <p-autoComplete
-              (onSelect)="onToCitySelect($event)"
-              name="ToCityID"
-              [suggestions]="filteredToCities"
-              (completeMethod)="filterToCities($event)"
-              field="CityName"
-              [dropdown]="true"
-              [forceSelection]="true"
-              placeholder="To City *"
-              class="w-full"
-              inputStyleClass="w-full"
-              panelStyleClass="w-full"
-            ></p-autoComplete>
-          </div>
-        </div>
-
-        <p-divider layout="vertical"></p-divider>
-
-        <div class="flex-1">
-          <!-- Duty Type -->
-          <div class="flex flex-col gap-2">
-            <label class="font-semibold text-gray-800 flex items-center gap-2">
-              <i class="pi pi-check-circle text-xl text-green-700"></i> Duty
-              Type
-            </label>
-            <p-dropdown
-              formControlName="DutyType"
-              [options]="dutyTypes"
-              optionLabel="name"
-              optionValue="name"
-              placeholder="Duty Type *"
-              class="w-full"
-            ></p-dropdown>
-          </div>
-        </div>
-      </div>
-
-      <div class="flex flex-col md:flex-row gap-6 mb-6">
-        <div class="flex-1">
-          <!-- Party -->
-          <div class="flex flex-col gap-2">
-            <label class="font-medium text-gray-700 flex items-center gap-2">
-              <i class="pi pi-users text-xl text-pink-500"></i> Party
-            </label>
-            <p-autoComplete
-              formControlName="Party"
-              (onSelect)="onPartyNameSelect($event)"
-              name="Party"
-              [suggestions]="PartyName"
-              (completeMethod)="filterPartyName($event)"
-              field="PartyName"
-              [dropdown]="true"
-              placeholder="Party *"
-              class="w-full"
-            ></p-autoComplete>
-          </div>
-        </div>
-
-        <p-divider layout="vertical"></p-divider>
-
-        <div class="flex-1">
-          <!-- Report At -->
-          <div class="flex flex-col gap-2">
-            <label class="font-semibold text-gray-800 flex items-center gap-2">
-              <i class="pi pi-map text-xl text-purple-600"></i> Report At
-            </label>
-            <p-dropdown
-              formControlName="ReportAt"
-              [options]="reportOptions"
-              optionLabel="label"
-              optionValue="value"
-              placeholder="Duty Type *"
-              class="w-full"
-            ></p-dropdown>
-          </div>
-        </div>
-
-        <p-divider layout="vertical"></p-divider>
-
-        <div class="flex-1">
-          <!-- Project -->
-          <div class="flex flex-col gap-2">
-            <label class="font-semibold text-gray-800 flex items-center gap-2">
-              <i class="pi pi-briefcase text-xl text-cyan-600"></i> Project
-            </label>
-            <input
-              type="text"
-              pInputText
-              formControlName="Project"
-              placeholder="Project"
-              class="w-full"
-            />
-          </div>
-        </div>
-      </div>
-
-      <div class="flex flex-col md:flex-row gap-6 mb-6">
-        <div class="flex-1">
-          <!-- Email -->
-          <div class="flex flex-col gap-2">
-            <label class="font-semibold text-gray-800 flex items-center gap-2">
-              <i class="pi pi-envelope text-xl text-blue-600"></i> Email
-            </label>
-            <input
-              type="email"
-              pInputText
-              formControlName="Email"
-              placeholder="Email"
-              class="w-full"
-            />
-          </div>
-        </div>
-
-        <p-divider layout="vertical"></p-divider>
-
-        <div class="flex-1">
-          <!-- Travel Mode -->
-          <div class="flex flex-col gap-2">
-            <label class="font-semibold text-gray-800 flex items-center gap-2">
-              <i class="pi pi-send text-xl text-blue-600"></i> Flight/Train
-            </label>
-            <input
-              type="text"
-              pInputText
-              formControlName="Flight_train_No"
-              placeholder="Train/Flight"
-              class="w-full"
-            />
-          </div>
-        </div>
-
-        <p-divider layout="vertical"></p-divider>
-
-        <div class="flex-1">
-          <!-- Booked By -->
-          <div class="flex flex-col gap-2">
-            <label class="font-semibold text-gray-800 flex items-center gap-2">
-              <i class="pi pi-user-plus text-xl text-yellow-600"></i> Booked By
-            </label>
-            <input
-              type="text"
-              pInputText
-              formControlName="BookedBy"
-              placeholder="Booked By"
-              class="w-full"
-            />
-          </div>
-        </div>
-      </div>
-
-      <div class="flex flex-col md:flex-row gap-6 mb-6">
-        <div class="flex-1">
-          <!-- Contact No -->
-          <div class="flex flex-col gap-2">
-            <label class="font-semibold text-gray-800 flex items-center gap-2">
-              <i class="pi pi-phone text-xl text-blue-600"></i> Contact No
-            </label>
-            <input
-              type="text"
-              pInputText
-              formControlName="ContactNo"
-              placeholder="Contact No"
-              class="w-full"
-            />
-          </div>
-        </div>
-
-        <p-divider layout="vertical"></p-divider>
-
-        <div class="flex-1">
-          <!-- Car Type  -->
-          <div class="flex flex-col gap-2">
-            <label class="font-semibold text-gray-800 flex items-center gap-2">
-              <i class="pi pi-car text-xl text-orange-600"></i> Car Type
-            </label>
-            <p-autoComplete
-              (onSelect)="onCarTypeSelect($event)"
-              name="CarType"
-              [suggestions]="filteredCarTypes"
-              (completeMethod)="filterCarTypes($event)"
-              field="car_type"
-              [dropdown]="true"
-              [forceSelection]="true"
-              placeholder="Car Type *"
-              class="w-full"
-              inputStyleClass="w-full"
-              panelStyleClass="w-full"
-            ></p-autoComplete>
-          </div>
-        </div>
-
-        <p-divider layout="vertical"></p-divider>
-
-        <div class="flex-1">
-          <!-- Booked by Email -->
-          <div class="flex flex-col gap-2">
-            <label class="font-semibold text-gray-800 flex items-center gap-2">
-              <i class="pi pi-envelope text-xl text-blue-600"></i> Booked By
-              Email
-            </label>
-            <input
-              type="email"
-              pInputText
-              formControlName="BookedEmail"
-              placeholder="Booked By Email"
-              class="w-full"
-            />
-          </div>
-        </div>
-      </div>
-
-      <div class="flex flex-col md:flex-row gap-6 mb-6">
-        <div class="flex-1">
-          <!-- Booking Mode -->
-          <div class="flex flex-col gap-2">
-            <label class="font-semibold text-gray-800 flex items-center gap-2">
-              <i class="pi pi-directions text-xl text-blue-600"></i> Booking
-              Mode
-            </label>
-            <input
-              type="text"
-              pInputText
-              formControlName="BookingMode"
-              placeholder="Booking Mode"
-              class="w-full"
-            />
-          </div>
-        </div>
-
-        <p-divider layout="vertical"></p-divider>
-
-        <div class="flex-1">
-          <!-- Party Rate Type -->
-          <div class="flex flex-col gap-2">
-            <label class="font-semibold text-gray-800 flex items-center gap-2">
-              <i class="pi pi-money-bill text-xl text-blue-600"></i> Party Rate
-              Type
-            </label>
-            <p-dropdown
-              formControlName="PartyRateType"
-              [options]="partyRateTypes"
-              optionLabel="label"
-              optionValue="value"
-              placeholder="Party Rate Type *"
-              class="w-full"
-              (onChange)="changePartyRateType()"
-            ></p-dropdown>
-          </div>
-        </div>
-
-        <p-divider layout="vertical"></p-divider>
-
-        <div class="flex-1">
-          <!-- Select Rate -->
-          <div class="flex flex-col gap-2">
-            <label class="font-semibold text-gray-800 flex items-center gap-2">
-              <i class="pi pi-percentage text-xl text-blue-600"></i> Select Rate
-            </label>
-            <p-dropdown
-              formControlName="SelectRate"
-              [options]="selectRates"
-              optionLabel="name"
-              optionValue="id"
-              placeholder="Select Rate *"
-              class="w-full"
-            ></p-dropdown>
-          </div>
-        </div>
-      </div>
-
-      <div class="flex flex-col md:flex-row gap-6 mb-6">
-        <div class="flex-1">
-          <!-- Cash & Advanced -->
-          <div class="flex flex-col gap-2">
-            <label class="font-semibold text-gray-800 flex items-center gap-2">
-              <i class="pi pi-wallet text-xl text-blue-600"></i> Payment
-            </label>
+    <!-- Pricing Info -->
+    <div class="mb-6">
+      <p-panel header="Pricing Info" [toggleable]="true" collapsed="false">
+        <div class="grid md:grid-cols-3 gap-6">
+          <div>
+            <label class="label-icon"><i class="pi pi-wallet text-blue-600"></i> Payment (Cash & Advance)</label>
             <div class="flex items-center gap-4">
-              <p-checkbox
-                formControlName="isCash"
-                binary="true"
-                inputId="cash"
-              ></p-checkbox>
-              <label for="cash" class="text-gray-800 text-sm font-medium"
-                >Cash</label
-              >
-              <input
-                type="text"
-                pInputText
-                formControlName="Advance"
-                placeholder="Advanced"
-                class="w-full"
-              />
+              <p-checkbox formControlName="isCash" binary="true" inputId="cash"></p-checkbox>
+              <label for="cash" class="text-gray-800 text-sm font-medium">Cash</label>
+              <input type="text" pInputText formControlName="Advance" placeholder="Advanced" class="w-full" />
             </div>
           </div>
-        </div>
-
-        <p-divider layout="vertical"></p-divider>
-
-        <div class="flex-1">
-          <!-- Price -->
-          <div class="flex flex-col gap-2">
-            <label class="font-semibold text-gray-800 flex items-center gap-2">
-              <i class="pi pi-dollar text-xl text-blue-600"></i> Price
-            </label>
-            <input
-              type="text"
-              pInputText
-              formControlName="Price"
-              placeholder="Price"
-              class="w-full"
-            />
+          <div>
+            <label class="label-icon"><i class="pi pi-dollar text-blue-600"></i> Price</label>
+            <input type="text" pInputText formControlName="Price" class="w-full" />
+          </div>
+          <div>
+            <label class="label-icon"><i class="pi pi-stopwatch text-blue-600"></i> Hour Rate</label>
+            <input type="text" pInputText formControlName="HourRate" class="w-full" />
           </div>
         </div>
-
-        <p-divider layout="vertical"></p-divider>
-
-        <div class="flex-1">
-          <!-- Hour Rate -->
-          <div class="flex flex-col gap-2">
-            <label class="font-semibold text-gray-800 flex items-center gap-2">
-              <i class="pi pi-stopwatch text-xl text-blue-600"></i> Hour Rate
-            </label>
-            <input
-              type="text"
-              pInputText
-              formControlName="HourRate"
-              placeholder="Hour Rate"
-              class="w-full"
-            />
+        <div class="grid md:grid-cols-3 gap-6 mt-6">
+          <div>
+            <label class="label-icon"><i class="pi pi-compass text-blue-600"></i> KM Rate</label>
+            <input type="text" pInputText formControlName="KMRate" class="w-full" />
+          </div>
+          <div>
+            <label class="label-icon"><i class="pi pi-percentage text-blue-600"></i> Select Rate</label>
+            <p-dropdown formControlName="SelectRate" [options]="selectRates" optionLabel="name" optionValue="id"
+              class="w-full"></p-dropdown>
+          </div>
+          <div>
+            <label class="label-icon"><i class="pi pi-money-bill text-blue-600"></i> Party Rate Type</label>
+            <p-dropdown formControlName="PartyRateType" [options]="partyRateTypes" optionLabel="label"
+              optionValue="value" class="w-full"></p-dropdown>
           </div>
         </div>
-      </div>
-
-      <div class="flex flex-col md:flex-row gap-6 mb-6">
-        <div class="flex-1"></div>
-
-        <p-divider layout="vertical"></p-divider>
-
-        <div class="flex-1">
-          <!-- KM Rate -->
-          <div class="flex flex-col gap-2">
-            <label class="font-semibold text-gray-800 flex items-center gap-2">
-              <i class="pi pi-compass text-xl text-blue-600"></i> KM Rate
-            </label>
-            <input
-              type="text"
-              pInputText
-              formControlName="KMRate"
-              placeholder="KM Rate"
-              class="w-full"
-            />
-          </div>
-        </div>
-
-        <p-divider layout="vertical"></p-divider>
-
-        <div class="flex-1">
-          <!-- Entry Date -->
-        </div>
-      </div>
-
-      <!-- Summary -->
-      <div
-        class="mt-6 grid grid-cols-3 gap-4 text-gray-800 text-lg font-semibold px-4"
-      >
-        <div>Min Hours: {{ totalHours }}</div>
-        <div>Night Halt Time: {{ totalKM }}</div>
-        <div>Night Halt Amount: {{ totalKM }}</div>
-      </div>
+      </p-panel>
     </div>
 
-    <!-- Guest section -->
-    <div class="mt-4 bg-white p-4 rounded-xl border">
-      <h3 class="text-xl font-semibold text-purple-600 mb-4">Guest Details</h3>
-      <p-table [value]="guests" responsiveLayout="scroll">
-        <ng-template pTemplate="header">
-          <tr>
-            <th>Guest Name *</th>
-            <th>Contact No *</th>
-            <th>Additional Contact No *</th>
-            <th>Pickup Address *</th>
-            <th>Drop Address *</th>
-            <th>Remarks</th>
-            <th>Action</th>
-          </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-guest let-i="rowIndex">
-          <tr>
-            <td>
-              <input
-                type="text"
-                pInputText
-                formControlName="LGustName"
-                name="LGustName{{ i }}"
-                class="w-full"
-                placeholder="Guest Name"
-              />
-            </td>
-            <td>
-              <input
-                type="text"
-                pInputText
-                formControlName="LContactNo"
-                name="LContactNo{{ i }}"
-                class="w-full"
-                placeholder="Contact No"
-              />
-            </td>
-            <td>
-              <input
-                type="text"
-                pInputText
-                formControlName="LContactNo2"
-                name="LContactNo2{{ i }}"
-                class="w-full"
-                placeholder="Additional Contact No"
-              />
-            </td>
-            <td>
-              <textarea
-                pInputTextarea
-                formControlName="LAddress"
-                name="LAddress{{ i }}"
-                class="w-full p-inputtext"
-                placeholder="Pickup Address"
-              ></textarea>
-            </td>
-            <td>
-              <textarea
-                pInputTextarea
-                formControlName="LDropAddress"
-                name="dropAddress{{ i }}"
-                class="w-full p-inputtext"
-                placeholder="Drop Address"
-              ></textarea>
-            </td>
-            <td>
-              <textarea
-                pInputTextarea
-                formControlName="LRemarks"
-                name="remarks{{ i }}"
-                class="w-full p-inputtext"
-                placeholder="Remarks"
-              ></textarea>
-            </td>
-            <td class="text-center">
-              <button
-                pButton
-                icon="pi pi-trash"
-                class="p-button-danger"
-                (click)="removeGuest(i)"
-              ></button>
-            </td>
-          </tr>
-        </ng-template>
-      </p-table>
-      <button
-        pButton
-        type="button"
-        label="Add Guest"
-        icon="pi pi-plus"
-        class="mt-4 p-button-success"
-        (click)="addGuest()"
-      ></button>
+    <!-- Guest Section -->
+    <div class="mb-6">
+      <p-panel header="Guest Details" [toggleable]="true" collapsed="false" class="mb-6">
+        <p-table [value]="guests" responsiveLayout="scroll">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Guest Name</th>
+              <th>Contact No</th>
+              <th>Additional Contact</th>
+              <th>Pickup Address</th>
+              <th>Drop Address</th>
+              <th>Remarks</th>
+              <th>Action</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-guest let-i="rowIndex">
+            <tr>
+              <td><input type="text" pInputText [(ngModel)]="guest.name" class="w-full" /></td>
+              <td><input type="text" pInputText [(ngModel)]="guest.contact" class="w-full" /></td>
+              <td><input type="text" pInputText [(ngModel)]="guest.altContact" class="w-full" /></td>
+              <td><textarea pInputTextarea [(ngModel)]="guest.pickup" class="w-full"></textarea></td>
+              <td><textarea pInputTextarea [(ngModel)]="guest.drop" class="w-full"></textarea></td>
+              <td><textarea pInputTextarea [(ngModel)]="guest.remarks" class="w-full"></textarea></td>
+              <td>
+                <button pButton icon="pi pi-trash" class="p-button-danger" (click)="removeGuest(i)"></button>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+        <button pButton type="button" label="Add Guest" icon="pi pi-plus" class="mt-4 p-button-success"
+          (click)="addGuest()"></button>
+      </p-panel>
     </div>
 
-    <!-- Action Buttons -->
-    <div class="flex justify-end mt-6 gap-4">
-      <button
-        pButton
-        type="button"
-        label="Close"
-        class="p-button-secondary"
-      ></button>
-      <button
-        pButton
-        type="button"
-        label="Save"
-        class="p-button-success"
-        (click)="submitBooking()"
-      ></button>
+    <!-- Submit -->
+    <div class="flex justify-end gap-4 mt-6">
+      <button pButton type="button" label="Close" class="p-button-secondary"></button>
+      <button pButton type="submit" label="Save Booking" class="p-button-success"></button>
     </div>
   </form>
 </div>
+
+<!-- Tailwind Utility -->
+<style>
+  .label-icon {
+    @apply font-semibold text-gray-800 flex items-center gap-2 mb-1;
+  }
+</style>
