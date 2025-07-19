@@ -254,6 +254,8 @@ export class VendorMasterComponent implements OnInit, OnDestroy, AfterViewInit {
       pin_code: "" + this.form.value.pin_code,
       mobileno: "" + this.form.value.mobileno,
       whatsappno: "" + this.form.value.whatsappno,
+      bank_acno: "" + this.form.value.bank_acno,
+      phone_no: "" + this.form.value.phone_no,
     }
     this.vendorMasterService.createUpdateVendor(payload)
   }

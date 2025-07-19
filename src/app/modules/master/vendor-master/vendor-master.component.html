@@ -207,7 +207,8 @@
                             </div>
                             <input type="email" pInputText class="w-full border border-gray-300 rounded-lg p-3"
                                formControlName="email" placeholder="Email">
-                            <span *ngIf="form.get('email')?.invalid && form.get('email')?.touched && form.get('email')?.errors?.['email']" class="text-red-500">
+                            <span *ngIf="form.get('email')?.invalid && form.get('email')?.touched && form.get('email')?.errors?.['email']"
+                                class="text-red-500">
                                 Invalid email address.
                             </span>
                         </div>
