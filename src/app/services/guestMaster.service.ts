@@ -10,13 +10,13 @@ export class guestMasterService extends BaseService {
     super(ws);
   }
 
-  GetAllGuest(payload: any) {
+  getAllGuest(payload: any) {
     this.call('master.gatAllGuestMaster', payload);
   }
 
-//   CreateUpdateParty(payload: any){
-//     this.post('/master/createUpdatePart', payload);
-//   }
+  createGuest(payload: any){
+    this.call('master.createGuestMaster', payload);
+  }
 
 //   Delete(payload: any){
 //     this.post('/master/deleteCharges', payload);
