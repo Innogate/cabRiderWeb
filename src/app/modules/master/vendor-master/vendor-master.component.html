@@ -34,7 +34,7 @@
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Vendor Name</label>
                                 <span class="text-red-600">*</span>
                             </div>
-                            <input type="text" class="w-full border border-gray-300 rounded-lg p-3 text-uppercase"
+                            <input type="text" class="w-full border border-gray-300 rounded-lg p-3 text-uppercase uppercase"
                                formControlName="vendor_name" placeholder="Enter Vendor Name">
                             <span *ngIf="form.get('vendor_name')?.touched && form.get('vendor_name')?.errors?.['required']"
                                 class="text-sm text-red-600">
@@ -54,7 +54,7 @@
                                 <i class="pi pi-map text-red-600"></i>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Address</label>
                             </div>
-                            <textarea pInputTextarea class="w-full border border-gray-300 rounded-lg p-3"
+                            <textarea pInputTextarea class="w-full border border-gray-300 rounded-lg p-3 text-uppercase uppercase"
                                formControlName="address" placeholder="Enter Address" rows="3"></textarea>
                         </div>
                     </div>
