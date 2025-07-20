@@ -14,6 +14,10 @@ export class userMasterService extends BaseService {
     this.call('master.getAllUserMaster', payload);
   }
 
+  createUpdateUser(id: number, name: string, mobile: string, email: string, username: string, password: string){
+     this.call('master.createUpdateUserMaster', {id, name, mobile, email, username, password});
+  }
+
 
   protected handleMessage(msg: any): boolean {
     return false;
