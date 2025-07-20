@@ -1,1 +1,87 @@
-<p>user-list-master works!</p>
+<div class="card" *ngIf="!showForm">
+    <app-dynamic-table [columns]="columns" [loading]="isLoading" [data]="data" [headerTitle]="'USER LIST'"
+        [rowActions]="actions" (onAction)="handleAction($event)">
+    </app-dynamic-table>
+</div>
+<div class="min-h-screen  p-4" *ngIf="showForm">
+    <form [formGroup]="form"
+        class="max-w-4xl mx-auto bg-white rounded-xl shadow-md overflow-hidden">
+        <!-- Header -->
+        <div class="bg-sky-700 px-6 py-4 rounded-t-lg flex justify-between items-center">
+            <h1 class="text-2xl font-semibold text-white">
+                {{heading}}
+            </h1>
+            <button type="button" class="text-white hover:text-gray-200 focus:outline-none" aria-label="Close"
+                (click)="showForm = false">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                    </path>
+                </svg>
+            </button>
+        </div>
+         <!-- Main Form Content -->
+        <div class="p-6 bg-sky-200">
+            <!-- Left Column -->
+            <div class="space-y-6">
+                <!-- Add User-->
+                <div class="bg-sky-100 p-5 rounded-lg border border-sky-400">
+                    <h2 class="text-lg font-semibold text-slate-950 mb-4 pb-2 border-b border-sky-400">
+                        <i class="pi pi-user mr-2"></i>ADD USER
+                    </h2>
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex items-center space-x-2">
+                                <i class="pi pi-pencil text-yellow-600"></i>
+                            <label class="block text-sm font-medium text-slate-950 mb-1">Name</label>
+                            </div>
+                            <input type="text"  pInputText
+                                class="w-full border border-gray-300 rounded-lg p-3 text-uppercase" placeholder="ENTER NAME">
+                        </div>
+                        <div>
+                            <div class="flex items-center space-x-2">
+                                <i class="pi pi-phone text-green-600"></i>
+                            <label class="block text-sm font-medium text-slate-950 mb-1">Phone No</label>
+                            </div>
+                            <input type="text" pInputText
+                                class="w-full border border-gray-300 rounded-lg p-3 text-uppercase" placeholder="PHONE NO">
+                        </div>
+                         <div>
+                            <div class="flex items-center space-x-2">
+                                <i class="pi pi-at text-red-500"></i>
+                            <label class="block text-sm font-medium text-slate-950 mb-1">Email</label>
+                            </div>
+                            <input type="text" pInputText
+                                class="w-full border border-gray-300 rounded-lg p-3 text-uppercase" placeholder="EMAIL">
+                        </div>
+                         <div>
+                            <div class="flex items-center space-x-2">
+                                <i class="pi pi-user-plus text-yellow-600"></i>
+                            <label class="block text-sm font-medium text-slate-950 mb-1">User Name</label>
+                            </div>
+                            <input type="text" pInputText
+                                class="w-full border border-gray-300 rounded-lg p-3 text-uppercase" placeholder="USER NAME">
+                        </div>
+                         <div>
+                            <div class="flex items-center space-x-2">
+                                <i class="pi pi-unlock text-black-400"></i>
+                            <label class="block text-sm font-medium text-slate-950 mb-1">Password</label>
+                            </div>
+                            <input type="text" pInputText
+                                class="w-full border border-gray-300 rounded-lg p-3 text-uppercase" placeholder="PASSWORD">
+                        </div>
+                       
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Footer with Submit Button -->
+        <div class=" bg-sky-400 px-5 py-2 border-t border-gray-200 flex justify-end">
+            <button type="submit" [disabled]="form.invalid"
+                class="px-6 py-3 bg-sky-700 text-white font-medium rounded-lg shadow-sm hover:bg-sky-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
+                Save 
+            </button>
+        </div>
+    </form>
+</div>   
+
+
