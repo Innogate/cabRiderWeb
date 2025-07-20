@@ -236,7 +236,7 @@ export class BookingEntryComponent implements OnInit {
   init() {
     this.bookingFrom = this.fb.group({
       id: [0],
-      Branch: ['', Validators.required], // -> Added
+      Branch: [''], // -> Added
       branch_id: [null, Validators.required],
       EntryDate: [getCurrentDate(), Validators.required],
       EntryTime: [getCurrentTime(), Validators.required],
