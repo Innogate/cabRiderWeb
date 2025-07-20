@@ -14,8 +14,8 @@ export class guestMasterService extends BaseService {
     this.call('master.gatAllGuestMaster', payload);
   }
 
-  createGuest(payload: any){
-    this.call('master.createGuestMaster', payload);
+  createGuest(id: any, PartyID: any, GuestName: string, AddrType: string, Addrr: string, ContactNo: string, WhatsappNo: string, Email_ID: string, Honorific: string){
+    this.call('master.createGuestMaster', {id, PartyID, GuestName, AddrType, Addrr, ContactNo, WhatsappNo, Email_ID, Honorific});
   }
 
 //   Delete(payload: any){
