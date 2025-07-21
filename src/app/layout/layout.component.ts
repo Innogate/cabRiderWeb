@@ -97,7 +97,7 @@ export class LayoutComponent {
         { label: 'Vendor Rate', icon: 'pi pi-percentage' },
         { label: 'Guest', icon: 'pi pi-user-plus' },
         { label: 'Network', icon: 'pi pi-sitemap' },
-        { label: 'User List', icon: 'pi pi-users' },
+        { label: 'User List', icon: 'pi pi-users',routerLink: 'master/user-master'},
         { label: 'Monthly Duty Setup', icon: 'pi pi-calendar' },
       ]
     },
