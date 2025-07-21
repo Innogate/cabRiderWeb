@@ -11,8 +11,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
 import { TableModule } from 'primeng/table';
-import { TabPanel, TabViewModule } from 'primeng/tabview';
-import { ToggleButton } from 'primeng/togglebutton';
+import { TabViewModule } from 'primeng/tabview';
 import { ActivatedRoute, Router } from '@angular/router';
 import { getCurrentDate, getCurrentTime, globalRequestHandler, } from '../../../utils/global';
 import { MessageService } from 'primeng/api';
@@ -35,7 +34,6 @@ import { PanelModule } from 'primeng/panel';
     SelectModule,
     CheckboxModule,
     TabViewModule,
-    ToggleButton,
     ReactiveFormsModule,
     FormsModule,
     PanelModule,
@@ -56,72 +54,12 @@ export class BookingEntryComponent implements OnInit {
   ) { }
   totalHours = 0;
   totalKM = 0;
-  filteredVendors: any[] = [];
   availableRates: any[] | undefined;
   charges: any[] = [];
-  vendorCharges: { name: string; amount: number }[] = [];
-  totalVendorHours = 0;
-  totalVendorKM = 0;
-
-  isFullBooking: boolean = false;
-
   bookingFrom?: any;
-  fullBookingFrom?: any;
 
 
-  dateFields = [
-    {
-      label: 'Garage Out Date',
-      dateModel: 'GarageOutDate',
-      kmLabel: 'Garage Out KM',
-      kmModel: 'GarageOutKm',
-    },
-    {
-      label: 'Report Date',
-      dateModel: 'ReportDate',
-      kmLabel: 'Report KM',
-      kmModel: 'ReportKm',
-    },
-    {
-      label: 'Releasing Date',
-      dateModel: 'ReleasingDate',
-      kmLabel: 'Releasing KM',
-      kmModel: 'ReleaseKm',
-    },
-    {
-      label: 'Garage In Date',
-      dateModel: 'GarageInDate',
-      kmLabel: 'Garage In KM',
-      kmModel: 'GarageInKm',
-    },
-  ];
 
-  vendorDateFields = [
-    {
-      label: 'Garage Out Date',
-      dateModel: 'VendorGarageOutDate',
-      kmLabel: 'Garage Out Km',
-      kmModel: 'VendorGarageOutKm',
-    },
-    {
-      label: 'Report Date',
-      dateModel: 'VendorReportDate',
-      kmLabel: 'Report KM',
-      kmModel: 'VendorReportKm',
-    },
-    {
-      label: 'Release Date',
-      dateModel: 'VendorReleasingDate',
-      kmLabel: 'Release KM',
-      kmModel: 'VendorReleaseKm',
-    },
-    {
-      label: 'Garage In Date',
-      dateModel: 'VendorGarageInDate',
-      kmLabel: 'Garage In Km',
-      kmModel: 'VendorGarageInKm',
-    },
-  ];
 
   booking = {
     netAmount: 0,
@@ -129,31 +67,6 @@ export class BookingEntryComponent implements OnInit {
     totalAmount: 0
   };
 
-
-  vendorBooking = {
-    vendorRateType: null,
-    selectedRate: null,
-    vendorOut: null,
-    vendorOutKM: 0,
-    reportDate: null,
-    reportKM: 0,
-    releaseDate: null,
-    releaseKM: 0,
-    vendorIn: null,
-    vendorInKM: 0,
-    kmRate: 0,
-    hourRate: 0,
-    price: 0,
-    advance: 0,
-    cash: false,
-    netAmount: 0,
-    otherCharges: 0,
-    totalAmount: 0,
-    extraHourRate: 0,
-    extraHourAmount: 0,
-    extraKmRate: 0,
-    extraKmAmount: 0,
-  };
 
   guests = [
     {
@@ -166,30 +79,7 @@ export class BookingEntryComponent implements OnInit {
     },
   ];
 
-  others = {
-    reportAt: null,
-    bookingMode: null,
-    billTo: null,
-    email: '',
-    bookedByEmail: '',
-    flightTrainNo: '',
-    dropAt: '',
-    otherReportAt: '',
-    releaseAt: '',
-  };
 
-  reportOptions = [
-    { label: 'Morning', value: 'Morning' },
-    { label: 'Evening', value: 'Evening' },
-  ];
-  bookingModes = [
-    { label: 'Online', value: 'Online' },
-    { label: 'Offline', value: 'Offline' },
-  ];
-  billToOptions = [
-    { label: 'Bill To Company', value: 'Bill To Company' },
-    { label: 'Bill To Guest', value: 'Bill To Guest' },
-  ];
 
   branches?: any[];
   cities?: any[];
@@ -216,15 +106,16 @@ export class BookingEntryComponent implements OnInit {
     },
   ];
 
-  vendorRateTypes = [{ name: 'Hourly' }, { name: 'KM Based' }];
+   bookingModes = [
+    { label: 'Online', value: 'Online' },
+    { label: 'Offline', value: 'Offline' },
+  ];
 
   selectRates: any[] = [
     { id: 1, name: 'Standard Rate' },
     { id: 2, name: 'Corporate Rate' },
     { id: 3, name: 'Special Event Rate' }
   ];
-
-  selectVendorRates = [{ name: 'Vendor Standard' }, { name: 'Vendor Premium' }];
 
   dutyTypes = [{ name: 'Local' }, { name: 'Outstation' }];
 
@@ -276,113 +167,6 @@ export class BookingEntryComponent implements OnInit {
       SelectRate: [0],
     });
 
-    this.fullBookingFrom = this.fb.group({
-      bookingStatus: [''],
-      Calon: [''],
-      minHour: [''],
-      minKm: [''],
-      EntryTime: [''],
-      id: [''],
-      EntryDate: [''],
-      branch_id: [''],
-      SlipNo: [''],
-      RentalDate: [''],
-      ReportingDatetime: [''],
-      CarType: [''],
-      CarTypeSend: [''],
-      Party: [null, Validators.required],
-      party_name: [''],
-      vendor_id: [''],
-      VendorContact: [''],
-      vendor_name: [''],
-      CarNo: [null, Validators.required],
-      DriverName: [''],
-      DriverContact: ['9966525250'],
-      Project: [''],
-      DutyType: ['1'],
-      FromCityID: ['1'],
-      ToCityID: ['1'],
-      BookedBy: ['SURESH BAJAJ'],
-      ContactNo: ['9051471725'],
-      PartyRateType: [''],
-      PartyRate: ['29'],
-      GarageOutDate: [''],
-      GarageOutKm: [''],
-      ReportDate: [''],
-      ReportKm: [''],
-      ReleasingDate: [''],
-      ReleaseKm: [''],
-      GarageInDate: [''],
-      GarageInKm: [''],
-      totalhrsvalue: ['0.00'],
-      totalkmvalue: ['0'],
-      ExtraHrs: [''],
-      ExtraHrsRate: [''],
-      ExtraHrsAmount: [''],
-      ExtraKM: [''],
-      ExtraKMRate: [''],
-      ExtraKMAmount: [''],
-      KMRate: ['17.5'],
-      Hrs_km: ['17'],
-      hrs_hrs: ['0'],
-      HigherRate: ['N'],
-      HourRate: ['170'],
-      Price: ['0'],
-      Advance: ['0.00'],
-      TotalAmt: ['0'],
-      TotalOtherCharge: ['0'],
-      NetAmt: [''],
-      VendorRateType: [''],
-      VendorRate: [null, Validators.required],
-      VendorGarageOutDate: [''],
-      VendorGarageOutKm: ['0'],
-      VendorReportDate: [''],
-      VendorReportKm: ['0'],
-      VendorReleasingDate: [''],
-      VendorReleaseKm: ['0'],
-      VendorGarageInDate: [''],
-      VendorGarageInKm: ['0'],
-      Vendortotalhrsvalue: ['0.00'],
-      Vendortotalkmvalue: ['0'],
-      VendorExtraHrs: [''],
-      VendorExtraHrsRate: [''],
-      VendorExtraHrsAmount: [''],
-      VendorExtraKM: [''],
-      VendorExtraKMRate: [''],
-      VendorExtraKMAmount: ['0.00'],
-      VendorKMRate: ['14.00'],
-      VendorHrs_km: ['0'],
-      Vendorhrs_hrs: ['0'],
-      VendorHigherRate: [''],
-      VendorHourRate: ['0'],
-      VendorPrice: ['0'],
-      VendorTotalAmt: ['0'],
-      VendorTotalOtherCharge: ['0'],
-      VendorNetAmt: ['0'],
-      LGustName: [''],
-      LContactNo: [''],
-      LContactNo2: [''],
-      LAddress: [''],
-      LAddressLat: [''],
-      LAddressLng: [''],
-      LDropAddress: [''],
-      LDropAddressLat: [''],
-      LDropAddressLng: [''],
-      LRemarks: [''],
-      lid: [''],
-      discount_amount: [''],
-      ReportAt: [''],
-      Email: [''],
-      Flight_train_No: [''],
-      DropAt: [''],
-      BookingMode: [''],
-      BookedEmail: [''],
-      ReleaseAt: [''],
-      BillingMode: [''],
-      attachment: [''],
-      isCash: ['0'],
-      item_image: [''],
-    });
   }
 
 
@@ -448,9 +232,7 @@ export class BookingEntryComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe((params) => {
-      this.isFullBooking = params['isFullBooking'] === 'true';
-    });
+
 
     this.carTypeMaster.registerPageHandler((msg) => {
       let rt = false;
@@ -483,12 +265,6 @@ export class BookingEntryComponent implements OnInit {
     this.init();
   }
 
-  searchVendors(event: any) {
-    const query = event.query.toLowerCase();
-    this.filteredVendors = [{ name: 'Vendor 1' }, { name: 'Vendor 2' }].filter(
-      (vendor) => vendor.name.toLowerCase().includes(query)
-    );
-  }
 
   addGuest() {
     this.guests.push({
@@ -525,54 +301,6 @@ export class BookingEntryComponent implements OnInit {
     }
   }
 
-  calculateVendorTotals() {
-    const startKM = this.vendorBooking.vendorOutKM || 0;
-    const endKM = this.vendorBooking.vendorInKM || 0;
-    this.totalVendorKM = endKM - startKM;
-
-    if (this.vendorBooking.vendorOut && this.vendorBooking.vendorIn) {
-      const start = new Date(this.vendorBooking.vendorOut).getTime();
-      const end = new Date(this.vendorBooking.vendorIn).getTime();
-      this.totalVendorHours = Math.max(
-        0,
-        Math.round((end - start) / (1000 * 60 * 60))
-      );
-    }
-
-    const kmCharge = this.totalVendorKM * (this.vendorBooking.kmRate || 0);
-    const hourCharge =
-      this.totalVendorHours * (this.vendorBooking.hourRate || 0);
-    const extraCharge =
-      (this.vendorBooking.extraHourAmount || 0) +
-      (this.vendorBooking.extraKmAmount || 0);
-
-    this.vendorBooking.netAmount =
-      kmCharge + hourCharge + (this.vendorBooking.price || 0);
-
-    this.vendorBooking.otherCharges = this.vendorCharges.reduce(
-      (sum, charge) => sum + (charge.amount || 0),
-      0
-    );
-
-    this.vendorBooking.totalAmount =
-      this.vendorBooking.netAmount +
-      this.vendorBooking.otherCharges +
-      extraCharge -
-      (this.vendorBooking.advance || 0);
-  }
-
-  addVendorCharge() {
-    this.vendorCharges.push({ name: '', amount: 0 });
-  }
-
-  removeVendorCharge(index: number) {
-    this.vendorCharges.splice(index, 1);
-    this.calculateVendorTotals();
-  }
-
-  onVendorFileSelected(event: any, index: number) {
-    // Optional: Handle file upload for vendor charges
-  }
 
   onFileSelectedGuest(event: any) {
     // Handle file selection logic
@@ -600,19 +328,12 @@ export class BookingEntryComponent implements OnInit {
     this.commonApiService.gateAllPartyNameDropdown();
   }
 
-  // Change Functions
-  changePartyRateType() {
-    // console.log('city_id : ', this.booking.FromCityID.Id);
-    // console.log('party_id : ', this.booking.Party);
-    // console.log('car_type_id : ', this.booking.CarType.id);
-    // console.log('duty_type : ', this.booking.PartyRateType);
-  }
 
   // OnSelect Functions
   onBranchSelect(branch: any) {
     if (this.bookingFrom) {
       this.bookingFrom.get('branch_id').setValue(branch.value.Id);
-      // console.log(branch);
+      console.log(branch);
     }
   }
 
@@ -633,9 +354,9 @@ export class BookingEntryComponent implements OnInit {
 
   onPartyNameSelect(party: any) {
     if (this.bookingFrom) {
-      this.bookingFrom.get('Party').setValue(party.id);
+      this.bookingFrom.get('Party').setValue(party.value.id);
     }
-    // console.log(party);
+    console.log(party);
   }
 
 
@@ -644,11 +365,6 @@ export class BookingEntryComponent implements OnInit {
       this.bookingFrom.get('CarType').setValue(cartype);
     }
   }
-
-  onToggleBooking(event: any) {
-    this.isFullBooking = !this.isFullBooking;
-  }
-
 
 
   submitBooking() {
@@ -661,13 +377,5 @@ export class BookingEntryComponent implements OnInit {
     }
   }
 
-  submitFullBooking() {
-    if (this.fullBookingFrom.valid) {
-      console.log('Submitted Form Values:', this.fullBookingFrom.value);
-    } else {
-      // Show validation errors
-      console.warn('Form is invalid');
-      this.fullBookingFrom.markAllAsTouched(); // Mark all fields as touched to show errors
-    }
-  }
+
 }

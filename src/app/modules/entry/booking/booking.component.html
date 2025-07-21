@@ -6,14 +6,26 @@
     <div
       class="flex flex-wrap justify-between items-center gap-4 p-4 border-b border-blue-200 bg-gradient-to-r from-blue-100 to-white">
       <div class="flex items-center gap-3">
-        <div class="w-10 h-10 bg-blue-300 text-blue-800 rounded-full flex items-center justify-center shadow-inner">
-          <i class="pi pi-calendar-plus text-xl animate-pulse"></i>
-        </div>
-        <div class="relative">
-          <h1 class="text-2xl sm:text-3xl font-bold text-blue-700">Booking List</h1>
-          <div class="absolute -bottom-1 left-0 w-24 h-1 bg-gradient-to-r from-blue-500 to-blue-400 rounded-full"></div>
-        </div>
-      </div>
+  <div class="w-10 h-10 bg-blue-300 text-blue-800 rounded-full flex items-center justify-center shadow-inner">
+    <i class="pi pi-calendar-plus text-xl animate-pulse"></i>
+  </div>
+
+  <div class="relative">
+    <!-- Booking List Title -->
+    <h1 *ngIf="!isFullBooking" class="text-2xl sm:text-3xl font-bold text-blue-700">
+      Booking List
+    </h1>
+
+    <!-- Full Booking List Title -->
+    <h1 *ngIf="isFullBooking" class="text-2xl sm:text-3xl font-bold text-blue-700">
+      Full Booking List
+    </h1>
+
+    <!-- Decorative underline -->
+    <div class="absolute -bottom-1 left-0 w-56 h-1 bg-gradient-to-r from-blue-500 to-blue-400 rounded-full"></div>
+  </div>
+</div>
+
 
       <div class="flex flex-wrap gap-3 items-center">
         <!-- Date Range -->

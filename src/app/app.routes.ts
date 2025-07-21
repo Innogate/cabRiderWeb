@@ -24,6 +24,7 @@ import { InvoiceAddComponent } from './modules/entry/invoice-add/invoice-add.com
 
 import { PartyRateMasterComponent } from './modules/master/party-rate-master/party-rate-master.component';
 import { VendorMasterComponent } from './modules/master/vendor-master/vendor-master.component';
+import { FullBookingEntryComponent } from './modules/entry/full-booking-entry/full-booking-entry.component';
 
 export const routes: Routes = [
     {
@@ -44,6 +45,7 @@ export const routes: Routes = [
             { path: 'voucher-entry', component: VoucherEntryComponent, canActivate: [AuthGuard] },
             { path: 'fuel-entry', component: FuelEntryComponent, canActivate: [AuthGuard] },
             { path: 'add-booking', component: BookingEntryComponent, canActivate: [AuthGuard] },
+            { path: 'add-full-booking', component: FullBookingEntryComponent, canActivate: [AuthGuard] },
             { path: 'driver-attendance', component: DriverAttendanceComponent, canActivate: [AuthGuard] },
             { path: 'quatation-entry', component: QuatationEntryComponent, canActivate: [AuthGuard] },
             { path: 'openingbill-entry', component: OpeningbillEntryComponent, canActivate: [AuthGuard] },

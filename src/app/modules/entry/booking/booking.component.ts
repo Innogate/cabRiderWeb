@@ -347,12 +347,13 @@ export class BookingComponent implements OnInit, OnDestroy, AfterViewInit {
     this.endDate = formatDateDdMmYyyy(today);
     this.search();
   }
-
-  goToAdd() {
-    this.router.navigate(['/add-booking'], {
-      queryParams: { isFullBooking: this.isFullBooking }
-    });
+goToAdd() {
+  if (this.isFullBooking) {
+    this.router.navigate(['/add-full-booking']);
+  } else {
+    this.router.navigate(['/add-booking']);
   }
+}
 
 
   onSearch(text: any) {
