@@ -1,0 +1,724 @@
+<!-- Add full booking -->
+<div *ngIf="fullBookingFrom" class="flex justify-center">
+  <div class="p-6 m-6 rounded-2xl shadow-xl border border-blue-300 bg-gradient-to-r from-white to-blue-50">
+    <div class="flex items-center justify-between mb-6">
+      <!-- Heading with Icon -->
+      <div class="border-b border-blue-200 pb-4">
+        <h2 class="text-3xl md:text-4xl font-bold text-blue-700 flex items-center gap-4">
+          <span class="bg-blue-100 text-blue-700 w-12 h-12 rounded-full flex items-center justify-center shadow-md">
+            <i class="pi pi-book text-2xl"></i>
+          </span>
+          <span class="leading-tight">
+            Add <span class="text-blue-900">Full Booking</span> Information
+          </span>
+        </h2>
+      </div>
+
+    </div>
+
+    <form [formGroup]="fullBookingFrom" (ngSubmit)="submitFullBooking()">
+      <div class="flex flex-col lg:flex-row gap-2 mb-6 items-stretch">
+        <!-- Left Column: Travel & Pricing Info -->
+        <div
+          class="flex-1 flex flex-col rounded-2xl border border-blue-300 bg-gradient-to-br from-blue-50 via-white to-blue-100 p-6">
+          <div>
+            <div class="grid grid-cols-1 gap-6 mt-6">
+              <div>
+                <label class="label-icon"><i class="pi pi-building text-blue-700"></i> Branch</label>
+                <p-autoComplete formControlName="branch_id" [suggestions]="filteredBranches"
+                  (completeMethod)="filterBranches($event)" field="branch_name" [dropdown]="true"
+                  [forceSelection]="true"></p-autoComplete>
+              </div>
+              <div class="flex flex-col gap-2">
+                <label class="font-medium text-gray-700 flex items-center gap-2">
+                  <i class="pi pi-users text-xl text-pink-500"></i> Party Name
+                </label>
+                <p-autoComplete formControlName="Party" name="Party" [suggestions]="filteredPartyName"
+                  (completeMethod)="filterPartyName($event)" (onSelect)="onPartyNameSelect($event)" field="party_name"
+                  [dropdown]="true" placeholder="Party *" class="w-full"></p-autoComplete>
+              </div>
+              <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="label-icon"><i class="pi pi-calendar text-purple-600"></i> Rental Date</label>
+                <input type="date" formControlName="RentalDate" class="w-full p-inputtext" />
+              </div>
+              <div>
+                <label class="label-icon"><i class="pi pi-clock text-pink-600"></i> Reporting Time</label>
+                <input type="text" pInputText formControlName="ReportingDatetime" class="w-full" />
+              </div>
+              </div>
+
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                <label class="label-icon"><i class="pi pi-map-marker text-purple-600"></i> From City</label>
+                <p-autoComplete formControlName="FromCityID" [suggestions]="filteredCities"
+                  (completeMethod)="filterCities($event)" field="CityName" [dropdown]="true"
+                  [forceSelection]="true"></p-autoComplete>
+              </div>
+              <div>
+                <label class="label-icon"><i class="pi pi-map text-green-600"></i> To City</label>
+                <p-autoComplete formControlName="ToCityID" [suggestions]="filteredToCities"
+                  (completeMethod)="filterToCities($event)" field="CityName" [dropdown]="true"
+                  [forceSelection]="true"></p-autoComplete>
+              </div>
+              </div>
+
+
+              <div class="grid grid-cols-2 gap-4">
+                <div class="flex flex-col gap-2">
+                <label class="font-medium text-gray-700 flex items-center gap-2">
+                  <i class="pi pi-car text-xl text-yellow-700"></i> Car No
+                </label>
+                <input type="text" pInputText formControlName="CarNo" placeholder="Car No *" class="w-full" />
+              </div>
+
+              <!-- Driver -->
+              <div class="flex flex-col gap-2">
+                <label class="font-medium text-gray-700 flex items-center gap-2">
+                  <i class="pi pi-user text-xl text-blue-500"></i> Driver
+                </label>
+                <input type="text" pInputText formControlName="DriverName" placeholder="Driver" class="w-full" />
+              </div>
+              </div>
+
+
+              <div class="flex flex-col gap-2">
+                <label class="font-semibold text-gray-800 flex items-center gap-2">
+                  <i class="pi pi-car text-xl text-orange-600"></i> Car Type Request
+                </label>
+                <p-autoComplete (onSelect)="onCarTypeSelect($event)" name="CarType" [suggestions]="filteredCarTypes"
+                  (completeMethod)="filterCarTypes($event)" field="car_type" [dropdown]="true" [forceSelection]="true"
+                  placeholder="Car Type *" class="w-full" inputStyleClass="w-full"
+                  panelStyleClass="w-full"></p-autoComplete>
+              </div>
+              <div class="flex flex-col gap-2">
+                <label class="font-semibold text-gray-800 flex items-center gap-2">
+                  <i class="pi pi-car text-xl text-orange-600"></i> Car Type Send
+                </label>
+                <p-autoComplete (onSelect)="onCarTypeSelect($event)" name="CarTypeSend" [suggestions]="filteredCarTypes"
+                  (completeMethod)="filterCarTypes($event)" field="car_type" [dropdown]="true" [forceSelection]="true"
+                  placeholder="Car Type *" class="w-full" inputStyleClass="w-full"
+                  panelStyleClass="w-full"></p-autoComplete>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- Middle Column: Booking Info -->
+        <div
+          class="flex-1 flex flex-col rounded-2xl border border-blue-300 bg-gradient-to-br from-blue-50 via-white to-blue-100 p-6">
+          <div>
+            <div class="grid grid-cols-1 gap-6 mt-6">
+              <div>
+                <label class="label-icon"><i class="pi pi-file-edit text-green-600"></i> Slip No</label>
+                <input type="text" pInputText formControlName="SlipNo" class="w-full !bg-gray-100" readonly />
+              </div>
+
+              <div>
+                <label class="label-icon"><i class="pi pi-user-plus text-purple-600"></i> Booked By</label>
+                <input type="text" pInputText formControlName="BookedBy" class="w-full" />
+              </div>
+              <div>
+                <label class="label-icon"><i class="pi pi-phone text-blue-600"></i> Contact No</label>
+                <input type="text" pInputText formControlName="ContactNo" class="w-full" />
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Entry Info -->
+        <div
+          class="flex-1 flex flex-col rounded-2xl border border-blue-300 bg-gradient-to-br from-blue-50 via-white to-blue-100 p-6">
+          <div>
+            <div class="grid grid-cols-1 gap-6 mt-6">
+
+              <div>
+                <label class="label-icon"><i class="pi pi-check-circle text-green-700"></i> Duty Type</label>
+                <p-select formControlName="DutyType" [options]="dutyTypes" optionLabel="name" class="w-full"></p-select>
+              </div>
+
+              <div>
+                <label class="label-icon"><i class="pi pi-briefcase text-blue-600"></i> Project</label>
+                <input type="text" pInputText formControlName="Project" class="w-full" />
+              </div>
+
+              <!-- Vendor -->
+              <div class="flex flex-col gap-2">
+                <label class="font-medium text-gray-700 flex items-center gap-2">
+                  <i class="pi pi-briefcase text-xl text-purple-500"></i> Vendor
+                </label>
+                <p-autoComplete formControlName="vendor_id" [suggestions]="filteredVendors"
+                  (completeMethod)="searchVendors($event)" dropdown="true" field="vendor_name" placeholder="Vendor *"
+                  class="w-full"></p-autoComplete>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-4 m-4 rounded-2xl  bg-gradient-to-r from-[#ffffff] to-[#e6f3ff] border ">
+        <!-- Summary -->
+        <div class="mt-6 grid grid-cols-3 gap-4 text-gray-800 text-lg font-semibold px-4">
+          <div>Min Hours: {{ totalHours }}</div>
+          <div>Night Halt Time: {{ totalKM }}</div>
+          <div>Night Halt Amount: {{ totalKM }}</div>
+        </div>
+      </div>
+
+      <!-- Party & Vendor Rate Sections -->
+      <div class="grid grid-cols-2 gap-6">
+        <div
+          class="bg-white p-2 rounded-xl border border-green-400 bg-gradient-to-br from-green-50 via-white to-green-100">
+          <!-- Party Rate Header -->
+          <div
+            class="flex items-center gap-3 mb-4 p-3 rounded-lg bg-gradient-to-r from-green-50 via-white to-green-100 border">
+            <i class="pi pi-dollar text-2xl text-green-700"></i>
+            <h3 class="text-2xl font-bold text-green-700 tracking-wide">
+              Party Rate Details
+            </h3>
+          </div>
+
+          <!-- Party Rate Type and Select Rate -->
+          <div class="grid grid-cols-3 gap-4 mb-6">
+            <p-select formControlName="PartyRateType" [options]="partyRateTypes" optionLabel="label" optionValue="value"
+              placeholder="Party Rate Type *" class="w-full" (onChange)="changePartyRateType()"></p-select>
+
+            <p-select formControlName="PartyRate" [options]="selectRates" optionLabel="name" optionValue="id"
+              placeholder="Select Rate *" class="w-full"></p-select>
+
+            <button pButton type="button" label="Get Price"
+              style="background: linear-gradient(to right, #4fd683,#33bd68, #18d87e) !important; color: white !important; border: none !important;"
+              class="w-full py-2 px-4 rounded-lg shadow-md">
+            </button>
+          </div>
+
+          <!-- Main Section: Date/Time & Cash Side by Side -->
+          <div class="grid grid-cols-3 gap-6">
+            <!-- Date & KM Section -->
+            <div class="col-span-2 grid grid-cols-2 gap-4">
+              <ng-container *ngFor="let field of dateFields">
+                <div>
+                  <label class="font-medium text-gray-800">{{
+                    field.label
+                    }}</label>
+                  <input type="datetime-local" [formControlName]="field.dateModel"
+                    class="w-full border border-gray-300 p-2 rounded text-gray-800" />
+                </div>
+
+                <div>
+                  <label class="font-medium text-gray-800">{{
+                    field.kmLabel
+                    }}</label>
+                  <input type="number" pInputText [formControlName]="field.kmModel"
+                    class="w-full border border-gray-300 p-2 rounded text-gray-800" />
+                </div>
+              </ng-container>
+            </div>
+
+            <!-- Cash Section -->
+            <div class="border border-gray-300 p-1 rounded h-fit">
+              <table class="w-full text-left">
+                <tbody>
+                  <tr class="border-b border-gray-300">
+                    <td class="p-2 font-medium text-gray-800">Cash</td>
+                    <td class="p-2">
+                      <p-checkbox formControlName="isCash" binary="true"></p-checkbox>
+                    </td>
+                  </tr>
+
+                  <tr class="border-b border-gray-300 bg-gray-200">
+                    <td class="font-medium text-gray-800">KM Rate</td>
+                    <td class="">
+                      <input type="number" pInputText formControlName="KMRate" class="w-full" />
+                    </td>
+                  </tr>
+
+                  <tr class="border-b border-gray-300">
+                    <td class="font-medium text-gray-800">Hour Rate</td>
+                    <td class="">
+                      <input type="number" pInputText formControlName="HourRate" class="w-full" />
+                    </td>
+                  </tr>
+
+                  <tr class="border-b border-gray-300">
+                    <td class="font-medium text-gray-800">Price</td>
+                    <td class="">
+                      <input type="number" pInputText formControlName="Price" class="w-full" />
+                    </td>
+                  </tr>
+
+                  <tr class="border-b border-gray-300">
+                    <td class="font-medium text-gray-800">Advance</td>
+                    <td class="">
+                      <input type="number" pInputText formControlName="Advance" class="w-full" />
+                    </td>
+                  </tr>
+
+                  <tr class="border-b border-gray-300">
+                    <td class="p-2 font-medium text-gray-800">Net Amount</td>
+                    <td class="p-2 text-center">
+                      {{ booking.netAmount || 0 }}
+                    </td>
+                  </tr>
+
+                  <tr class="border-b border-gray-300">
+                    <td class="p-2 font-medium text-gray-800">Other Charges</td>
+                    <td class="p-2 text-center">
+                      {{ booking.otherCharges || 0 }}
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td class="p-2 font-medium text-gray-800">Total Amount</td>
+                    <td class="p-2 text-center font-semibold text-green-600">
+                      {{ booking.totalAmount || 0 }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Summary -->
+          <div class="mt-4 grid grid-cols-2 gap-4">
+            <div class="text-gray-700 font-medium">
+              Total Hours: {{ totalHours }}
+            </div>
+            <div class="text-gray-700 font-medium">Total KM: {{ totalKM }}</div>
+          </div>
+
+          <!-- Extra Charges -->
+          <div class="mt-6">
+            <p-panel header="Extra Charges" [toggleable]="true" collapsed="false" class="mb-5">
+              <table class="w-full text-center border border-green-700">
+                <thead class="bg-green-700 text-white">
+                  <tr>
+                    <th class="p-2"></th>
+                    <th class="p-2">Rate</th>
+                    <th class="p-2">Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="p-2">
+                      Extra Hour
+                      <input type="number" pInputText formControlName="ExtraHrs" class="w-full" />
+                    </td>
+                    <td class="p-2">
+                      <input type="number" pInputText formControlName="ExtraHrsRate" class="w-full" />
+                    </td>
+                    <td class="p-2">
+                      <input type="number" pInputText formControlName="ExtraHrsAmount" class="w-full" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="p-2">
+                      Extra KM
+                      <input type="number" pInputText formControlName="ExtraKM" class="w-full" />
+                    </td>
+                    <td class="p-2">
+                      <input type="number" pInputText formControlName="ExtraKMRate" class="w-full" />
+                    </td>
+                    <td class="p-2">
+                      <input type="number" pInputText formControlName="ExtraKMAmount" class="w-full" />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </p-panel>
+          </div>
+
+          <!-- Additional Charges Table -->
+          <div class="mt-6">
+            <p-panel header="Additional Charges" [toggleable]="true" collapsed="false" class="mb-5 ">
+              <table class="w-full text-center border border-green-700">
+                <thead class="bg-green-700 text-white">
+                  <tr>
+                    <th class="p-2">
+                      Charges Name <span class="text-red-500">*</span>
+                    </th>
+                    <th class="p-2">Amount</th>
+                    <th class="p-2">Image</th>
+                    <th class="p-2">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let charge of charges; let i = index">
+                    <td class="p-2">
+                      <input type="text" pInputText [name]="'chargeName' + i" class="w-full" />
+                    </td>
+                    <td class="p-2">
+                      <input type="number" pInputText [name]="'chargeAmount' + i" class="w-full" />
+                    </td>
+                    <td class="p-2">
+                      <input type="file" (change)="onFileSelected($event, i)" />
+                    </td>
+                    <td class="p-2">
+                      <button pButton type="button" icon="pi pi-trash" class="p-button-danger"
+                        (click)="removeCharge(i)"></button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <button pButton type="button" icon="pi pi-plus" class="mt-4 p-button-success"
+                (click)="addCharge()"></button>
+            </p-panel>
+          </div>
+        </div>
+
+        <!-- Vendor Rate Section -->
+        <div
+          class="bg-white p-2 rounded-xl border border-blue-400 bg-gradient-to-br from-blue-50 via-white to-blue-100">
+          <!-- Vendor Rate Header -->
+          <div
+            class="flex items-center gap-3 mb-4 p-3 rounded-lg bg-gradient-to-r from-blue-50 via-white to-blue-100 border">
+            <i class="pi pi-briefcase text-2xl text-blue-700"></i>
+            <h3 class="text-2xl font-bold text-blue-700 tracking-wide">
+              Vendor Rate Details
+            </h3>
+          </div>
+
+          <!-- Vendor Rate Type and Select Rate -->
+          <div class="grid grid-cols-3 gap-4 mb-6">
+            <p-select formControlName="VendorRateType" [options]="vendorRateTypes" optionLabel="name"
+              placeholder="Vendor Rate Type *" class="w-full"></p-select>
+
+            <p-select formControlName="VendorRate" [options]="selectRates" optionLabel="name"
+              placeholder="Select Rate *" class="w-full"></p-select>
+
+            <button pButton type="button" label="Get Price"
+              style="background: linear-gradient(to right, #4a81da,#336fbd, #1855d8) !important; color: white !important; border: none !important;"
+              class="w-full py-2 px-4 rounded-lg shadow-md">
+            </button>
+
+
+          </div>
+
+          <!-- Main Section: Date/Time & Cash Side by Side -->
+          <div class="grid grid-cols-3 gap-6">
+            <!-- Date & KM Section -->
+            <div class="col-span-2 grid grid-cols-2 gap-4">
+              <ng-container *ngFor="let field of vendorDateFields">
+                <div>
+                  <label class="font-medium text-gray-800">{{
+                    field.label
+                    }}</label>
+                  <input type="datetime-local" [formControlName]="field.dateModel"
+                    class="w-full border border-gray-300 p-2 rounded text-gray-800" />
+                </div>
+
+                <div>
+                  <label class="font-medium text-gray-800">{{
+                    field.kmLabel
+                    }}</label>
+                  <input type="number" pInputText [formControlName]="field.kmModel"
+                    class="w-full border border-gray-300 p-2 rounded" />
+                </div>
+              </ng-container>
+            </div>
+
+            <!-- Cash Section -->
+            <div class="border border-gray-300 p-1 rounded h-fit">
+              <table class="w-full text-left">
+                <tbody>
+                  <tr class="border-b border-gray-300">
+                    <td class="p-2 font-medium text-gray-800">Cash</td>
+                    <td class="p-2">
+                      <p-checkbox formControlName="isCash" binary="true"></p-checkbox>
+                    </td>
+                  </tr>
+
+                  <tr class="border-b border-gray-300 bg-gray-200">
+                    <td class="font-medium text-gray-800">KM Rate</td>
+                    <td class="">
+                      <input type="number" pInputText formControlName="VendorKMRate" class="w-full" />
+                    </td>
+                  </tr>
+
+                  <tr class="border-b border-gray-300">
+                    <td class="font-medium text-gray-800">Hour Rate</td>
+                    <td class="">
+                      <input type="number" pInputText formControlName="VendorHourRate" class="w-full" />
+                    </td>
+                  </tr>
+
+                  <tr class="border-b border-gray-300">
+                    <td class="font-medium text-gray-800">Price</td>
+                    <td class="">
+                      <input type="number" pInputText formControlName="VendorPrice" class="w-full" />
+                    </td>
+                  </tr>
+
+                  <tr class="border-b border-gray-300">
+                    <td class="font-medium text-gray-800">Advance</td>
+                    <td class="">
+                      <input type="number" pInputText formControlName="Advance" class="w-full" />
+                    </td>
+                  </tr>
+
+                  <tr class="border-b border-gray-300">
+                    <td class="p-2 font-medium text-gray-800">Net Amount</td>
+                    <td class="p-2 text-center">
+                      {{ vendorBooking.netAmount || 0 }}
+                    </td>
+                  </tr>
+
+                  <tr class="border-b border-gray-300">
+                    <td class="p-2 font-medium text-gray-800">Other Charges</td>
+                    <td class="p-2 text-center">
+                      {{ vendorBooking.otherCharges || 0 }}
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td class="p-2 font-medium text-gray-800">Total Amount</td>
+                    <td class="p-2 text-center font-semibold text-blue-600">
+                      {{ vendorBooking.totalAmount || 0 }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Summary -->
+          <div class="mt-4 grid grid-cols-2 gap-4">
+            <div class="text-gray-700 font-medium">
+              Total Hours: {{ totalVendorHours }}
+            </div>
+            <div class="text-gray-700 font-medium">
+              Total KM: {{ totalVendorKM }}
+            </div>
+          </div>
+
+          <!-- Extra Charges -->
+
+          <div class="mt-6">
+            <p-panel header="Extra Charges" [toggleable]="true" collapsed="false" class="mb-16">
+              <table class="w-full text-center border border-blue-700">
+                <thead class="bg-blue-700 text-white">
+                  <tr>
+                    <th class="p-2"></th>
+                    <th class="p-2">Rate</th>
+                    <th class="p-2">Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="p-2">
+                      Extra Hour
+                      <input type="number" pInputText formControlName="VendorExtraHrs" class="w-full" />
+                    </td>
+                    <td class="p-2">
+                      <input type="number" pInputText formControlName="VendorExtraHrsRate" class="w-full" />
+                    </td>
+                    <td class="p-2">
+                      <input type="number" pInputText formControlName="VendorExtraHrsAmount" class="w-full" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="p-2">
+                      Extra KM
+                      <input type="number" pInputText formControlName="VendorExtraKM" class="w-full" />
+                    </td>
+                    <td class="p-2">
+                      <input type="number" pInputText formControlName="VendorExtraKMRate" class="w-full" />
+                    </td>
+                    <td class="p-2">
+                      <input type="number" pInputText formControlName="VendorExtraKMAmount" class="w-full" />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </p-panel>
+          </div>
+
+          <!-- Additional Charges Table -->
+          <div class="mt-6">
+            <p-panel header="Additional Charges" [toggleable]="true" collapsed="false" class="mb-5">
+              <table class="w-full text-center border border-blue-700">
+                <thead class="bg-blue-700 text-white">
+                  <tr>
+                    <th class="p-2">
+                      Charges Name <span class="text-red-500">*</span>
+                    </th>
+                    <th class="p-2">Amount</th>
+                    <th class="p-2">Image</th>
+                    <th class="p-2">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let charge of vendorCharges; let i = index">
+                    <td class="p-2">
+                      <input type="text" pInputText [name]="'chargeName' + i" class="w-full" />
+                    </td>
+                    <td class="p-2">
+                      <input type="number" pInputText [name]="'chargeAmount' + i" class="w-full" />
+                    </td>
+                    <td class="p-2">
+                      <input type="file" (change)="onVendorFileSelected($event, i)" />
+                    </td>
+                    <td class="p-2">
+                      <button pButton type="button" icon="pi pi-trash" class="p-button-danger"
+                        (click)="removeVendorCharge(i)"></button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <button pButton type="button" icon="pi pi-plus" class="mt-4 p-button-success"
+                (click)="addVendorCharge()"></button>
+            </p-panel>
+          </div>
+        </div>
+      </div>
+
+      <!-- Guest Section -->
+      <div class="mt-6 border  rounded-xl bg-gradient-to-r from-[#ffffff] to-[#e6f3ff]">
+        <p-panel header="Guest Section" [toggleable]="true" collapsed="false" class="mb-5 ">
+          <p-tabView>
+            <!-- Guest Name Tab -->
+            <p-tabPanel header="Guest Name">
+              <div class="mt-4 bg-white p-4 rounded-xl border">
+                <h3 class="text-xl font-semibold text-purple-600 mb-4">
+                  Guest Details
+                </h3>
+                <p-table [value]="guests" responsiveLayout="scroll">
+                  <ng-template pTemplate="header">
+                    <tr>
+                      <th>Guest Name *</th>
+                      <th>Contact No *</th>
+                      <th>Additional Contact No *</th>
+                      <th>Pickup Address *</th>
+                      <th>Drop Address *</th>
+                      <th>Remarks</th>
+                      <th>Action</th>
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="body" let-guest let-i="rowIndex">
+                    <tr>
+                      <td>
+                        <input type="text" pInputText formControlName="LGustName" name="guestName{{ i }}" class="w-full"
+                          placeholder="Guest Name" />
+                      </td>
+                      <td>
+                        <input type="text" pInputText formControlName="LContactNo" name="contactNo{{ i }}"
+                          class="w-full" placeholder="Contact No" />
+                      </td>
+                      <td>
+                        <input type="text" pInputText formControlName="LContactNo2" name="additionalContactNo{{ i }}"
+                          class="w-full" placeholder="Additional Contact No" />
+                      </td>
+                      <td>
+                        <textarea pInputTextarea formControlName="LAddress" name="pickupAddress{{ i }}"
+                          class="w-full p-inputtext" placeholder="Pickup Address"></textarea>
+                      </td>
+                      <td>
+                        <textarea pInputTextarea formControlName="LDropAddress" name="dropAddress{{ i }}"
+                          class="w-full p-inputtext" placeholder="Drop Address"></textarea>
+                      </td>
+                      <td>
+                        <textarea pInputTextarea formControlName="LRemarks" name="remarks{{ i }}"
+                          class="w-full p-inputtext" placeholder="Remarks"></textarea>
+                      </td>
+                      <td class="text-center">
+                        <button pButton icon="pi pi-trash" class="p-button-danger" (click)="removeGuest(i)"></button>
+                      </td>
+                    </tr>
+                  </ng-template>
+                </p-table>
+                <button pButton type="button" label="Add Guest" icon="pi pi-plus" class="mt-4 p-button-success"
+                  (click)="addGuest()"></button>
+              </div>
+            </p-tabPanel>
+
+            <!-- Others Tab -->
+            <p-tabPanel header="Others">
+              <!-- Booking & Party Info Section -->
+              <div class="flex flex-col md:flex-row gap-6 mb-6 items-stretch">
+                <!-- Booking Info -->
+                <div
+                  class="flex-1 rounded-2xl shadow-xl border border-indigo-300 bg-gradient-to-br from-indigo-50 via-white to-indigo-100 p-6">
+                  <p-panel header="Booking Info" collapsed="false">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+
+                      <div>
+                        <label class="label-icon"><i class="pi pi-bars text-blue-600"></i> Booking Mode</label>
+                        <p-select [options]="bookingModes" formControlName="BookingMode"
+                          placeholder="Select Booking Mode" class="w-full"></p-select>
+                      </div>
+
+                      <div>
+                        <label class="label-icon"><i class="pi pi-envelope text-green-600"></i> Email</label>
+                        <input type="email" pInputText formControlName="Email" placeholder="Enter Email"
+                          class="w-full" />
+                      </div>
+
+                      <div>
+                        <label class="label-icon"><i class="pi pi-user-plus text-purple-600"></i> Booked By
+                          Email</label>
+                        <input type="email" pInputText formControlName="BookedEmail" placeholder="Booked By Email"
+                          class="w-full" />
+                      </div>
+
+                      <div>
+                        <label class="label-icon"><i class="pi pi-send text-pink-600"></i> Flight / Train No</label>
+                        <input type="text" pInputText formControlName="Flight_train_No" placeholder="Flight or Train No"
+                          class="w-full" />
+                      </div>
+                    </div>
+                  </p-panel>
+                </div>
+
+                <!-- Party Info -->
+                <div
+                  class="flex-1 rounded-2xl shadow-xl border border-indigo-300 bg-gradient-to-br from-indigo-50 via-white to-indigo-100 p-6">
+                  <p-panel header="Party Info" collapsed="false">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+
+                      <div>
+                        <label class="label-icon"><i class="pi pi-user text-blue-600"></i> Bill To</label>
+                        <p-select [options]="billToOptions" formControlName="BillingMode" placeholder="Bill To"
+                          class="w-full"></p-select>
+                      </div>
+
+                      <div>
+                        <label class="label-icon"><i class="pi pi-map-marker text-orange-600"></i> Report At</label>
+                        <input type="text" pInputText formControlName="ReportAt" placeholder="Report Location"
+                          class="w-full" />
+                      </div>
+
+                      <div>
+                        <label class="label-icon"><i class="pi pi-flag text-red-600"></i> Release At</label>
+                        <input type="text" pInputText formControlName="ReleaseAt" placeholder="Release Location"
+                          class="w-full" />
+                      </div>
+
+                      <div>
+                        <label class="label-icon"><i class="pi pi-paperclip text-blue-500"></i> Attach Duty Slip</label>
+                        <input type="file" formControlName="item_image" (change)="onFileSelectedGuest($event)"
+                          class="w-full" />
+                      </div>
+
+                    </div>
+                  </p-panel>
+                </div>
+              </div>
+
+
+            </p-tabPanel>
+          </p-tabView>
+        </p-panel>
+      </div>
+
+
+      <!-- Action Buttons -->
+      <div class="flex justify-end mt-6 gap-4">
+        <button pButton type="button" label="Close" class="p-button-secondary"></button>
+        <button pButton type="button" label="Save" class="p-button-success" (click)="submitFullBooking()"></button>
+      </div>
+    </form>
+  </div>
+</div>

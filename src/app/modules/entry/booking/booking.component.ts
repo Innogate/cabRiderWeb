@@ -9,7 +9,7 @@ import { CommonModule, TitleCasePipe } from '@angular/common';
 import { CheckboxModule } from 'primeng/checkbox';
 import { DialogModule } from 'primeng/dialog';
 import { TooltipModule } from 'primeng/tooltip';
-import { BookingService } from '../../services/booking.service';
+import { BookingService } from '../../../services/booking.service';
 import { MessageService } from 'primeng/api';
 import { ActivatedRoute } from '@angular/router';
 
@@ -17,7 +17,7 @@ import {
   formatDateDdMmYyyy,
   getRowsPerPageOptions,
   globalRequestHandler,
-} from '../../utils/global';
+} from '../../../utils/global';
 import { Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { ContextMenuModule } from 'primeng/contextmenu';
@@ -347,12 +347,13 @@ export class BookingComponent implements OnInit, OnDestroy, AfterViewInit {
     this.endDate = formatDateDdMmYyyy(today);
     this.search();
   }
-
-  goToAdd() {
-    this.router.navigate(['/add-booking'], {
-      queryParams: { isFullBooking: true }
-    });
+goToAdd() {
+  if (this.isFullBooking) {
+    this.router.navigate(['/add-full-booking']);
+  } else {
+    this.router.navigate(['/add-booking']);
   }
+}
 
 
   onSearch(text: any) {
