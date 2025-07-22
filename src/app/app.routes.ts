@@ -7,7 +7,7 @@ import { BookingComponent } from './modules/entry/booking/booking.component';
 import { InvoiceEntryComponent } from './modules/entry/invoice-entry/invoice-entry.component';
 import { VendorInvoiceEntryComponent } from './modules/entry/vendor-invoice-entry/vendor-invoice-entry.component';
 import { VoucherEntryComponent } from './modules/entry/voucher-entry/voucher-entry.component';
-import { BookingEntryComponent } from './modules/entry/booking-entry/booking-entry.component';
+import { BookingEntryComponent } from './modules/entry/booking/booking-entry/booking-entry.component';
 import { CarTypeMasterComponent } from './modules/master/car-type-master/car-type-master.component';
 import { ChargeListMasterComponent } from './modules/master/charge-list-master/charge-list-master.component';
 import { DriverMasterComponent } from './modules/master/driver-master/driver-master.component';
@@ -24,7 +24,7 @@ import { InvoiceAddComponent } from './modules/entry/invoice-add/invoice-add.com
 
 import { PartyRateMasterComponent } from './modules/master/party-rate-master/party-rate-master.component';
 import { VendorMasterComponent } from './modules/master/vendor-master/vendor-master.component';
-import { FullBookingEntryComponent } from './modules/entry/full-booking-entry/full-booking-entry.component';
+import { FullBookingEntryComponent } from './modules/entry/booking/full-booking-entry/full-booking-entry.component';
 
 export const routes: Routes = [
     {

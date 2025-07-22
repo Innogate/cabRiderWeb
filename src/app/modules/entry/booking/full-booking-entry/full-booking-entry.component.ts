@@ -1,5 +1,5 @@
 
-import { carTypeMasterService } from '../../../services/carTypeMaster.service';
+import { carTypeMasterService } from '../../../../services/carTypeMaster.service';
 import { CheckboxModule } from 'primeng/checkbox';
 import { CommonModule } from '@angular/common';
 import { Component, NgModule, OnInit } from '@angular/core';
@@ -12,9 +12,9 @@ import { SelectModule } from 'primeng/select';
 import { TableModule } from 'primeng/table';
 import { TabViewModule } from 'primeng/tabview';
 import { ActivatedRoute, Router } from '@angular/router';
-import { getCurrentDate, getCurrentTime, globalRequestHandler, } from '../../../utils/global';
+import { getCurrentDate, getCurrentTime, globalRequestHandler, } from '../../../../utils/global';
 import { MessageService } from 'primeng/api';
-import { commonService } from '../../../services/comonApi.service';
+import { commonService } from '../../../../services/comonApi.service';
 import { DividerModule } from 'primeng/divider';
 import { PanelModule } from 'primeng/panel';
 
