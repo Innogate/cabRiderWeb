@@ -23,6 +23,7 @@ import { InvoiceRegisterComponent } from './modules/invoice-register/invoice-reg
 import { InvoiceAddComponent } from './modules/invoice-add/invoice-add.component';
 
 import { PartyRateMasterComponent } from './modules/master/party-rate-master/party-rate-master.component';
+import { MonthlyDutyMasterComponent } from './modules/master/monthly-duty-master/monthly-duty-master.component';
 
 export const routes: Routes = [
     {
@@ -51,6 +52,7 @@ export const routes: Routes = [
             { path: 'invoice-register', component: InvoiceRegisterComponent, canActivate: [AuthGuard] },
             { path: 'master/partyRate', component: PartyRateMasterComponent, canActivate: [AuthGuard] },
             { path: 'invoice-add', component: InvoiceAddComponent, canActivate: [AuthGuard] },
+            { path: 'master/monthly-duty-master', component: MonthlyDutyMasterComponent, canActivate: [AuthGuard] },
         ],
         canActivate: [AuthGuard]
     },

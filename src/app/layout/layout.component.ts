@@ -98,7 +98,7 @@ export class LayoutComponent {
         { label: 'Guest', icon: 'pi pi-user-plus' },
         { label: 'Network', icon: 'pi pi-sitemap' },
         { label: 'User List', icon: 'pi pi-users' },
-        { label: 'Monthly Duty Setup', icon: 'pi pi-calendar' },
+        { label: 'Monthly Duty Setup', icon: 'pi pi-calendar',  routerLink: 'master/monthly-duty-master' },
       ]
     },
   ];

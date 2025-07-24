@@ -6,6 +6,7 @@ import { BaseService } from './base.service';
   providedIn: 'root',
 })
 export class monthlyDutyMasterService extends BaseService {
+  [x: string]: any;
   constructor(ws: WebSocketService) {
     super(ws);
   }
