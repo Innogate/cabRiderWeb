@@ -78,6 +78,30 @@ export class InvoiceAddComponent {
       totalTime: '9h',
       totalKm: 200,
       netAmount: 1500,
+
+// id
+// City
+// duty_type
+// branch_id
+// company_id
+// branch
+// party_id
+// city_id
+// BillNo
+// BillDate
+// taxtype
+// rcm
+// GrossAmount
+// OtherCharges
+// Discount
+// CGSTPer
+// CGST
+// SGSTPer
+// SGST
+// OtherCharges2
+// RoundOff
+// NetAmount
+// Advance
     },
     // Add more invoice entries here...
   ];
