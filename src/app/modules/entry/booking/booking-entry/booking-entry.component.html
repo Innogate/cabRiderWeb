@@ -3,22 +3,27 @@
   *ngIf="bookingFrom"
   class="p-6 m-6 rounded-2xl shadow-xl border border-blue-300 bg-gradient-to-r from-white to-blue-50"
 >
-  <div class="flex items-center justify-between mb-6">
-    <div class="border-b border-blue-200 pb-4">
-      <h2
-        class="text-3xl md:text-4xl font-bold text-blue-700 flex items-center gap-4"
+ <div class="flex items-start justify-between mb-6">
+  <!-- Left Side: Heading -->
+  <div class="border-b border-blue-200 pb-4">
+    <h2 class="text-3xl md:text-4xl font-bold text-blue-700 flex items-center gap-4">
+      <span
+        class="bg-blue-100 text-blue-700 w-12 h-12 rounded-full flex items-center justify-center shadow-md"
       >
-        <span
-          class="bg-blue-100 text-blue-700 w-12 h-12 rounded-full flex items-center justify-center shadow-md"
-        >
-          <i class="pi pi-book text-2xl"></i>
-        </span>
-        <span class="leading-tight">
-          Add <span class="text-blue-900">Booking</span> Information
-        </span>
-      </h2>
-    </div>
+        <i class="pi pi-book text-2xl"></i>
+      </span>
+      <span class="leading-tight">
+        Add <span class="text-blue-900">Booking</span> Information
+      </span>
+    </h2>
   </div>
+
+  <!-- Right Side: Speak Button -->
+  <div class="self-start">
+    <p-button label="Speak" icon="pi pi-microphone"></p-button>
+  </div>
+</div>
+
 
   <form [formGroup]="bookingFrom">
     <div class="flex flex-col lg:flex-row gap-3 mb-6">
@@ -80,27 +85,51 @@
           </div>
 
           <div class="grid grid-cols-2 gap-4">
-            <div>
-              <label class="label-icon"><i class="pi pi-map-marker text-purple-600"></i> From
-                City</label>
-              <p-autoComplete (onselect)="onCitySelect($event)" [suggestions]="filteredCities" (completeMethod)="filterCities($event)" field="CityName"
-                [dropdown]="true" [forceSelection]="true"></p-autoComplete>
-            </div>
-            <div>
-              <label class="label-icon"><i class="pi pi-map text-green-600"></i> To City</label>
-              <p-autoComplete (onselect)="onToCitySelect($event)" [suggestions]="filteredToCities" (completeMethod)="filterToCities($event)"
-                field="CityName" [dropdown]="true" [forceSelection]="true"></p-autoComplete>
-            </div>
+             <div>
+                  <label class="label-icon"
+                    ><i class="pi pi-map-marker text-purple-600"></i> From
+                    City</label
+                  >
+                  <p-autoComplete
+                    [suggestions]="filteredCities"
+                    (completeMethod)="filterCities($event)"
+                    (onSelect)="onCitySelect($event)"
+                    field="CityName"
+                    [dropdown]="true"
+                    [forceSelection]="true"
+                  ></p-autoComplete>
+                </div>
+                <div>
+                  <label class="label-icon"
+                    ><i class="pi pi-map text-green-600"></i> To City</label
+                  >
+                  <p-autoComplete
+                    [suggestions]="filteredToCities"
+                    (completeMethod)="filterToCities($event)"
+                    (onSelect)="onToCitySelect($event)"
+                    field="CityName"
+                    [dropdown]="true"
+                    [forceSelection]="true"
+                  ></p-autoComplete>
+                </div>
           </div>
 
           <div class="flex flex-col gap-2">
             <label class="font-semibold text-gray-800 flex items-center gap-2">
               <i class="pi pi-car text-xl text-orange-600"></i> Car Type
             </label>
-            <p-autoComplete (onSelect)="onCarTypeSelect($event)" [suggestions]="filteredCarTypes"
-              (completeMethod)="filterCarTypes($event)" field="car_type" [dropdown]="true" [forceSelection]="true"
-              placeholder="Car Type *" class="w-full" inputStyleClass="w-full"
-              panelStyleClass="w-full"></p-autoComplete>
+            <p-autoComplete
+              (onSelect)="onCarTypeSelect($event)"
+              [suggestions]="filteredCarTypes"
+              (completeMethod)="filterCarTypes($event)"
+              field="car_type"
+              [dropdown]="true"
+              [forceSelection]="true"
+              placeholder="Car Type *"
+              class="w-full"
+              inputStyleClass="w-full"
+              panelStyleClass="w-full"
+            ></p-autoComplete>
           </div>
 
           <div class="grid grid-cols-2 gap-4">
@@ -113,27 +142,23 @@
                 formControlName="PartyRateType"
                 [options]="partyRateTypes"
                 optionLabel="label"
-                optionValue="label"
-                (onChange)="changePartyRateType()"
+                optionValue="value"
                 class="w-full"
               ></p-select>
             </div>
-
-              <div>
+            <div>
               <label class="label-icon"
                 ><i class="pi pi-percentage text-blue-600"></i> Select
                 Rate</label
               >
               <p-select
-                formControlName="PartyRate"
+                formControlName="SelectRate"
                 [options]="selectRates"
-                optionLabel="party_name"
+                optionLabel="name"
                 optionValue="id"
                 class="w-full"
               ></p-select>
             </div>
-
-
           </div>
 
           <div class="grid grid-cols-2 gap-4">
@@ -142,7 +167,7 @@
                 ><i class="pi pi-stopwatch text-blue-600"></i> Hour Rate</label
               >
               <input
-                type="number"
+                type="text"
                 pInputText
                 formControlName="HourRate"
                 class="w-full"
@@ -153,7 +178,7 @@
                 ><i class="pi pi-compass text-blue-600"></i> KM Rate</label
               >
               <input
-                type="number"
+                type="text"
                 pInputText
                 formControlName="KMRate"
                 class="w-full"
@@ -167,7 +192,7 @@
                 ><i class="pi pi-dollar text-blue-600"></i> Price</label
               >
               <input
-                type="number"
+                type="text"
                 pInputText
                 formControlName="Price"
                 class="w-full"
@@ -188,7 +213,7 @@
                   >Cash</label
                 >
                 <input
-                  type="number"
+                  type="text"
                   pInputText
                   formControlName="Advance"
                   placeholder="Advanced"
@@ -321,8 +346,7 @@
             <p-select
               formControlName="DutyType"
               [options]="dutyTypes"
-              optionLabel="label"
-              optionValue="value"
+              optionLabel="name"
               class="w-full"
             ></p-select>
           </div>
@@ -331,25 +355,28 @@
             <label class="label-icon"
               ><i class="pi pi-map-marker text-orange-600"></i> Report At</label
             >
-            <p-select
+            <input
+              type="text"
+              pInputText
               formControlName="ReportAt"
-              [options]="reportAt"
-              optionLabel="label"
-              optionValue="value"
+              placeholder="Report Location"
               class="w-full"
-            ></p-select>
+            />
           </div>
 
           <div class="flex flex-col gap-2">
             <label class="font-medium text-gray-700 flex items-center gap-2">
               <i class="pi pi-users text-xl text-pink-500"></i> Drop At
             </label>
-            <input
-              type="text"
-              pInputText
-              formControlName="DropAt"
+            <p-autoComplete
+              [suggestions]="filteredPartyName"
+              (completeMethod)="filterPartyName($event)"
+              (onSelect)="onPartyNameSelect($event)"
+              field="party_name"
+              [dropdown]="true"
+              placeholder="Party *"
               class="w-full"
-            />
+            ></p-autoComplete>
           </div>
           <div>
             <label class="label-icon"
@@ -394,65 +421,82 @@
 
     <!-- Guest Section -->
     <div class="mb-6">
-      <p-panel header="Guest Details" [toggleable]="true" collapsed="false">
-        <div formArrayName="LGuest">
-          <div
-            *ngFor="let guest of LGuest.controls; let i = index"
-            [formGroupName]="i"
-            class="mb-3 border-b pb-3"
-          >
-            <div class="grid grid-cols-6 gap-4">
-              <input
-                pInputText
-                formControlName="LGustName"
-                placeholder="Guest Name"
-                class="col-span-1"
-              />
-              <input
-                pInputText
-                formControlName="LContactNo"
-                placeholder="Contact No"
-                class="col-span-1"
-              />
-              <input
-                pInputText
-                formControlName="LContactNo2"
-                placeholder="Additional Contact"
-                class="col-span-1"
-              />
-              <textarea
-                pInputTextarea
-                formControlName="LAddress"
-                placeholder="Pickup Address"
-                class="p-inputtext p-component row-span-2"
-                rows="1"
-              ></textarea>
-              <textarea
-                pInputTextarea
-                formControlName="LDropAddress"
-                placeholder="Drop Address"
-                class="p-inputtext p-component row-span-2"
-                rows="1"
-              ></textarea>
-              <textarea
-                pInputTextarea
-                formControlName="LRemarks"
-                placeholder="Remarks"
-                class="p-inputtext p-component row-span-2"
-                rows="1"
-              ></textarea>
-            </div>
-            <div class="mt-2 text-right">
-              <button
-                pButton
-                icon="pi pi-trash"
-                class="p-button-danger"
-                (click)="removeGuest(i)"
-              ></button>
-            </div>
-          </div>
-        </div>
-
+      <p-panel
+        header="Guest Details"
+        [toggleable]="true"
+        collapsed="false"
+        class="mb-6"
+      >
+        <p-table [value]="guests" responsiveLayout="scroll">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Guest Name</th>
+              <th>Contact No</th>
+              <th>Additional Contact</th>
+              <th>Pickup Address</th>
+              <th>Drop Address</th>
+              <th>Remarks</th>
+              <th>Action</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-guest let-i="rowIndex">
+            <tr>
+              <td>
+                <input
+                  type="text"
+                  pInputText
+                  formControlName="LGustName"
+                  class="w-full"
+                />
+              </td>
+              <td>
+                <input
+                  type="text"
+                  pInputText
+                  formControlName="LContactNo"
+                  class="w-full"
+                />
+              </td>
+              <td>
+                <input
+                  type="text"
+                  pInputText
+                  formControlName="LContactNo2"
+                  class="w-full"
+                />
+              </td>
+              <td>
+                <textarea
+                  pInputTextarea
+                  formControlName="LAddress"
+                  class="w-full p-inputtext"
+                ></textarea>
+              </td>
+              <td>
+                <textarea
+                  pInputTextarea
+                  formControlName="LDropAddress"
+                  class="w-full p-inputtext"
+                ></textarea>
+              </td>
+              <td>
+                <textarea
+                  pInputTextarea
+                  formControlName="LRemarks"
+                  class="w-full p-inputtext"
+                ></textarea>
+              </td>
+              <td>
+                <button
+                  pButton
+                  icon="pi pi-file"
+                  class="p-button-info"
+                  (click)="showGuestList()"
+                ></button>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
         <button
           pButton
           type="button"
@@ -489,3 +533,71 @@
     @apply font-semibold text-gray-800 flex items-center gap-2 mb-1;
   }
 </style>
+
+
+
+<!-- Guest action  -->
+
+<p-dialog header="Guest List" [(visible)]="guestListVisible" modal [style]="{ width: '80vw' }" [closable]="true">
+
+  <p-table #table [value]="guestList" [paginator]="true" [rows]="10"
+           [rowsPerPageOptions]="[5, 10, 20]" [globalFilterFields]="['name', 'contact', 'address']"
+           [responsiveLayout]="'scroll'" class="p-datatable-striped p-datatable-sm">
+
+    <!-- Caption with title and search -->
+    <ng-template pTemplate="caption">
+      <div class="flex justify-between items-center px-3 py-2">
+        <div class="text-xl text-blue-700 font-semibold flex items-center gap-2">
+          <i class="pi pi-user-plus text-yellow-500 text-2xl"></i>
+          Guest List
+        </div>
+        <span class="p-input-icon-left">
+          <i class="pi pi-search text-blue-500"></i>
+          <input pInputText type="text"
+            placeholder="Search guests..."
+            class="w-60 px-3 py-1.5 rounded border border-gray-300 text-sm focus:ring-2 focus:ring-blue-400" />
+        </span>
+      </div>
+    </ng-template>
+
+    <!-- Header -->
+    <ng-template pTemplate="header">
+      <tr class="text-sm text-blue-800 font-semibold border-b border-blue-300">
+        <th><i class="pi pi-list text-purple-500 mr-1"></i>SL. No</th>
+        <th><i class="pi pi-user text-lime-600 mr-1"></i>Guest Name</th>
+        <th><i class="pi pi-compass text-orange-500 mr-1"></i>Address Type</th>
+        <th><i class="pi pi-phone text-green-600 mr-1"></i>Contact No</th>
+        <th><i class="pi pi-map text-yellow-600 mr-1"></i>Address</th>
+        <th><i class="pi pi-mobile text-cyan-600 mr-1"></i>Additional No</th>
+        <th><i class="pi pi-cog text-gray-700 mr-1"></i>Action</th>
+      </tr>
+    </ng-template>
+
+    <!-- Body Rows -->
+    <ng-template pTemplate="body" let-guestList let-i="rowIndex">
+      <tr class="text-sm">
+        <td>{{ i + 1 }}</td>
+        <td>{{ guestList.name }}</td>
+        <td>{{ guestList.addressType }}</td>
+        <td>{{ guestList.contact }}</td>
+        <td>{{ guestList.address }}</td>
+        <td>{{ guestList.additionalNo }}</td>
+        <td>
+          <div class="flex gap-2">
+            <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-sm p-button-success" pTooltip="Edit Guest"></button>
+            <button pButton icon="pi pi-trash" class="p-button-rounded p-button-sm p-button-danger" pTooltip="Delete Guest"></button>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+
+    <!-- Empty Message -->
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="7" class="text-center text-gray-500 py-4">No data available</td>
+      </tr>
+    </ng-template>
+
+  </p-table>
+</p-dialog>
+

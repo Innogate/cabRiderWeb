@@ -20,9 +20,11 @@ import { partyMasterService } from '../../../../services/partyMaster.service';
 import { DividerModule } from 'primeng/divider';
 import { PanelModule } from 'primeng/panel';
 import { BookingService } from '../../../../services/booking.service';
+import { DialogModule } from 'primeng/dialog';
 @Component({
   selector: 'app-booking-entry',
   imports: [
+    DialogModule,
     CommonModule,
     DividerModule,
     TableModule,
@@ -80,7 +82,10 @@ export class BookingEntryComponent implements OnInit {
     },
   ];
 
-
+guestList = [
+  { name: 'John Doe', addressType: 'Home', contact: '9876543210', address: '123, Blue Street', additionalNo: '8800112233' },
+  { name: 'Jane Smith', addressType: 'Work', contact: '9876512345', address: '45, Red Ave', additionalNo: '8811223344' }
+];
 
   branches?: any[];
   cities?: any[];
@@ -204,6 +209,7 @@ export class BookingEntryComponent implements OnInit {
     this.filteredCities = this.cities.filter((city) =>
       city.CityName.toLowerCase().includes(query)
     );
+    console.log(this.filteredCities)
   }
 
   filteredToCities: any[] = [];
@@ -375,14 +381,14 @@ export class BookingEntryComponent implements OnInit {
     if (this.bookingFrom) {
       this.bookingFrom.get('FromCityID').setValue(city.value.Id);
     }
-    // console.log(city);
+    console.log(city);
   }
 
   onToCitySelect(city: any) {
     if (this.bookingFrom) {
       this.bookingFrom.get('ToCityID').setValue(city.value.Id);
     }
-    // console.log(city);
+     console.log(city);
   }
 
 
@@ -402,6 +408,13 @@ export class BookingEntryComponent implements OnInit {
   changePartyRateType() {
     this.getAllPartyRate();
   }
+
+   guestListVisible = false;
+
+  showGuestList() {
+    this.guestListVisible = true;
+  }
+
 
   submitBooking() {
     if (this.bookingFrom.valid) {
