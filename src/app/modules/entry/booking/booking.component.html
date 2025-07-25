@@ -102,19 +102,31 @@
               <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
                 <tr [ngClass]="rowIndex % 2 === 0 ? 'bg-white' : 'bg-blue-50'" class="hover:bg-blue-100 cursor-pointer">
                   <td *ngFor="let header of selectedHeaders" (contextmenu)="cm.show($event); selectedRow = rowData"
-                    class="text-center px-3 py-2 border-b border-gray-200 font-medium"
-                    [ngClass]="header === 'Status' ? statusColors[rowData[header]] : 'text-gray-800'">
-                    <span *ngIf="header === 'Status'; else normalCell"
-                      class="inline-block px-2 py-1 rounded-full text-xs font-semibold"
-                      [ngClass]="statusColors[rowData[header]]" pTooltip="{{ rowData[header] }}">
-                      {{ rowData[header] }}
-                    </span>
-                    <ng-template #normalCell>
-                      <span class="block truncate max-w-[150px]" pTooltip="{{ rowData[header] }}">
+                      class="text-center px-3 py-2 border-b border-gray-200 font-medium"
+                      [ngClass]="header === 'Status' ? statusColors[rowData[header]] : 'text-gray-800'">
+
+                    <!-- For Booking NO add a button -->
+                    <ng-container *ngIf="header === 'Booking No.'; else otherCells">
+                      <button class="text-blue-700 hover:underline font-sans" (click)="showChargesDialog = true">
+                        {{ rowData[header] }}
+                      </button>
+                    </ng-container>
+
+                    <ng-template #otherCells>
+                      <span *ngIf="header === 'Status'; else normalCell"
+                        class="inline-block px-2 py-1 rounded-full text-xs font-semibold"
+                        [ngClass]="statusColors[rowData[header]]" pTooltip="{{ rowData[header] }}">
                         {{ rowData[header] }}
                       </span>
+                      <ng-template #normalCell>
+                        <span class="block truncate max-w-[150px]" pTooltip="{{ rowData[header] }}">
+                          {{ rowData[header] }}
+                        </span>
+                      </ng-template>
                     </ng-template>
+
                   </td>
+
                 </tr>
               </ng-template>
 
@@ -171,3 +183,65 @@
     </div>
   </p-dialog>
 </div>
+
+
+
+<!--  booking no page  -->
+<p-dialog
+  header="Duty Images"
+  [(visible)]="showChargesDialog"
+  [modal]="true"
+  [style]="{ width: '60vw' }"
+  [closable]="true"
+>
+  <!-- Image Preview Area -->
+  <div class="text-center mb-4">
+    <img
+      *ngIf="mainImage"
+      [src]="mainImage"
+      alt="Main Image Preview"
+      class="mx-auto h-32 object-contain border border-gray-300 rounded mb-2"
+    />
+    <label class="text-blue-700 font-semibold underline cursor-pointer">
+      Attach Duty Slip
+      <input
+        type="file"
+        hidden
+        (change)="onMainImageChange($event)"
+      />
+    </label>
+  </div>
+
+  <!-- Charges Table -->
+  <table class="w-full text-center border border-blue-300 shadow-sm rounded-lg">
+    <thead class="bg-blue-400 text-white">
+      <tr>
+        <th class="p-2">Charges Name <span class="text-red-500">*</span></th>
+        <th class="p-2">Amount</th>
+        <th class="p-2">Image</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let charge of charges; let i = index" class="border-b">
+        <td class="p-2">{{charge.name}}</td>
+        <td class="p-2">{{charge.amount}}</td>
+        <td class="p-2">{{charge.file}}</td>
+      </tr>
+    </tbody>
+  </table>
+   <div class="flex justify-end mt-6 gap-4">
+        <button
+          pButton
+          type="button"
+          label="Close"
+          class="p-button-danger"
+        ></button>
+        <button
+          pButton
+          type="button"
+          label="Save"
+          class="p-button-success"
+        ></button>
+      </div>
+</p-dialog>
+
