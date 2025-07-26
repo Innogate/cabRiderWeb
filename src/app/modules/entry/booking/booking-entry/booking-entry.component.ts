@@ -13,12 +13,13 @@ import { SelectModule } from 'primeng/select';
 import { TableModule } from 'primeng/table';
 import { TabViewModule } from 'primeng/tabview';
 import { ActivatedRoute, Router } from '@angular/router';
-import { getCurrentDate, getCurrentTime, globalRequestHandler, } from '../../../../utils/global';
+import { getCurrentDate, getCurrentTime, getStringifiedFormValues, globalRequestHandler, } from '../../../../utils/global';
 import { MessageService } from 'primeng/api';
 import { commonService } from '../../../../services/comonApi.service';
 import { partyMasterService } from '../../../../services/partyMaster.service';
 import { DividerModule } from 'primeng/divider';
 import { PanelModule } from 'primeng/panel';
+import { BookingService } from '../../../../services/booking.service';
 @Component({
   selector: 'app-booking-entry',
   imports: [
@@ -48,7 +49,7 @@ export class BookingEntryComponent implements OnInit {
     private messageService: MessageService,
     private router: Router,
     private commonApiService: commonService,
-    private partyMasterService: partyMasterService,
+    private bookingService: BookingService,
     private partyRateMasterService: partyRateMasterService,
     private fb: FormBuilder
   ) { }
@@ -326,10 +327,10 @@ export class BookingEntryComponent implements OnInit {
 
   getAllPartyRate() {
     this.partyRateMasterService.GatAllPartyRate({
-      "city_id": 1,
-      "party_id": 0,
-      "car_type_id": 0,
-      "duty_type": "Hrs"
+      "city_id": this.bookingFrom?.get('FromCityID').value,
+      "party_id": this.bookingFrom?.get('Party').value,
+      "car_type_id": this.bookingFrom?.get('CarType').value,
+      "duty_type": this.bookingFrom?.get('DutyType').value,
     })
   }
 
@@ -374,8 +375,47 @@ export class BookingEntryComponent implements OnInit {
   }
 
   submitBooking() {
-    if (this.bookingFrom.valid) {
+    if (this.bookingFrom.valid || true) {
       console.log('Submitted Form Values:', this.bookingFrom.value);
+      this.bookingService.create(getStringifiedFormValues({
+        "id": 0,
+        "Branch": "",
+        "branch_id": 17,
+        "EntryDate": "26-07-2025",
+        "EntryTime": "12:13",
+        "RentalDate": "2025-07-27",
+        "SlipNo": "NEW",
+        "FromCityID": "1",
+        "ReportingDatetime": "12:13",
+        "ToCityID": "1",
+        "DutyType": "Local",
+        "Party": 2,
+        "ReportAt": "",
+        "Email": "tuhin@email.com",
+        "Flight_train_No": "",
+        "Project": "",
+        "DropAt": "",
+        "CarType": 1769,
+        "BookingMode": "Online",
+        "BookedBy": "Amit",
+        "ContactNo": "1234567890",
+        "BookedEmail": "tuhin@email.com",
+        "Advance": 0,
+        "PartyRate": 0,
+        "Price": 0,
+        "HourRate": 0,
+        "KMRate": 0,
+        "LGustName": "",
+        "lid": "",
+        "LContactNo": "",
+        "LContactNo2": "",
+        "LAddress": "",
+        "LDropAddress": "",
+        "LRemarks": "",
+        "discount_amount": "",
+        "isCash": 0,
+        "SelectRate": 85
+      }));
     } else {
       // Show validation errors
       console.warn('Form is invalid');
@@ -385,3 +425,87 @@ export class BookingEntryComponent implements OnInit {
 
 
 }
+
+// * REQUIRED FORM DATA
+
+// {
+//   "id": "120802",
+//   "branch_id": "17",
+//   "EntryDate": "26-07-2025",
+//   "EntryTime": "13:58",
+//   "RentalDate": "2025-07-26",
+//   "SlipNo": "LC26072025-67",
+//   "FromCityID": "1",
+//   "ReportingDatetime": "13:58",
+//   "ToCityID": "1",
+//   "DutyType": "2",
+//   "Party": "2",
+//   "ReportAt": "Office",
+//   "Email": "TEST@EMAIL.COM",
+//   "Flight_train_No": "",
+//   "Project": "",
+//   "DropAt": "",
+//   "CarType": "29",
+//   "BookingMode": "SMS",
+//   "BookedBy": "XEONAMIT@GMAIL.COM",
+//   "ContactNo": "8877878",
+//   "BookedEmail": "test@gmail.com",
+//   "Advance": "0",
+//   "PartyRateType": "Normal",
+//   "PartyRate": "593",
+//   "Price": "0",
+//   "HourRate": "250",
+//   "KMRate": "25",
+//   "LGustName": ["SHANKAR DAS"],
+//   "lid": ["120530", "0"],
+//   "LContactNo": [""],
+//   "LContactNo2": [""],
+//   "LAddress": ["19, R.N.MUKHERJEE ROAD, 1ST FLOOR"],
+//   "LDropAddress": [""],
+//   "LRemarks": ["SEND CLEAN CAR WITH NEWSPAPER"],
+//   "discount_amount": [""],
+//   "isCash": "0"
+// }
+
+
+// ! SENDING FORMATE DATA
+
+
+      //   "id": 0,
+      //   "Branch": "",
+      //   "branch_id": 17,
+      //   "EntryDate": "26-07-2025",
+      //   "EntryTime": "12:13",
+      //   "RentalDate": "2025-07-27",
+      //   "SlipNo": "NEW",
+      //   "FromCityID": "1",
+      //   "ReportingDatetime": "12:13",
+      //   "ToCityID": "1",
+      //   "DutyType": "Local",
+      //   "Party": 2,
+      //   "ReportAt": "",
+      //   "Email": "tuhin@email.com",
+      //   "Flight_train_No": "",
+      //   "Project": "",
+      //   "DropAt": "",
+      //   "CarType": 1769,
+      //   "BookingMode": "Online",
+      //   "BookedBy": "Amit",
+      //   "ContactNo": "1234567890",
+      //   "BookedEmail": "tuhin@email.com",
+      //   "Advance": 0,
+      //   "PartyRate": 0,
+      //   "Price": 0,
+      //   "HourRate": 0,
+      //   "KMRate": 0,
+      //   "LGustName": "",
+      //   "lid": "",
+      //   "LContactNo": "",
+      //   "LContactNo2": "",
+      //   "LAddress": "",
+      //   "LDropAddress": "",
+      //   "LRemarks": "",
+      //   "discount_amount": "",
+      //   "isCash": 0,
+      //   "SelectRate": 85
+      // }

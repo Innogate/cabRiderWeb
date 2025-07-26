@@ -14,6 +14,10 @@ export class BookingService extends BaseService {
     this.call('booking.search', payload);
   }
 
+  create(payload: any) {
+    this.call('booking.create', payload);
+  }
+
   protected handleMessage(msg: any): boolean {
     return false;
   }
