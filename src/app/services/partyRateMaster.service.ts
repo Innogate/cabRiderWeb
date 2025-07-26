@@ -10,17 +10,17 @@ export class partyRateMasterService extends BaseService {
     super(ws);
   }
 
-  GatAllPartyRate(payload: any) {
+  getAllPartyRate(payload: any) {
     this.call('master.gatAllPartyRate', payload);
   }
 
-//   CreateUpdateParty(payload: any){
-//     this.post('/master/createUpdatePart', payload);
-//   }
+  createUpdatePartyRate(id: number, party_id: number, city_id: number, PartyAddr: string, PinCode: string,
+    GSTNo: string, ContactPersonName: string, ContactNo: string, EMailID: string, postJsonData: any
+  ) {
+    this.call('master.createUpdatePartyRate')
+  }
 
-//   Delete(payload: any){
-//     this.post('/master/deleteCharges', payload);
-//   }
+
 
   protected handleMessage(msg: any): boolean {
     return false;

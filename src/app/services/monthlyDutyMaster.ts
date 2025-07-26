@@ -14,6 +14,11 @@ export class monthlyDutyMasterService extends BaseService {
     this.call('master.getAllMonthlyDutyMaster', payload);
   }
 
+  createUpdateMonthlyDuty(payload: any) {
+    this.call('master.createUpdateMonthlyDutyMaster', payload);
+
+  }
+
   protected handleMessage(msg: any): boolean {
     return false;
   }

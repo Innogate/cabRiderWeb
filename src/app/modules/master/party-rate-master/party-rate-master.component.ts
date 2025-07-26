@@ -57,7 +57,7 @@ export class PartyRateMasterComponent implements OnInit, AfterViewInit, OnDestro
       PageSize: 1000,
       Search: "",
     }
-    this.partyRateMasterService.GatAllPartyRate(payload);
+    this.partyRateMasterService.getAllPartyRate(payload);
   }
 
 
