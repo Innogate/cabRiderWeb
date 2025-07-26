@@ -1,3 +1,4 @@
+import { Value } from 'regjsparser';
 
 import { carTypeMasterService } from '../../../../services/carTypeMaster.service';
 import { CheckboxModule } from 'primeng/checkbox';
@@ -234,17 +235,17 @@ export class FullBookingEntryComponent {
       id: [''],
       EntryDate: [''],
       branch_id: [''],
-      SlipNo: [''],
+      SlipNo: ['NEW'],
       RentalDate: [''],
       ReportingDatetime: [''],
       CarType: [''],
       CarTypeSend: [''],
-      Party: [null, Validators.required],
+      Party: [''],  // null, Validators.required
       party_name: [''],
       vendor_id: [''],
       VendorContact: [''],
       vendor_name: [''],
-      CarNo: [null, Validators.required],
+      CarNo: [''],  // null, Validators.required
       DriverName: [''],
       DriverContact: ['9966525250'],
       Project: [''],
@@ -282,7 +283,7 @@ export class FullBookingEntryComponent {
       TotalOtherCharge: ['0'],
       NetAmt: [''],
       VendorRateType: [''],
-      VendorRate: [null, Validators.required],
+      VendorRate: [''], //null, Validators.required
       VendorGarageOutDate: [''],
       VendorGarageOutKm: ['0'],
       VendorReportDate: [''],
@@ -578,15 +579,23 @@ export class FullBookingEntryComponent {
 
   onPartyNameSelect(party: any) {
     if (this.fullBookingFrom) {
-      this.fullBookingFrom.get('Party').setValue(party.id);
+      this.fullBookingFrom.get('Party').setValue(party.value.id);
     }
     // console.log(party);
   }
 
   onCarTypeSelect(cartype: any) {
     if (this.fullBookingFrom) {
-      this.fullBookingFrom.get('CarType').setValue(cartype);
+      this.fullBookingFrom.get('CarType').setValue(cartype.value.id);
     }
+    // console.log(cartype)
+  }
+
+    onCarTypeSendSelect(cartype: any) {
+    if (this.fullBookingFrom) {
+      this.fullBookingFrom.get('CarTypeSend').setValue(cartype.value.id);
+    }
+    // console.log(cartype)
   }
 
 

@@ -75,3 +75,17 @@ export function getCurrentDate() {
     const year = now.getFullYear();
     return `${day}-${month}-${year}`;
   }
+
+  export function getStringifiedFormValues(formValue: Record<string, any>): Record<string, any> {
+  const stringifiedValues: Record<string, any> = {};
+
+  for (const key in formValue) {
+    if (Object.prototype.hasOwnProperty.call(formValue, key)) {
+      const value = formValue[key];
+      stringifiedValues[key] = value === null ? null : String(value);
+    }
+  }
+
+  console.log('Submitted Form Values:', stringifiedValues);
+  return stringifiedValues;
+}

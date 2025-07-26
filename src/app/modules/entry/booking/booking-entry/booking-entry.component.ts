@@ -4,7 +4,7 @@ import { carTypeMasterService } from '../../../../services/carTypeMaster.service
 import { CheckboxModule } from 'primeng/checkbox';
 import { CommonModule } from '@angular/common';
 import { Component, NgModule, OnInit } from '@angular/core';
-import { FormBuilder, FormsModule, NgModel, ReactiveFormsModule, Validators, } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, FormsModule, NgModel, ReactiveFormsModule, Validators, } from '@angular/forms';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
@@ -13,12 +13,13 @@ import { SelectModule } from 'primeng/select';
 import { TableModule } from 'primeng/table';
 import { TabViewModule } from 'primeng/tabview';
 import { ActivatedRoute, Router } from '@angular/router';
-import { getCurrentDate, getCurrentTime, globalRequestHandler, } from '../../../../utils/global';
+import { getCurrentDate, getCurrentTime, getStringifiedFormValues, globalRequestHandler, } from '../../../../utils/global';
 import { MessageService } from 'primeng/api';
 import { commonService } from '../../../../services/comonApi.service';
 import { partyMasterService } from '../../../../services/partyMaster.service';
 import { DividerModule } from 'primeng/divider';
 import { PanelModule } from 'primeng/panel';
+import { BookingService } from '../../../../services/booking.service';
 @Component({
   selector: 'app-booking-entry',
   imports: [
@@ -48,7 +49,7 @@ export class BookingEntryComponent implements OnInit {
     private messageService: MessageService,
     private router: Router,
     private commonApiService: commonService,
-    private partyMasterService: partyMasterService,
+    private bookingService: BookingService,
     private partyRateMasterService: partyRateMasterService,
     private fb: FormBuilder
   ) { }
@@ -89,35 +90,44 @@ export class BookingEntryComponent implements OnInit {
 
   partyRateTypes: any[] = [
     {
-      label: 'Normal',
-      value: 'Normal',
+      label: 'Normal'
     },
     {
-      label: 'Hrs',
-      value: 'Hrs',
+      label: 'Hrs'
     },
     {
-      label: 'DayKM',
-      value: 'DayKM',
+      label: 'DayKM'
     },
     {
-      label: 'Trn',
-      value: 'Trn',
+      label: 'Trn'
     },
   ];
 
-   bookingModes = [
-    { label: 'Online', value: 'Online' },
-    { label: 'Offline', value: 'Offline' },
+  bookingModes = [
+    { label: 'SMS', value: 'SMS' },
+    { label: 'CALL', value: 'CALL' },
+    { label: 'E-Mail', value: 'E-Mail' },
+    { label: 'WhatsApp', value: 'WhatsApp' },
   ];
 
-  selectRates: any[] = [
-    { id: 1, name: 'Standard Rate' },
-    { id: 2, name: 'Corporate Rate' },
-    { id: 3, name: 'Special Event Rate' }
+  selectRates = [];
+
+  dutyTypes = [
+    { label: 'DISPOSAL', value: '1' },
+    { label: 'OUTSTATION', value: '2' },
+    { label: 'PICKUP', value: '3' },
+    { label: 'DROP', value: '4' },
   ];
 
-  dutyTypes = [{ name: 'Local' }, { name: 'Outstation' }];
+    reportAt = [
+    { label: 'RESIDENCE', value: 'RESIDENCE' },
+    { label: 'OFFICE', value: 'OFFICE' },
+    { label: 'HOTEL', value: 'HOTEL' },
+    { label: 'RAILWAY STATION', value: 'RAILWAY STATION' },
+    { label: 'AIRPORT', value: 'AIRPORT' },
+    { label: 'OUTSTATION', value: 'OUTSTATION' },
+    { label: 'OTHER', value: 'OTHER' },
+  ];
 
   dropAt = [{ name: 'kolkata' }, { name: 'Haldia' }];
 
@@ -125,49 +135,67 @@ export class BookingEntryComponent implements OnInit {
   filteredCities: any[] = [];
 
   init() {
-    this.bookingFrom = this.fb.group({
-      id: [0],
-      Branch: [''], // -> Added
-      branch_id: [null, Validators.required],
-      EntryDate: [getCurrentDate(), Validators.required],
-      EntryTime: [getCurrentTime(), Validators.required],
-      RentalDate: [''],
-      SlipNo: ['NEW'],
-      FromCityID: [''],
-      ReportingDatetime: [getCurrentTime(), Validators.required],
-      ToCityID: [''],
-      DutyType: [''], // null, Validators.required
-      Party: [''],
-      ReportAt: [''],
-      Email: [''],
-      Flight_train_No: [''],
-      Project: [''],
-      DropAt: [''],
-      CarType: [''], //null, Validators.required
-      BookingMode: [''],
-      BookedBy: [''],
-      ContactNo: [''],
-      BookedEmail: [''],
-      Advance: [0],
-      PartyRateType: [''],   // null, Validators.required
-      PartyRate: [0],
-      Price: [0],
-      HourRate: [0],
-      KMRate: [0],
-      LGustName: [''],
-      lid: [''],
-      LContactNo: [''],
-      LContactNo2: [''],
-      LAddress: [''],
-      LDropAddress: [''],
-      LRemarks: [''],
-      discount_amount: [''],
-      isCash: [0],
-      // missing
-      SelectRate: [0],
-    });
+  this.bookingFrom = this.fb.group({
+    id: ['0'],
+    branch_id: ['', Validators.required],
+    RentalDate: [''], // string, yyyy-MM-dd
+    EntryDate: [ getCurrentDate(), Validators.required], // string, dd-MM-yyyy
+    ReportingDatetime: [getCurrentTime(), Validators.required], // string (hh:mm)
+    SlipNo: ['New'],
+    FromCityID: [''],
+    EntryTime: [getCurrentTime(), Validators.required], // string
+    ToCityID: [''],
+    DutyType: [''], // string
+    Party: [''], // string
+    party_name: [''],
+    ReportAt: [''],
+    Email: [''],
+    Flight_train_No: [''],
+    Project: [''],
+    DropAt: [''],
+    CarType: [''], // string
+    BookingMode: [''],
+    BookedBy: [''],
+    ContactNo: [''],
+    BookedEmail: [''],
+    Advance: ['0'],
+    PartyRateType: [''],
+    PartyRate: [''], // stringified number
+    Price: ['0'],
+    HourRate: ['0'], // stringified number
+    KMRate: ['0'],    // stringified number
+    IncludeTax: [''], // empty string
+    discount_amount: this.fb.array([this.fb.control('')]),
+    isCash: [''], // string
 
-  }
+    // Optional extras preserved
+    Branch: [''],
+    SelectRate: [''],
+
+    LGuest: this.fb.array([
+    this.createGuestFormGroup()
+  ])
+
+  });
+}
+
+createGuestFormGroup(): FormGroup {
+  return this.fb.group({
+      LGustName: [""],
+      LGustEmail: [""],
+      LContactNo: [""],
+      LContactNo2: [""],
+      LAddress: [""],
+      LAddressLat: [""],
+      LAddressLng: [""],
+      LDropAddress: [""],
+      LDropAddressLat: [""],
+      LDropAddressLng: [""],
+      LRemarks: [""],
+      lid: [""],
+  });
+}
+
 
 
   filterCities(event: any) {
@@ -250,6 +278,10 @@ export class BookingEntryComponent implements OnInit {
         } else if (msg.for === 'getAllPartyDropdown') {
           this.PartyName = msg.data;
           rt = true;
+        } else if (msg.for === 'getallpartyrate') {
+          this.selectRates = msg.data;
+          console.log(this.selectRates);
+          rt = true;
         }
       }
       if (rt == false) {
@@ -266,20 +298,14 @@ export class BookingEntryComponent implements OnInit {
   }
 
 
-  addGuest() {
-    this.guests.push({
-      name: '',
-      contactNo: '',
-      additionalContactNo: '',
-      pickupAddress: '',
-      dropAddress: '',
-      remarks: '',
-    });
-  }
+ addGuest() {
+  this.LGuest.push(this.createGuestFormGroup());
+}
 
-  removeGuest(index: number) {
-    this.guests.splice(index, 1);
-  }
+removeGuest(index: number) {
+  this.LGuest.removeAt(index);
+}
+
 
   closeForm() {
     // Handle form close logic here
@@ -328,12 +354,20 @@ export class BookingEntryComponent implements OnInit {
     this.commonApiService.gateAllPartyNameDropdown();
   }
 
+  getAllPartyRate() {
+    this.partyRateMasterService.GatAllPartyRate({
+      "city_id": this.bookingFrom?.get('FromCityID').value,
+      "party_id": this.bookingFrom?.get('Party').value,
+      "car_type_id": this.bookingFrom?.get('CarType').value,
+      "duty_type": this.bookingFrom?.get('DutyType').value,
+    })
+  }
+
 
   // OnSelect Functions
   onBranchSelect(branch: any) {
     if (this.bookingFrom) {
       this.bookingFrom.get('branch_id').setValue(branch.value.Id);
-      console.log(branch);
     }
   }
 
@@ -356,20 +390,23 @@ export class BookingEntryComponent implements OnInit {
     if (this.bookingFrom) {
       this.bookingFrom.get('Party').setValue(party.value.id);
     }
-    console.log(party);
   }
 
 
   onCarTypeSelect(cartype: any) {
     if (this.bookingFrom) {
-      this.bookingFrom.get('CarType').setValue(cartype);
+      this.bookingFrom.get('CarType').setValue(cartype.value.id);
     }
   }
 
+  changePartyRateType() {
+    this.getAllPartyRate();
+  }
 
   submitBooking() {
     if (this.bookingFrom.valid) {
-      console.log('Submitted Form Values:', this.bookingFrom.value);
+      console.log(this.bookingFrom.value);
+      this.bookingService.create((this.bookingFrom.value));
     } else {
       // Show validation errors
       console.warn('Form is invalid');
@@ -377,5 +414,94 @@ export class BookingEntryComponent implements OnInit {
     }
   }
 
+  get LGuest(): FormArray {
+  return this.bookingFrom.get('LGuest') as FormArray;
+}
+
+
 
 }
+
+// * REQUIRED FORM DATA
+
+// {
+//   "id": "120802",
+//   "branch_id": "17",
+//   "EntryDate": "26-07-2025",
+//   "EntryTime": "13:58",
+//   "RentalDate": "2025-07-26",
+//   "SlipNo": "LC26072025-67",
+//   "FromCityID": "1",
+//   "ReportingDatetime": "13:58",
+//   "ToCityID": "1",
+//   "DutyType": "2",
+//   "Party": "2",
+//   "ReportAt": "Office",
+//   "Email": "TEST@EMAIL.COM",
+//   "Flight_train_No": "",
+//   "Project": "",
+//   "DropAt": "",
+//   "CarType": "29",
+//   "BookingMode": "SMS",
+//   "BookedBy": "XEONAMIT@GMAIL.COM",
+//   "ContactNo": "8877878",
+//   "BookedEmail": "test@gmail.com",
+//   "Advance": "0",
+//   "PartyRateType": "Normal",
+//   "PartyRate": "593",
+//   "Price": "0",
+//   "HourRate": "250",
+//   "KMRate": "25",
+//   "LGustName": ["SHANKAR DAS"],
+//   "lid": ["120530", "0"],
+//   "LContactNo": [""],
+//   "LContactNo2": [""],
+//   "LAddress": ["19, R.N.MUKHERJEE ROAD, 1ST FLOOR"],
+//   "LDropAddress": [""],
+//   "LRemarks": ["SEND CLEAN CAR WITH NEWSPAPER"],
+//   "discount_amount": [""],
+//   "isCash": "0"
+// }
+
+
+// ! SENDING FORMATE DATA
+
+
+//   "id": 0,
+//   "Branch": "",
+//   "branch_id": 17,
+//   "EntryDate": "26-07-2025",
+//   "EntryTime": "12:13",
+//   "RentalDate": "2025-07-27",
+//   "SlipNo": "NEW",
+//   "FromCityID": "1",
+//   "ReportingDatetime": "12:13",
+//   "ToCityID": "1",
+//   "DutyType": "Local",
+//   "Party": 2,
+//   "ReportAt": "",
+//   "Email": "tuhin@email.com",
+//   "Flight_train_No": "",
+//   "Project": "",
+//   "DropAt": "",
+//   "CarType": 1769,
+//   "BookingMode": "Online",
+//   "BookedBy": "Amit",
+//   "ContactNo": "1234567890",
+//   "BookedEmail": "tuhin@email.com",
+//   "Advance": 0,
+//   "PartyRate": 0,
+//   "Price": 0,
+//   "HourRate": 0,
+//   "KMRate": 0,
+//   "LGustName": "",
+//   "lid": "",
+//   "LContactNo": "",
+//   "LContactNo2": "",
+//   "LAddress": "",
+//   "LDropAddress": "",
+//   "LRemarks": "",
+//   "discount_amount": "",
+//   "isCash": 0,
+//   "SelectRate": 85
+// }
