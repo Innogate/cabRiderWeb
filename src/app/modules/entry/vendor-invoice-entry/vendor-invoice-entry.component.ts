@@ -10,7 +10,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { CardModule } from 'primeng/card';
 import { TagModule } from 'primeng/tag';
 import { RippleModule } from 'primeng/ripple';
-
+import { Router } from '@angular/router'; 
 @Component({
   selector: 'app-vendor-invoice-entry',
   imports: [
@@ -31,6 +31,9 @@ import { RippleModule } from 'primeng/ripple';
   styleUrl: './vendor-invoice-entry.component.css',
 })
 export class VendorInvoiceEntryComponent {
+  constructor(private router: Router) {};
+   showVendorInvoiceModal = false; // 👈 modal flag
+
 searchText: any;
 selectedShow: any;
 show = [10, 50, 100, 500, 1000, 2000]
@@ -57,8 +60,10 @@ throw new Error('Method not implemented.');
     // Add more invoice entries here...
   ];
 
-  addVendorInvoice() {
-    // Logic to add invoice
+ // ✅ Navigate to new invoice entry page
+  addNewVendorInvoice() {
+    this.router.navigate(['/add-new-vendor-invoice']);
+    this.showVendorInvoiceModal = true; // 👈 show modal on button click
   }
 
   viewInvoice(invoice: any) {
