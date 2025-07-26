@@ -119,9 +119,8 @@ export class BookingEntryComponent implements OnInit {
 
   init() {
     this.bookingFrom = this.fb.group({
-      id: [0],
-      Branch: [''], // -> Added
-      branch_id: [null, Validators.required],
+      id: ['0'],
+      branch_id: ['17', Validators.required],
       EntryDate: [getCurrentDate(), Validators.required],
       EntryTime: [getCurrentTime(), Validators.required],
       RentalDate: [''],
@@ -129,36 +128,39 @@ export class BookingEntryComponent implements OnInit {
       FromCityID: ['1'],
       ReportingDatetime: [getCurrentTime(), Validators.required],
       ToCityID: ['1'],
-      DutyType: [''], // null, Validators.required
+      DutyType: [''], // should be string like "2" or "Local"
       Party: [''],
       ReportAt: [''],
       Email: [''],
       Flight_train_No: [''],
       Project: [''],
       DropAt: [''],
-      CarType: [''], //null, Validators.required
+      CarType: [''], // e.g., "29"
       BookingMode: [''],
       BookedBy: [''],
       ContactNo: [''],
       BookedEmail: [''],
-      Advance: [0],
-      PartyRateType: [''],   // null, Validators.required
-      PartyRate: [0],
-      Price: [0],
-      HourRate: [0],
-      KMRate: [0],
-      LGustName: [''],
-      lid: [''],
-      LContactNo: [''],
-      LContactNo2: [''],
-      LAddress: [''],
-      LDropAddress: [''],
-      LRemarks: [''],
-      discount_amount: [''],
-      isCash: [0],
-      // missing
-      SelectRate: [0],
+      Advance: ['0'],
+      PartyRateType: ['Normal'], // Added missing key
+      PartyRate: ['0'],
+      Price: ['0'],
+      HourRate: ['0'],
+      KMRate: ['0'],
+      LGustName: [[""]],            // now as array of strings
+      lid: [[""]],
+      LContactNo: [[""]],
+      LContactNo2: [[""]],
+      LAddress: [[""]],
+      LDropAddress: [[""]],
+      LRemarks: [[""]],
+      discount_amount: [[""]],
+      isCash: ['0'],
+
+      // 🆕 Optional extras (not in standard but preserved)
+      Branch: [''],              // extra key retained
+      SelectRate: ['0']          // extra key retained
     });
+
 
   }
 
@@ -375,47 +377,9 @@ export class BookingEntryComponent implements OnInit {
   }
 
   submitBooking() {
-    if (this.bookingFrom.valid || true) {
-      console.log('Submitted Form Values:', this.bookingFrom.value);
-      this.bookingService.create(getStringifiedFormValues({
-        "id": 0,
-        "Branch": "",
-        "branch_id": 17,
-        "EntryDate": "26-07-2025",
-        "EntryTime": "12:13",
-        "RentalDate": "2025-07-27",
-        "SlipNo": "NEW",
-        "FromCityID": "1",
-        "ReportingDatetime": "12:13",
-        "ToCityID": "1",
-        "DutyType": "Local",
-        "Party": 2,
-        "ReportAt": "",
-        "Email": "tuhin@email.com",
-        "Flight_train_No": "",
-        "Project": "",
-        "DropAt": "",
-        "CarType": 1769,
-        "BookingMode": "Online",
-        "BookedBy": "Amit",
-        "ContactNo": "1234567890",
-        "BookedEmail": "tuhin@email.com",
-        "Advance": 0,
-        "PartyRate": 0,
-        "Price": 0,
-        "HourRate": 0,
-        "KMRate": 0,
-        "LGustName": "",
-        "lid": "",
-        "LContactNo": "",
-        "LContactNo2": "",
-        "LAddress": "",
-        "LDropAddress": "",
-        "LRemarks": "",
-        "discount_amount": "",
-        "isCash": 0,
-        "SelectRate": 85
-      }));
+    if (this.bookingFrom.valid) {
+      console.log(this.bookingFrom.value);
+      this.bookingService.create((this.bookingFrom.value));
     } else {
       // Show validation errors
       console.warn('Form is invalid');
@@ -471,41 +435,41 @@ export class BookingEntryComponent implements OnInit {
 // ! SENDING FORMATE DATA
 
 
-      //   "id": 0,
-      //   "Branch": "",
-      //   "branch_id": 17,
-      //   "EntryDate": "26-07-2025",
-      //   "EntryTime": "12:13",
-      //   "RentalDate": "2025-07-27",
-      //   "SlipNo": "NEW",
-      //   "FromCityID": "1",
-      //   "ReportingDatetime": "12:13",
-      //   "ToCityID": "1",
-      //   "DutyType": "Local",
-      //   "Party": 2,
-      //   "ReportAt": "",
-      //   "Email": "tuhin@email.com",
-      //   "Flight_train_No": "",
-      //   "Project": "",
-      //   "DropAt": "",
-      //   "CarType": 1769,
-      //   "BookingMode": "Online",
-      //   "BookedBy": "Amit",
-      //   "ContactNo": "1234567890",
-      //   "BookedEmail": "tuhin@email.com",
-      //   "Advance": 0,
-      //   "PartyRate": 0,
-      //   "Price": 0,
-      //   "HourRate": 0,
-      //   "KMRate": 0,
-      //   "LGustName": "",
-      //   "lid": "",
-      //   "LContactNo": "",
-      //   "LContactNo2": "",
-      //   "LAddress": "",
-      //   "LDropAddress": "",
-      //   "LRemarks": "",
-      //   "discount_amount": "",
-      //   "isCash": 0,
-      //   "SelectRate": 85
-      // }
+//   "id": 0,
+//   "Branch": "",
+//   "branch_id": 17,
+//   "EntryDate": "26-07-2025",
+//   "EntryTime": "12:13",
+//   "RentalDate": "2025-07-27",
+//   "SlipNo": "NEW",
+//   "FromCityID": "1",
+//   "ReportingDatetime": "12:13",
+//   "ToCityID": "1",
+//   "DutyType": "Local",
+//   "Party": 2,
+//   "ReportAt": "",
+//   "Email": "tuhin@email.com",
+//   "Flight_train_No": "",
+//   "Project": "",
+//   "DropAt": "",
+//   "CarType": 1769,
+//   "BookingMode": "Online",
+//   "BookedBy": "Amit",
+//   "ContactNo": "1234567890",
+//   "BookedEmail": "tuhin@email.com",
+//   "Advance": 0,
+//   "PartyRate": 0,
+//   "Price": 0,
+//   "HourRate": 0,
+//   "KMRate": 0,
+//   "LGustName": "",
+//   "lid": "",
+//   "LContactNo": "",
+//   "LContactNo2": "",
+//   "LAddress": "",
+//   "LDropAddress": "",
+//   "LRemarks": "",
+//   "discount_amount": "",
+//   "isCash": 0,
+//   "SelectRate": 85
+// }
