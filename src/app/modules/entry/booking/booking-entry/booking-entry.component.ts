@@ -110,9 +110,7 @@ export class BookingEntryComponent implements OnInit {
     { label: 'WhatsApp', value: 'WhatsApp' },
   ];
 
-  selectRates = [
-    { label: 'BPA_JSJI', value: 'BPA_JSJI' },
-  ];
+  selectRates = [];
 
   dutyTypes = [
     { label: 'DISPOSAL', value: '1' },
@@ -138,7 +136,7 @@ export class BookingEntryComponent implements OnInit {
 
   init() {
   this.bookingFrom = this.fb.group({
-    id: [''],
+    id: ['0'],
     branch_id: ['', Validators.required],
     RentalDate: [''], // string, yyyy-MM-dd
     EntryDate: [ getCurrentDate(), Validators.required], // string, dd-MM-yyyy
@@ -163,9 +161,9 @@ export class BookingEntryComponent implements OnInit {
     Advance: ['0'],
     PartyRateType: [''],
     PartyRate: [''], // stringified number
-    Price: [''],
-    HourRate: [''], // stringified number
-    KMRate: [''],    // stringified number
+    Price: ['0'],
+    HourRate: ['0'], // stringified number
+    KMRate: ['0'],    // stringified number
     IncludeTax: [''], // empty string
     discount_amount: this.fb.array([this.fb.control('')]),
     isCash: [''], // string
