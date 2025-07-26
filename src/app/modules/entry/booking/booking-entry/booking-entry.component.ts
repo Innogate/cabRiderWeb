@@ -119,7 +119,7 @@ export class BookingEntryComponent implements OnInit {
     { label: 'DROP', value: '4' },
   ];
 
-    reportAt = [
+  reportAt = [
     { label: 'RESIDENCE', value: 'RESIDENCE' },
     { label: 'OFFICE', value: 'OFFICE' },
     { label: 'HOTEL', value: 'HOTEL' },
@@ -135,52 +135,52 @@ export class BookingEntryComponent implements OnInit {
   filteredCities: any[] = [];
 
   init() {
-  this.bookingFrom = this.fb.group({
-    id: ['0'],
-    branch_id: ['', Validators.required],
-    RentalDate: [''], // string, yyyy-MM-dd
-    EntryDate: [ getCurrentDate(), Validators.required], // string, dd-MM-yyyy
-    ReportingDatetime: [getCurrentTime(), Validators.required], // string (hh:mm)
-    SlipNo: ['New'],
-    FromCityID: [''],
-    EntryTime: [getCurrentTime(), Validators.required], // string
-    ToCityID: [''],
-    DutyType: [''], // string
-    Party: [''], // string
-    party_name: [''],
-    ReportAt: [''],
-    Email: [''],
-    Flight_train_No: [''],
-    Project: [''],
-    DropAt: [''],
-    CarType: [''], // string
-    BookingMode: [''],
-    BookedBy: [''],
-    ContactNo: [''],
-    BookedEmail: [''],
-    Advance: ['0'],
-    PartyRateType: [''],
-    PartyRate: [''], // stringified number
-    Price: ['0'],
-    HourRate: ['0'], // stringified number
-    KMRate: ['0'],    // stringified number
-    IncludeTax: [''], // empty string
-    discount_amount: this.fb.array([this.fb.control('')]),
-    isCash: [''], // string
+    this.bookingFrom = this.fb.group({
+      id: ['0'],
+      branch_id: ['', Validators.required],
+      RentalDate: [''], // string, yyyy-MM-dd
+      EntryDate: [getCurrentDate(), Validators.required], // string, dd-MM-yyyy
+      ReportingDatetime: [getCurrentTime(), Validators.required], // string (hh:mm)
+      SlipNo: ['New'],
+      FromCityID: [''],
+      EntryTime: [getCurrentTime(), Validators.required], // string
+      ToCityID: [''],
+      DutyType: [''], // string
+      Party: [''], // string
+      party_name: [''],
+      ReportAt: [''],
+      Email: [''],
+      Flight_train_No: [''],
+      Project: [''],
+      DropAt: [''],
+      CarType: [''], // string
+      BookingMode: [''],
+      BookedBy: [''],
+      ContactNo: [''],
+      BookedEmail: [''],
+      Advance: ['0'],
+      PartyRateType: [''],
+      PartyRate: [''], // stringified number
+      Price: ['0'],
+      HourRate: ['0'], // stringified number
+      KMRate: ['0'],    // stringified number
+      IncludeTax: [''], // empty string
+      discount_amount: this.fb.array([this.fb.control('')]),
+      isCash: [''], // string
 
-    // Optional extras preserved
-    Branch: [''],
-    SelectRate: [''],
+      // Optional extras preserved
+      Branch: [''],
+      SelectRate: [''],
 
-    LGuest: this.fb.array([
-    this.createGuestFormGroup()
-  ])
+      LGuest: this.fb.array([
+        this.createGuestFormGroup()
+      ])
 
-  });
-}
+    });
+  }
 
-createGuestFormGroup(): FormGroup {
-  return this.fb.group({
+  createGuestFormGroup(): FormGroup {
+    return this.fb.group({
       LGustName: [""],
       LGustEmail: [""],
       LContactNo: [""],
@@ -193,8 +193,8 @@ createGuestFormGroup(): FormGroup {
       LDropAddressLng: [""],
       LRemarks: [""],
       lid: [""],
-  });
-}
+    });
+  }
 
 
 
@@ -298,13 +298,13 @@ createGuestFormGroup(): FormGroup {
   }
 
 
- addGuest() {
-  this.LGuest.push(this.createGuestFormGroup());
-}
+  addGuest() {
+    this.LGuest.push(this.createGuestFormGroup());
+  }
 
-removeGuest(index: number) {
-  this.LGuest.removeAt(index);
-}
+  removeGuest(index: number) {
+    this.LGuest.removeAt(index);
+  }
 
 
   closeForm() {
@@ -355,7 +355,7 @@ removeGuest(index: number) {
   }
 
   getAllPartyRate() {
-    this.partyRateMasterService.GatAllPartyRate({
+    this.partyRateMasterService.getAllPartyRate({
       "city_id": this.bookingFrom?.get('FromCityID').value,
       "party_id": this.bookingFrom?.get('Party').value,
       "car_type_id": this.bookingFrom?.get('CarType').value,
@@ -415,93 +415,6 @@ removeGuest(index: number) {
   }
 
   get LGuest(): FormArray {
-  return this.bookingFrom.get('LGuest') as FormArray;
+    return this.bookingFrom.get('LGuest') as FormArray;
+  }
 }
-
-
-
-}
-
-// * REQUIRED FORM DATA
-
-// {
-//   "id": "120802",
-//   "branch_id": "17",
-//   "EntryDate": "26-07-2025",
-//   "EntryTime": "13:58",
-//   "RentalDate": "2025-07-26",
-//   "SlipNo": "LC26072025-67",
-//   "FromCityID": "1",
-//   "ReportingDatetime": "13:58",
-//   "ToCityID": "1",
-//   "DutyType": "2",
-//   "Party": "2",
-//   "ReportAt": "Office",
-//   "Email": "TEST@EMAIL.COM",
-//   "Flight_train_No": "",
-//   "Project": "",
-//   "DropAt": "",
-//   "CarType": "29",
-//   "BookingMode": "SMS",
-//   "BookedBy": "XEONAMIT@GMAIL.COM",
-//   "ContactNo": "8877878",
-//   "BookedEmail": "test@gmail.com",
-//   "Advance": "0",
-//   "PartyRateType": "Normal",
-//   "PartyRate": "593",
-//   "Price": "0",
-//   "HourRate": "250",
-//   "KMRate": "25",
-//   "LGustName": ["SHANKAR DAS"],
-//   "lid": ["120530", "0"],
-//   "LContactNo": [""],
-//   "LContactNo2": [""],
-//   "LAddress": ["19, R.N.MUKHERJEE ROAD, 1ST FLOOR"],
-//   "LDropAddress": [""],
-//   "LRemarks": ["SEND CLEAN CAR WITH NEWSPAPER"],
-//   "discount_amount": [""],
-//   "isCash": "0"
-// }
-
-
-// ! SENDING FORMATE DATA
-
-
-//   "id": 0,
-//   "Branch": "",
-//   "branch_id": 17,
-//   "EntryDate": "26-07-2025",
-//   "EntryTime": "12:13",
-//   "RentalDate": "2025-07-27",
-//   "SlipNo": "NEW",
-//   "FromCityID": "1",
-//   "ReportingDatetime": "12:13",
-//   "ToCityID": "1",
-//   "DutyType": "Local",
-//   "Party": 2,
-//   "ReportAt": "",
-//   "Email": "tuhin@email.com",
-//   "Flight_train_No": "",
-//   "Project": "",
-//   "DropAt": "",
-//   "CarType": 1769,
-//   "BookingMode": "Online",
-//   "BookedBy": "Amit",
-//   "ContactNo": "1234567890",
-//   "BookedEmail": "tuhin@email.com",
-//   "Advance": 0,
-//   "PartyRate": 0,
-//   "Price": 0,
-//   "HourRate": 0,
-//   "KMRate": 0,
-//   "LGustName": "",
-//   "lid": "",
-//   "LContactNo": "",
-//   "LContactNo2": "",
-//   "LAddress": "",
-//   "LDropAddress": "",
-//   "LRemarks": "",
-//   "discount_amount": "",
-//   "isCash": 0,
-//   "SelectRate": 85
-// }
