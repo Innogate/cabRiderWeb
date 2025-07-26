@@ -4,7 +4,7 @@ import { carTypeMasterService } from '../../../../services/carTypeMaster.service
 import { CheckboxModule } from 'primeng/checkbox';
 import { CommonModule } from '@angular/common';
 import { Component, NgModule, OnInit } from '@angular/core';
-import { FormBuilder, FormsModule, NgModel, ReactiveFormsModule, Validators, } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, FormsModule, NgModel, ReactiveFormsModule, Validators, } from '@angular/forms';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
@@ -104,13 +104,32 @@ export class BookingEntryComponent implements OnInit {
   ];
 
   bookingModes = [
-    { label: 'Online', value: 'Online' },
-    { label: 'Offline', value: 'Offline' },
+    { label: 'SMS', value: 'SMS' },
+    { label: 'CALL', value: 'CALL' },
+    { label: 'E-Mail', value: 'E-Mail' },
+    { label: 'WhatsApp', value: 'WhatsApp' },
   ];
 
-  selectRates?: any[];
+  selectRates = [
+    { label: 'BPA_JSJI', value: 'BPA_JSJI' },
+  ];
 
-  dutyTypes = [{ name: 'Local' }, { name: 'Outstation' }];
+  dutyTypes = [
+    { label: 'DISPOSAL', value: '1' },
+    { label: 'OUTSTATION', value: '2' },
+    { label: 'PICKUP', value: '3' },
+    { label: 'DROP', value: '4' },
+  ];
+
+    reportAt = [
+    { label: 'RESIDENCE', value: 'RESIDENCE' },
+    { label: 'OFFICE', value: 'OFFICE' },
+    { label: 'HOTEL', value: 'HOTEL' },
+    { label: 'RAILWAY STATION', value: 'RAILWAY STATION' },
+    { label: 'AIRPORT', value: 'AIRPORT' },
+    { label: 'OUTSTATION', value: 'OUTSTATION' },
+    { label: 'OTHER', value: 'OTHER' },
+  ];
 
   dropAt = [{ name: 'kolkata' }, { name: 'Haldia' }];
 
@@ -118,51 +137,67 @@ export class BookingEntryComponent implements OnInit {
   filteredCities: any[] = [];
 
   init() {
-    this.bookingFrom = this.fb.group({
-      id: ['0'],
-      branch_id: ['17', Validators.required],
-      EntryDate: [getCurrentDate(), Validators.required],
-      EntryTime: [getCurrentTime(), Validators.required],
-      RentalDate: [''],
-      SlipNo: ['NEW'],
-      FromCityID: ['1'],
-      ReportingDatetime: [getCurrentTime(), Validators.required],
-      ToCityID: ['1'],
-      DutyType: [''], // should be string like "2" or "Local"
-      Party: [''],
-      ReportAt: [''],
-      Email: [''],
-      Flight_train_No: [''],
-      Project: [''],
-      DropAt: [''],
-      CarType: [''], // e.g., "29"
-      BookingMode: [''],
-      BookedBy: [''],
-      ContactNo: [''],
-      BookedEmail: [''],
-      Advance: ['0'],
-      PartyRateType: ['Normal'], // Added missing key
-      PartyRate: ['0'],
-      Price: ['0'],
-      HourRate: ['0'],
-      KMRate: ['0'],
-      LGustName: [[""]],            // now as array of strings
-      lid: [[""]],
-      LContactNo: [[""]],
-      LContactNo2: [[""]],
-      LAddress: [[""]],
-      LDropAddress: [[""]],
-      LRemarks: [[""]],
-      discount_amount: [[""]],
-      isCash: ['0'],
+  this.bookingFrom = this.fb.group({
+    id: [''],
+    branch_id: ['', Validators.required],
+    RentalDate: [''], // string, yyyy-MM-dd
+    EntryDate: [ getCurrentDate(), Validators.required], // string, dd-MM-yyyy
+    ReportingDatetime: [getCurrentTime(), Validators.required], // string (hh:mm)
+    SlipNo: ['New'],
+    FromCityID: [''],
+    EntryTime: [getCurrentTime(), Validators.required], // string
+    ToCityID: [''],
+    DutyType: [''], // string
+    Party: [''], // string
+    party_name: [''],
+    ReportAt: [''],
+    Email: [''],
+    Flight_train_No: [''],
+    Project: [''],
+    DropAt: [''],
+    CarType: [''], // string
+    BookingMode: [''],
+    BookedBy: [''],
+    ContactNo: [''],
+    BookedEmail: [''],
+    Advance: ['0'],
+    PartyRateType: [''],
+    PartyRate: [''], // stringified number
+    Price: [''],
+    HourRate: [''], // stringified number
+    KMRate: [''],    // stringified number
+    IncludeTax: [''], // empty string
+    discount_amount: this.fb.array([this.fb.control('')]),
+    isCash: [''], // string
 
-      // 🆕 Optional extras (not in standard but preserved)
-      Branch: [''],              // extra key retained
-      SelectRate: ['0']          // extra key retained
-    });
+    // Optional extras preserved
+    Branch: [''],
+    SelectRate: [''],
 
+    LGuest: this.fb.array([
+    this.createGuestFormGroup()
+  ])
 
-  }
+  });
+}
+
+createGuestFormGroup(): FormGroup {
+  return this.fb.group({
+      LGustName: [""],
+      LGustEmail: [""],
+      LContactNo: [""],
+      LContactNo2: [""],
+      LAddress: [""],
+      LAddressLat: [""],
+      LAddressLng: [""],
+      LDropAddress: [""],
+      LDropAddressLat: [""],
+      LDropAddressLng: [""],
+      LRemarks: [""],
+      lid: [""],
+  });
+}
+
 
 
   filterCities(event: any) {
@@ -265,20 +300,14 @@ export class BookingEntryComponent implements OnInit {
   }
 
 
-  addGuest() {
-    this.guests.push({
-      name: '',
-      contactNo: '',
-      additionalContactNo: '',
-      pickupAddress: '',
-      dropAddress: '',
-      remarks: '',
-    });
-  }
+ addGuest() {
+  this.LGuest.push(this.createGuestFormGroup());
+}
 
-  removeGuest(index: number) {
-    this.guests.splice(index, 1);
-  }
+removeGuest(index: number) {
+  this.LGuest.removeAt(index);
+}
+
 
   closeForm() {
     // Handle form close logic here
@@ -386,6 +415,11 @@ export class BookingEntryComponent implements OnInit {
       this.bookingFrom.markAllAsTouched(); // Mark all fields as touched to show errors
     }
   }
+
+  get LGuest(): FormArray {
+  return this.bookingFrom.get('LGuest') as FormArray;
+}
+
 
 
 }
