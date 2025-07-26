@@ -76,12 +76,12 @@
               <label class="label-icon"><i class="pi pi-money-bill text-blue-600"></i> Party Rate
                 Type</label>
               <p-select formControlName="PartyRateType" [options]="partyRateTypes" optionLabel="label"
-                optionValue="value" class="w-full"></p-select>
+                optionValue="labele" (onChange)="changePartyRateType()" class="w-full"></p-select>
             </div>
             <div>
               <label class="label-icon"><i class="pi pi-percentage text-blue-600"></i> Select
                 Rate</label>
-              <p-select formControlName="SelectRate" [options]="selectRates" optionLabel="name" optionValue="id"
+              <p-select formControlName="SelectRate" [options]="selectRates" optionLabel="party_name" optionValue="id"
                 class="w-full"></p-select>
             </div>
           </div>
@@ -172,7 +172,7 @@
           <div>
             <label class="label-icon"><i class="pi pi-check-circle text-green-700"></i> Duty
               Type</label>
-            <p-select formControlName="DutyType" [options]="dutyTypes" optionLabel="name" class="w-full"></p-select>
+            <p-select formControlName="DutyType" [options]="dutyTypes" optionLabel="name" optionValue="name" class="w-full"></p-select>
           </div>
 
           <div>

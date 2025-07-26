@@ -1,7 +1,7 @@
 services:
   web:
     image:  tuhinsu/angular:lts
-    container_name: ${PROJECT_DOMAIN}
+    container_name: cbr.${PROJECT_DOMAIN}
     restart: unless-stopped
     user: vscode
     environment:

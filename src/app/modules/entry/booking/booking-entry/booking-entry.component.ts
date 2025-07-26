@@ -89,33 +89,25 @@ export class BookingEntryComponent implements OnInit {
 
   partyRateTypes: any[] = [
     {
-      label: 'Normal',
-      value: 'Normal',
+      label: 'Normal'
     },
     {
-      label: 'Hrs',
-      value: 'Hrs',
+      label: 'Hrs'
     },
     {
-      label: 'DayKM',
-      value: 'DayKM',
+      label: 'DayKM'
     },
     {
-      label: 'Trn',
-      value: 'Trn',
+      label: 'Trn'
     },
   ];
 
-   bookingModes = [
+  bookingModes = [
     { label: 'Online', value: 'Online' },
     { label: 'Offline', value: 'Offline' },
   ];
 
-  selectRates: any[] = [
-    { id: 1, name: 'Standard Rate' },
-    { id: 2, name: 'Corporate Rate' },
-    { id: 3, name: 'Special Event Rate' }
-  ];
+  selectRates?: any[];
 
   dutyTypes = [{ name: 'Local' }, { name: 'Outstation' }];
 
@@ -133,9 +125,9 @@ export class BookingEntryComponent implements OnInit {
       EntryTime: [getCurrentTime(), Validators.required],
       RentalDate: [''],
       SlipNo: ['NEW'],
-      FromCityID: [''],
+      FromCityID: ['1'],
       ReportingDatetime: [getCurrentTime(), Validators.required],
-      ToCityID: [''],
+      ToCityID: ['1'],
       DutyType: [''], // null, Validators.required
       Party: [''],
       ReportAt: [''],
@@ -250,6 +242,10 @@ export class BookingEntryComponent implements OnInit {
         } else if (msg.for === 'getAllPartyDropdown') {
           this.PartyName = msg.data;
           rt = true;
+        } else if (msg.for === 'getallpartyrate') {
+          this.selectRates = msg.data;
+          console.log(this.selectRates);
+          rt = true;
         }
       }
       if (rt == false) {
@@ -328,12 +324,20 @@ export class BookingEntryComponent implements OnInit {
     this.commonApiService.gateAllPartyNameDropdown();
   }
 
+  getAllPartyRate() {
+    this.partyRateMasterService.GatAllPartyRate({
+      "city_id": 1,
+      "party_id": 0,
+      "car_type_id": 0,
+      "duty_type": "Hrs"
+    })
+  }
+
 
   // OnSelect Functions
   onBranchSelect(branch: any) {
     if (this.bookingFrom) {
       this.bookingFrom.get('branch_id').setValue(branch.value.Id);
-      console.log(branch);
     }
   }
 
@@ -356,16 +360,18 @@ export class BookingEntryComponent implements OnInit {
     if (this.bookingFrom) {
       this.bookingFrom.get('Party').setValue(party.value.id);
     }
-    console.log(party);
   }
 
 
   onCarTypeSelect(cartype: any) {
     if (this.bookingFrom) {
-      this.bookingFrom.get('CarType').setValue(cartype);
+      this.bookingFrom.get('CarType').setValue(cartype.value.id);
     }
   }
 
+  changePartyRateType() {
+    this.getAllPartyRate();
+  }
 
   submitBooking() {
     if (this.bookingFrom.valid) {
