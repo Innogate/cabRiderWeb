@@ -29,6 +29,7 @@ import { AutoComplete } from 'primeng/autocomplete';
   selector: 'app-invoice-add',
   imports: [
     FormsModule,
+    AutoComplete,
     RadioButtonModule,
     TableModule,
     DropdownModule,
@@ -48,6 +49,8 @@ import { AutoComplete } from 'primeng/autocomplete';
   styleUrl: './invoice-add.component.css',
 })
 export class InvoiceAddComponent {
+
+
 
   constructor(
     private fb: FormBuilder,
@@ -77,9 +80,9 @@ export class InvoiceAddComponent {
   ];
 
   companies = [{ label: 'ABC Ltd', value: 1 }];
-  branches = [{ label: 'Main Branch', value: 101 }];
+  branches : any[] = [];
   parties = [{ label: 'XYZ Pvt Ltd', value: 501 }];
-  cities = [{ label: 'Delhi', value: 301 }];
+  cities  : any[] = [];
 
   invoices = [
     {
@@ -171,6 +174,7 @@ export class InvoiceAddComponent {
           rt = true;
         } else if (msg.for === 'getAllBranchDropdown') {
           this.branches = msg.data;
+          console.log(this.branches)
           rt = true;
         } else if (msg.for === 'getAllPartyDropdown') {
           this.PartyName = msg.data;
@@ -202,25 +206,32 @@ export class InvoiceAddComponent {
 
 isEditMode: boolean = false;
 
-patchInvoice(invoice: any) {
+selectedBranchModel: any = null;
+selectedPartyModel: any = null;
+selectedCityModel: any = null;
 
-  const selectedBranch = this.branches.find(b => b.value === invoice.branch_id);
-  const selectedParty = this.PartyName.find(p => p.value === invoice.party_id);
-  const selectedCity = this.cities.find(c => c.value === invoice.city_id);
+patchInvoice(invoice: any) {
+  const foundBranch = this.branches.find(branch => branch.branch_name == invoice.branch);
+  const foundParty = this.PartyName.find(p => p.value === invoice.party_name);
+  const foundCity = this.cities.find(c => c.value === invoice.City);
+
+  this.selectedBranchModel = foundBranch || null;
+  this.selectedPartyModel = foundParty || null;
+  this.selectedCityModel = foundCity || null;
 
   this.invoiceForm.patchValue({
     id: invoice.id || '',
+    branch_id: foundBranch?.Id || null,   // Use Id from matched branch
+    party_id: foundParty?.value || null,
+    city_id: foundCity?.value || null,
     City: invoice.City || '',
-    duty_type: invoice.dutyType || '',
-    branch_id: selectedBranch || '',
+    duty_type: invoice.duty_type || '',
     company_id: invoice.company_id || '',
     branch: invoice.branch || '',
-    party_id: selectedParty || '',
-    city_id: selectedCity || '',
     BillNo: invoice.BillNo || 'NEW',
-    BillDate: invoice.BillDate ? new Date(invoice.BillDate) : new Date(),
-    taxtype: invoice.taxtype || 'cgst',
-    rcm: invoice.rcm || 'yes',
+    BillDate: invoice.BillDate ? new Date(invoice.BillDate.replace(/-/g, '/')) : new Date(),
+    taxtype: invoice.taxtype ?? 'cgst',
+    rcm: invoice.rcm ?? 'yes',
     GrossAmount: invoice.GrossAmount || '0',
     OtherCharges: invoice.OtherCharges || '0',
     Discount: invoice.Discount || '',
@@ -234,8 +245,11 @@ patchInvoice(invoice: any) {
     Advance: invoice.Advance || '',
   });
 
-
+  console.log('Selected Branch:', this.selectedBranchModel);
+  console.log('Patched Invoice:', this.invoiceForm.value);
 }
+
+
 
 
 
@@ -243,6 +257,7 @@ patchInvoice(invoice: any) {
    // AutoComplete
   PartyName: any[] = []; // original full list
   filteredPartyName: any[] = []; // used by the autocomplete
+  filteredCities: any[] = [];
 
   filterPartyName(event: any) {
     const query = event.query?.toLowerCase() || '';
@@ -250,6 +265,28 @@ patchInvoice(invoice: any) {
       const name = party.party_name?.toLowerCase() || '';
       return name.includes(query);
     });
+  }
+
+
+  filterCities(event: any) {
+    if (!this.cities) return;
+    const query = event.query.toLowerCase();
+    this.filteredCities = this.cities.filter((city) =>
+      city.CityName.toLowerCase().includes(query)
+    );
+    console.log(this.filteredCities)
+  }
+
+
+
+  filteredBranches: any[] = [];
+
+  filterBranches(event: any) {
+    if (!this.branches) return;
+    const query = event.query.toLowerCase();
+    this.filteredBranches = this.branches.filter((branch) =>
+      branch.branch_name.toLowerCase().includes(query)
+    );
   }
 
   // API CALLS

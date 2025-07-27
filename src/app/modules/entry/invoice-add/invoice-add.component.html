@@ -39,23 +39,48 @@
         <label class="block text-gray-700 font-semibold mb-1">
           <i class="pi pi-sitemap text-purple-500 mr-2"></i>Select Branch
         </label>
-        <p-dropdown formControlName="branch_id" [options]="branches" optionLabel="label" optionValue="value" placeholder="Select Branch"
-          class="w-full"></p-dropdown>
+        <p-autoComplete
+              [suggestions]="filteredBranches"
+              (completeMethod)="filterBranches($event)"
+              (onSelect)="onBranchSelect($event)"
+              field="branch_name"
+              [(ngModel)]="selectedBranchModel"
+              [ngModelOptions]="{ standalone: true }"
+              [dropdown]="true"
+              [forceSelection]="true"
+            ></p-autoComplete>
       </div>
 
       <div>
         <label class="block text-gray-700 font-semibold mb-1">
           <i class="pi pi-users text-green-500 mr-2"></i>Select Party
         </label>
-        <p-dropdown formControlName="party_id" [options]="parties" placeholder="Select Party"
-          class="w-full"></p-dropdown>
+         <p-autoComplete
+              [suggestions]="filteredPartyName"
+              (completeMethod)="filterPartyName($event)"
+              (onSelect)="onPartyNameSelect($event)"
+              [(ngModel)]="selectedPartyModel"
+              [ngModelOptions]="{ standalone: true }"
+              field="party_name"
+              [dropdown]="true"
+              placeholder="Party *"
+            ></p-autoComplete>
       </div>
 
       <div>
         <label class="block text-gray-700 font-semibold mb-1">
           <i class="pi pi-map-marker text-red-500 mr-2"></i>Select City
         </label>
-        <p-dropdown formControlName="city_id" [options]="cities" placeholder="Select City" class="w-full"></p-dropdown>
+        <p-autoComplete
+                    [suggestions]="filteredCities"
+                    (completeMethod)="filterCities($event)"
+                    (onSelect)="onCitySelect($event)"
+                    field="CityName"
+                    [(ngModel)]="selectedCityModel"
+                    [ngModelOptions]="{ standalone: true }"
+                    [dropdown]="true"
+                    [forceSelection]="true"
+                  ></p-autoComplete>
 
       </div>
 
