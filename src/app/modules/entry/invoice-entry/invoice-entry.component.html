@@ -180,35 +180,50 @@
             <div class="flex justify-center gap-2">
               <button
                 pButton
+                pTooltip="Invoice"
                 icon="pi pi-eye"
                 class="p-button-sm p-button-rounded p-button-info"
               ></button>
               <button
                 pButton
                 icon="pi pi-pencil"
+                pTooltip="Update"
                 class="p-button-sm p-button-rounded p-button-warning"
+                (click)="editInvoice(invoice)"
               ></button>
               <button
                 pButton
+                pTooltip="Delete"
                 icon="pi pi-trash"
                 class="p-button-sm p-button-rounded p-button-danger"
               ></button>
+
+            </div>
+
+
+            <div class="flex justify-center gap-2 mt-3">
+
               <button
                 pButton
+                pTooltip="Payment Received"
+                (click)="openDialog()"
                 icon="pi pi-wallet"
                 class="p-button-sm p-button-rounded p-button-success"
               ></button>
               <button
                 pButton
+                pTooltip="XML"
                 icon="pi pi-code"
                 class="p-button-sm p-button-rounded p-button-secondary"
               ></button>
               <button
                 pButton
+                pTooltip="PDF"
                 icon="pi pi-file-pdf"
                 class="p-button-sm p-button-rounded p-button-help"
               ></button>
             </div>
+
           </td>
         </tr>
       </ng-template>
@@ -218,4 +233,102 @@
 
 <app-invoice-eyes-show *ngIf="showInvoiceDetails" [invoice]="selectedInvoice" (close)="showInvoiceDetails = false"></app-invoice-eyes-show>
 
+
+<!-- payment-received.component.html -->
+<p-dialog
+  header="Payment Received"
+  [(visible)]="showDialog"
+  [modal]="true"
+  [closable]="true"
+  [style]="{ width: '90vw', marginTop: '0px' }"
+  [contentStyle]="{ padding: '0', margin: '0' }"
+  [baseZIndex]="10000"
+  styleClass="rounded-xl shadow-2xl overflow-hidden m-2 p-2"
+>
+  <!-- Dialog Content -->
+  <div class="p-4">
+    <!-- Top Bar (Dropdown + Search) -->
+<div
+  class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 bg-blue-50 p-5 rounded-xl border border-blue-100 mb-6"
+>
+  <!-- Show Filter (Left Side) -->
+  <div class="lg:col-span-1">
+    <label for="show" class="block text-sm font-medium text-gray-700 mb-1">Show</label>
+    <p-dropdown
+      inputId="show"
+      [options]="show"
+      [(ngModel)]="selectedShow"
+      placeholder="Filter"
+      [showClear]="true"
+      class="w-full"
+    ></p-dropdown>
+  </div>
+
+  <!-- Empty columns to push search to right -->
+  <div class="lg:col-span-2 hidden lg:block"></div>
+
+  <!-- Search (Right Side) -->
+  <div class="lg:col-span-1 flex flex-col justify-end">
+    <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Search</label>
+    <div class="flex items-center gap-2">
+      <span class="p-input-icon-left w-full">
+        <input
+          id="search"
+          pInputText
+          type="text"
+          [(ngModel)]="searchText"
+          placeholder="Search by Sno , Amount..."
+          class="w-full"
+        />
+      </span>
+      <button
+        pButton
+        icon="pi pi-search"
+        class="p-button-sm p-button-info p-button-rounded"
+        (click)="searchInvoices()"
+        pTooltip="Search"
+      ></button>
+    </div>
+  </div>
+</div>
+
+
+    <!-- Scrollable Table -->
+    <p-table
+      [value]="payments"
+      scrollable
+      scrollHeight="250px"
+      class="p-datatable-sm rounded-xl overflow-hidden shadow"
+      [style]="{ minWidth: '100%' }"
+      [rows]="rows"
+      [globalFilterFields]="['voucherNo', 'amount']"
+      [responsiveLayout]="'scroll'"
+      emptyMessage="No data available"
+    >
+      <ng-template pTemplate="header">
+        <tr class="bg-blue-700 text-white text-center text-sm">
+          <th><i class="pi pi-tags text-yellow-300 mr-1"></i></th>
+          <th><i class="pi pi-hashtag text-purple-400 mr-1"></i> SNo</th>
+          <th><i class="pi pi-file text-pink-400 mr-1"></i> Voucher No</th>
+          <th><i class="pi pi-dollar text-green-400 mr-1"></i> Amount</th>
+          <th><i class="pi pi-credit-card text-indigo-400 mr-1"></i> Payment Received</th>
+          <th><i class="pi pi-percentage text-lime-400 mr-1"></i> TDS Amount</th>
+          <th><i class="pi pi-tags text-violet-400 mr-1"></i> Discount</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-row let-i="rowIndex">
+        <tr class="text-center text-sm hover:bg-blue-100 transition duration-200">
+          <td></td>
+          <td class="font-semibold">{{ i + 1 }}</td>
+          <td>{{ row.voucherNo }}</td>
+          <td class="text-green-600 font-bold">₹ {{ row.amount }}</td>
+          <td class="text-blue-700 font-semibold">₹ {{ row.paymentReceived }}</td>
+          <td class="text-yellow-600">₹ {{ row.tdsAmount }}</td>
+          <td class="text-pink-600">₹ {{ row.discountAmount }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</p-dialog>
 

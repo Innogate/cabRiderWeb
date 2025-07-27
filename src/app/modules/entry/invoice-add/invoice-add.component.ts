@@ -28,7 +28,6 @@ import { AutoComplete } from 'primeng/autocomplete';
 @Component({
   selector: 'app-invoice-add',
   imports: [
-    AutoComplete,
     FormsModule,
     RadioButtonModule,
     TableModule,
@@ -49,6 +48,17 @@ import { AutoComplete } from 'primeng/autocomplete';
   styleUrl: './invoice-add.component.css',
 })
 export class InvoiceAddComponent {
+
+  constructor(
+    private fb: FormBuilder,
+    private carTypeMaster: carTypeMasterService,
+    private router: Router,
+    private messageService: MessageService,
+    private commonApiService: commonService
+  ) {}
+
+
+
   taxType = 'cgst';
   rcm = 'no';
   billDate = new Date();
@@ -148,14 +158,6 @@ export class InvoiceAddComponent {
 
   carTypeSearch: any;
 
-  constructor(
-    private fb: FormBuilder,
-    private carTypeMaster: carTypeMasterService,
-    private router: Router,
-    private messageService: MessageService,
-    private commonApiService: commonService
-  ) {}
-
   ngOnInit(): void {
     this.carTypeMaster.registerPageHandler((msg) => {
       let rt = false;
@@ -185,7 +187,58 @@ export class InvoiceAddComponent {
     this.getAllBranches();
     this.getAllParty();
     this.init();
+
+
+     // Check for edit data
+      const editData = history.state?.editInvoice;
+
+      if (editData) {
+        this.isEditMode = true;
+        this.patchInvoice(editData);
+      }
+
   }
+
+
+isEditMode: boolean = false;
+
+patchInvoice(invoice: any) {
+
+  const selectedBranch = this.branches.find(b => b.value === invoice.branch_id);
+  const selectedParty = this.PartyName.find(p => p.value === invoice.party_id);
+  const selectedCity = this.cities.find(c => c.value === invoice.city_id);
+
+  this.invoiceForm.patchValue({
+    id: invoice.id || '',
+    City: invoice.City || '',
+    duty_type: invoice.dutyType || '',
+    branch_id: selectedBranch || '',
+    company_id: invoice.company_id || '',
+    branch: invoice.branch || '',
+    party_id: selectedParty || '',
+    city_id: selectedCity || '',
+    BillNo: invoice.BillNo || 'NEW',
+    BillDate: invoice.BillDate ? new Date(invoice.BillDate) : new Date(),
+    taxtype: invoice.taxtype || 'cgst',
+    rcm: invoice.rcm || 'yes',
+    GrossAmount: invoice.GrossAmount || '0',
+    OtherCharges: invoice.OtherCharges || '0',
+    Discount: invoice.Discount || '',
+    CGSTPer: invoice.CGSTPer || '',
+    CGST: invoice.CGST || '0',
+    SGSTPer: invoice.SGSTPer || '',
+    SGST: invoice.SGST || '0',
+    OtherCharges2: invoice.OtherCharges2 || '0',
+    RoundOff: invoice.RoundOff || '0',
+    NetAmount: invoice.NetAmount || '0',
+    Advance: invoice.Advance || '',
+  });
+
+
+}
+
+
+
 
    // AutoComplete
   PartyName: any[] = []; // original full list
@@ -236,14 +289,21 @@ export class InvoiceAddComponent {
   }
 
 
-  save() {
-    const formData = {
-      ...this.invoiceForm.value,
-      duties: this.invoices,
-    };
+ save() {
+  const formData = {
+    ...this.invoiceForm.value,
+    duties: this.invoices,
+  };
 
-    console.log('📦 Form Data:', formData);
+  if (this.isEditMode) {
+    console.log('📝 Updating invoice:', formData);
+    // this.commonApiService.updateInvoice(formData).subscribe(...)
+  } else {
+    console.log('🆕 Creating new invoice:', formData);
+    // this.commonApiService.createInvoice(formData).subscribe(...)
   }
+}
+
 
   searchInvoices() {
     throw new Error('Method not implemented.');

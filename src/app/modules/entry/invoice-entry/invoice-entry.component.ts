@@ -144,4 +144,39 @@ openInvoiceDetails(invoice: any) {
   this.selectedInvoice = { ...invoice }; // ensure new reference
   this.showInvoiceDetails = true;
 }
+
+editInvoice(invoice: any) {
+  this.router.navigate(['/invoice-add'], {
+    state: { editInvoice: invoice },
+  });
+}
+
+
+   // payment recived
+  showDialog = false;
+
+  rows = 10;
+  globalFilter = '';
+  entryOptions = [
+    { label: '5', value: 5 },
+    { label: '10', value: 10 },
+    { label: '20', value: 20 },
+  ];
+
+  payments = [
+
+    {
+     voucherNo: 'V123',
+      amount: 5000,
+      paymentReceived: 4500,
+      tdsAmount: 200,
+      discountAmount: 300
+    }
+  ];
+
+  openDialog() {
+    this.showDialog = true;
+  }
+
+
 }

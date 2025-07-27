@@ -39,7 +39,7 @@
         <label class="block text-gray-700 font-semibold mb-1">
           <i class="pi pi-sitemap text-purple-500 mr-2"></i>Select Branch
         </label>
-        <p-dropdown formControlName="branch_id" [options]="branches" placeholder="Select Branch"
+        <p-dropdown formControlName="branch_id" [options]="branches" optionLabel="label" optionValue="value" placeholder="Select Branch"
           class="w-full"></p-dropdown>
       </div>
 
@@ -279,8 +279,13 @@
 
   <!-- ✅ Save Button -->
   <div class="text-right mt-6">
-    <button pButton type="button" icon="pi pi-save" label="Save" class="p-button-primary px-6 py-2"
-      (click)="save()"></button>
+    <button
+  pButton
+  type="submit"
+  (click)="save()"
+  label="{{ isEditMode ? 'Update Invoice' : 'Save Invoice' }}"
+  icon="{{ isEditMode ? 'pi pi-save' : 'pi pi-plus' }}"
+></button>
   </div>
 </div>
 
