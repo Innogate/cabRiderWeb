@@ -25,23 +25,26 @@ import { InvoiceAddComponent } from './modules/entry/invoice-add/invoice-add.com
 import { PartyRateMasterComponent } from './modules/master/party-rate-master/party-rate-master.component';
 import { VendorMasterComponent } from './modules/master/vendor-master/vendor-master.component';
 import { FullBookingEntryComponent } from './modules/entry/booking/full-booking-entry/full-booking-entry.component';
-
+import { AddNewVendorInvoiceComponent } from './modules/entry/vendor-invoice-entry/add-new-vendor-invoice/add-new-vendor-invoice.component';
 export const routes: Routes = [
     {
         path: '',
         component: LayoutComponent,
         children: [
-            { path: 'bar', component: LoginComponent, canActivate: [AuthGuard]  },
-            { path: 'booking', component: BookingComponent, canActivate: [AuthGuard]  },
-            { path: 'full-booking', component: BookingComponent, data: { isFullBooking: true }, canActivate: [AuthGuard]  },
+            { path: 'bar', component: LoginComponent, canActivate: [AuthGuard] },
+            { path: 'booking', component: BookingComponent, canActivate: [AuthGuard] },
+            { path: 'full-booking', component: BookingComponent, data: { isFullBooking: true }, canActivate: [AuthGuard] },
             { path: 'add-booking', component: BookingEntryComponent, data: { isFullBooking: true }, canActivate: [AuthGuard] },
             { path: 'invoice-entry', component: InvoiceEntryComponent, canActivate: [AuthGuard] },
             { path: 'vendor-invoice-entry', component: VendorInvoiceEntryComponent, canActivate: [AuthGuard] },
-            { path: 'master/cartype', component: CarTypeMasterComponent, canActivate: [AuthGuard]},
-            { path: 'master/charges', component: ChargeListMasterComponent, canActivate: [AuthGuard]},
-            { path: 'master/driver', component: DriverMasterComponent, canActivate: [AuthGuard]},
-            { path: 'master/driverSalary', component: DriverSalarySetupMasterComponent, canActivate: [AuthGuard]},
-            { path: 'master/party', component: PartyMasterComponent, canActivate: [AuthGuard]},
+           //added 
+            {path: 'add-new-vendor-invoice', component: AddNewVendorInvoiceComponent,canActivate: [AuthGuard]},
+
+            { path: 'master/cartype', component: CarTypeMasterComponent, canActivate: [AuthGuard] },
+            { path: 'master/charges', component: ChargeListMasterComponent, canActivate: [AuthGuard] },
+            { path: 'master/driver', component: DriverMasterComponent, canActivate: [AuthGuard] },
+            { path: 'master/driverSalary', component: DriverSalarySetupMasterComponent, canActivate: [AuthGuard] },
+            { path: 'master/party', component: PartyMasterComponent, canActivate: [AuthGuard] },
             { path: 'voucher-entry', component: VoucherEntryComponent, canActivate: [AuthGuard] },
             { path: 'fuel-entry', component: FuelEntryComponent, canActivate: [AuthGuard] },
             { path: 'add-booking', component: BookingEntryComponent, canActivate: [AuthGuard] },
@@ -62,6 +65,6 @@ export const routes: Routes = [
         path: 'login',
         component: LoginComponent
     },
-    { path: '**', component: NotFoundComponent}
+    { path: '**', component: NotFoundComponent }
 
 ];
