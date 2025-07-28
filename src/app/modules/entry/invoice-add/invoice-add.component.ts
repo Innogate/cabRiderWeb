@@ -87,14 +87,19 @@ export class InvoiceAddComponent {
 
   ngOnInit() {
     this.invoiceForm = this.fb.group({
-      company: [null],
-      branch: [null],
-      party: [null],
-      city: [null],
-      billNo: ['NEW'],
-      billDate: [new Date()],
-      taxType: ['cgst'],
+      id:[null],
+      company_id: [null],
+      branch_id: [null],
+      party_id: [null],
+      City: [null],
+      BillNo: ['NEW'],
+      BillDate: [new Date()],
+      taxtype: ['cgst'],
       rcm: ['no'],
+      duty_type:[null],
+      branch:[null],
+      city_id:[null],
+
     });
   }
 

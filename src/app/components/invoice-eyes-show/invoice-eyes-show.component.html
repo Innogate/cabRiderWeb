@@ -1,0 +1,49 @@
+<p-dialog
+  [(visible)]="display"
+  [modal]="true"
+  [closable]="true"
+  header="Other Charges"
+  [style]="{ width: '65vw', marginTop: '0px' }"
+  [contentStyle]="{ padding: '0', margin: '0' }"
+  [baseZIndex]="10000"
+  styleClass="rounded-xl shadow-2xl overflow-hidden m-2 p-2 "
+  (onHide)="closeDialog()"
+>
+  <!-- Table Content -->
+  <div class="p-4">
+    <p-table
+      [value]="charges"
+      scrollable
+      scrollHeight="250px"
+      class="p-datatable-sm rounded-xl overflow-hidden shadow"
+      [style]="{ minWidth: '100%' }"
+    >
+      <ng-template pTemplate="header">
+        <tr class="bg-blue-700 text-white text-center text-sm">
+          <th><i class="pi pi-hashtag text-yellow-300 mr-1"></i> SNo</th>
+          <th><i class="pi pi-book text-pink-300 mr-1"></i> Booking No</th>
+          <th><i class="pi pi-calendar text-orange-300 mr-1"></i> Date</th>
+          <th><i class="pi pi-briefcase text-purple-300 mr-1"></i> Other Charges</th>
+          <th><i class="pi pi-wallet text-green-300 mr-1"></i> Amount</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-rowData let-i="rowIndex">
+        <tr class="text-center hover:bg-blue-100 transition duration-200">
+          <td class="py-2 font-semibold">{{ i + 1 }}</td>
+          <td>{{ rowData.bookingNo }}</td>
+          <td>{{ rowData.date }}</td>
+          <td>{{ rowData.otherCharges }}</td>
+          <td class="text-green-600 font-bold">₹ {{ rowData.amount }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</p-dialog>
+
+<!-- Dialog Header Template -->
+<ng-template #headerTemplate>
+  <div class="flex items-center gap-2 text-blue-700 text-xl font-bold">
+    <i class="pi pi-dollar text-yellow-400"></i>
+    <span>Other Charges</span>
+  </div>
+</ng-template>

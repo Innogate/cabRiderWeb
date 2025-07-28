@@ -81,31 +81,15 @@
 
           <div class="grid grid-cols-2 gap-4">
             <div>
-              <label class="label-icon"
-                ><i class="pi pi-map-marker text-purple-600"></i> From
-                City</label
-              >
-              <p-autoComplete
-                [suggestions]="filteredCities"
-                (completeMethod)="filterCities($event)"
-                (onSelect)="onCitySelect($event)"
-                field="CityName"
-                [dropdown]="true"
-                [forceSelection]="true"
-              ></p-autoComplete>
+              <label class="label-icon"><i class="pi pi-map-marker text-purple-600"></i> From
+                City</label>
+              <p-autoComplete (onselect)="onCitySelect($event)" [suggestions]="filteredCities" (completeMethod)="filterCities($event)" field="CityName"
+                [dropdown]="true" [forceSelection]="true"></p-autoComplete>
             </div>
             <div>
-              <label class="label-icon"
-                ><i class="pi pi-map text-green-600"></i> To City</label
-              >
-              <p-autoComplete
-                [suggestions]="filteredToCities"
-                (completeMethod)="filterToCities($event)"
-                (onSelect)="onToCitySelect($event)"
-                field="CityName"
-                [dropdown]="true"
-                [forceSelection]="true"
-              ></p-autoComplete>
+              <label class="label-icon"><i class="pi pi-map text-green-600"></i> To City</label>
+              <p-autoComplete (onselect)="onToCitySelect($event)" [suggestions]="filteredToCities" (completeMethod)="filterToCities($event)"
+                field="CityName" [dropdown]="true" [forceSelection]="true"></p-autoComplete>
             </div>
           </div>
 
@@ -113,19 +97,10 @@
             <label class="font-semibold text-gray-800 flex items-center gap-2">
               <i class="pi pi-car text-xl text-orange-600"></i> Car Type
             </label>
-            <p-autoComplete
-              (onSelect)="onCarTypeSelect($event)"
-              name="CarType"
-              [suggestions]="filteredCarTypes"
-              (completeMethod)="filterCarTypes($event)"
-              field="car_type"
-              [dropdown]="true"
-              [forceSelection]="true"
-              placeholder="Car Type *"
-              class="w-full"
-              inputStyleClass="w-full"
-              panelStyleClass="w-full"
-            ></p-autoComplete>
+            <p-autoComplete (onSelect)="onCarTypeSelect($event)" [suggestions]="filteredCarTypes"
+              (completeMethod)="filterCarTypes($event)" field="car_type" [dropdown]="true" [forceSelection]="true"
+              placeholder="Car Type *" class="w-full" inputStyleClass="w-full"
+              panelStyleClass="w-full"></p-autoComplete>
           </div>
 
           <div class="grid grid-cols-2 gap-4">

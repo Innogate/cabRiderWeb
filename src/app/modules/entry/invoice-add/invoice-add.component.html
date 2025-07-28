@@ -19,7 +19,7 @@
         <i class="pi pi-building text-blue-500 mr-2"></i>Select Company
       </label>
       <p-dropdown
-        formControlName="company"
+        formControlName="company_id"
         [options]="companies"
         placeholder="Select Company"
         class="w-full"
@@ -31,7 +31,7 @@
         <i class="pi pi-sitemap text-purple-500 mr-2"></i>Select Branch
       </label>
       <p-dropdown
-        formControlName="branch"
+        formControlName="branch_id"
         [options]="branches"
         placeholder="Select Branch"
         class="w-full"
@@ -43,7 +43,7 @@
         <i class="pi pi-users text-green-500 mr-2"></i>Select Party
       </label>
       <p-dropdown
-        formControlName="party"
+        formControlName="party_id"
         [options]="parties"
         placeholder="Select Party"
         class="w-full"
@@ -55,7 +55,7 @@
         <i class="pi pi-map-marker text-red-500 mr-2"></i>Select City
       </label>
       <p-dropdown
-        formControlName="city"
+        formControlName="city_id"
         [options]="cities"
         placeholder="Select City"
         class="w-full"
@@ -69,7 +69,7 @@
       <input
         type="text"
         pInputText
-        formControlName="billNo"
+        formControlName="BillNo"
         class="w-full bg-gray-50"
         readonly
       />
@@ -80,7 +80,7 @@
         <i class="pi pi-calendar text-indigo-500 mr-2"></i>Bill Date
       </label>
       <p-calendar
-        formControlName="billDate"
+        formControlName="BillDate"
         dateFormat="dd/mm/yy"
         class="w-full"
       ></p-calendar>
@@ -95,10 +95,10 @@
         <i class="pi pi-percentage text-pink-500 mr-2"></i>Tax Type
       </label>
       <div class="flex gap-6 items-center">
-        <p-radioButton inputId="cgst" name="taxType" value="cgst" formControlName="taxType"></p-radioButton>
+        <p-radioButton inputId="cgst" value="cgst" formControlName="taxtype"></p-radioButton>
         <label for="cgst" class="text-gray-600">CGST/SGST</label>
 
-        <p-radioButton inputId="igst" name="taxType" value="igst" formControlName="taxType"></p-radioButton>
+        <p-radioButton inputId="igst" value="igst" formControlName="taxtype"></p-radioButton>
         <label for="igst" class="text-gray-600">IGST</label>
       </div>
     </div>
@@ -110,10 +110,10 @@
           <i class="pi pi-briefcase text-orange-500 mr-2"></i>RCM
         </label>
         <div class="flex gap-6 items-center">
-          <p-radioButton inputId="rcmNo" name="rcm" value="no" formControlName="rcm"></p-radioButton>
+          <p-radioButton inputId="rcmNo" value="no" formControlName="rcm"></p-radioButton>
           <label for="rcmNo" class="text-gray-600">No</label>
 
-          <p-radioButton inputId="rcmYes" name="rcm" value="yes" formControlName="rcm"></p-radioButton>
+          <p-radioButton inputId="rcmYes" value="yes" formControlName="rcm"></p-radioButton>
           <label for="rcmYes" class="text-gray-600">Yes</label>
         </div>
       </div>

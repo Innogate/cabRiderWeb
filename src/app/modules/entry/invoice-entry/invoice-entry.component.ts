@@ -17,9 +17,11 @@ import { MessageService } from 'primeng/api';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { Dialog, DialogModule } from "primeng/dialog";
 import { Calendar, CalendarModule } from 'primeng/calendar';
+import { InvoiceEyesShowComponent } from '../../../components/invoice-eyes-show/invoice-eyes-show.component';
 @Component({
   selector: 'app-invoice-entry',
   imports: [
+    InvoiceEyesShowComponent,
     FormsModule,
     RadioButtonModule,
     TableModule,
@@ -37,6 +39,7 @@ import { Calendar, CalendarModule } from 'primeng/calendar';
 ],
   templateUrl: './invoice-entry.component.html',
   styleUrl: './invoice-entry.component.css',
+
 })
 export class InvoiceEntryComponent implements OnInit {
   invoices?: any;
@@ -133,4 +136,12 @@ goToAdd() {
     this.router.navigate(['/invoice-add'])
   }
 
+
+showInvoiceDetails = false;
+selectedInvoice: any = null;
+
+openInvoiceDetails(invoice: any) {
+  this.selectedInvoice = { ...invoice }; // ensure new reference
+  this.showInvoiceDetails = true;
+}
 }

@@ -143,19 +143,26 @@
           <td>{{ invoice.City }}</td>
           <td>{{ invoice.GrossAmount }}</td>
           <td>
-            <p-tag
-              [value]="invoice.OtherCharges ?? '0'"
-              severity="info"
-            ></p-tag>
+          <div
+            class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-blue-100 text-blue-700 text-sm border border-blue-300 cursor-pointer hover:shadow-md"
+            (click)="openInvoiceDetails(invoice)"
+          >
+            <i class="pi pi-eye text-blue-700"></i>
+            <span>{{ invoice.OtherCharges ?? '0' }}</span>
+          </div>
           </td>
           <td>{{ invoice.CGST }}</td>
           <td>{{ invoice.SGST }}</td>
           <td>{{ invoice.IGST }}</td>
           <td>
-            <p-tag
-              [value]="invoice.OtherCharges2 ?? '0'"
-              severity="success"
-            ></p-tag>
+          <div
+            class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-green-100 text-green-700 text-sm border border-green-300 cursor-pointer hover:shadow-md"
+            (click)="openInvoiceDetails(invoice)"
+          >
+            <i class="pi pi-eye text-green-700"></i>
+            <span>{{ invoice.OtherCharges2 ?? '0' }}</span>
+          </div>
+
           </td>
           <td>{{ invoice.NetAmount }}</td>
           <td>
@@ -209,5 +216,6 @@
   </div>
 </div>
 
+<app-invoice-eyes-show *ngIf="showInvoiceDetails" [invoice]="selectedInvoice" (close)="showInvoiceDetails = false"></app-invoice-eyes-show>
 
 
