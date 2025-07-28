@@ -304,7 +304,7 @@
       </div>
 
       <!-- Party & Vendor Rate Sections -->
-      <div class="grid grid-cols-2 gap-6">
+      <div class="grid grid-cols-2 gap-3">
         <div
           class="bg-white p-2 rounded-xl border border-green-400 bg-gradient-to-br from-green-50 via-white to-green-100"
         >
@@ -705,16 +705,6 @@
             <div class="border border-gray-300 p-1 rounded h-fit">
               <table class="w-full text-left">
                 <tbody>
-                  <tr class="border-b border-gray-300">
-                    <td class="p-2 font-medium text-gray-800">Cash</td>
-                    <td class="p-2">
-                      <p-checkbox
-                        formControlName="isCash"
-                        binary="true"
-                      ></p-checkbox>
-                    </td>
-                  </tr>
-
                   <tr class="border-b border-gray-300 bg-gray-200">
                     <td class="font-medium text-gray-800">KM Rate</td>
                     <td class="">
@@ -751,17 +741,6 @@
                     </td>
                   </tr>
 
-                  <tr class="border-b border-gray-300">
-                    <td class="font-medium text-gray-800">Advance</td>
-                    <td class="">
-                      <input
-                        type="number"
-                        pInputText
-                        formControlName="Advance"
-                        class="w-full"
-                      />
-                    </td>
-                  </tr>
 
                   <tr class="border-b border-gray-300">
                     <td class="p-2 font-medium text-gray-800">Net Amount</td>
@@ -968,7 +947,7 @@
                       <th>Pickup Address *</th>
                       <th>Drop Address *</th>
                       <th>Remarks</th>
-                      <th>Action</th>
+
                     </tr>
                   </ng-template>
                   <ng-template pTemplate="body" let-guest let-i="rowIndex">
@@ -1030,14 +1009,7 @@
                           placeholder="Remarks"
                         ></textarea>
                       </td>
-                      <td class="text-center">
-                        <button
-                          pButton
-                          icon="pi pi-trash"
-                          class="p-button-danger"
-                          (click)="removeGuest(i)"
-                        ></button>
-                      </td>
+
                     </tr>
                   </ng-template>
                 </p-table>

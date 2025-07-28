@@ -26,6 +26,8 @@ import { PartyRateMasterComponent } from './modules/master/party-rate-master/par
 import { VendorMasterComponent } from './modules/master/vendor-master/vendor-master.component';
 import { FullBookingEntryComponent } from './modules/entry/booking/full-booking-entry/full-booking-entry.component';
 import { AddNewVendorInvoiceComponent } from './modules/entry/vendor-invoice-entry/add-new-vendor-invoice/add-new-vendor-invoice.component';
+import { InvoiceEyesShowComponent } from './components/invoice-eyes-show/invoice-eyes-show.component';
+
 export const routes: Routes = [
     {
         path: '',
@@ -37,7 +39,7 @@ export const routes: Routes = [
             { path: 'add-booking', component: BookingEntryComponent, data: { isFullBooking: true }, canActivate: [AuthGuard] },
             { path: 'invoice-entry', component: InvoiceEntryComponent, canActivate: [AuthGuard] },
             { path: 'vendor-invoice-entry', component: VendorInvoiceEntryComponent, canActivate: [AuthGuard] },
-           //added 
+           //added
             {path: 'add-new-vendor-invoice', component: AddNewVendorInvoiceComponent,canActivate: [AuthGuard]},
 
             { path: 'master/cartype', component: CarTypeMasterComponent, canActivate: [AuthGuard] },
@@ -57,7 +59,9 @@ export const routes: Routes = [
             { path: 'invoice-register', component: InvoiceRegisterComponent, canActivate: [AuthGuard] },
             { path: 'master/partyRate', component: PartyRateMasterComponent, canActivate: [AuthGuard] },
             { path: 'invoice-add', component: InvoiceAddComponent, canActivate: [AuthGuard] },
+
             { path: 'master/vendor-master', component: VendorMasterComponent, canActivate: [AuthGuard] },
+
         ],
         canActivate: [AuthGuard]
     },

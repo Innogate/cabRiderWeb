@@ -360,4 +360,49 @@ goToAdd() {
     this.searchSubject.next(text);
     this.searchValue = text;
   }
+
+
+showChargesDialog: boolean = false;
+
+charges = [
+  {
+    name: 'Amit Shah',
+    amount: 250,
+    file: null,
+    filePreview: 'https://via.placeholder.com/80x60?text=Slip' // demo image
+  },
+  {
+    name: 'Nitin Gadkari',
+    amount: 180,
+    file: null,
+    filePreview: 'https://via.placeholder.com/80x60?text=Receipt' // demo image
+  }
+];
+
+onFileSelected(event: any, index: number) {
+  const file = event.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.charges[index].file = file;
+      this.charges[index].filePreview = reader.result as string;
+    };
+    reader.readAsDataURL(file);
+  }
+}
+
+mainImage: string | null = null;
+
+onMainImageChange(event: any) {
+  const file = event.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.mainImage = reader.result as string;
+    };
+    reader.readAsDataURL(file);
+  }
+}
+
+
 }

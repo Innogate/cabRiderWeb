@@ -17,9 +17,11 @@ import { MessageService } from 'primeng/api';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { Dialog, DialogModule } from "primeng/dialog";
 import { Calendar, CalendarModule } from 'primeng/calendar';
+import { InvoiceEyesShowComponent } from '../../../components/invoice-eyes-show/invoice-eyes-show.component';
 @Component({
   selector: 'app-invoice-entry',
   imports: [
+    InvoiceEyesShowComponent,
     FormsModule,
     RadioButtonModule,
     TableModule,
@@ -37,6 +39,7 @@ import { Calendar, CalendarModule } from 'primeng/calendar';
 ],
   templateUrl: './invoice-entry.component.html',
   styleUrl: './invoice-entry.component.css',
+
 })
 export class InvoiceEntryComponent implements OnInit {
   invoices?: any;
@@ -132,5 +135,48 @@ resetFilters() {
 goToAdd() {
     this.router.navigate(['/invoice-add'])
   }
+
+
+showInvoiceDetails = false;
+selectedInvoice: any = null;
+
+openInvoiceDetails(invoice: any) {
+  this.selectedInvoice = { ...invoice }; // ensure new reference
+  this.showInvoiceDetails = true;
+}
+
+editInvoice(invoice: any) {
+  this.router.navigate(['/invoice-add'], {
+    state: { editInvoice: invoice },
+  });
+}
+
+
+   // payment recived
+  showDialog = false;
+
+  rows = 10;
+  globalFilter = '';
+  entryOptions = [
+    { label: '5', value: 5 },
+    { label: '10', value: 10 },
+    { label: '20', value: 20 },
+  ];
+
+  payments = [
+
+    {
+     voucherNo: 'V123',
+      amount: 5000,
+      paymentReceived: 4500,
+      tdsAmount: 200,
+      discountAmount: 300
+    }
+  ];
+
+  openDialog() {
+    this.showDialog = true;
+  }
+
 
 }
