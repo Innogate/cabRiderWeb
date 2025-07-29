@@ -177,29 +177,28 @@ guestList = [
       Branch: [''],
       SelectRate: [''],
 
-      LGuest: this.fb.array([
-        this.createGuestFormGroup()
-      ])
+    postJsonData: this.fb.array([
+    this.createGuestFormGroup()
+  ])
 
     });
   }
 
-  createGuestFormGroup(): FormGroup {
-    return this.fb.group({
-      LGustName: [""],
-      LGustEmail: [""],
-      LContactNo: [""],
-      LContactNo2: [""],
-      LAddress: [""],
-      LAddressLat: [""],
-      LAddressLng: [""],
-      LDropAddress: [""],
-      LDropAddressLat: [""],
-      LDropAddressLng: [""],
-      LRemarks: [""],
-      lid: [""],
-    });
-  }
+createGuestFormGroup(): FormGroup {
+  return this.fb.group({
+      id: '',
+      GustName: "",
+      ContactNo: "",
+      Address: "",
+      Remarks: "",
+      AditionalContactNo: "",
+      DropAddress: "",
+      AddressLat: "",
+      AddressLng: "",
+      DropAddressLat: "",
+      DropAddressLng: ""
+  });
+}
 
 
 
