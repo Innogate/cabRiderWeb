@@ -305,11 +305,11 @@ guestList = [
   }
 
   addGuest() {
-    this.LGuest.push(this.createGuestFormGroup());
+    this.postJsonData.push(this.createGuestFormGroup());
   }
 
   removeGuest(index: number) {
-    this.LGuest.removeAt(index);
+    this.postJsonData.removeAt(index);
   }
 
   closeForm() {
@@ -422,7 +422,7 @@ guestList = [
     }
   }
 
-  get LGuest(): FormArray {
-    return this.bookingFrom.get('LGuest') as FormArray;
+  get postJsonData(): FormArray {
+    return this.bookingFrom.get('postJsonData') as FormArray;
   }
 }
