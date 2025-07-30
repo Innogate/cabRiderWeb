@@ -15,6 +15,7 @@ export class InvoiceService extends BaseService {
   }
 
   getBookingList(payload: any) {
+    console.log('Calling invoice.getBookings with:', payload);
     this.call('invoice.getBookings', payload);
   }
   protected handleMessage(msg: any): boolean {

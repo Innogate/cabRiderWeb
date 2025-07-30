@@ -1,38 +1,46 @@
-<div class="p-6 m-6 rounded-2xl  border border-blue-300 shadow-lg bg-gradient-to-r from-white to-blue-50">
+<div
+  class="p-6 m-6 rounded-2xl border border-blue-300 shadow-lg bg-gradient-to-r from-white to-blue-50"
+>
   <!-- 📄 Creative Header -->
-<div class="flex items-center justify-between mb-10">
-  <div class="flex items-center gap-4">
-    <!-- 🌟 Circle Icon -->
-    <div class="w-14 h-14 rounded-full bg-blue-100 flex items-center justify-center shadow-lg">
-      <i class="pi pi-calendar-plus text-2xl text-blue-700"></i>
-    </div>
+  <div class="flex items-center justify-between mb-10">
+    <div class="flex items-center gap-4">
+      <!-- 🌟 Circle Icon -->
+      <div
+        class="w-14 h-14 rounded-full bg-blue-100 flex items-center justify-center shadow-lg"
+      >
+        <i class="pi pi-calendar-plus text-2xl text-blue-700"></i>
+      </div>
 
-    <!-- 🔤 Title -->
-    <div class="relative">
-      <h1
-      class="text-2xl sm:text-3xl font-bold text-blue-900 flex items-center gap-2"
-    >
-      <i class="pi pi-file-invoice text-blue-600 text-3xl sm:text-2xl"></i>
-      Add Invoice
-    </h1>
-       <!-- Decorative underline -->
-    <div class="absolute -bottom-1 left-0 w-56 h-1 bg-gradient-to-r from-blue-500 to-blue-400 rounded-full"></div>
+      <!-- 🔤 Title -->
+      <div class="relative">
+        <h1
+          class="text-2xl sm:text-3xl font-bold text-blue-900 flex items-center gap-2"
+        >
+          <i class="pi pi-file-invoice text-blue-600 text-3xl sm:text-2xl"></i>
+          Add Invoice
+        </h1>
+        <!-- Decorative underline -->
+        <div
+          class="absolute -bottom-1 left-0 w-56 h-1 bg-gradient-to-r from-blue-500 to-blue-400 rounded-full"
+        ></div>
+      </div>
     </div>
   </div>
-</div>
-
 
   <!-- 🧾 Form -->
   <form [formGroup]="invoiceForm" class="p-8 bg-white rounded-2xl border">
-
     <!-- Company Info -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
       <div>
         <label class="block text-gray-700 font-semibold mb-1">
           <i class="pi pi-building text-blue-500 mr-2"></i>Select Company
         </label>
-        <p-dropdown formControlName="company_id" [options]="companies" placeholder="Select Company"
-          class="w-full"></p-dropdown>
+        <p-dropdown
+          formControlName="company_id"
+          [options]="companies"
+          placeholder="Select Company"
+          class="w-full"
+        ></p-dropdown>
       </div>
 
       <div>
@@ -40,31 +48,31 @@
           <i class="pi pi-sitemap text-purple-500 mr-2"></i>Select Branch
         </label>
         <p-autoComplete
-              [suggestions]="filteredBranches"
-              (completeMethod)="filterBranches($event)"
-              (onSelect)="onBranchSelect($event)"
-              field="branch_name"
-              [(ngModel)]="selectedBranchModel"
-              [ngModelOptions]="{ standalone: true }"
-              [dropdown]="true"
-              [forceSelection]="true"
-            ></p-autoComplete>
+          [suggestions]="filteredBranches"
+          (completeMethod)="filterBranches($event)"
+          (onSelect)="onBranchSelect($event)"
+          field="branch_name"
+          [(ngModel)]="selectedBranchModel"
+          [ngModelOptions]="{ standalone: true }"
+          [dropdown]="true"
+          [forceSelection]="true"
+        ></p-autoComplete>
       </div>
 
       <div>
         <label class="block text-gray-700 font-semibold mb-1">
           <i class="pi pi-users text-green-500 mr-2"></i>Select Party
         </label>
-         <p-autoComplete
-              [suggestions]="filteredPartyName"
-              (completeMethod)="filterPartyName($event)"
-              (onSelect)="onPartyNameSelect($event)"
-              [(ngModel)]="selectedPartyModel"
-              [ngModelOptions]="{ standalone: true }"
-              field="party_name"
-              [dropdown]="true"
-              placeholder="Party *"
-            ></p-autoComplete>
+        <p-autoComplete
+          [suggestions]="filteredPartyName"
+          (completeMethod)="filterPartyName($event)"
+          (onSelect)="onPartyNameSelect($event)"
+          [(ngModel)]="selectedPartyModel"
+          [ngModelOptions]="{ standalone: true }"
+          field="party_name"
+          [dropdown]="true"
+          placeholder="Party *"
+        ></p-autoComplete>
       </div>
 
       <div>
@@ -72,23 +80,28 @@
           <i class="pi pi-map-marker text-red-500 mr-2"></i>Select City
         </label>
         <p-autoComplete
-                    [suggestions]="filteredCities"
-                    (completeMethod)="filterCities($event)"
-                    (onSelect)="onCitySelect($event)"
-                    field="CityName"
-                    [(ngModel)]="selectedCityModel"
-                    [ngModelOptions]="{ standalone: true }"
-                    [dropdown]="true"
-                    [forceSelection]="true"
-                  ></p-autoComplete>
-
+          [suggestions]="filteredCities"
+          (completeMethod)="filterCities($event)"
+          (onSelect)="onCitySelect($event)"
+          field="CityName"
+          [(ngModel)]="selectedCityModel"
+          [ngModelOptions]="{ standalone: true }"
+          [dropdown]="true"
+          [forceSelection]="true"
+        ></p-autoComplete>
       </div>
 
       <div>
         <label class="block text-gray-700 font-semibold mb-1">
           <i class="pi pi-tag text-yellow-500 mr-2"></i>Bill No
         </label>
-        <input type="text" pInputText formControlName="BillNo" class="w-full !bg-gray-200" readonly />
+        <input
+          type="text"
+          pInputText
+          formControlName="BillNo"
+          class="w-full !bg-gray-200"
+          readonly
+        />
       </div>
 
       <div>
@@ -96,12 +109,12 @@
           <i class="pi pi-calendar text-indigo-500 mr-2"></i>Bill Date
         </label>
 
-           <input
-                    type="date"
-                    formControlName="BillDate"
-                    dateFormat="dd/mm/yy"
-                    class="w-full border border-gray-300 p-2 rounded text-gray-800"
-                  />
+        <input
+          type="date"
+          formControlName="BillDate"
+          dateFormat="dd/mm/yy"
+          class="w-full border border-gray-300 p-2 rounded text-gray-800"
+        />
       </div>
     </div>
 
@@ -113,160 +126,309 @@
           <i class="pi pi-percentage text-pink-500 mr-2"></i>Tax Type
         </label>
         <div class="flex gap-6 items-center">
-          <p-radioButton inputId="cgst" value="cgst" formControlName="taxtype"></p-radioButton>
+          <p-radioButton
+            inputId="cgst"
+            value="cgst"
+            formControlName="taxtype"
+          ></p-radioButton>
           <label for="cgst" class="text-gray-600">CGST/SGST</label>
 
-          <p-radioButton inputId="igst" value="igst" formControlName="taxtype"></p-radioButton>
+          <p-radioButton
+            inputId="igst"
+            value="igst"
+            formControlName="taxtype"
+          ></p-radioButton>
           <label for="igst" class="text-gray-600">IGST</label>
         </div>
       </div>
 
       <!-- RCM + Add Duty -->
-      <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+      <div
+        class="flex flex-col md:flex-row md:items-end md:justify-between gap-6"
+      >
         <div>
           <label class="block font-semibold text-gray-700 mb-2">
             <i class="pi pi-briefcase text-orange-500 mr-2"></i>RCM
           </label>
           <div class="flex gap-6 items-center">
-            <p-radioButton inputId="rcmNo" value="no" formControlName="rcm"></p-radioButton>
+            <p-radioButton
+              inputId="rcmNo"
+              value="no"
+              formControlName="rcm"
+            ></p-radioButton>
             <label for="rcmNo" class="text-gray-600">No</label>
 
-            <p-radioButton inputId="rcmYes" value="yes" formControlName="rcm"></p-radioButton>
+            <p-radioButton
+              inputId="rcmYes"
+              value="yes"
+              formControlName="rcm"
+            ></p-radioButton>
             <label for="rcmYes" class="text-gray-600">Yes</label>
           </div>
         </div>
 
         <!-- Add Duty Button -->
         <div class="self-end">
-          <button pButton type="button" icon="pi pi-plus-circle" label="Add Duty"
+          <button
+            pButton
+            type="button"
+            icon="pi pi-plus-circle"
+            label="Add Duty"
             class="p-button-success px-4 py-2 text-base shadow-md hover:scale-105 transition-transform"
-            (click)="displayDuty = true"></button>
+            (click)="displayDuty = true"
+          ></button>
         </div>
       </div>
     </div>
 
-   <!-- ✅ Show when RCM is YES -->
-<div *ngIf="invoiceForm.get('rcm')?.value === 'yes'" class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-10">
+    <!-- ✅ Show when RCM is YES -->
+    <div
+      *ngIf="invoiceForm.get('rcm')?.value === 'yes'"
+      class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-10"
+    >
+      <!-- 🌟 Left Side: Charges Table -->
+      <div class="bg-white rounded-2xl border border-blue-300 p-4">
+        <h3
+          class="text-xl font-bold text-blue-700 mb-4 flex items-center gap-2"
+        >
+          <i class="pi pi-dollar text-yellow-500"></i>
+          Other Charges
+        </h3>
 
-  <!-- 🌟 Left Side: Charges Table -->
-  <div class="bg-white rounded-2xl border border-blue-300 p-4">
-    <h3 class="text-xl font-bold text-blue-700 mb-4 flex items-center gap-2">
-      <i class="pi pi-dollar text-yellow-500"></i>
-      Other Charges
-    </h3>
-
-    <p-table [value]="charges" [responsiveLayout]="'scroll'" class="p-datatable-sm rounded-lg">
-      <ng-template pTemplate="header">
-        <tr class="bg-blue-100 text-blue-800 text-sm">
-          <th>SINo <span class="text-red-500">*</span></th>
-          <th>Other Charges <span class="text-red-500">*</span></th>
-          <th>Amount <span class="text-red-500">*</span></th>
-        </tr>
-      </ng-template>
-      <ng-template pTemplate="body" let-row let-i="rowIndex">
-        <tr class="hover:bg-blue-50">
-          <td>{{ i + 1 }}</td>
-          <td>{{ row.name }}</td>
-          <td>₹{{ row.amount }}</td>
-        </tr>
-      </ng-template>
-    </p-table>
-  </div>
-
-  <!-- 📋 Right Side: Calculation Fields -->
-  <div class="bg-white rounded-2xl border border-blue-300 p-6">
-    <h3 class="text-xl font-bold text-blue-700 mb-4 flex items-center gap-2">
-      <i class="pi pi-calculator text-green-600"></i>
-      Calculation Summary
-    </h3>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <div>
-        <label class="font-semibold text-gray-700 mb-1 block">Gross Amount</label>
-        <input type="number" pInputText formControlName="GrossAmount" class="w-full !bg-gray-200" readonly/>
+        <p-table
+          [value]="charges"
+          [responsiveLayout]="'scroll'"
+          class="p-datatable-sm rounded-lg"
+        >
+          <ng-template pTemplate="header">
+            <tr class="bg-blue-100 text-blue-800 text-sm">
+              <th>SINo <span class="text-red-500">*</span></th>
+              <th>Other Charges <span class="text-red-500">*</span></th>
+              <th>Amount <span class="text-red-500">*</span></th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-row let-i="rowIndex">
+            <tr class="hover:bg-blue-50">
+              <td>{{ i + 1 }}</td>
+              <td>{{ row.name }}</td>
+              <td>₹{{ row.amount }}</td>
+            </tr>
+          </ng-template>
+        </p-table>
       </div>
 
-      <div>
-        <label class="font-semibold text-gray-700 mb-1 block">Taxable Other Charges</label>
-        <input type="number" pInputText formControlName="OtherCharges" class="w-full !bg-gray-200" readonly />
+      <!-- 📋 Right Side: Calculation Fields -->
+      <div class="bg-white rounded-2xl border border-blue-300 p-6">
+        <h3
+          class="text-xl font-bold text-blue-700 mb-4 flex items-center gap-2"
+        >
+          <i class="pi pi-calculator text-green-600"></i>
+          Calculation Summary
+        </h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label class="font-semibold text-gray-700 mb-1 block"
+              >Gross Amount</label
+            >
+            <input
+              type="number"
+              pInputText
+              formControlName="GrossAmount"
+              class="w-full !bg-gray-200"
+              readonly
+            />
+          </div>
+
+          <div>
+            <label class="font-semibold text-gray-700 mb-1 block"
+              >Taxable Other Charges</label
+            >
+            <input
+              type="number"
+              pInputText
+              formControlName="OtherCharges"
+              class="w-full !bg-gray-200"
+              readonly
+            />
+          </div>
+
+          <div>
+            <label class="font-semibold text-gray-700 mb-1 block"
+              >Discount</label
+            >
+            <input
+              type="number"
+              pInputText
+              formControlName="Discount"
+              class="w-full"
+            />
+          </div>
+
+          <div>
+            <label class="font-semibold text-gray-700 mb-1 block"
+              >CGST (%)</label
+            >
+            <input
+              type="number"
+              pInputText
+              formControlName="CGSTPer"
+              class="w-full"
+            />
+          </div>
+
+          <div>
+            <label class="font-semibold text-gray-700 mb-1 block"
+              >CGST Amount</label
+            >
+            <input
+              type="number"
+              pInputText
+              formControlName="CGST"
+              class="w-full !bg-gray-200"
+              readonly
+            />
+          </div>
+
+          <div>
+            <label class="font-semibold text-gray-700 mb-1 block"
+              >SGST (%)</label
+            >
+            <input
+              type="number"
+              pInputText
+              formControlName="SGSTPer"
+              class="w-full"
+            />
+          </div>
+
+          <div>
+            <label class="font-semibold text-gray-700 mb-1 block"
+              >SGST Amount</label
+            >
+            <input
+              type="number"
+              pInputText
+              formControlName="SGST"
+              class="w-full !bg-gray-200"
+              readonly
+            />
+          </div>
+
+          <div>
+            <label class="font-semibold text-gray-700 mb-1 block"
+              >Non-Taxable Other Charges</label
+            >
+            <input
+              type="number"
+              pInputText
+              formControlName="OtherCharges2"
+              class="w-full !bg-gray-200"
+              readonly
+            />
+          </div>
+
+          <div>
+            <label class="font-semibold text-gray-700 mb-1 block"
+              >Round Off</label
+            >
+            <input
+              type="number"
+              pInputText
+              formControlName="RoundOff"
+              class="w-full !bg-gray-200"
+              readonly
+            />
+          </div>
+
+          <div>
+            <label class="font-semibold text-gray-700 mb-1 block"
+              >Net Amount</label
+            >
+            <input
+              type="number"
+              pInputText
+              formControlName="NetAmount"
+              class="w-full text-green-700 font-semibold !bg-gray-200"
+              readonly
+            />
+          </div>
+        </div>
+        <div>
+          <label class="font-semibold text-gray-700 mb-1 block">Advance</label>
+          <input
+            type="number"
+            pInputText
+            formControlName="Advance"
+            class="w-full"
+          />
+        </div>
       </div>
-
-      <div>
-        <label class="font-semibold text-gray-700 mb-1 block">Discount</label>
-        <input type="number" pInputText formControlName="Discount" class="w-full" />
-      </div>
-
-      <div>
-        <label class="font-semibold text-gray-700 mb-1 block">CGST (%)</label>
-        <input type="number" pInputText formControlName="CGSTPer" class="w-full" />
-      </div>
-
-      <div>
-        <label class="font-semibold text-gray-700 mb-1 block">CGST Amount</label>
-        <input type="number" pInputText formControlName="CGST" class="w-full !bg-gray-200" readonly />
-      </div>
-
-      <div>
-        <label class="font-semibold text-gray-700 mb-1 block">SGST (%)</label>
-        <input type="number" pInputText formControlName="SGSTPer" class="w-full" />
-      </div>
-
-      <div>
-        <label class="font-semibold text-gray-700 mb-1 block">SGST Amount</label>
-        <input type="number" pInputText formControlName="SGST" class="w-full !bg-gray-200" readonly />
-      </div>
-
-      <div>
-        <label class="font-semibold text-gray-700 mb-1 block">Non-Taxable Other Charges</label>
-        <input type="number" pInputText formControlName="OtherCharges2" class="w-full !bg-gray-200" readonly />
-      </div>
-
-      <div>
-        <label class="font-semibold text-gray-700 mb-1 block">Round Off</label>
-        <input type="number" pInputText formControlName="RoundOff" class="w-full !bg-gray-200" readonly/>
-      </div>
-
-      <div>
-        <label class="font-semibold text-gray-700 mb-1 block">Net Amount</label>
-        <input type="number" pInputText formControlName="NetAmount" class="w-full text-green-700 font-semibold !bg-gray-200" readonly />
-      </div>
-
-
     </div>
-    <div>
-        <label class="font-semibold text-gray-700 mb-1 block">Advance</label>
-        <input type="number" pInputText formControlName="Advance" class="w-full" />
-      </div>
-  </div>
-</div>
-
-
   </form>
 
-
-  <!-- 📋 Table -->
-  <div class=" p-4 rounded-xl bg-white mt-6 border ">
-    <p-table [value]="invoices" [paginator]="true" [rows]="10" [responsiveLayout]="'scroll'" [resizableColumns]="true"
-      [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-      class="p-datatable-gridlines rounded-xl">
+  <!-- 📋 add Table -->
+  <div class="p-4 rounded-xl bg-white mt-6 border">
+    <p-table
+      [value]="invoices"
+      [paginator]="true"
+      [rows]="10"
+      [responsiveLayout]="'scroll'"
+      [resizableColumns]="true"
+      [showCurrentPageReport]="true"
+      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+      class="p-datatable-gridlines rounded-xl"
+    >
       <ng-template pTemplate="header">
-        <tr class=" bg-blue-500 text-gray-800 text-sm font-semibold">
-          <th class="py-3 px-4"><i class="pi pi-sort-numeric-up text-blue-500 mr-1"></i> SI No.</th>
-          <th class="py-3 px-4"><i class="pi pi-id-card text-green-600 mr-1"></i> Slip No.</th>
-          <th class="py-3 px-4"><i class="pi pi-briefcase text-purple-600 mr-1"></i> Duty Type</th>
-          <th class="py-3 px-4"><i class="pi pi-car text-orange-500 mr-1"></i> Car No.</th>
-          <th class="py-3 px-4"><i class="pi pi-cog text-gray-700 mr-1"></i> Car Type</th>
-          <th class="py-3 px-4"><i class="pi pi-building text-pink-600 mr-1"></i> Project</th>
-          <th class="py-3 px-4"><i class="pi pi-user text-indigo-600 mr-1"></i> Guest Name</th>
-          <th class="py-3 px-4"><i class="pi pi-calendar text-teal-600 mr-1"></i> From Date</th>
-          <th class="py-3 px-4"><i class="pi pi-calendar-times text-red-600 mr-1"></i> To Date</th>
-          <th class="py-3 px-4"><i class="pi pi-clock text-yellow-600 mr-1"></i> From Time</th>
-          <th class="py-3 px-4"><i class="pi pi-clock text-yellow-700 mr-1"></i> To Time</th>
-          <th class="py-3 px-4"><i class="pi pi-directions text-blue-700 mr-1"></i> From KM</th>
-          <th class="py-3 px-4"><i class="pi pi-directions-alt text-blue-800 mr-1"></i> To KM</th>
-          <th class="py-3 px-4"><i class="pi pi-stopwatch text-lime-600 mr-1"></i> Total Time</th>
-          <th class="py-3 px-4"><i class="pi pi-compass text-cyan-600 mr-1"></i> Total KM</th>
-          <th class="py-3 px-4"><i class="pi pi-cog text-red-500 mr-1"></i> Action</th>
+        <tr class="bg-blue-500 text-gray-800 text-sm font-semibold">
+          <th class="py-3 px-4">
+            <i class="pi pi-sort-numeric-up text-blue-500 mr-1"></i> SI No.
+          </th>
+          <th class="py-3 px-4">
+            <i class="pi pi-id-card text-green-600 mr-1"></i> Slip No.
+          </th>
+          <th class="py-3 px-4">
+            <i class="pi pi-briefcase text-purple-600 mr-1"></i> Duty Type
+          </th>
+          <th class="py-3 px-4">
+            <i class="pi pi-car text-orange-500 mr-1"></i> Car No.
+          </th>
+          <th class="py-3 px-4">
+            <i class="pi pi-cog text-gray-700 mr-1"></i> Car Type
+          </th>
+          <th class="py-3 px-4">
+            <i class="pi pi-building text-pink-600 mr-1"></i> Project
+          </th>
+          <th class="py-3 px-4">
+            <i class="pi pi-user text-indigo-600 mr-1"></i> Guest Name
+          </th>
+          <th class="py-3 px-4">
+            <i class="pi pi-calendar text-teal-600 mr-1"></i> From Date
+          </th>
+          <th class="py-3 px-4">
+            <i class="pi pi-calendar-times text-red-600 mr-1"></i> To Date
+          </th>
+          <th class="py-3 px-4">
+            <i class="pi pi-clock text-yellow-600 mr-1"></i> From Time
+          </th>
+          <th class="py-3 px-4">
+            <i class="pi pi-clock text-yellow-700 mr-1"></i> To Time
+          </th>
+          <th class="py-3 px-4">
+            <i class="pi pi-directions text-blue-700 mr-1"></i> From KM
+          </th>
+          <th class="py-3 px-4">
+            <i class="pi pi-directions-alt text-blue-800 mr-1"></i> To KM
+          </th>
+          <th class="py-3 px-4">
+            <i class="pi pi-stopwatch text-lime-600 mr-1"></i> Total Time
+          </th>
+          <th class="py-3 px-4">
+            <i class="pi pi-compass text-cyan-600 mr-1"></i> Total KM
+          </th>
+          <th class="py-3 px-4">
+            <i class="pi pi-cog text-red-500 mr-1"></i> Action
+          </th>
         </tr>
       </ng-template>
 
@@ -289,12 +451,24 @@
           <td class="py-2 px-3">{{ invoice.totalKm }}</td>
           <td class="py-2 px-3">
             <div class="flex gap-2 justify-center">
-              <button pButton icon="pi pi-pencil" class="p-button-sm p-button-warning p-button-rounded"
-                pTooltip="Edit"></button>
-              <button pButton icon="pi pi-trash" class="p-button-sm p-button-danger p-button-rounded"
-                pTooltip="Delete"></button>
-              <button pButton icon="pi pi-print" class="p-button-sm p-button-info p-button-rounded"
-                pTooltip="Print"></button>
+              <button
+                pButton
+                icon="pi pi-pencil"
+                class="p-button-sm p-button-warning p-button-rounded"
+                pTooltip="Edit"
+              ></button>
+              <button
+                pButton
+                icon="pi pi-trash"
+                class="p-button-sm p-button-danger p-button-rounded"
+                pTooltip="Delete"
+              ></button>
+              <button
+                pButton
+                icon="pi pi-print"
+                class="p-button-sm p-button-info p-button-rounded"
+                pTooltip="Print"
+              ></button>
             </div>
           </td>
         </tr>
@@ -305,111 +479,176 @@
   <!-- ✅ Save Button -->
   <div class="text-right mt-6">
     <button
-  pButton
-  type="submit"
-  (click)="save()"
-  label="{{ isEditMode ? 'Update Invoice' : 'Save Invoice' }}"
-  icon="{{ isEditMode ? 'pi pi-save' : 'pi pi-plus' }}"
-></button>
+      pButton
+      type="submit"
+      (click)="save()"
+      label="{{ isEditMode ? 'Update Invoice' : 'Save Invoice' }}"
+      icon="{{ isEditMode ? 'pi pi-save' : 'pi pi-plus' }}"
+    ></button>
   </div>
 </div>
 
-
-
-
 <!-- Add duty -->
 
-<p-dialog [(visible)]="displayDuty" [modal]="true" [style]="{ width: '90vw' }"
-  [breakpoints]="{ '960px': '95vw', '640px': '100vw' }" [closable]="true" [dismissableMask]="true"
-  [contentStyle]="{ padding: '0' }">
-
+<p-dialog
+  [(visible)]="displayDuty"
+  [modal]="true"
+  [style]="{ width: '90vw' }"
+  [breakpoints]="{ '960px': '95vw', '640px': '100vw' }"
+  [closable]="true"
+  [dismissableMask]="true"
+  [contentStyle]="{ padding: '0' }"
+>
   <ng-template pTemplate="header">
     <div class="flex items-center gap-3 text-blue-700 font-extrabold text-xl">
-      <span class="w-10 h-10 bg-blue-200 rounded-full flex items-center justify-center shadow-sm">
+      <span
+        class="w-10 h-10 bg-blue-200 rounded-full flex items-center justify-center shadow-sm"
+      >
         <i class="pi pi-calendar-plus text-lg"></i>
       </span>
       <span>Add Duty</span>
     </div>
   </ng-template>
 
-  <div class="p-4 bg-gradient-to-br from-white via-sky-50 to-blue-50 rounded-xl">
-
+  <div
+    class="p-4 bg-gradient-to-br from-white via-sky-50 to-blue-50 rounded-xl"
+  >
     <!-- 🔍 Filter Section -->
-    <div class="bg-white p-4 rounded-xl border flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-5">
-
+    <div
+      class="bg-white p-4 rounded-xl border flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-5"
+    >
       <!-- Show Dropdown -->
       <div class="flex items-center gap-3 w-full md:w-auto">
         <i class="pi pi-eye text-blue-600 text-lg"></i>
-        <label class="font-semibold text-gray-700 whitespace-nowrap">Show:</label>
-        <p-dropdown [options]="show" [(ngModel)]="selectedShow" placeholder="Show" [showClear]="true"
-          class="w-full min-w-[200px]"></p-dropdown>
+        <label class="font-semibold text-gray-700 whitespace-nowrap"
+          >Show:</label
+        >
+        <p-dropdown
+          [options]="show"
+          [(ngModel)]="selectedShow"
+          placeholder="Show"
+          [showClear]="true"
+          class="w-full min-w-[200px]"
+        ></p-dropdown>
       </div>
 
       <!-- Search Field + Button -->
       <div class="flex items-center gap-3 w-full md:w-auto max-w-md">
         <i class="pi pi-search text-blue-600 text-lg"></i>
         <span class="p-input-icon-left w-full">
-          <input pInputText type="text" placeholder="Search Invoices..."
+          <input
+            pInputText
+            type="text"
+            placeholder="Search Invoices..."
             class="w-full border border-blue-200 focus:ring-2 focus:ring-blue-400 rounded-lg"
-            [(ngModel)]="searchText" />
+            [(ngModel)]="searchText"
+          />
         </span>
-        <button pButton type="button" icon="pi pi-search"
+        <button
+          pButton
+          type="button"
+          icon="pi pi-search"
           class="p-button-info p-button-rounded px-4 py-3 text-base hover:scale-105 transition-transform shadow-md"
-          (click)="searchInvoices()"></button>
+          (click)="searchInvoices()"
+        ></button>
       </div>
     </div>
 
     <!-- 📋 Table Section -->
     <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-lg">
-      <p-table [value]="invoices" [paginator]="true" [rows]="10" [responsiveLayout]="'scroll'" [resizableColumns]="true"
-        [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-        class="p-datatable-gridlines rounded-xl">
+      <p-table
+        [value]="dutyTableData"
+        [paginator]="true"
+        [totalRecords]="totalRecords"
+        [loading]=""
+        [paginator]="true"
+        [rows]="10"
+        [responsiveLayout]="'scroll'"
+        [resizableColumns]="true"
+        [showCurrentPageReport]="true"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+        class="p-datatable-gridlines rounded-xl"
+      >
         <!-- Table Header -->
         <ng-template pTemplate="header">
           <tr class="bg-blue-100 text-gray-800 text-sm font-semibold">
-            <th class="py-2 px-3"><i class="pi pi-check-square text-blue-500"></i></th>
-            <th class="py-2 px-3"><i class="pi pi-sort-numeric-up text-cyan-600 mr-1"></i> SI No.</th>
-            <th class="py-2 px-3"><i class="pi pi-id-card text-green-600 mr-1"></i> Slip No.</th>
-            <th class="py-2 px-3"><i class="pi pi-briefcase text-indigo-600 mr-1"></i> Duty Type</th>
-            <th class="py-2 px-3"><i class="pi pi-car text-orange-500 mr-1"></i> Car No.</th>
-            <th class="py-2 px-3"><i class="pi pi-cog text-gray-700 mr-1"></i> Car Type</th>
-            <th class="py-2 px-3"><i class="pi pi-building text-pink-600 mr-1"></i> Project</th>
-            <th class="py-2 px-3"><i class="pi pi-user text-purple-600 mr-1"></i> Guest Name</th>
-            <th class="py-2 px-3"><i class="pi pi-calendar text-teal-600 mr-1"></i> From Date</th>
-            <th class="py-2 px-3"><i class="pi pi-calendar text-red-600 mr-1"></i> To Date</th>
-            <th class="py-2 px-3"><i class="pi pi-clock text-yellow-600 mr-1"></i> From Time</th>
-            <th class="py-2 px-3"><i class="pi pi-clock text-yellow-600 mr-1"></i> To Time</th>
-            <th class="py-2 px-3"><i class="pi pi-directions text-gray-600 mr-1"></i> From KM</th>
-            <th class="py-2 px-3"><i class="pi pi-directions-alt text-gray-600 mr-1"></i> To KM</th>
-            <th class="py-2 px-3"><i class="pi pi-stopwatch text-lime-600 mr-1"></i> Total Time</th>
-            <th class="py-2 px-3"><i class="pi pi-compass text-lime-600 mr-1"></i> Total KM</th>
-            <th class="py-2 px-3"><i class="pi pi-wallet text-emerald-600 mr-1"></i> Net Amount</th>
+            <th class="py-2 px-3">
+              <i class="pi pi-check-square text-blue-500"></i>
+            </th>
+            <th class="py-2 px-3">
+              <i class="pi pi-sort-numeric-up text-cyan-600 mr-1"></i> SI No.
+            </th>
+            <th class="py-2 px-3">
+              <i class="pi pi-id-card text-green-600 mr-1"></i> Slip No.
+            </th>
+            <th class="py-2 px-3">
+              <i class="pi pi-briefcase text-indigo-600 mr-1"></i> Duty Type
+            </th>
+            <th class="py-2 px-3">
+              <i class="pi pi-car text-orange-500 mr-1"></i> Car No.
+            </th>
+            <th class="py-2 px-3">
+              <i class="pi pi-cog text-gray-700 mr-1"></i> Car Type
+            </th>
+            <th class="py-2 px-3">
+              <i class="pi pi-building text-pink-600 mr-1"></i> Project
+            </th>
+            <th class="py-2 px-3">
+              <i class="pi pi-user text-purple-600 mr-1"></i> Guest Name
+            </th>
+            <th class="py-2 px-3">
+              <i class="pi pi-calendar text-teal-600 mr-1"></i> From Date
+            </th>
+            <th class="py-2 px-3">
+              <i class="pi pi-calendar text-red-600 mr-1"></i> To Date
+            </th>
+            <th class="py-2 px-3">
+              <i class="pi pi-clock text-yellow-600 mr-1"></i> From Time
+            </th>
+            <th class="py-2 px-3">
+              <i class="pi pi-clock text-yellow-600 mr-1"></i> To Time
+            </th>
+            <th class="py-2 px-3">
+              <i class="pi pi-directions text-gray-600 mr-1"></i> From KM
+            </th>
+            <th class="py-2 px-3">
+              <i class="pi pi-directions-alt text-gray-600 mr-1"></i> To KM
+            </th>
+            <th class="py-2 px-3">
+              <i class="pi pi-stopwatch text-lime-600 mr-1"></i> Total Time
+            </th>
+            <th class="py-2 px-3">
+              <i class="pi pi-compass text-lime-600 mr-1"></i> Total KM
+            </th>
+            <th class="py-2 px-3">
+              <i class="pi pi-wallet text-emerald-600 mr-1"></i> Net Amount
+            </th>
           </tr>
         </ng-template>
 
         <!-- Table Body -->
-        <ng-template pTemplate="body" let-invoice>
+        <ng-template pTemplate="body" let-dutyTableData>
           <tr class="hover:bg-blue-50 transition-all text-sm">
             <td class="py-2 px-3">
-              <input type="checkbox" [(ngModel)]="invoice.selected" />
+              <input type="checkbox" [(ngModel)]="dutyTableData.selected" />
             </td>
-            <td class="py-2 px-3">{{ invoice.siNo }}</td>
-            <td class="py-2 px-3">{{ invoice.slipNo }}</td>
-            <td class="py-2 px-3">{{ invoice.dutyType }}</td>
-            <td class="py-2 px-3">{{ invoice.carNo }}</td>
-            <td class="py-2 px-3">{{ invoice.carType }}</td>
-            <td class="py-2 px-3">{{ invoice.project }}</td>
-            <td class="py-2 px-3">{{ invoice.guestName }}</td>
-            <td class="py-2 px-3">{{ invoice.fromDate }}</td>
-            <td class="py-2 px-3">{{ invoice.toDate }}</td>
-            <td class="py-2 px-3">{{ invoice.fromTime }}</td>
-            <td class="py-2 px-3">{{ invoice.toTime }}</td>
-            <td class="py-2 px-3">{{ invoice.fromKm }}</td>
-            <td class="py-2 px-3">{{ invoice.toKm }}</td>
-            <td class="py-2 px-3">{{ invoice.totalTime }}</td>
-            <td class="py-2 px-3">{{ invoice.totalKm }}</td>
+            <td class="py-2 px-3">{{ dutyTableData.siNo }}</td>
+            <td class="py-2 px-3">{{ dutyTableData.SlipNo }}</td>
+            <td class="py-2 px-3">{{ dutyTableData.Duty_Type }}</td>
+            <td class="py-2 px-3">{{ dutyTableData.CarNo }}</td>
+            <td class="py-2 px-3">{{ dutyTableData.carType }}</td>
+            <td class="py-2 px-3">{{ dutyTableData.project }}</td>
+            <td class="py-2 px-3">{{ dutyTableData.guestName }}</td>
+            <td class="py-2 px-3">{{ dutyTableData.fromDate }}</td>
+            <td class="py-2 px-3">{{ dutyTableData.toDate }}</td>
+            <td class="py-2 px-3">{{ dutyTableData.fromTime }}</td>
+            <td class="py-2 px-3">{{ dutyTableData.toTime }}</td>
+            <td class="py-2 px-3">{{ dutyTableData.fromKm }}</td>
+            <td class="py-2 px-3">{{ dutyTableData.toKm }}</td>
+            <td class="py-2 px-3">{{ dutyTableData.totalTime }}</td>
+            <td class="py-2 px-3">{{ dutyTableData.totalKm }}</td>
             <td class="py-2 px-3 font-semibold text-right text-green-600">
-              ₹{{ invoice.netAmount | number: '1.2-2' }}
+              ₹{{ dutyTableData.netAmount | number : "1.2-2" }}
             </td>
           </tr>
         </ng-template>
@@ -422,10 +661,14 @@
       </button>
 
       <!-- Creative Close Button -->
-      <button pButton type="button" icon="pi pi-times" label="Close" class="p-button-danger"
-        (click)="displayDuty = false"></button>
-
+      <button
+        pButton
+        type="button"
+        icon="pi pi-times"
+        label="Close"
+        class="p-button-danger"
+        (click)="displayDuty = false"
+      ></button>
     </div>
-
   </div>
 </p-dialog>
