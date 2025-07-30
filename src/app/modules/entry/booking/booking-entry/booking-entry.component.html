@@ -142,7 +142,8 @@
                 formControlName="PartyRateType"
                 [options]="partyRateTypes"
                 optionLabel="label"
-                optionValue="value"
+                optionValue="label"
+                (onChange)="changePartyRateType()"
                 class="w-full"
               ></p-select>
             </div>
@@ -152,9 +153,9 @@
                 Rate</label
               >
               <p-select
-                formControlName="SelectRate"
+                formControlName="PartyRate"
                 [options]="selectRates"
-                optionLabel="name"
+                optionLabel="party_name"
                 optionValue="id"
                 class="w-full"
               ></p-select>
@@ -343,10 +344,11 @@
               ><i class="pi pi-check-circle text-green-700"></i> Duty
               Type</label
             >
-            <p-select
+              <p-select
               formControlName="DutyType"
               [options]="dutyTypes"
-              optionLabel="name"
+              optionLabel="label"
+              optionValue="value"
               class="w-full"
             ></p-select>
           </div>
