@@ -421,13 +421,9 @@
 
     <!-- Guest Section -->
     <div class="mb-6">
-      <p-panel
-        header="Guest Details"
-        [toggleable]="true"
-        collapsed="false"
-        class="mb-6"
-      >
-        <p-table [value]="guests" responsiveLayout="scroll">
+    <p-panel header="Guest Details" [toggleable]="true" collapsed="false" class="mb-6">
+      <div formArrayName="postJsonData">
+        <p-table [value]="bookingFrom.get('postJsonData')['controls']" responsiveLayout="scroll">
           <ng-template pTemplate="header">
             <tr>
               <th>Guest Name</th>
@@ -439,53 +435,14 @@
               <th>Action</th>
             </tr>
           </ng-template>
-          <ng-template pTemplate="body" let-guest let-i="rowIndex">
-            <tr>
-              <td>
-                <input
-                  type="text"
-                  pInputText
-                  formControlName="LGustName"
-                  class="w-full"
-                />
-              </td>
-              <td>
-                <input
-                  type="text"
-                  pInputText
-                  formControlName="LContactNo"
-                  class="w-full"
-                />
-              </td>
-              <td>
-                <input
-                  type="text"
-                  pInputText
-                  formControlName="LContactNo2"
-                  class="w-full"
-                />
-              </td>
-              <td>
-                <textarea
-                  pInputTextarea
-                  formControlName="LAddress"
-                  class="w-full p-inputtext"
-                ></textarea>
-              </td>
-              <td>
-                <textarea
-                  pInputTextarea
-                  formControlName="LDropAddress"
-                  class="w-full p-inputtext"
-                ></textarea>
-              </td>
-              <td>
-                <textarea
-                  pInputTextarea
-                  formControlName="LRemarks"
-                  class="w-full p-inputtext"
-                ></textarea>
-              </td>
+          <ng-template pTemplate="body" let-row let-i="rowIndex">
+            <tr [formGroupName]="i">
+              <td><input type="text" pInputText formControlName="GustName" class="w-full" /></td>
+              <td><input type="text" pInputText formControlName="ContactNo" class="w-full" /></td>
+              <td><input type="text" pInputText formControlName="AditionalContactNo" class="w-full" /></td>
+              <td><textarea pInputTextarea formControlName="Address" class="w-full p-inputtext"></textarea></td>
+              <td><textarea pInputTextarea formControlName="DropAddress" class="w-full p-inputtext"></textarea></td>
+              <td><textarea pInputTextarea formControlName="Remarks" class="w-full p-inputtext"></textarea></td>
               <td>
                 <button
                   pButton
@@ -497,16 +454,18 @@
             </tr>
           </ng-template>
         </p-table>
-        <button
-          pButton
-          type="button"
-          label="Add Guest"
-          icon="pi pi-plus"
-          class="mt-4 p-button-success"
-          (click)="addGuest()"
-        ></button>
-      </p-panel>
-    </div>
+      </div>
+
+      <button
+        pButton
+        type="button"
+        label="Add Guest"
+        icon="pi pi-plus"
+        class="mt-4 p-button-success"
+        (click)="addGuest()"
+      ></button>
+    </p-panel>
+  </div>
 
     <!-- Submit -->
     <div class="flex justify-end gap-4 mt-6">
@@ -600,4 +559,3 @@
 
   </p-table>
 </p-dialog>
-

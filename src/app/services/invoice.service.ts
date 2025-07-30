@@ -14,6 +14,9 @@ export class InvoiceService extends BaseService {
     this.call('invoice.search', payload);
   }
 
+  getBookingList(payload: any) {
+    this.call('invoice.getBookings', payload);
+  }
   protected handleMessage(msg: any): boolean {
     return false;
   }

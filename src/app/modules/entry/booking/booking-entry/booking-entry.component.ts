@@ -4,7 +4,15 @@ import { carTypeMasterService } from '../../../../services/carTypeMaster.service
 import { CheckboxModule } from 'primeng/checkbox';
 import { CommonModule } from '@angular/common';
 import { Component, NgModule, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, FormsModule, NgModel, ReactiveFormsModule, Validators, } from '@angular/forms';
+import {
+  FormArray,
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  NgModel,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
@@ -13,7 +21,12 @@ import { SelectModule } from 'primeng/select';
 import { TableModule } from 'primeng/table';
 import { TabViewModule } from 'primeng/tabview';
 import { ActivatedRoute, Router } from '@angular/router';
-import { getCurrentDate, getCurrentTime, getStringifiedFormValues, globalRequestHandler, } from '../../../../utils/global';
+import {
+  getCurrentDate,
+  getCurrentTime,
+  getStringifiedFormValues,
+  globalRequestHandler,
+} from '../../../../utils/global';
 import { MessageService } from 'primeng/api';
 import { commonService } from '../../../../services/comonApi.service';
 import { partyMasterService } from '../../../../services/partyMaster.service';
@@ -54,22 +67,18 @@ export class BookingEntryComponent implements OnInit {
     private bookingService: BookingService,
     private partyRateMasterService: partyRateMasterService,
     private fb: FormBuilder
-  ) { }
+  ) {}
   totalHours = 0;
   totalKM = 0;
   availableRates: any[] | undefined;
   charges: any[] = [];
   bookingFrom?: any;
 
-
-
-
   booking = {
     netAmount: 0,
     otherCharges: 0,
-    totalAmount: 0
+    totalAmount: 0,
   };
-
 
   guests = [
     {
@@ -95,16 +104,16 @@ guestList = [
 
   partyRateTypes: any[] = [
     {
-      label: 'Normal'
+      label: 'Normal',
     },
     {
-      label: 'Hrs'
+      label: 'Hrs',
     },
     {
-      label: 'DayKM'
+      label: 'DayKM',
     },
     {
-      label: 'Trn'
+      label: 'Trn',
     },
   ];
 
@@ -168,7 +177,7 @@ guestList = [
       PartyRate: [''], // stringified number
       Price: ['0'],
       HourRate: ['0'], // stringified number
-      KMRate: ['0'],    // stringified number
+      KMRate: ['0'], // stringified number
       IncludeTax: [''], // empty string
       discount_amount: this.fb.array([this.fb.control('')]),
       isCash: [''], // string
@@ -177,31 +186,25 @@ guestList = [
       Branch: [''],
       SelectRate: [''],
 
-      LGuest: this.fb.array([
-        this.createGuestFormGroup()
-      ])
-
+      postJsonData: this.fb.array([this.createGuestFormGroup()]),
     });
   }
 
   createGuestFormGroup(): FormGroup {
     return this.fb.group({
-      LGustName: [""],
-      LGustEmail: [""],
-      LContactNo: [""],
-      LContactNo2: [""],
-      LAddress: [""],
-      LAddressLat: [""],
-      LAddressLng: [""],
-      LDropAddress: [""],
-      LDropAddressLat: [""],
-      LDropAddressLng: [""],
-      LRemarks: [""],
-      lid: [""],
+      id: '',
+      GustName: '',
+      ContactNo: '',
+      Address: '',
+      Remarks: '',
+      AditionalContactNo: '',
+      DropAddress: '',
+      AddressLat: '',
+      AddressLng: '',
+      DropAddressLat: '',
+      DropAddressLng: '',
     });
   }
-
-
 
   filterCities(event: any) {
     if (!this.cities) return;
@@ -266,8 +269,6 @@ guestList = [
   }
 
   ngOnInit(): void {
-
-
     this.carTypeMaster.registerPageHandler((msg) => {
       let rt = false;
       rt = globalRequestHandler(msg, this.router, this.messageService);
@@ -303,15 +304,13 @@ guestList = [
     this.init();
   }
 
-
   addGuest() {
-    this.LGuest.push(this.createGuestFormGroup());
+    this.postJsonData.push(this.createGuestFormGroup());
   }
 
   removeGuest(index: number) {
-    this.LGuest.removeAt(index);
+    this.postJsonData.removeAt(index);
   }
-
 
   closeForm() {
     // Handle form close logic here
@@ -332,7 +331,6 @@ guestList = [
       this.charges[index].image = file;
     }
   }
-
 
   onFileSelectedGuest(event: any) {
     // Handle file selection logic
@@ -369,7 +367,6 @@ guestList = [
     })
   }
 
-
   // OnSelect Functions
   onBranchSelect(branch: any) {
     if (this.bookingFrom) {
@@ -391,13 +388,11 @@ guestList = [
      console.log(city);
   }
 
-
   onPartyNameSelect(party: any) {
     if (this.bookingFrom) {
       this.bookingFrom.get('Party').setValue(party.value.id);
     }
   }
-
 
   onCarTypeSelect(cartype: any) {
     if (this.bookingFrom) {
@@ -419,7 +414,7 @@ guestList = [
   submitBooking() {
     if (this.bookingFrom.valid) {
       console.log(this.bookingFrom.value);
-      this.bookingService.create((this.bookingFrom.value));
+      this.bookingService.create(this.bookingFrom.value);
     } else {
       // Show validation errors
       console.warn('Form is invalid');
@@ -427,7 +422,7 @@ guestList = [
     }
   }
 
-  get LGuest(): FormArray {
-    return this.bookingFrom.get('LGuest') as FormArray;
+  get postJsonData(): FormArray {
+    return this.bookingFrom.get('postJsonData') as FormArray;
   }
 }
