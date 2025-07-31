@@ -632,13 +632,13 @@
             <td class="py-2 px-3">
               <input type="checkbox" [(ngModel)]="dutyTableData.selected" />
             </td>
-            <td class="py-2 px-3">{{ dutyTableData.siNo }}</td>
-            <td class="py-2 px-3">{{ dutyTableData.SlipNo }}</td>
-            <td class="py-2 px-3">{{ dutyTableData.Duty_Type }}</td>
+            <td class="py-2 px-3">{{ dutyTableData.BookingID }}</td>
+            <td class="py-2 px-3">{{ dutyTableData.BillNo }}</td>
+            <td class="py-2 px-3">{{ dutyTableData.duty_type }}</td>
             <td class="py-2 px-3">{{ dutyTableData.CarNo }}</td>
             <td class="py-2 px-3">{{ dutyTableData.carType }}</td>
             <td class="py-2 px-3">{{ dutyTableData.project }}</td>
-            <td class="py-2 px-3">{{ dutyTableData.guestName }}</td>
+            <td class="py-2 px-3">{{ dutyTableData.gustName }}</td>
             <td class="py-2 px-3">{{ dutyTableData.fromDate }}</td>
             <td class="py-2 px-3">{{ dutyTableData.toDate }}</td>
             <td class="py-2 px-3">{{ dutyTableData.fromTime }}</td>
@@ -648,7 +648,7 @@
             <td class="py-2 px-3">{{ dutyTableData.totalTime }}</td>
             <td class="py-2 px-3">{{ dutyTableData.totalKm }}</td>
             <td class="py-2 px-3 font-semibold text-right text-green-600">
-              ₹{{ dutyTableData.netAmount | number : "1.2-2" }}
+              ₹{{ dutyTableData.NetAmount | number : "1.2-2" }}
             </td>
           </tr>
         </ng-template>

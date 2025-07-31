@@ -194,7 +194,7 @@ export class InvoiceAddComponent {
       rt = globalRequestHandler(msg, this.router, this.messageService);
 
       if (msg.for) {
-        if (msg.for === 'dutyTableData') {
+        if (msg.for === 'bookingInvoiceEntryList') {
           this.dutyTableData = msg.data || [];
           this.totalRecords = msg.total || 0;
           this.tableLoading = false;
