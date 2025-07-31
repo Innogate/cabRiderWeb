@@ -34,12 +34,16 @@ export class commonService extends BaseService {
   }
 
 
-  getAllPartyNameByCity(payload: any){
+  getAllPartyNameByCity(payload: any) {
     this.call('common.getAllPartyRateByCity', payload)
   }
 
   getAllCompanyDropdown() {
     this.call('common.getAllCompany', {});
+  }
+
+  getAllVendorDropdown() {
+    this.call('common.getAllVendor', {});
   }
 
   protected handleMessage(msg: any): boolean {
