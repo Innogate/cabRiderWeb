@@ -34,6 +34,7 @@ import { MonthlyInvoiceListComponent } from './modules/entry/monthlyInvoice/mont
 import { MonthlyInvoiceCreateComponent } from './modules/entry/monthlyInvoice/monthly-invoice-create/monthly-invoice-create.component';
 import { MbillingComponent } from './components/mbilling/mbilling.component';
 
+import { AllotDutyComponent } from './modules/entry/booking/allot-duty/allot-duty.component';
 export const routes: Routes = [
     {
         path: '',
@@ -42,6 +43,8 @@ export const routes: Routes = [
             { path: 'bar', component: LoginComponent, canActivate: [AuthGuard] },
             { path: 'booking', component: BookingComponent, canActivate: [AuthGuard] },
             { path: 'full-booking', component: BookingComponent, data: { isFullBooking: true }, canActivate: [AuthGuard] },
+            //added
+            {path:'allot-duty', component: AllotDutyComponent, canActivate: [AuthGuard]},
             { path: 'add-booking', component: BookingEntryComponent, data: { isFullBooking: true }, canActivate: [AuthGuard] },
             { path: 'invoice-entry', component: InvoiceEntryComponent, canActivate: [AuthGuard] },
             { path: 'vendor-invoice-entry', component: VendorInvoiceEntryComponent, canActivate: [AuthGuard] },
