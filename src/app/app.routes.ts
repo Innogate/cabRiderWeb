@@ -29,6 +29,7 @@ import { AddNewVendorInvoiceComponent } from './modules/entry/vendor-invoice-ent
 import { InvoiceEyesShowComponent } from './components/invoice-eyes-show/invoice-eyes-show.component';
 import { UserListMasterComponent } from './modules/master/user-list-master/user-list-master.component';
 
+import { AllotDutyComponent } from './modules/entry/booking/allot-duty/allot-duty.component';
 export const routes: Routes = [
     {
         path: '',
@@ -37,6 +38,8 @@ export const routes: Routes = [
             { path: 'bar', component: LoginComponent, canActivate: [AuthGuard] },
             { path: 'booking', component: BookingComponent, canActivate: [AuthGuard] },
             { path: 'full-booking', component: BookingComponent, data: { isFullBooking: true }, canActivate: [AuthGuard] },
+            //added
+            {path:'allot-duty', component: AllotDutyComponent, canActivate: [AuthGuard]},
             { path: 'add-booking', component: BookingEntryComponent, data: { isFullBooking: true }, canActivate: [AuthGuard] },
             { path: 'invoice-entry', component: InvoiceEntryComponent, canActivate: [AuthGuard] },
             { path: 'vendor-invoice-entry', component: VendorInvoiceEntryComponent, canActivate: [AuthGuard] },

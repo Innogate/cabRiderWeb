@@ -1,0 +1,193 @@
+<div
+  class="p-6 m-6 rounded-2xl border border-blue-300 shadow-lg bg-gradient-to-r from-white to-blue-50"
+  [formGroup]="dutyForm">
+  <!-- 🧾 Header -->
+  <div class="flex items-center justify-between mb-8">
+    <div class="flex items-center gap-4">
+      <span class="bg-blue-200 text-blue-800 rounded-full p-3 shadow-md">
+        <i class="pi pi-wallet text-2xl"></i>
+      </span>
+      <h2 class="text-3xl md:text-4xl font-extrabold text-blue-600 m-0">Allot
+        Duty</h2>
+    </div>
+  </div>
+
+  <!-- 🧾 Duty Info Table -->
+  <div class="overflow-x-auto mb-6">
+    <table class="min-w-full table-auto border border-gray-300 text-sm">
+      <tbody class="text-gray-700">
+        <tr class="bg-gray-100">
+          <td class="px-4 py-2 font-medium">Duty No</td>
+          <td class="px-4 py-2">LC26072025-67</td>
+          <td class="px-4 py-2 font-medium">Duty Date</td>
+          <td class="px-4 py-2">26 July 2025</td>
+        </tr>
+        <tr>
+          <td class="px-4 py-2 font-medium">Party Name</td>
+          <td class="px-4 py-2">INTAS PHARMA LIMITED</td>
+          <td class="px-4 py-2 font-medium">Guest Name</td>
+          <td class="px-4 py-2">SHANKAR DAS</td>
+        </tr>
+        <tr class="bg-gray-100">
+          <td class="px-4 py-2 font-medium">Guest Contact No</td>
+          <td class="px-4 py-2">-</td>
+          <td class="px-4 py-2 font-medium">Reporting Address</td>
+          <td class="px-4 py-2">19, R.N.MUKHERJEE ROAD, 1ST FLOOR</td>
+        </tr>
+        <tr>
+          <td class="px-4 py-2 font-medium">Reporting Time</td>
+          <td class="px-4 py-2">13:58</td>
+          <td class="px-4 py-2 font-medium">Car Type Required</td>
+          <td class="px-4 py-2">ALTIS</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 🔧 Form -->
+ <form [formGroup]="dutyForm" (ngSubmit)="save()">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+
+      <!-- Vendor -->
+      <div>
+        <label class="text-sm font-medium text-gray-700 mb-1 block">
+          <i class="pi pi-users text-yellow-500 mr-2"></i>Select Vendor <span
+            class="text-red-500">*</span>
+        </label>
+        <div class="flex gap-2">
+          <p-dropdown [options]="vendorList" formControlName="selectedVendor"
+            placeholder="Select Vendor" class="w-full" />
+          <button pButton type="button" icon="pi pi-plus"
+            class="p-button-sm p-button-rounded p-button-info"></button>
+        </div>
+      </div>
+
+      <!-- Vendor Contact -->
+      <div>
+        <label class="text-sm font-medium text-gray-700 mb-1 block">
+          <i class="pi pi-phone text-yellow-500 mr-2"></i>Vendor Contact <span
+            class="text-red-500">*</span>
+        </label>
+        <input
+          pInputText
+          formControlName="vendorContact"
+          placeholder="Vendor Contact"
+          class="w-full border rounded px-3 py-2"
+          maxlength="10"
+          (keypress)="allowOnlyNumbers($event)"
+          [ngClass]="{
+      'border-red-500': dutyForm.get('vendorContact')?.invalid && dutyForm.get('vendorContact')?.touched,
+      'border-gray-300': dutyForm.get('vendorContact')?.valid || !dutyForm.get('vendorContact')?.touched
+    }" />
+        <div
+          class="text-red-600 text-xs mt-1"
+          *ngIf="dutyForm.get('vendorContact')?.invalid && dutyForm.get('vendorContact')?.touched">
+          <span
+            *ngIf="dutyForm.get('vendorContact')?.errors?.['required']">Vendor
+            contact is required.</span>
+          <span *ngIf="dutyForm.get('vendorContact')?.errors?.['pattern']">Enter
+            exactly 10 digits.</span>
+        </div>
+      </div>
+
+      <!-- Car Type -->
+      <div>
+        <label class="text-sm font-medium text-gray-700 mb-1 block">
+          <i class="pi pi-car text-yellow-500 mr-2"></i>Car Type <span
+            class="text-red-500">*</span>
+        </label>
+        <p-dropdown [options]="carTypes" formControlName="selectedCarType"
+          placeholder="Select Car" class="w-full" />
+      </div>
+
+      <!-- Grg Out Time -->
+      <div>
+        <label class="text-sm font-medium text-gray-700 mb-1 block">
+          <i class="pi pi-clock text-yellow-500 mr-2"></i>Grg Out Time
+        </label>
+        <p-calendar formControlName="grgOutTime" timeOnly hourFormat="24"
+          showIcon class="w-full" />
+      </div>
+
+      <!-- Vendor Grg Out Time -->
+      <div>
+        <label class="text-sm font-medium text-gray-700 mb-1 block">
+          <i class="pi pi-clock text-yellow-500 mr-2"></i>Vendor Grg Out Time
+        </label>
+        <p-calendar formControlName="vendorGrgOutTime" timeOnly hourFormat="24"
+          showIcon class="w-full" />
+      </div>
+
+      <!-- Vendor Advanced -->
+      <div>
+        <label class="text-sm font-medium text-gray-700 mb-1 block">
+          <i class="pi pi-money-bill text-yellow-500 mr-2"></i>Vendor Advanced
+        </label>
+        <input pInputText formControlName="vendorAdvanced" type="number"
+          class="w-full" />
+      </div>
+
+      <!-- Car No -->
+      <div>
+        <label class="text-sm font-medium text-gray-700 mb-1 block">
+          <i class="pi pi-car text-yellow-500 mr-2"></i>Car No
+        </label>
+        <div class="flex items-center gap-2">
+          <i class="pi pi-search text-gray-500"></i>
+          <input pInputText placeholder="Car No" formControlName="carNo"
+            class="w-full" />
+        </div>
+      </div>
+
+      <!-- Driver Name -->
+      <div>
+        <label class="text-sm font-medium text-gray-700 mb-1 block">
+          <i class="pi pi-user text-yellow-500 mr-2"></i>Driver Name
+        </label>
+        <div class="flex gap-2">
+          <input pInputText placeholder="Select Driver"
+            formControlName="driverName" class="w-full" />
+          <button pButton icon="pi pi-plus"
+            class="p-button-sm p-button-rounded p-button-info"></button>
+        </div>
+      </div>
+
+      <!-- Driver Contact -->
+      <div>
+        <label class="text-sm font-medium text-gray-700 mb-1 block">
+          <i class="pi pi-phone text-yellow-500 mr-2"></i>Driver Contact <span
+            class="text-red-500">*</span>
+        </label>
+        <input
+          pInputText
+          formControlName="driverContact"
+          placeholder="Driver Contact"
+          class="w-full border rounded px-3 py-2"
+          maxlength="10"
+          (keypress)="allowOnlyNumbers($event)"
+          [ngClass]="{
+      'border-red-500': dutyForm.get('driverContact')?.invalid && dutyForm.get('driverContact')?.touched,
+      'border-gray-300': dutyForm.get('driverContact')?.valid || !dutyForm.get('driverContact')?.touched
+    }" />
+        <div
+          class="text-red-600 text-xs mt-1"
+          *ngIf="dutyForm.get('driverContact')?.invalid && dutyForm.get('driverContact')?.touched">
+          <span
+            *ngIf="dutyForm.get('driverContact')?.errors?.['required']">Driver
+            contact is required.</span>
+          <span *ngIf="dutyForm.get('driverContact')?.errors?.['pattern']">Enter
+            exactly 10 digits.</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 🚀 Buttons -->
+    <div class="flex justify-end gap-4">
+      <button pButton type="button" label="Close" class="p-button-secondary"
+        (click)="close()"></button>
+      <button pButton type="submit" label="Save"
+        class="p-button-primary"></button>
+    </div>
+  </form>
+</div>
