@@ -27,6 +27,7 @@ import { VendorMasterComponent } from './modules/master/vendor-master/vendor-mas
 import { FullBookingEntryComponent } from './modules/entry/booking/full-booking-entry/full-booking-entry.component';
 import { AddNewVendorInvoiceComponent } from './modules/entry/vendor-invoice-entry/add-new-vendor-invoice/add-new-vendor-invoice.component';
 import { InvoiceEyesShowComponent } from './components/invoice-eyes-show/invoice-eyes-show.component';
+import { UserListMasterComponent } from './modules/master/user-list-master/user-list-master.component';
 
 export const routes: Routes = [
     {
@@ -62,6 +63,7 @@ export const routes: Routes = [
 
             { path: 'master/vendor-master', component: VendorMasterComponent, canActivate: [AuthGuard] },
 
+            { path: 'master/user-master', component: UserListMasterComponent, canActivate: [AuthGuard] },
         ],
         canActivate: [AuthGuard]
     },

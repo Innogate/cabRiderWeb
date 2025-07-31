@@ -13,9 +13,9 @@ export class userMasterService extends BaseService {
   getAllUser(payload: any) {
     this.call('master.getAllUserMaster', payload);
   }
-
-  createUpdateUser(id: number, name: string, mobile: string, email: string, username: string, password: string){
-     this.call('master.createUpdateUserMaster', {id, name, mobile, email, username, password});
+// id: number, name: string, mobile: string, email: string, username: string, password: string
+  createUpdateUser(paylod:any){
+     this.call('master.createUpdateUserMaster', paylod);
   }
 
 
