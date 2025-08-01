@@ -58,6 +58,7 @@ export class LayoutComponent {
         { label: 'Quotation Entry', icon: 'pi pi-file', routerLink:'/quatation-entry' },
         { label: 'Opening Bill Entry', icon: 'pi pi-file-export', routerLink:'/openingbill-entry' },
         { label: 'Network Duty', icon: 'pi pi-sitemap', routerLink:'network-duty' },
+        { label: 'Monthly Invoice', icon: 'pi pi-calendar', routerLink:'monthly-invoice' },
       ],
     },
 
