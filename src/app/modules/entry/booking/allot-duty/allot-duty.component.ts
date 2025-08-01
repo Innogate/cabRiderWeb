@@ -5,6 +5,9 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { CalendarModule } from 'primeng/calendar';
 import { DropdownModule } from 'primeng/dropdown';
+import { DutyService } from '../../../../services/duty.service';
+import { MessageService } from 'primeng/api';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-allot-duty',
@@ -33,9 +36,26 @@ export class AllotDutyComponent implements OnInit {
     { label: 'SUV', value: 'suv' },
   ];
 
-  constructor(private fb: FormBuilder) { }
+  constructor(
+    private fb: FormBuilder,
+    private dutyService: DutyService,
+    private messageService: MessageService,
+    private router: Router,
+    
+  ) { }
 
   ngOnInit(): void {
+    this.dutyService.registerPageHandler((msg)=>{
+      let rt = false
+      if(msg.for){
+        if(msg.for === "bookingAllotted"){
+           this.messageService.add({ severity: msg.type, summary: msg.type, detail: msg.msg });
+          console.log(msg)
+          rt = true;
+        }
+      }
+      return rt;
+    })
     this.dutyForm = this.fb.group({
       selectedVendor: [null, Validators.required],
       vendorContact: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
@@ -57,7 +77,8 @@ export class AllotDutyComponent implements OnInit {
 
   save() {
     console.log("Form Submitted:", this.dutyForm.value);
-
+    this.dutyService.duty(this.dutyForm.value);
+    this.messageService.add({ severity: 'contrast', summary: 'Info', detail: 'Please wait processing...' });
   }
 
   allowOnlyNumbers(event: KeyboardEvent) {
