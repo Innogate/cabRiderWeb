@@ -8,6 +8,8 @@ import { DropdownModule } from 'primeng/dropdown';
 import { DutyService } from '../../../../services/duty.service';
 import { MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
+import { carTypeMasterService } from '../../../../services/carTypeMaster.service';
+import { AutoCompleteModule } from 'primeng/autocomplete';
 
 @Component({
   selector: 'app-allot-duty',
@@ -19,6 +21,7 @@ import { Router } from '@angular/router';
     ButtonModule,
     CalendarModule,
     DropdownModule,
+    AutoCompleteModule
   ],
   templateUrl: './allot-duty.component.html',
   styleUrl: './allot-duty.component.css'
@@ -31,19 +34,17 @@ export class AllotDutyComponent implements OnInit {
     { label: 'Vendor B', value: 'B' },
   ];
 
-  carTypes = [
-    { label: 'Sedan', value: 'sedan' },
-    { label: 'SUV', value: 'suv' },
-  ];
+    carTypes?: any[];
 
   constructor(
     private fb: FormBuilder,
     private dutyService: DutyService,
     private messageService: MessageService,
     private router: Router,
-    
+    private carTypeMaster: carTypeMasterService
   ) { }
 
+  carTypeSearch: any;
   ngOnInit(): void {
     this.dutyService.registerPageHandler((msg)=>{
       let rt = false
@@ -56,6 +57,24 @@ export class AllotDutyComponent implements OnInit {
       }
       return rt;
     })
+
+    this.carTypeMaster.registerPageHandler((msg) => {
+      let rt = false;
+
+      if (msg.for) {
+        if (msg.for === 'CarTypeGate') {
+          this.carTypes = msg.data;
+          rt = true;
+        }
+      }
+      if (rt == false) {
+        console.log(msg);
+      }
+      return rt;
+    })
+
+    this.getCarTypeName();
+
     this.dutyForm = this.fb.group({
       selectedVendor: [null, Validators.required],
       vendorContact: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
@@ -88,4 +107,29 @@ export class AllotDutyComponent implements OnInit {
     }
   }
 
+  onCarTypeSelect(cartype: any) {
+    if (this.dutyForm) {
+      this.dutyForm.get('CarType')?.setValue(cartype.value.id);
+    }
+  }
+
+  filteredCarTypes: any[] = [];
+
+  filterCarTypes(event: any) {
+    if (!this.carTypes) return;
+    const query = event.query.toLowerCase();
+    this.filteredCarTypes = this.carTypes.filter((type) =>
+      type.car_type.toLowerCase().includes(query)
+    );
+    console.log(this.filteredCarTypes)
+  }
+
+  getCarTypeName() {
+    // console.log('getCarTypeName');
+    this.carTypeMaster.GateAllCarType({
+      PageNo: 1,
+      PageSize: 10,
+      Search: this.carTypeSearch,
+    });
+  }
 }
