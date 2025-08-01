@@ -76,12 +76,10 @@ export class InvoiceEntryComponent implements OnInit {
 
   ngOnInit(): void {
     this._invoice.registerPageHandler((msg)=>{
-      console.log(msg);
       let rt = false;
       rt = globalRequestHandler(msg, this.router, this.messageService);
       if (msg.for) {
         if (msg.for === 'invoiceTableData') {
-          console.log(msg.data);
           this.invoices = msg.data;
           console.log(this.invoices);
           this.cdr.detectChanges();
