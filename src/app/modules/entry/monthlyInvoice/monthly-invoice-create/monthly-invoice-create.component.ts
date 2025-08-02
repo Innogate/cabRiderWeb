@@ -26,6 +26,7 @@ import { MessageService } from 'primeng/api';
 import { commonService } from '../../../../services/comonApi.service';
 import { AutoComplete } from 'primeng/autocomplete';
 import { InvoiceService } from '../../../../services/invoice.service';
+import { MinvoiceService } from '../../../../services/minvoice.service';
 
 
 
@@ -60,13 +61,12 @@ export class MonthlyInvoiceCreateComponent implements OnInit{
     private commonApiService: commonService,
     private cdr: ChangeDetectorRef,
     private _invoice: InvoiceService,
+    private _minvoice: MinvoiceService
 
 
   ) {}
 
-  monthlySetupData: any = null;
    ngOnInit(): void {
-
     this.commonApiService.registerPageHandler((msg) => {
       let rt = false;
       rt = globalRequestHandler(msg, this.router, this.messageService);
@@ -82,16 +82,17 @@ export class MonthlyInvoiceCreateComponent implements OnInit{
           this.PartyName = msg.data;
           rt = true;
         }
-         else if (msg.for === 'bookingInvoiceEntryList') {
+         else if (msg.for === 'minvoice.getMonthlyBookingList') {
           this.dutyTableData = msg.data || [];
           this.totalRecords = msg.total || 0;
+          console.log("dutytable data:",this.dutyTableData)
           this.tableLoading = false;
           this.cdr.detectChanges();
           rt = true;
         }
         else if (msg.for === 'minvoice.getMonthlySetupCode') {
           this.monthlySetupData = msg.data;
-          console.log('Monthly Setup Data:', this.monthlySetupData);
+
     }
       }
       if (rt == false) {
@@ -106,7 +107,6 @@ export class MonthlyInvoiceCreateComponent implements OnInit{
     this.getAllParty();
     this.getAllMonthlySetupCode();
     this.init();
-    this.loadDutyTable();
 
     // Check for edit data
     const editData = history.state?.editInvoice;
@@ -115,6 +115,10 @@ export class MonthlyInvoiceCreateComponent implements OnInit{
       this.isEditMode = true;
       this.patchInvoice(editData);
     }
+  }
+
+   ngOnDestroy(): void {
+    this._invoice.unregisterPageHandler();
   }
 
 
@@ -138,8 +142,9 @@ export class MonthlyInvoiceCreateComponent implements OnInit{
 
   companies = [{ label: 'ABC Ltd', value: 1 }];
   branches: any[] = [];
-  parties = [{ label: 'XYZ Pvt Ltd', value: 501 }];
+  parties : any[] = [];;
   cities: any[] = [];
+  monthlySetupData: any[] = [];
 
   dutyTableData: any[] = [];
   tableLoading = false;
@@ -199,29 +204,47 @@ export class MonthlyInvoiceCreateComponent implements OnInit{
     });
   }
 
-  carTypeSearch: any;
+
+
+  checkAndLoadDutyTable() {
+  const partyId = this.invoiceForm.get('party_id')?.value;
+  const branchId = this.invoiceForm.get('branch_id')?.value;
+  const cityId = this.invoiceForm.get('city_id')?.value;
+  const companyId = this.invoiceForm.get('company_id')?.value;
+
+  // Call only when all 3 values are present
+  if (partyId && branchId && cityId && companyId) {
+    this.loadDutyTable(partyId, branchId, cityId, companyId);
+  }
+}
 
 
 
-  loadDutyTable() {
-    this.tableLoading = true;
-
-    const payload = {
-      page: 1,
-      pageSize: 10,
-      from_date: '2025-07-01',
-      to_date: '2025-07-30',
-      Party: 'INTAS PHARMA LIMITED',
-      Project: 'ProjectX',
-      City: 'Mumbai',
-    };
-
-    this._invoice.getBookingList(payload);
+ loadDutyTable(partyId: string, branchId: string, cityId: string, companyId:string) {
+  if (!partyId || !branchId || !cityId || !companyId) {
+    this.messageService.add({
+      severity: 'warn',
+      summary: 'Missing Selection',
+      detail: 'Please select Party, Branch, and City.'
+    });
+    return;
   }
 
-  ngOnDestroy(): void {
-    this._invoice.unregisterPageHandler();
-  }
+  const payload = {
+    party_id: partyId,
+    brunch_id: branchId,
+    from_city_id: cityId,
+    company_id: companyId,
+  };
+
+  console.log('Duty Table Payload:', payload);
+
+  this.tableLoading = true;
+  this._minvoice.getMonthlyBookingList(payload);
+}
+
+
+
 
   isEditMode: boolean = false;
 
@@ -349,6 +372,7 @@ export class MonthlyInvoiceCreateComponent implements OnInit{
   onBranchSelect(branch: any) {
     if (this.invoiceForm) {
       this.invoiceForm.get('branch_id')?.setValue(branch.value.Id);
+      this.checkAndLoadDutyTable();
 
     }
   }
@@ -356,20 +380,23 @@ export class MonthlyInvoiceCreateComponent implements OnInit{
   onCitySelect(city: any) {
     if (this.invoiceForm) {
       this.invoiceForm.get('city_id')?.setValue(city.value.Id);
+      this.checkAndLoadDutyTable();
     }
+
 
   }
 
   onPartyNameSelect(party: any) {
     if (this.invoiceForm) {
       this.invoiceForm.get('party_id')?.setValue(party.value.id);
+      this.checkAndLoadDutyTable();
     }
 
   }
 
   onCodeSelect(codeObj: any) {
   if (this.invoiceForm) {
-      this.invoiceForm.get('SetupCode')?.setValue(codeObj);
+      this.invoiceForm.get('SetupCode')?.setValue(codeObj.value.id);
     }
     console.log('Selected Duty Setup Code:', codeObj);
 }
@@ -409,9 +436,9 @@ export class MonthlyInvoiceCreateComponent implements OnInit{
     // Logic to delete invoice
   }
 
-                               // add duty
-  selectedDuties: any[] = []; // to store selected rows
+  //ADD DUTY
 
+  selectedDuties: any[] = []; // to store selected rows
   mainDutyList: any[] = []; // this holds the final duty list shown in main UI
 
 saveSelectedDuties() {
@@ -434,27 +461,9 @@ saveSelectedDuties() {
 
 
 
-   // Sample list of monthly codes (customize as needed)
-  monthlyCodes = [
-    { code: 'JAN2025' },
-    { code: 'FEB2025' },
-    { code: 'MAR2025' },
-    { code: 'APR2025' },
-    { code: 'MAY2025' },
-    { code: 'JUN2025' },
-    { code: 'JUL2025' },
-    { code: 'AUG2025' },
-    { code: 'SEP2025' },
-    { code: 'OCT2025' },
-    { code: 'NOV2025' },
-    { code: 'DEC2025' },
-  ];
 
 
   // After add duty ui and table
-
-
-
   months = [
   { label: 'Jan', value: 'Jan' }, { label: 'Feb', value: 'Feb' },
   { label: 'Mar', value: 'Mar' }, { label: 'Apr', value: 'Apr' },
