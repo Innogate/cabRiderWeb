@@ -46,6 +46,10 @@ export class commonService extends BaseService {
     this.call('common.getAllVendor', {});
   }
 
+  getMonthlySetupCode(payload:any){
+    this.call('minvoice.getMonthlySetupCode', payload);
+  }
+
   protected handleMessage(msg: any): boolean {
     return false;
   }

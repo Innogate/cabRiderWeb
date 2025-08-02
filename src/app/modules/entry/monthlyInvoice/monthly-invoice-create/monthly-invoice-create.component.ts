@@ -28,6 +28,7 @@ import { AutoComplete } from 'primeng/autocomplete';
 import { InvoiceService } from '../../../../services/invoice.service';
 
 
+
 @Component({
   selector: 'app-monthly-invoice-create',
   imports: [FormsModule,
@@ -59,14 +60,18 @@ export class MonthlyInvoiceCreateComponent implements OnInit{
     private commonApiService: commonService,
     private cdr: ChangeDetectorRef,
     private _invoice: InvoiceService,
+
+
   ) {}
 
+  monthlySetupData: any = null;
    ngOnInit(): void {
 
     this.commonApiService.registerPageHandler((msg) => {
       let rt = false;
       rt = globalRequestHandler(msg, this.router, this.messageService);
       if (msg.for) {
+
        if (msg.for === 'getAllCityDropdown') {
           this.cities = msg.data;
           rt = true;
@@ -84,6 +89,10 @@ export class MonthlyInvoiceCreateComponent implements OnInit{
           this.cdr.detectChanges();
           rt = true;
         }
+        else if (msg.for === 'minvoice.getMonthlySetupCode') {
+          this.monthlySetupData = msg.data;
+          console.log('Monthly Setup Data:', this.monthlySetupData);
+    }
       }
       if (rt == false) {
         console.log(msg);
@@ -95,6 +104,7 @@ export class MonthlyInvoiceCreateComponent implements OnInit{
     this.getAllCity();
     this.getAllBranches();
     this.getAllParty();
+    this.getAllMonthlySetupCode();
     this.init();
     this.loadDutyTable();
 
@@ -185,6 +195,7 @@ export class MonthlyInvoiceCreateComponent implements OnInit{
       RoundOff: ['0'],
       NetAmount: ['0'],
       Advance: [''],
+      DutyNo:[''],
     });
   }
 
@@ -295,6 +306,25 @@ export class MonthlyInvoiceCreateComponent implements OnInit{
     );
   }
 
+  filteredCodes: any[] = [];
+  selectedCode: any[] = [];
+
+  filterCodes(event: any) {
+  const query = event.query?.toLowerCase() || '';
+  if (!this.monthlySetupData || !Array.isArray(this.monthlySetupData)) {
+    this.filteredCodes = [];
+    return;
+  }
+  this.filteredCodes = this.monthlySetupData.filter(codeObj =>
+    codeObj.DutyNo?.toLowerCase().includes(query)
+  );
+}
+
+
+
+
+
+
   // API CALLS
 
   getAllCity() {
@@ -307,6 +337,10 @@ export class MonthlyInvoiceCreateComponent implements OnInit{
 
   getAllParty() {
     this.commonApiService.gateAllPartyNameDropdown();
+  }
+
+   getAllMonthlySetupCode() {
+    this.commonApiService.getMonthlySetupCode({});
   }
 
 
@@ -332,6 +366,13 @@ export class MonthlyInvoiceCreateComponent implements OnInit{
     }
 
   }
+
+  onCodeSelect(codeObj: any) {
+  if (this.invoiceForm) {
+      this.invoiceForm.get('SetupCode')?.setValue(codeObj);
+    }
+    console.log('Selected Duty Setup Code:', codeObj);
+}
 
   save() {
     const formData = {
@@ -408,22 +449,6 @@ saveSelectedDuties() {
     { code: 'NOV2025' },
     { code: 'DEC2025' },
   ];
-
-  filteredCodes: { code: string }[] = [];
-
-  selectedCode: { code: string } | null = null;
-
-  filterCodes(event: any) {
-    const query = event.query.toLowerCase();
-    this.filteredCodes = this.monthlyCodes.filter(c =>
-      c.code.toLowerCase().includes(query)
-    );
-  }
-
-  onCodeSelect(event: any) {
-    console.log('Selected Monthly Code:', event.code);
-  }
-
 
 
   // After add duty ui and table
