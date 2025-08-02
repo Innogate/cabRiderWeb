@@ -6,7 +6,7 @@ import { BaseService } from './base.service';
   providedIn: 'root',
 })
 
-export class DutyService extends BaseService {
+export class MinvoiceService extends BaseService {
   constructor(ws: WebSocketService) {
     super(ws);
   }
