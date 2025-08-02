@@ -15,6 +15,10 @@ export class DutyService extends BaseService {
     this.call('minvoice.getMonthlySetupCode', payload);
   }
 
+  getMonthlyBookingList(payload:any){
+    this.call('minvoice.getMonthlyBookingList', payload);
+  }
+
   protected handleMessage(msg: any): boolean {
     return false;
   }
