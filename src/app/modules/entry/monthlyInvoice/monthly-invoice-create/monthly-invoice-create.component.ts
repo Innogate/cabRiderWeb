@@ -368,6 +368,30 @@ export class MonthlyInvoiceCreateComponent implements OnInit{
     // Logic to delete invoice
   }
 
+                               // add duty
+  selectedDuties: any[] = []; // to store selected rows
+
+  mainDutyList: any[] = []; // this holds the final duty list shown in main UI
+
+saveSelectedDuties() {
+  const selected = this.dutyTableData.filter((item: any) => item.selected);
+
+  // Avoid duplication if needed
+  selected.forEach((item: any) => {
+    const alreadyExists = this.mainDutyList.some(d => d.BookingID === item.BookingID);
+    if (!alreadyExists) {
+      this.mainDutyList.push({ ...item });
+    }
+  });
+
+  // Close dialog
+  this.displayDuty = false;
+
+  // Optional: Reset selection
+  this.dutyTableData.forEach((item: any) => item.selected = false);
+}
+
+
 
    // Sample list of monthly codes (customize as needed)
   monthlyCodes = [
@@ -399,4 +423,64 @@ export class MonthlyInvoiceCreateComponent implements OnInit{
   onCodeSelect(event: any) {
     console.log('Selected Monthly Code:', event.code);
   }
+
+
+
+  // After add duty ui and table
+
+
+
+  months = [
+  { label: 'Jan', value: 'Jan' }, { label: 'Feb', value: 'Feb' },
+  { label: 'Mar', value: 'Mar' }, { label: 'Apr', value: 'Apr' },
+  { label: 'May', value: 'May' }, { label: 'Jun', value: 'Jun' },
+  { label: 'Jul', value: 'Jul' }, { label: 'Aug', value: 'Aug' },
+  { label: 'Sep', value: 'Sep' }, { label: 'Oct', value: 'Oct' },
+  { label: 'Nov', value: 'Nov' }, { label: 'Dec', value: 'Dec' },
+];
+
+selectedMonth = 'Jan';
+dbillDate = new Date();
+billNo = '';
+fixedAmount = 54000;
+extraHours = 0;
+exceptDayHrs = 0;
+fuelAmount = 0;
+nightAmount = 0;
+numDays = 0;
+rate = 0;
+rateAmount = 0;
+mobileAmount = 0;
+outstationText = '';
+parking = 600;
+desc = '';
+billTotal = 54000;
+advance = 0;
+amountPayable = 54600;
+
+entries = [
+  {
+    id: 1,
+    outDate: '19/02/2024',
+    outTime: '10:00',
+    inDate: '19/02/2024',
+    inTime: '20:00',
+    totalTime: '10:00',
+    overTime: 0,
+    kmOut: 1550,
+    kmIn: 1556,
+    totalKm: 6,
+    parking: 600,
+    nightHalt: 0,
+    outstation: '',
+    carNo: 4533
+  }
+];
+
+selectedEntries = [];
+
+calculate() {
+  this.amountPayable = this.billTotal + this.parking + this.nightAmount - this.advance;
+}
+
 }
