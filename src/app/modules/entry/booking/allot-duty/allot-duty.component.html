@@ -45,8 +45,8 @@
   </div>
 
   <!-- 🔧 Form -->
- <form [formGroup]="dutyForm" (ngSubmit)="save()">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+  <form [formGroup]="dutyForm" (ngSubmit)="save()">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
 
       <!-- Vendor -->
       <div>
@@ -92,22 +92,20 @@
 
       <!-- Car Type -->
       <div class="flex flex-col gap-2">
-            <label class="font-semibold text-gray-800 flex items-center gap-2">
-              <i class="pi pi-car text-xl text-orange-600"></i> Car Type
-            </label>
-            <p-autoComplete
-              (onSelect)="onCarTypeSelect($event)"
-              [suggestions]="filteredCarTypes"
-              (completeMethod)="filterCarTypes($event)"
-              field="car_type"
-              [dropdown]="true"
-              [forceSelection]="true"
-              placeholder="Car Type *"
-              class="w-full"
-              inputStyleClass="w-full"
-              panelStyleClass="w-full"
-            ></p-autoComplete>
-          </div>
+        <label class="text-sm font-medium text-gray-700 mb-1 block">
+          <i class="pi pi-car text-yellow-500 mr-2"></i>Car Type <span
+            class="text-red-500">*</span>
+        </label>
+        <p-autocomplete
+          formControlName="selectedCarType"
+          [suggestions]="filteredCarTypes"
+          (completeMethod)="filterCarTypes($event)"
+          field="car_type"
+          [dropdown]="true"
+          [forceSelection]="true"
+          placeholder="Car Type *"
+          class="w-full" />
+      </div>
 
       <!-- Grg Out Time -->
       <div>
