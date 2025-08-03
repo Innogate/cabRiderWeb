@@ -28,10 +28,10 @@ import { InvoiceService } from '../../../../services/invoice.service';
 import { MinvoiceService } from '../../../../services/minvoice.service';
 import { HelperService } from '../../../../services/helper.service';
 
-
 @Component({
   selector: 'app-monthly-invoice-create',
-  imports: [FormsModule,
+  imports: [
+    FormsModule,
     AutoComplete,
     RadioButtonModule,
     TableModule,
@@ -46,13 +46,13 @@ import { HelperService } from '../../../../services/helper.service';
     ReactiveFormsModule,
     DialogModule,
     CalendarModule,
-    BadgeModule,],
+    BadgeModule,
+  ],
   templateUrl: './monthly-invoice-create.component.html',
-  styleUrl: './monthly-invoice-create.component.css'
+  styleUrl: './monthly-invoice-create.component.css',
 })
-export class MonthlyInvoiceCreateComponent implements OnInit{
-
-   constructor(
+export class MonthlyInvoiceCreateComponent implements OnInit {
+  constructor(
     private fb: FormBuilder,
     private carTypeMaster: carTypeMasterService,
     private router: Router,
@@ -62,68 +62,60 @@ export class MonthlyInvoiceCreateComponent implements OnInit{
     private _invoice: InvoiceService,
     private _minvoice: MinvoiceService,
     private _helperService: HelperService
-
-
   ) {}
 
-   ngOnInit(): void {
+  ngOnInit(): void {
     this.commonApiService.registerPageHandler((msg) => {
       let rt = false;
       rt = globalRequestHandler(msg, this.router, this.messageService);
       if (msg.for) {
-
-       if (msg.for === 'getAllCityDropdown') {
+        if (msg.for === 'CarTypeGate') {
+          this.carTypes = msg.data;
+          console.log('cartype', this.carTypes);
+          rt = true;
+        } else if (msg.for === 'getAllCityDropdown') {
           this.cities = msg.data;
           const city = this.cities.find((c: any) => c.Id == 1);
-            if (city) {
-              console.log(city);
-            }
-            else{
-              console.log("no data foundcity")
-            }
+          if (city) {
+            console.log(city);
+          } else {
+            console.log('no data foundcity');
+          }
           rt = true;
-
         } else if (msg.for === 'branchDropdown') {
           this.branches = msg.data;
-          console.log("branches :",this.branches)
+          console.log('branches :', this.branches);
           rt = true;
-
         } else if (msg.for === 'partyDropdown') {
           this.PartyName = msg.data;
-          console.log("party:", msg.data)
+          console.log('party:', msg.data);
           const party = this.PartyName.find((c: any) => c.id === 1398);
-            if (party) {
-              console.log(party);
-            }
-            else{
-              console.log("no data foundparty")
-            }
+          if (party) {
+            console.log(party);
+          } else {
+            console.log('no data foundparty');
+          }
           rt = true;
-        }
-         else if (msg.for === 'companyDropdown') {
+        } else if (msg.for === 'companyDropdown') {
           this.companies = msg.data;
-          console.log("companies",this.companies)
+          console.log('companies', this.companies);
           const company = this.companies.find((c: any) => c.Id == 81);
-            if (company) {
-              console.log(company);
-            }
-            else{
-              console.log("no data found")
-            }
+          if (company) {
+            console.log(company);
+          } else {
+            console.log('no data found');
+          }
           rt = true;
-        }
-         else if (msg.for === 'minvoice.getMonthlyBookingList') {
+        } else if (msg.for === 'minvoice.getMonthlyBookingList') {
           this.dutyTableData = msg.data || [];
           this.totalRecords = msg.total || 0;
-          console.log("dutytable data:",this.dutyTableData)
+          console.log('dutytable data:', this.dutyTableData);
           this.tableLoading = false;
           this.cdr.detectChanges();
           rt = true;
-        }
-        else if (msg.for === 'minvoice.getMonthlySetupCode') {
+        } else if (msg.for === 'minvoice.getMonthlySetupCode') {
           this.monthlySetupData = msg.data;
         }
-
       }
       if (rt == false) {
         console.log(msg);
@@ -131,14 +123,13 @@ export class MonthlyInvoiceCreateComponent implements OnInit{
       return rt;
     });
 
-
     this.getAllCity();
     this.getAllBranches();
     this.getAllParty();
+    this.getCarTypeName();
     this.getAllMonthlySetupCode();
     this.getAllCompany();
     this.init();
-
 
     // Check for edit data
     const editData = history.state?.editInvoice;
@@ -148,11 +139,9 @@ export class MonthlyInvoiceCreateComponent implements OnInit{
     }
   }
 
-   ngOnDestroy(): void {
+  ngOnDestroy(): void {
     this._invoice.unregisterPageHandler();
   }
-
-
 
   taxType = 'cgst';
   rcm = 'no';
@@ -164,6 +153,13 @@ export class MonthlyInvoiceCreateComponent implements OnInit{
   show = [10, 50, 100, 500, 1000, 2000];
   displayDuty = false;
 
+  dutyTypes = [
+    { label: 'DISPOSAL', value: '1' },
+    { label: 'OUTSTATION', value: '2' },
+    { label: 'PICKUP', value: '3' },
+    { label: 'DROP', value: '4' },
+  ];
+
   invoiceForm!: FormGroup;
 
   charges = [
@@ -171,9 +167,9 @@ export class MonthlyInvoiceCreateComponent implements OnInit{
     { name: 'Driver Allowance', amount: 100 },
   ];
 
-  companies : any[] = [];
+  companies: any[] = [];
   branches: any[] = [];
-  parties : any[] = [];;
+  parties: any[] = [];
   cities: any[] = [];
   monthlySetupData: any[] = [];
 
@@ -200,10 +196,7 @@ export class MonthlyInvoiceCreateComponent implements OnInit{
       totalTime: '9h',
       totalKm: 200,
       netAmount: 1500,
-
-
     },
-
   ];
 
   init() {
@@ -231,64 +224,61 @@ export class MonthlyInvoiceCreateComponent implements OnInit{
       RoundOff: ['0'],
       NetAmount: ['0'],
       Advance: [''],
-      DutyNo:[''],
+      DutyNo: [''],
     });
   }
 
+  checkAndLoadDutyTable() {
+    const party_id = Number(this.invoiceForm.get('party_id')?.value);
+    const branch_id = Number(this.invoiceForm.get('branch_id')?.value);
+    const city_id = Number(this.invoiceForm.get('city_id')?.value);
+    const company_id = Number(this.invoiceForm.get('company_id')?.value);
 
+    console.log('Selected Values:', {
+      party_id,
+      branch_id,
+      city_id,
+      company_id,
+    });
 
-checkAndLoadDutyTable() {
-  const party_id = Number(this.invoiceForm.get('party_id')?.value);
-  const branch_id = Number(this.invoiceForm.get('branch_id')?.value);
-  const city_id = Number(this.invoiceForm.get('city_id')?.value);
-  const company_id = Number(this.invoiceForm.get('company_id')?.value);
+    // Call only when all values are valid numbers and not NaN
+    if (
+      !isNaN(party_id) &&
+      !isNaN(branch_id) &&
+      !isNaN(city_id) &&
+      !isNaN(company_id)
+    ) {
+      this.loadDutyTable(party_id, branch_id, city_id, company_id);
+    }
+  }
 
-  console.log('Selected Values:', {
-    party_id,
-    branch_id,
-    city_id,
-    company_id
-  });
-
-  // Call only when all values are valid numbers and not NaN
-  if (
-    !isNaN(party_id) &&
-    !isNaN(branch_id) &&
-    !isNaN(city_id) &&
-    !isNaN(company_id)
+  loadDutyTable(
+    partyId: number,
+    branchId: number,
+    cityId: number,
+    companyId: number
   ) {
-    this.loadDutyTable(party_id, branch_id, city_id, company_id);
+    if (!partyId || !branchId || !cityId || !companyId) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Missing Selection',
+        detail: 'Please select Party, Branch, and City.',
+      });
+      return;
+    }
+
+    const payload = {
+      party_id: partyId,
+      branch_id: branchId,
+      from_city_id: cityId,
+      company_id: companyId,
+    };
+
+    console.log('Duty Table Payload:', payload);
+
+    this.tableLoading = true;
+    this._minvoice.getMonthlyBookingList(payload);
   }
-}
-
-
-
-
- loadDutyTable(partyId: number, branchId: number, cityId: number, companyId:number) {
-  if (!partyId || !branchId || !cityId || !companyId) {
-    this.messageService.add({
-      severity: 'warn',
-      summary: 'Missing Selection',
-      detail: 'Please select Party, Branch, and City.'
-    });
-    return;
-  }
-
-  const payload = {
-    party_id: partyId,
-    branch_id: branchId,
-    from_city_id: cityId,
-    company_id: companyId,
-  };
-
-  console.log('Duty Table Payload:', payload);
-
-  this.tableLoading = true;
-  this._minvoice.getMonthlyBookingList(payload);
-}
-
-
-
 
   isEditMode: boolean = false;
 
@@ -362,7 +352,6 @@ checkAndLoadDutyTable() {
     this.filteredCities = this.cities.filter((city) =>
       city.CityName.toLowerCase().includes(query)
     );
-
   }
 
   filteredBranches: any[] = [];
@@ -377,29 +366,26 @@ checkAndLoadDutyTable() {
 
   filteredCodes: any[] = [];
   selectedCode: any[] = [];
-  selectedCompany : any[]=[];
+  selectedCompany: any[] = [];
 
   filterCodes(event: any) {
-  const query = event.query?.toLowerCase() || '';
-  if (!this.monthlySetupData || !Array.isArray(this.monthlySetupData)) {
-    this.filteredCodes = [];
-    return;
+    const query = event.query?.toLowerCase() || '';
+    if (!this.monthlySetupData || !Array.isArray(this.monthlySetupData)) {
+      this.filteredCodes = [];
+      return;
+    }
+    this.filteredCodes = this.monthlySetupData.filter((codeObj) =>
+      codeObj.DutyNo?.toLowerCase().includes(query)
+    );
   }
-  this.filteredCodes = this.monthlySetupData.filter(codeObj =>
-    codeObj.DutyNo?.toLowerCase().includes(query)
-  );
-}
 
-filterCompany(event: any) {
+  filterCompany(event: any) {
     if (!this.companies) return;
     const query = event.query.toLowerCase();
     this.filteredCompanies = this.companies.filter((companies) =>
       companies.Name.toLowerCase().includes(query)
     );
   }
-
-
-
 
   // API CALLS
 
@@ -415,24 +401,32 @@ filterCompany(event: any) {
     this._helperService.getPartyDropdown();
   }
 
-   getAllMonthlySetupCode() {
+  getAllMonthlySetupCode() {
     this.commonApiService.getMonthlySetupCode({});
   }
 
-  getAllCompany(){
+  getAllCompany() {
     this._helperService.getCompanyDropdown();
   }
 
+  carTypeSearch = '';
 
+  getCarTypeName() {
+    // console.log('getCarTypeName');
+    this.carTypeMaster.GateAllCarType({
+      PageNo: 1,
+      PageSize: 10,
+      Search: this.carTypeSearch,
+    });
+  }
 
   // OnSelect Functions
   onBranchSelect(branch: any) {
     if (this.invoiceForm) {
       this.invoiceForm.get('branch_id')?.setValue(branch.value.id);
       this.checkAndLoadDutyTable();
-
     }
-    console.log(branch)
+    console.log(branch);
   }
 
   onCitySelect(city: any) {
@@ -447,24 +441,22 @@ filterCompany(event: any) {
       this.invoiceForm.get('party_id')?.setValue(party.value.id);
       this.checkAndLoadDutyTable();
     }
-
   }
 
   onCodeSelect(codeObj: any) {
-  if (this.invoiceForm) {
+    if (this.invoiceForm) {
       this.invoiceForm.get('SetupCode')?.setValue(codeObj.value.id);
     }
     console.log('Selected Duty Setup Code:', codeObj);
-}
+  }
 
- onCompanySelect(company: any) {
+  onCompanySelect(company: any) {
     if (this.invoiceForm) {
       this.invoiceForm.get('company_id')?.setValue(company.value.Id);
       this.checkAndLoadDutyTable();
     }
-    console.log(company)
+    console.log(company);
   }
-
 
   save() {
     const formData = {
@@ -504,82 +496,76 @@ filterCompany(event: any) {
   //ADD DUTY
 
   selectedDuties: any[] = []; // to store selected rows
+
   mainDutyList: any[] = []; // this holds the final duty list shown in main UI
 
-saveSelectedDuties() {
-  const selected = this.dutyTableData.filter((item: any) => item.selected);
-
-  // Avoid duplication if needed
-  selected.forEach((item: any) => {
-    const alreadyExists = this.mainDutyList.some(d => d.BookingID === item.BookingID);
-    if (!alreadyExists) {
+  saveSelectedDuties() {
+    const selected = this.dutyTableData.filter((item: any) => item.selected);
+    selected.forEach((item: any) => {
       this.mainDutyList.push({ ...item });
-    }
-  });
-
-  // Close dialog
-  this.displayDuty = false;
-
-  // Optional: Reset selection
-  this.dutyTableData.forEach((item: any) => item.selected = false);
-}
-
-
-
-
+    });
+    // Close dialog
+    this.displayDuty = false;
+  }
 
   // After add duty ui and table
   months = [
-  { label: 'Jan', value: 'Jan' }, { label: 'Feb', value: 'Feb' },
-  { label: 'Mar', value: 'Mar' }, { label: 'Apr', value: 'Apr' },
-  { label: 'May', value: 'May' }, { label: 'Jun', value: 'Jun' },
-  { label: 'Jul', value: 'Jul' }, { label: 'Aug', value: 'Aug' },
-  { label: 'Sep', value: 'Sep' }, { label: 'Oct', value: 'Oct' },
-  { label: 'Nov', value: 'Nov' }, { label: 'Dec', value: 'Dec' },
-];
+    { label: 'Jan', value: 'Jan' },
+    { label: 'Feb', value: 'Feb' },
+    { label: 'Mar', value: 'Mar' },
+    { label: 'Apr', value: 'Apr' },
+    { label: 'May', value: 'May' },
+    { label: 'Jun', value: 'Jun' },
+    { label: 'Jul', value: 'Jul' },
+    { label: 'Aug', value: 'Aug' },
+    { label: 'Sep', value: 'Sep' },
+    { label: 'Oct', value: 'Oct' },
+    { label: 'Nov', value: 'Nov' },
+    { label: 'Dec', value: 'Dec' },
+  ];
 
-selectedMonth = 'Jan';
-dbillDate = new Date();
-billNo = '';
-fixedAmount = 54000;
-extraHours = 0;
-exceptDayHrs = 0;
-fuelAmount = 0;
-nightAmount = 0;
-numDays = 0;
-rate = 0;
-rateAmount = 0;
-mobileAmount = 0;
-outstationText = '';
-parking = 600;
-desc = '';
-billTotal = 54000;
-advance = 0;
-amountPayable = 54600;
+  selectedMonth = 'Jan';
+  dbillDate = new Date();
+  billNo = '';
+  fixedAmount = 54000;
+  extraHours = 0;
+  exceptDayHrs = 0;
+  fuelAmount = 0;
+  nightAmount = 0;
+  numDays = 0;
+  rate = 0;
+  rateAmount = 0;
+  mobileAmount = 0;
+  outstationText = '';
+  parking = 600;
+  desc = '';
+  billTotal = 54000;
+  advance = 0;
+  amountPayable = 54600;
 
-entries = [
-  {
-    id: 1,
-    outDate: '19/02/2024',
-    outTime: '10:00',
-    inDate: '19/02/2024',
-    inTime: '20:00',
-    totalTime: '10:00',
-    overTime: 0,
-    kmOut: 1550,
-    kmIn: 1556,
-    totalKm: 6,
-    parking: 600,
-    nightHalt: 0,
-    outstation: '',
-    carNo: 4533
+  entries = [
+    {
+      id: 1,
+      outDate: '19/02/2024',
+      outTime: '10:00',
+      inDate: '19/02/2024',
+      inTime: '20:00',
+      totalTime: '10:00',
+      overTime: 0,
+      kmOut: 1550,
+      kmIn: 1556,
+      totalKm: 6,
+      parking: 600,
+      nightHalt: 0,
+      outstation: '',
+      carNo: 4533,
+    },
+  ];
+
+  selectedEntries = [];
+
+  calculate() {
+    this.amountPayable =
+      this.billTotal + this.parking + this.nightAmount - this.advance;
   }
-];
-
-selectedEntries = [];
-
-calculate() {
-  this.amountPayable = this.billTotal + this.parking + this.nightAmount - this.advance;
-}
-
 }
