@@ -1,4 +1,3 @@
-
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import {
@@ -74,12 +73,42 @@ export class MonthlyInvoiceCreateComponent implements OnInit{
 
        if (msg.for === 'getAllCityDropdown') {
           this.cities = msg.data;
+          const city = this.cities.find((c: any) => c.Id == 1);
+            if (city) {
+              console.log(city);
+            }
+            else{
+              console.log("no data foundcity")
+            }
           rt = true;
+
         } else if (msg.for === 'getAllBranchDropdown') {
           this.branches = msg.data;
+          console.log("branches :",this.branches)
           rt = true;
+
         } else if (msg.for === 'getAllPartyDropdown') {
           this.PartyName = msg.data;
+          console.log("party:",this.PartyName)
+          const party = this.PartyName.find((c: any) => c.id === 1398);
+            if (party) {
+              console.log(party);
+            }
+            else{
+              console.log("no data foundparty")
+            }
+          rt = true;
+        }
+         else if (msg.for === 'getAllCompanyDropdown') {
+          this.companies = msg.data;
+          console.log("companies",this.companies)
+          const company = this.companies.find((c: any) => c.Id === 81);
+            if (company) {
+              console.log(company);
+            }
+            else{
+              console.log("no data found")
+            }
           rt = true;
         }
          else if (msg.for === 'minvoice.getMonthlyBookingList') {
@@ -92,8 +121,8 @@ export class MonthlyInvoiceCreateComponent implements OnInit{
         }
         else if (msg.for === 'minvoice.getMonthlySetupCode') {
           this.monthlySetupData = msg.data;
+        }
 
-    }
       }
       if (rt == false) {
         console.log(msg);
@@ -106,11 +135,12 @@ export class MonthlyInvoiceCreateComponent implements OnInit{
     this.getAllBranches();
     this.getAllParty();
     this.getAllMonthlySetupCode();
+    this.getAllCompany();
     this.init();
+
 
     // Check for edit data
     const editData = history.state?.editInvoice;
-
     if (editData) {
       this.isEditMode = true;
       this.patchInvoice(editData);
@@ -140,7 +170,7 @@ export class MonthlyInvoiceCreateComponent implements OnInit{
     { name: 'Driver Allowance', amount: 100 },
   ];
 
-  companies = [{ label: 'ABC Ltd', value: 1 }];
+  companies : any[] = [];
   branches: any[] = [];
   parties : any[] = [];;
   cities: any[] = [];
@@ -301,6 +331,8 @@ export class MonthlyInvoiceCreateComponent implements OnInit{
   PartyName: any[] = []; // original full list
   filteredPartyName: any[] = []; // used by the autocomplete
   filteredCities: any[] = [];
+  companyList: any[] = [];
+  filteredCompanies: any[] = [];
 
   filterPartyName(event: any) {
     const query = event.query?.toLowerCase() || '';
@@ -331,6 +363,7 @@ export class MonthlyInvoiceCreateComponent implements OnInit{
 
   filteredCodes: any[] = [];
   selectedCode: any[] = [];
+  selectedCompany : any[]=[];
 
   filterCodes(event: any) {
   const query = event.query?.toLowerCase() || '';
@@ -343,7 +376,13 @@ export class MonthlyInvoiceCreateComponent implements OnInit{
   );
 }
 
-
+filterCompany(event: any) {
+    if (!this.companies) return;
+    const query = event.query.toLowerCase();
+    this.filteredCompanies = this.companies.filter((companies) =>
+      companies.Name.toLowerCase().includes(query)
+    );
+  }
 
 
 
@@ -355,7 +394,7 @@ export class MonthlyInvoiceCreateComponent implements OnInit{
   }
 
   getAllBranches() {
-    this.commonApiService.GatAllBranchDropDown({});
+    this._minvoice.getAllBranchDropdown({});
   }
 
   getAllParty() {
@@ -364,6 +403,10 @@ export class MonthlyInvoiceCreateComponent implements OnInit{
 
    getAllMonthlySetupCode() {
     this.commonApiService.getMonthlySetupCode({});
+  }
+
+  getAllCompany(){
+    this._minvoice.getAllCompanyDropdown({});
   }
 
 
@@ -382,8 +425,6 @@ export class MonthlyInvoiceCreateComponent implements OnInit{
       this.invoiceForm.get('city_id')?.setValue(city.value.Id);
       this.checkAndLoadDutyTable();
     }
-
-
   }
 
   onPartyNameSelect(party: any) {
@@ -400,6 +441,15 @@ export class MonthlyInvoiceCreateComponent implements OnInit{
     }
     console.log('Selected Duty Setup Code:', codeObj);
 }
+
+ onCompanySelect(company: any) {
+    if (this.invoiceForm) {
+      this.invoiceForm.get('company_id')?.setValue(company.value.Id);
+      this.checkAndLoadDutyTable();
+    }
+    console.log(company)
+  }
+
 
   save() {
     const formData = {

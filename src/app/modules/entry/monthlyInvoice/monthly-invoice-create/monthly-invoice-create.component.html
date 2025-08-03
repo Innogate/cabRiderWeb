@@ -35,12 +35,16 @@
         <label class="block text-gray-700 font-semibold mb-1">
           <i class="pi pi-building text-blue-500 mr-2"></i>Select Company
         </label>
-        <p-dropdown
-          formControlName="company_id"
-          [options]="companies"
-          placeholder="Select Company"
-          class="w-full"
-        ></p-dropdown>
+         <p-autoComplete
+          [suggestions]="filteredCompanies"
+          (completeMethod)="filterCompany($event)"
+          (onSelect)="onCompanySelect($event)"
+          field="Name"
+          [(ngModel)]="selectedCompany"
+          [ngModelOptions]="{ standalone: true }"
+          [dropdown]="true"
+          [forceSelection]="true"
+        ></p-autoComplete>
       </div>
 
       <div>
@@ -385,10 +389,16 @@
     </div>
   </form>
 
-  <!-- 📋 add Table -->
-  <div class="p-4 rounded-xl bg-white mt-6 border">
+
+
+  <!-- Show only after duties are added -->
+   <!-- *ngIf="mainDutyList.length > 0" -->
+  <div class="p-8 mt-8 bg-white border rounded-2xl space-y-8 max-w-screen-xl mx-auto ">
+
+    <!-- 🟡 Table Section -->
+  <div class="p-4 rounded-xl bg-white mt-6  border">
     <p-table
-      [value]="invoices"
+      [value]="mainDutyList"
       [paginator]="true"
       [rows]="10"
       [responsiveLayout]="'scroll'"
@@ -450,23 +460,23 @@
         </tr>
       </ng-template>
 
-      <ng-template pTemplate="body" let-invoice>
+      <ng-template pTemplate="body" let-duty>
         <tr class="hover:bg-blue-50 transition-all text-sm">
-          <td class="py-2 px-3">{{ invoice.siNo }}</td>
-          <td class="py-2 px-3">{{ invoice.slipNo }}</td>
-          <td class="py-2 px-3">{{ invoice.dutyType }}</td>
-          <td class="py-2 px-3">{{ invoice.carNo }}</td>
-          <td class="py-2 px-3">{{ invoice.carType }}</td>
-          <td class="py-2 px-3">{{ invoice.project }}</td>
-          <td class="py-2 px-3">{{ invoice.guestName }}</td>
-          <td class="py-2 px-3">{{ invoice.fromDate }}</td>
-          <td class="py-2 px-3">{{ invoice.toDate }}</td>
-          <td class="py-2 px-3">{{ invoice.fromTime }}</td>
-          <td class="py-2 px-3">{{ invoice.toTime }}</td>
-          <td class="py-2 px-3">{{ invoice.fromKm }}</td>
-          <td class="py-2 px-3">{{ invoice.toKm }}</td>
-          <td class="py-2 px-3">{{ invoice.totalTime }}</td>
-          <td class="py-2 px-3">{{ invoice.totalKm }}</td>
+          <td class="py-2 px-3">{{ duty.siNo }}</td>
+          <td class="py-2 px-3">{{ duty.slipNo }}</td>
+          <td class="py-2 px-3">{{ duty.dutyType }}</td>
+          <td class="py-2 px-3">{{ duty.carNo }}</td>
+          <td class="py-2 px-3">{{ duty.carType }}</td>
+          <td class="py-2 px-3">{{ duty.project }}</td>
+          <td class="py-2 px-3">{{ duty.guestName }}</td>
+          <td class="py-2 px-3">{{ duty.fromDate }}</td>
+          <td class="py-2 px-3">{{ duty.toDate }}</td>
+          <td class="py-2 px-3">{{ duty.fromTime }}</td>
+          <td class="py-2 px-3">{{ duty.toTime }}</td>
+          <td class="py-2 px-3">{{ duty.fromKm }}</td>
+          <td class="py-2 px-3">{{ duty.toKm }}</td>
+          <td class="py-2 px-3">{{ duty.totalTime }}</td>
+          <td class="py-2 px-3">{{ duty.totalKm }}</td>
           <td class="py-2 px-3">
             <div class="flex gap-2 justify-center">
               <button
@@ -494,302 +504,97 @@
     </p-table>
   </div>
 
-  <!-- Show only after duties are added -->
-  <div
-    *ngIf="mainDutyList.length > 0"
-    class="p-8 mt-8 bg-white rounded-2xl space-y-8 max-w-screen-xl mx-auto"
-  >
-    <!-- 🔵 Top Form Section -->
-    <div
-      class="grid grid-cols-1 max-w-screen-xl mx-auto sm:grid-cols-2 lg:grid-cols-5 gap-5 items-end bg-gradient-to-r from-white via-blue-50 to-white p-6 rounded-xl border border-blue-100"
-    >
-      <!-- Month Dropdown -->
-      <div class="flex flex-col gap-1">
-        <label
-          class="text-sm text-gray-700 font-medium flex items-center gap-1"
-        >
-          <i class="pi pi-calendar text-blue-500"></i> Bill Month
-        </label>
-        <p-dropdown
-          [options]="months"
-          [(ngModel)]="selectedMonth"
-          placeholder="Select Month"
-          [showClear]="true"
-          appendTo="body"
-          class="w-full"
-        >
-        </p-dropdown>
-      </div>
+<!-- 💠 Billing Section -->
+<div class="max-w-screen-xl mx-auto p-6 rounded-2xl border  bg-white space-y-6">
 
-      <!-- Bill No -->
-      <div class="flex flex-col gap-1">
-        <label
-          class="text-sm text-gray-700 font-medium flex items-center gap-1"
-        >
-          <i class="pi pi-file-edit text-green-500"></i> Bill No.
-        </label>
-        <span class="p-input-icon-left w-full">
-          <input
-            type="text"
-            pInputText
-            [(ngModel)]="billNo"
-            placeholder="Enter Bill No."
-            class="w-full"
-          />
-        </span>
-      </div>
+   <!-- 🔘 Bottom Action -->
+  <div class="flex justify-end">
+    <button
+      pButton
+      label="Calculate Bill"
+      icon="pi pi-calculator"
+      class="p-button-lg p-button-primary rounded-xl shadow-lg transition-transform hover:scale-105"
+    ></button>
+  </div>
 
-      <!-- Bill Date -->
-      <div class="flex flex-col gap-1">
-        <label
-          class="text-sm text-gray-700 font-medium flex items-center gap-1"
-        >
-          <i class="pi pi-clock text-purple-500"></i> Bill Date
-        </label>
-        <p-calendar
-          [(ngModel)]="dbillDate"
-          dateFormat="dd/mm/yy"
-          showIcon
-          placeholder="Select Date"
-          class="w-full"
-        >
-        </p-calendar>
+  <!-- 🧾 Billing Summary Grid -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <!-- Column 1 -->
+    <div class="space-y-4">
+      <div class="flex justify-between items-center">
+        <label>💰 Fixed Amount:</label>
+        <input type="number" pInputText [(ngModel)]="fixedAmount" class="w-44 text-right" />
       </div>
-
-      <!-- Select All Button -->
-      <div class="flex flex-col gap-1">
-        <label class="invisible">-</label>
-        <!-- keep spacing consistent -->
-        <button
-          pButton
-          type="button"
-          label="Select All"
-          icon="pi pi-check-circle"
-          class="p-button p-button-sm p-button-outlined p-button-secondary w-full hover:shadow-md transition-shadow"
-        ></button>
+      <div class="flex justify-between items-center">
+        <label>🕓 Extra Hours:</label>
+        <input type="number" pInputText [(ngModel)]="extraHours" class="w-44 text-right" />
       </div>
-
-      <!-- Add Unbilled Button -->
-      <div class="flex flex-col gap-1">
-        <label class="invisible">-</label>
-        <button
-          pButton
-          type="button"
-          label="Add UnBilled"
-          icon="pi pi-plus-circle"
-          class="p-button p-button-sm p-button-success w-full hover:shadow-md transition-shadow"
-        ></button>
+      <div class="flex justify-between items-center">
+        <label>📉 Except Day Hrs:</label>
+        <input type="number" pInputText [(ngModel)]="exceptDayHrs" class="w-44 text-right" />
+      </div>
+      <div class="flex justify-between items-center">
+        <label>⛽ Fuel Amount:</label>
+        <input type="number" pInputText [(ngModel)]="fuelAmount" class="w-44 text-right" />
+      </div>
+      <div class="flex justify-between items-center">
+        <label>🌙 Night Amount:</label>
+        <input type="number" pInputText [(ngModel)]="nightAmount" class="w-44 text-right" />
       </div>
     </div>
 
-    <!-- 🟡 Table Section -->
-    <p-table
-      [value]="mainDutyList"
-      [(selection)]="selectedEntries"
-      dataKey="id"
-      responsiveLayout="scroll"
-      class="p-datatable-striped p-datatable-gridlines p-datatable-sm mt-6 rounded-xl"
-    >
-      <ng-template pTemplate="header">
-        <tr>
-          <th style="width: 40px"></th>
-          <th>🚗 Out Date</th>
-          <th>⏰ Out Time</th>
-          <th>📅 In Date</th>
-          <th>⏰ In Time</th>
-          <th>🕒 Total Time</th>
-          <th>⏱ Over Time</th>
-          <th>🏁 KM Out</th>
-          <th>📍 KM In</th>
-          <th>📊 Total KM</th>
-          <th>🅿️ Parking</th>
-          <th>🌙 Night Halt</th>
-          <th>🧳 Outstation</th>
-          <th>🚘 Car No</th>
-        </tr>
-      </ng-template>
-
-      <ng-template pTemplate="body" let-duty>
-        <tr [pSelectableRow]="duty">
-          <td><p-tableCheckbox [value]="duty"></p-tableCheckbox></td>
-          <td>{{ duty.outDate }}</td>
-          <td>{{ duty.outTime }}</td>
-          <td>{{ duty.inDate }}</td>
-          <td>{{ duty.inTime }}</td>
-          <td>{{ duty.totalTime }}</td>
-          <td>{{ duty.overTime }}</td>
-          <td>{{ duty.kmOut }}</td>
-          <td>{{ duty.kmIn }}</td>
-          <td>{{ duty.totalKm }}</td>
-          <td>{{ duty.parking }}</td>
-          <td>{{ duty.nightHalt }}</td>
-          <td>{{ duty.outstation }}</td>
-          <td>{{ duty.carNo }}</td>
-        </tr>
-      </ng-template>
-    </p-table>
-
-    <!-- 🟢 Billing Summary -->
-    <div
-      class="grid grid-cols-3 gap-6 border border-blue-200 p-6 rounded-2xl bg-blue-50 shadow-inner"
-    >
-      <!-- Column 1 -->
-      <div class="space-y-3">
-        <div class="flex justify-between items-center">
-          <label>💰 Fixed Amount:</label>
-          <input
-            type="number"
-            pInputText
-            [(ngModel)]="fixedAmount"
-            class="w-44 text-right"
-          />
-        </div>
-        <div class="flex justify-between items-center">
-          <label>🕓 Extra Hours:</label>
-          <input
-            type="number"
-            pInputText
-            [(ngModel)]="extraHours"
-            class="w-44 text-right"
-          />
-        </div>
-        <div class="flex justify-between items-center">
-          <label>📉 Except Day Hrs:</label>
-          <input
-            type="number"
-            pInputText
-            [(ngModel)]="exceptDayHrs"
-            class="w-44 text-right"
-          />
-        </div>
-        <div class="flex justify-between items-center">
-          <label>⛽ Fuel Amount:</label>
-          <input
-            type="number"
-            pInputText
-            [(ngModel)]="fuelAmount"
-            class="w-44 text-right"
-          />
-        </div>
-        <div class="flex justify-between items-center">
-          <label>🌙 Night Amount:</label>
-          <input
-            type="number"
-            pInputText
-            [(ngModel)]="nightAmount"
-            class="w-44 text-right"
-          />
-        </div>
+    <!-- Column 2 -->
+    <div class="space-y-4">
+      <div class="flex justify-between items-center">
+        <label>📆 No. of Days:</label>
+        <input type="number" pInputText [(ngModel)]="numDays" class="w-44 text-right" />
       </div>
-
-      <!-- Column 2 -->
-      <div class="space-y-3">
-        <div class="flex justify-between items-center">
-          <label>📆 No. of Days:</label>
-          <input
-            type="number"
-            pInputText
-            [(ngModel)]="numDays"
-            class="w-44 text-right"
-          />
-        </div>
-        <div class="flex justify-between items-center">
-          <label>💵 Rate:</label>
-          <input
-            type="number"
-            pInputText
-            [(ngModel)]="rate"
-            class="w-44 text-right"
-          />
-        </div>
-        <div class="flex justify-between items-center">
-          <label>💴 Amount:</label>
-          <input
-            type="number"
-            pInputText
-            [(ngModel)]="rateAmount"
-            class="w-44 text-right"
-          />
-        </div>
-        <div class="flex justify-between items-center">
-          <label>📱 Mobile Amount:</label>
-          <input
-            type="number"
-            pInputText
-            [(ngModel)]="mobileAmount"
-            class="w-44 text-right"
-          />
-        </div>
-        <div class="flex justify-between items-center">
-          <label>🧳 Outstation:</label>
-          <input
-            type="text"
-            pInputText
-            [(ngModel)]="outstationText"
-            class="w-44 text-right"
-          />
-        </div>
+      <div class="flex justify-between items-center">
+        <label>💵 Rate:</label>
+        <input type="number" pInputText [(ngModel)]="rate" class="w-44 text-right" />
       </div>
-
-      <!-- Column 3 -->
-      <div class="space-y-3">
-        <div class="flex justify-between items-center">
-          <label>🅿️ Parking:</label>
-          <input
-            type="number"
-            pInputText
-            [(ngModel)]="parking"
-            class="w-44 text-right"
-          />
-        </div>
-        <div class="flex justify-between items-center">
-          <label>📝 Description:</label>
-          <input
-            type="text"
-            pInputText
-            [(ngModel)]="desc"
-            class="w-44 text-right"
-          />
-        </div>
-        <div class="flex justify-between items-center">
-          <label class="font-semibold">🧾 Bill Total:</label>
-          <input
-            type="number"
-            pInputText
-            [(ngModel)]="billTotal"
-            class="w-44 text-right font-bold text-green-700"
-          />
-        </div>
-        <div class="flex justify-between items-center">
-          <label>💸 Advance:</label>
-          <input
-            type="number"
-            pInputText
-            [(ngModel)]="advance"
-            class="w-44 text-right"
-          />
-        </div>
-        <div class="flex justify-between items-center">
-          <label class="font-semibold text-blue-700">💳 Amount Payable:</label>
-          <input
-            type="number"
-            pInputText
-            [(ngModel)]="amountPayable"
-            class="w-44 text-right font-bold text-blue-700"
-          />
-        </div>
+      <div class="flex justify-between items-center">
+        <label>💴 Amount:</label>
+        <input type="number" pInputText [(ngModel)]="rateAmount" class="w-44 text-right" />
+      </div>
+      <div class="flex justify-between items-center">
+        <label>📱 Mobile Amount:</label>
+        <input type="number" pInputText [(ngModel)]="mobileAmount" class="w-44 text-right" />
+      </div>
+      <div class="flex justify-between items-center">
+        <label>🧳 Outstation:</label>
+        <input type="text" pInputText [(ngModel)]="outstationText" class="w-44 text-right" />
       </div>
     </div>
 
-    <!-- 🔘 Bottom Action -->
-    <div class="flex justify-end">
-      <button
-        pButton
-        label="Calculate Bill"
-        icon="pi pi-calculator"
-        class="p-button-lg p-button-primary rounded-xl shadow-md"
-      ></button>
+    <!-- Column 3 -->
+    <div class="space-y-4">
+      <div class="flex justify-between items-center">
+        <label>🅿️ Parking:</label>
+        <input type="number" pInputText [(ngModel)]="parking" class="w-44 text-right" />
+      </div>
+      <div class="flex justify-between items-center">
+        <label>📝 Description:</label>
+        <input type="text" pInputText [(ngModel)]="desc" class="w-44 text-right" />
+      </div>
+      <div class="flex justify-between items-center">
+        <label class="font-semibold">🧾 Bill Total:</label>
+        <input type="number" pInputText [(ngModel)]="billTotal" class="w-44 text-right font-bold text-green-700" />
+      </div>
+      <div class="flex justify-between items-center">
+        <label>💸 Advance:</label>
+        <input type="number" pInputText [(ngModel)]="advance" class="w-44 text-right" />
+      </div>
+      <div class="flex justify-between items-center">
+        <label class="font-semibold text-blue-700">💳 Amount Payable:</label>
+        <input type="number" pInputText [(ngModel)]="amountPayable" class="w-44 text-right font-bold text-blue-700" />
+      </div>
     </div>
+  </div>
+
+
+</div>
+
   </div>
 
   <!-- ✅ Save Button -->
