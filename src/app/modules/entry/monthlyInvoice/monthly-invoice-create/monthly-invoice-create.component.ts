@@ -237,21 +237,34 @@ export class MonthlyInvoiceCreateComponent implements OnInit{
 
 
 
-  checkAndLoadDutyTable() {
-  const partyId = this.invoiceForm.get('party_id')?.value;
-  const branchId = this.invoiceForm.get('branch_id')?.value;
-  const cityId = this.invoiceForm.get('city_id')?.value;
-  const companyId = this.invoiceForm.get('company_id')?.value;
+checkAndLoadDutyTable() {
+  const party_id = Number(this.invoiceForm.get('party_id')?.value);
+  const branch_id = Number(this.invoiceForm.get('branch_id')?.value);
+  const city_id = Number(this.invoiceForm.get('city_id')?.value);
+  const company_id = Number(this.invoiceForm.get('company_id')?.value);
 
-  // Call only when all 3 values are present
-  if (partyId && branchId && cityId && companyId) {
-    this.loadDutyTable(partyId, branchId, cityId, companyId);
+  console.log('Selected Values:', {
+    party_id,
+    branch_id,
+    city_id,
+    company_id
+  });
+
+  // Call only when all values are valid numbers and not NaN
+  if (
+    !isNaN(party_id) &&
+    !isNaN(branch_id) &&
+    !isNaN(city_id) &&
+    !isNaN(company_id)
+  ) {
+    this.loadDutyTable(party_id, branch_id, city_id, company_id);
   }
 }
 
 
 
- loadDutyTable(partyId: string, branchId: string, cityId: string, companyId:string) {
+
+ loadDutyTable(partyId: number, branchId: number, cityId: number, companyId:number) {
   if (!partyId || !branchId || !cityId || !companyId) {
     this.messageService.add({
       severity: 'warn',
@@ -263,7 +276,7 @@ export class MonthlyInvoiceCreateComponent implements OnInit{
 
   const payload = {
     party_id: partyId,
-    brunch_id: branchId,
+    branch_id: branchId,
     from_city_id: cityId,
     company_id: companyId,
   };
@@ -415,7 +428,7 @@ filterCompany(event: any) {
   // OnSelect Functions
   onBranchSelect(branch: any) {
     if (this.invoiceForm) {
-      this.invoiceForm.get('branch_id')?.setValue(branch.value.Id);
+      this.invoiceForm.get('branch_id')?.setValue(branch.value.id);
       this.checkAndLoadDutyTable();
 
     }
