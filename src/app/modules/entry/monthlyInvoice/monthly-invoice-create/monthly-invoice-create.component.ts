@@ -26,7 +26,7 @@ import { commonService } from '../../../../services/comonApi.service';
 import { AutoComplete } from 'primeng/autocomplete';
 import { InvoiceService } from '../../../../services/invoice.service';
 import { MinvoiceService } from '../../../../services/minvoice.service';
-
+import { HelperService } from '../../../../services/helper.service';
 
 
 @Component({
@@ -60,7 +60,8 @@ export class MonthlyInvoiceCreateComponent implements OnInit{
     private commonApiService: commonService,
     private cdr: ChangeDetectorRef,
     private _invoice: InvoiceService,
-    private _minvoice: MinvoiceService
+    private _minvoice: MinvoiceService,
+    private _helperService: HelperService
 
 
   ) {}
@@ -82,12 +83,12 @@ export class MonthlyInvoiceCreateComponent implements OnInit{
             }
           rt = true;
 
-        } else if (msg.for === 'getAllBranchDropdown') {
+        } else if (msg.for === 'branchDropdown') {
           this.branches = msg.data;
           console.log("branches :",this.branches)
           rt = true;
 
-        } else if (msg.for === 'getAllPartyDropdown') {
+        } else if (msg.for === 'partyDropdown') {
           this.PartyName = msg.data;
           console.log("party:",this.PartyName)
           const party = this.PartyName.find((c: any) => c.id === 1398);
@@ -99,7 +100,7 @@ export class MonthlyInvoiceCreateComponent implements OnInit{
             }
           rt = true;
         }
-         else if (msg.for === 'getAllCompanyDropdown') {
+         else if (msg.for === 'companyDropdown') {
           this.companies = msg.data;
           console.log("companies",this.companies)
           const company = this.companies.find((c: any) => c.Id === 81);
@@ -394,11 +395,11 @@ filterCompany(event: any) {
   }
 
   getAllBranches() {
-    this._minvoice.getAllBranchDropdown({});
+    this._helperService.getBranchDropdown();
   }
 
   getAllParty() {
-    this.commonApiService.gateAllPartyNameDropdown();
+    this._helperService.getPartyDropdown();
   }
 
    getAllMonthlySetupCode() {
@@ -406,7 +407,7 @@ filterCompany(event: any) {
   }
 
   getAllCompany(){
-    this._minvoice.getAllCompanyDropdown({});
+    this._helperService.getCompanyDropdown();
   }
 
 
