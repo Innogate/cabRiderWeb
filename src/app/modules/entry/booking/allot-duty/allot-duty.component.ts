@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
@@ -10,6 +10,7 @@ import { MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
 import { carTypeMasterService } from '../../../../services/carTypeMaster.service';
 import { AutoCompleteModule } from 'primeng/autocomplete';
+import { globalRequestHandler } from '../../../../utils/global';
 
 @Component({
   selector: 'app-allot-duty',
@@ -24,7 +25,7 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
     AutoCompleteModule
   ],
   templateUrl: './allot-duty.component.html',
-  styleUrl: './allot-duty.component.css'
+  styleUrls: ['./allot-duty.component.css']  // ✅ FIX: changed styleUrl to styleUrls
 })
 export class AllotDutyComponent implements OnInit {
   dutyForm!: FormGroup;
@@ -34,7 +35,9 @@ export class AllotDutyComponent implements OnInit {
     { label: 'Vendor B', value: 'B' },
   ];
 
-    carTypes?: any[];
+  carTypes?: any[] = [];
+  carTypeSearch: any;
+  filteredCarTypes: any[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -44,37 +47,52 @@ export class AllotDutyComponent implements OnInit {
     private carTypeMaster: carTypeMasterService
   ) { }
 
-  carTypeSearch: any;
   ngOnInit(): void {
-    this.dutyService.registerPageHandler((msg)=>{
-      let rt = false
-      if(msg.for){
-        if(msg.for === "bookingAllotted"){
-           this.messageService.add({ severity: msg.type, summary: msg.type, detail: msg.msg });
-          console.log(msg)
-          rt = true;
-        }
-      }
-      return rt;
-    })
+    this.registerMessageHandler();
+    this.initializeForm();
+    this.getCarTypeName(); // triggers API to get car types
+  }
 
-    this.carTypeMaster.registerPageHandler((msg) => {
-      let rt = false;
+  registerMessageHandler() {
+    this.dutyService.registerPageHandler((msg) => {
+      let handled = false;
+
+      handled = globalRequestHandler(msg, this.router, this.messageService);
 
       if (msg.for) {
-        if (msg.for === 'CarTypeGate') {
-          this.carTypes = msg.data;
-          rt = true;
+        switch (msg.for) {
+          case 'CarTypeGate':
+            if (Array.isArray(msg.data)) {
+              this.carTypes = msg.data || [];
+              console.log('Car Types Loaded:', this.carTypes);
+            } else {
+              this.carTypes = [];
+              console.warn('Invalid carTypes data:', msg.data);
+            }
+            handled = true;
+            break;
+
+          case 'bookingAllotted':
+            this.messageService.add({
+              severity: msg.type,
+              summary: msg.type,
+              detail: msg.msg
+            });
+            console.log('Duty response:', msg);
+            handled = true;
+            break;
         }
       }
-      if (rt == false) {
-        console.log(msg);
+
+      if (!handled) {
+        console.log('Unhandled message in AllotDutyComponent:', msg);
       }
-      return rt;
-    })
 
-    this.getCarTypeName();
+      return handled;
+    });
+  }
 
+  initializeForm() {
     this.dutyForm = this.fb.group({
       selectedVendor: [null, Validators.required],
       vendorContact: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
@@ -86,18 +104,29 @@ export class AllotDutyComponent implements OnInit {
       driverName: [''],
       driverContact: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]]
     });
-
-
   }
 
-  close() {
-    console.log("Close clicked");
+  getCarTypeName() {
+    this.carTypeMaster.GateAllCarType({
+      PageNo: 1,
+      PageSize: 10,
+      Search: this.carTypeSearch || '',
+    });
   }
 
-  save() {
-    console.log("Form Submitted:", this.dutyForm.value);
-    this.dutyService.duty(this.dutyForm.value);
-    this.messageService.add({ severity: 'contrast', summary: 'Info', detail: 'Please wait processing...' });
+  filterCarTypes(event: any) {
+    if (this.carTypes) {
+      const query = event.query.toLowerCase();
+      this.filteredCarTypes = this.carTypes.filter((type) =>
+        type.car_type.toLowerCase().includes(query)
+      );
+    }
+  }
+
+
+  onCarTypeSelect(carType: any) {
+    this.dutyForm.get('selectedCarType')?.setValue(carType);
+    console.log('Car Type selected:', carType);
   }
 
   allowOnlyNumbers(event: KeyboardEvent) {
@@ -107,29 +136,47 @@ export class AllotDutyComponent implements OnInit {
     }
   }
 
-  onCarTypeSelect(cartype: any) {
-    if (this.dutyForm) {
-      this.dutyForm.get('CarType')?.setValue(cartype.value.id);
+  save() {
+    if (this.dutyForm.invalid) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Form Error',
+        detail: 'Please fill in all required fields correctly.'
+      });
+      return;
     }
-  }
 
-  filteredCarTypes: any[] = [];
+    const formValue = this.dutyForm.value;
 
-  filterCarTypes(event: any) {
-    if (!this.carTypes) return;
-    const query = event.query.toLowerCase();
-    this.filteredCarTypes = this.carTypes.filter((type) =>
-      type.car_type.toLowerCase().includes(query)
-    );
-    console.log(this.filteredCarTypes)
-  }
+    const formatDate = (date: Date | null) => {
+      return date ? new Date(date).toISOString() : null;
+    };
 
-  getCarTypeName() {
-    // console.log('getCarTypeName');
-    this.carTypeMaster.GateAllCarType({
-      PageNo: 1,
-      PageSize: 10,
-      Search: this.carTypeSearch,
+    const payload = {
+      selectedVendor: formValue.selectedVendor,
+      vendorContact: formValue.vendorContact,
+      carType: formValue.selectedCarType?.car_type || null,
+      carTypeId: formValue.selectedCarType?.id || null,
+      grgOutTime: formatDate(formValue.grgOutTime),
+      vendorGrgOutTime: formatDate(formValue.vendorGrgOutTime),
+      vendorAdvanced: formValue.vendorAdvanced,
+      carNo: formValue.carNo,
+      driverName: formValue.driverName,
+      driverContact: formValue.driverContact
+    };
+
+    console.log('Sending payload:', payload);
+
+    this.dutyService.duty(payload);  // assuming it uses WebSocket
+    this.messageService.add({
+      severity: 'info',
+      summary: 'Info',
+      detail: 'Please wait, processing...'
     });
+  }
+
+
+  close() {
+    console.log('Close clicked');
   }
 }
