@@ -14,15 +14,6 @@ export class MinvoiceService extends BaseService {
   getMonthlySetupCode(payload:any){
     this.call('minvoice.getMonthlySetupCode', payload);
   }
-
-  getAllBranchDropdown(payload:any){
-    this.call('minvoice.getAllBranchDropdown', payload);
-  }
-
-    getAllCompanyDropdown(payload:any){
-    this.call('minvoice.getAllCompanyDropdown', payload);
-  }
-
   getMonthlyBookingList(payload:any){
     this.call('minvoice.getMonthlyBookingList', payload);
   }
