@@ -90,7 +90,7 @@ export class MonthlyInvoiceCreateComponent implements OnInit{
 
         } else if (msg.for === 'partyDropdown') {
           this.PartyName = msg.data;
-          console.log("party:",this.PartyName)
+          console.log("party:", msg.data)
           const party = this.PartyName.find((c: any) => c.id === 1398);
             if (party) {
               console.log(party);
@@ -103,7 +103,7 @@ export class MonthlyInvoiceCreateComponent implements OnInit{
          else if (msg.for === 'companyDropdown') {
           this.companies = msg.data;
           console.log("companies",this.companies)
-          const company = this.companies.find((c: any) => c.Id === 81);
+          const company = this.companies.find((c: any) => c.Id == 81);
             if (company) {
               console.log(company);
             }
@@ -419,6 +419,7 @@ filterCompany(event: any) {
       this.checkAndLoadDutyTable();
 
     }
+    console.log(branch)
   }
 
   onCitySelect(city: any) {
