@@ -71,6 +71,7 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
       if (msg.for) {
         if (msg.for === 'CarTypeGate') {
           this.carTypes = msg.data;
+          this.mapCarAndDutyTypesToDutyData();
           console.log('cartype', this.carTypes);
           rt = true;
         } else if (msg.for === 'getAllCityDropdown') {
@@ -109,6 +110,7 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
         } else if (msg.for === 'minvoice.getMonthlyBookingList') {
           this.dutyTableData = msg.data || [];
           this.totalRecords = msg.total || 0;
+          this.mapCarAndDutyTypesToDutyData();
           console.log('dutytable data:', this.dutyTableData);
           this.tableLoading = false;
           this.cdr.detectChanges();
@@ -227,6 +229,36 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
       DutyNo: [''],
     });
   }
+
+  private mapCarAndDutyTypesToDutyData() {
+  if (!this.dutyTableData?.length) return;
+
+  this.dutyTableData.forEach((duty: any) => {
+    // ✅ Car Type Mapping
+    const carType = this.carTypes?.find((c: any) => c.id == duty.CarType);
+    duty.CarTypeName = carType ? carType.car_type : '';
+
+    // ✅ Duty Type Mapping
+    const dutyType = this.dutyTypes.find((d: any) => d.value == duty.DutyType);
+    duty.DutyTypeName = dutyType ? dutyType.label : '';
+
+    // ✅ Date-Time Handling
+    if (duty.GarageOutDate) {
+      const out = new Date(duty.GarageOutDate);
+      duty.fromDate = out.toISOString().split('T')[0];
+      duty.fromTime = out.toTimeString().slice(0, 5);
+    }
+
+    if (duty.GarageInDate) {
+      const inDate = new Date(duty.GarageInDate);
+      duty.toDate = inDate.toISOString().split('T')[0];
+      duty.toTime = inDate.toTimeString().slice(0, 5);
+    }
+  });
+
+  this.cdr.detectChanges();
+}
+
 
   checkAndLoadDutyTable() {
     const party_id = Number(this.invoiceForm.get('party_id')?.value);
@@ -509,63 +541,110 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
   }
 
   // After add duty ui and table
-  months = [
-    { label: 'Jan', value: 'Jan' },
-    { label: 'Feb', value: 'Feb' },
-    { label: 'Mar', value: 'Mar' },
-    { label: 'Apr', value: 'Apr' },
-    { label: 'May', value: 'May' },
-    { label: 'Jun', value: 'Jun' },
-    { label: 'Jul', value: 'Jul' },
-    { label: 'Aug', value: 'Aug' },
-    { label: 'Sep', value: 'Sep' },
-    { label: 'Oct', value: 'Oct' },
-    { label: 'Nov', value: 'Nov' },
-    { label: 'Dec', value: 'Dec' },
-  ];
 
-  selectedMonth = 'Jan';
-  dbillDate = new Date();
-  billNo = '';
-  fixedAmount = 54000;
-  extraHours = 0;
-  exceptDayHrs = 0;
-  fuelAmount = 0;
-  nightAmount = 0;
-  numDays = 0;
-  rate = 0;
-  rateAmount = 0;
-  mobileAmount = 0;
-  outstationText = '';
-  parking = 600;
-  desc = '';
-  billTotal = 54000;
-  advance = 0;
-  amountPayable = 54600;
+  // Column 1
+  fixedAmount: number = 0;
+  extraHours: number = 0;
+  extrakm: number = 0;
+  exceptDayHrs: number = 0;
+  extraDaykm: number = 0;
+  fuelAmount: number = 0;
 
-  entries = [
-    {
-      id: 1,
-      outDate: '19/02/2024',
-      outTime: '10:00',
-      inDate: '19/02/2024',
-      inTime: '20:00',
-      totalTime: '10:00',
-      overTime: 0,
-      kmOut: 1550,
-      kmIn: 1556,
-      totalKm: 6,
-      parking: 600,
-      nightHalt: 0,
-      outstation: '',
-      carNo: 4533,
-    },
-  ];
+  // Column 2
+  numDays: number = 0;
+  rate1: number = 0;
+  rate2: number = 0;
+  rate3: number = 0;
+  rate4: number = 0;
+  mobileAmount: number = 0;
 
-  selectedEntries = [];
+  // Column 3
+  fixedAmount2: number = 0;
+  amountPayableText: string = '';
+  billTotal2: number = 0;
+  advance2: number = 0;
+  amount2: number = 0;
+  desc2: string = '';
+  isParkingTaxApplied: boolean = false;
 
-  calculate() {
-    this.amountPayable =
-      this.billTotal + this.parking + this.nightAmount - this.advance;
-  }
+  // Column 4
+  billTotal: number = 0;
+  advance: number = 0;
+  serviceTax: number = 0;
+  eduCess: number = 0;
+  sbCess: number = 0;
+  roundOff: number = 0;
+  amountPayable: number = 0;
+
+  // Extra
+  desc: string = '';
+
+ calculateBillAndLog() {
+  // Auto-fill some fields with example values (for demo/testing)
+  this.fixedAmount = 2000;
+  this.extraHours = 3;
+  this.extrakm = 15;
+  this.fuelAmount = 500;
+  this.numDays = 5;
+  this.rate1 = 1000;
+  this.rate2 = 800;
+  this.rate3 = 1200;
+  this.mobileAmount = 150;
+  this.billTotal = this.fixedAmount + this.fuelAmount + this.rate1;
+  this.amountPayable = this.billTotal - this.advance;
+
+  // Optional: Update other dependent fields
+  this.amountPayableText = `₹${this.amountPayable.toFixed(2)}`;
+  this.billTotal2 = this.billTotal;
+  this.amount2 = this.amountPayable;
+  this.desc2 = 'Sample Description';
+
+  // Log everything
+  this.logBillingFormValues();
+}
+
+logBillingFormValues() {
+  const billingData = {
+    // Column 1
+    fixedAmount: this.fixedAmount,
+    extraHours: this.extraHours,
+    extrakm: this.extrakm,
+    exceptDayHrs: this.exceptDayHrs,
+    extraDaykm: this.extraDaykm,
+    fuelAmount: this.fuelAmount,
+
+    // Column 2
+    numDays: this.numDays,
+    rate1: this.rate1,
+    rate2: this.rate2,
+    rate3: this.rate3,
+    rate4: this.rate4,
+    mobileAmount: this.mobileAmount,
+
+    // Column 3
+    fixedAmount2: this.fixedAmount2,
+    amountPayableText: this.amountPayableText,
+    billTotal2: this.billTotal2,
+    advance2: this.advance2,
+    amount2: this.amount2,
+    desc2: this.desc2,
+    isParkingTaxApplied: this.isParkingTaxApplied,
+
+    // Column 4
+    billTotal: this.billTotal,
+    advance: this.advance,
+    serviceTax: this.serviceTax,
+    eduCess: this.eduCess,
+    sbCess: this.sbCess,
+    roundOff: this.roundOff,
+    amountPayable: this.amountPayable,
+
+    // Extra
+    desc: this.desc
+  };
+
+  console.log('📋 Billing Form Values:', billingData);
+}
+
+
 }
