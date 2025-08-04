@@ -46,6 +46,10 @@ export class commonService extends BaseService {
     this.call('common.getAllVendor', {});
   }
 
+  guestFilterBySearch(payload: { party_id: number; Search: string }): void {
+  this.call('common.guestFilterBySearch', payload);
+}
+
   protected handleMessage(msg: any): boolean {
     return false;
   }
