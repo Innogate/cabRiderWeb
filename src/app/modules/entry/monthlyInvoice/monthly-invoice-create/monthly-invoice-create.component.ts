@@ -52,6 +52,8 @@ import { HelperService } from '../../../../services/helper.service';
   styleUrl: './monthly-invoice-create.component.css',
 })
 export class MonthlyInvoiceCreateComponent implements OnInit {
+
+
   constructor(
     private fb: FormBuilder,
     private carTypeMaster: carTypeMasterService,
@@ -117,6 +119,7 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
           rt = true;
         } else if (msg.for === 'minvoice.getMonthlySetupCode') {
           this.monthlySetupData = msg.data;
+          console.log("setupdata",this.monthlySetupData)
         }
       }
       if (rt == false) {
@@ -178,6 +181,8 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
   dutyTableData: any[] = [];
   tableLoading = false;
   totalRecords = 0;
+  totalSelectedDays: number = 0;
+  totalCalculatedAmount: number = 0;
 
   invoices = [
     {
@@ -234,15 +239,15 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
   if (!this.dutyTableData?.length) return;
 
   this.dutyTableData.forEach((duty: any) => {
-    // ✅ Car Type Mapping
+    //  Car Type Mapping
     const carType = this.carTypes?.find((c: any) => c.id == duty.CarType);
     duty.CarTypeName = carType ? carType.car_type : '';
 
-    // ✅ Duty Type Mapping
+    //  Duty Type Mapping
     const dutyType = this.dutyTypes.find((d: any) => d.value == duty.DutyType);
     duty.DutyTypeName = dutyType ? dutyType.label : '';
 
-    // ✅ Date-Time Handling
+    //  Date-Time Handling
     if (duty.GarageOutDate) {
       const out = new Date(duty.GarageOutDate);
       duty.fromDate = out.toISOString().split('T')[0];
@@ -532,13 +537,38 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
   mainDutyList: any[] = []; // this holds the final duty list shown in main UI
 
   saveSelectedDuties() {
-    const selected = this.dutyTableData.filter((item: any) => item.selected);
-    selected.forEach((item: any) => {
-      this.mainDutyList.push({ ...item });
-    });
-    // Close dialog
-    this.displayDuty = false;
-  }
+  const selected = this.dutyTableData.filter((item: any) => item.selected);
+
+  let totalDays = 0;
+  let totalAmount = 0;
+
+  selected.forEach((item: any) => {
+    const fromDate = new Date(item.fromDate);
+    const toDate = new Date(item.toDate);
+
+    if (!isNaN(fromDate.getTime()) && !isNaN(toDate.getTime())) {
+      const diffTime = toDate.getTime() - fromDate.getTime();
+      const days = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
+      totalDays += days;
+
+      // 🔍 Find DutyAmt from monthlySetupData based on DutyNo
+      const setup = this.monthlySetupData?.find((s: any) => s.DutyNo === item.DutyNo);
+      const dutyAmt = setup?.DutyAmt ?? 0;
+
+      const amount = (dutyAmt / 30) * days;
+      totalAmount += amount;
+    }
+
+    this.mainDutyList.push({ ...item });
+  });
+
+  console.log("Total selected duty days:", totalDays);
+  console.log("Total selected duty amount:", totalAmount);
+   this.totalSelectedDays = totalDays; // if you want to use it elsewhere
+   this.totalCalculatedAmount = totalAmount;
+  this.displayDuty = false;
+}
+
 
   // After add duty ui and table
 
@@ -579,13 +609,13 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
   // Extra
   desc: string = '';
 
- calculateBillAndLog() {
+calculateBillAndLog() {
   // Auto-fill some fields with example values (for demo/testing)
-  this.fixedAmount = 2000;
+  this.fixedAmount = this.totalCalculatedAmount;
   this.extraHours = 3;
   this.extrakm = 15;
   this.fuelAmount = 500;
-  this.numDays = 5;
+  this.numDays = this.totalSelectedDays;
   this.rate1 = 1000;
   this.rate2 = 800;
   this.rate3 = 1200;
@@ -599,14 +629,12 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
   this.amount2 = this.amountPayable;
   this.desc2 = 'Sample Description';
 
-  // Log everything
-  this.logBillingFormValues();
 }
 
 logBillingFormValues() {
   const billingData = {
     // Column 1
-    fixedAmount: this.fixedAmount,
+    fixedAmount: this.totalCalculatedAmount,
     extraHours: this.extraHours,
     extrakm: this.extrakm,
     exceptDayHrs: this.exceptDayHrs,
@@ -642,7 +670,6 @@ logBillingFormValues() {
     // Extra
     desc: this.desc
   };
-
   console.log('📋 Billing Form Values:', billingData);
 }
 
