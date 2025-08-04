@@ -587,18 +587,17 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
   // After add duty ui and table
 
   calculateTotals(selected: any[]) {
-    // 🔍 1. Validate DutyNo for all selected items
-    const formDutyNo = (this.invoiceForm.get('DutyNo')?.value);
+    // const formDutyNo = (this.invoiceForm.get('DutyNo')?.value);
 
-    if (!formDutyNo) {
-      this.messageService.add({
-        severity: 'warn',
-        summary: 'Missing Duty Number',
-        detail:
-          'Please select Duty Number for all selected rows before calculating.',
-      });
-      return;
-    }
+    // if (!formDutyNo) {
+    //   this.messageService.add({
+    //     severity: 'warn',
+    //     summary: 'Missing Duty Number',
+    //     detail:
+    //       'Please select Duty Number for all selected rows before calculating.',
+    //   });
+    //   return;
+    // }
 
     // ✅ 2. Proceed with calculation if all DutyNo are valid
     let totalDays = 0;
