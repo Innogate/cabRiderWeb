@@ -54,6 +54,7 @@ import { HelperService } from '../../../../services/helper.service';
 export class MonthlyInvoiceCreateComponent implements OnInit {
 
 
+
   constructor(
     private fb: FormBuilder,
     private carTypeMaster: carTypeMasterService,
@@ -183,6 +184,9 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
   totalRecords = 0;
   totalSelectedDays: number = 0;
   totalCalculatedAmount: number = 0;
+  totalTimeText: string = '';
+  extraHour : number = 0
+
 
   invoices = [
     {
@@ -541,8 +545,11 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
 
   let totalDays = 0;
   let totalAmount = 0;
+  let totalMinutes = 0;
 
   selected.forEach((item: any) => {
+
+    //  Find Totalday from monthlySetupData based on DutyNo
     const fromDate = new Date(item.fromDate);
     const toDate = new Date(item.toDate);
 
@@ -551,7 +558,7 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
       const days = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
       totalDays += days;
 
-      // 🔍 Find DutyAmt from monthlySetupData based on DutyNo
+      //  Find TotalAmount from monthlySetupData based on DutyNo
       const setup = this.monthlySetupData?.find((s: any) => s.DutyNo === item.DutyNo);
       const dutyAmt = setup?.DutyAmt ?? 0;
 
@@ -559,13 +566,53 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
       totalAmount += amount;
     }
 
+    // --- Total Time Calculation in Minutes ---
+    if (item.fromTime && item.toTime) {
+      const [fromHours, fromMinutes] = item.fromTime.split(":").map(Number);
+      const [toHours, toMinutes] = item.toTime.split(":").map(Number);
+
+      let start = new Date();
+      let end = new Date();
+
+      start.setHours(fromHours, fromMinutes, 0, 0);
+      end.setHours(toHours, toMinutes, 0, 0);
+
+      if (end < start) {
+        end.setDate(end.getDate() + 1); // Overnight
+      }
+
+      const diff = (end.getTime() - start.getTime()) / (1000 * 60);
+      totalMinutes += diff;
+
+        // Convert total minutes to decimal hours
+      const totalHoursDecimal = totalMinutes / 60;
+      this.totalTimeText = `${totalHoursDecimal.toFixed(2)} hrs`;
+
+      const setup = this.monthlySetupData?.find((s: any) => s.DutyNo === item.DutyNo);
+      const totalhrs = setup?.TotHrs ?? 0;
+
+      if(this.totalTimeText > totalhrs){
+       const extraHrs = (Number(this.totalTimeText) - totalhrs)
+       this.extraHour = extraHrs;
+
+      }
+      console.log("Extrahour:",this.extraHour)
+    }
+
     this.mainDutyList.push({ ...item });
   });
 
-  console.log("Total selected duty days:", totalDays);
-  console.log("Total selected duty amount:", totalAmount);
-   this.totalSelectedDays = totalDays; // if you want to use it elsewhere
+
+
+   this.totalSelectedDays = totalDays;
    this.totalCalculatedAmount = totalAmount;
+
+
+   console.log("Total selected hour:", this.totalTimeText);
+   console.log("Total selected duty days:", totalDays);
+   console.log("Total selected duty amount:", totalAmount);
+
+
   this.displayDuty = false;
 }
 
