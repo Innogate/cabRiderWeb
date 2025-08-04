@@ -52,9 +52,6 @@ import { HelperService } from '../../../../services/helper.service';
   styleUrl: './monthly-invoice-create.component.css',
 })
 export class MonthlyInvoiceCreateComponent implements OnInit {
-
-
-
   constructor(
     private fb: FormBuilder,
     private carTypeMaster: carTypeMasterService,
@@ -120,7 +117,7 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
           rt = true;
         } else if (msg.for === 'minvoice.getMonthlySetupCode') {
           this.monthlySetupData = msg.data;
-          console.log("setupdata", this.monthlySetupData)
+          console.log('setupdata', this.monthlySetupData);
         }
       }
       if (rt == false) {
@@ -184,7 +181,9 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
   totalRecords = 0;
   totalSelectedDays: number = 0;
   totalCalculatedAmount: number = 0;
-  totalSelectedKm: number = 0;
+  totalTimeText: string = '';
+  extraHour: number = 0;
+  totalExtraHour: number = 0;
 
   invoices = [
     {
@@ -246,7 +245,9 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
       duty.CarTypeName = carType ? carType.car_type : '';
 
       //  Duty Type Mapping
-      const dutyType = this.dutyTypes.find((d: any) => d.value == duty.DutyType);
+      const dutyType = this.dutyTypes.find(
+        (d: any) => d.value == duty.DutyType
+      );
       duty.DutyTypeName = dutyType ? dutyType.label : '';
 
       //  Date-Time Handling
@@ -265,7 +266,6 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
 
     this.cdr.detectChanges();
   }
-
 
   checkAndLoadDutyTable() {
     const party_id = Number(this.invoiceForm.get('party_id')?.value);
@@ -577,7 +577,7 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
 
     this.totalSelectedDays = totalDays;
     this.totalCalculatedAmount = totalAmount;
-    this.totalSelectedKm = totalKm; // ✅ Store for use elsewhere
+    this.totalSelectedDays = totalKm; // ✅ Store for use elsewhere
 
     this.displayDuty = false;
 
@@ -585,6 +585,102 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
 
 
   // After add duty ui and table
+
+  calculateTotals(selected: any[]) {
+    // 🔍 1. Validate DutyNo for all selected items
+    const formDutyNo = (this.invoiceForm.get('DutyNo')?.value);
+
+    if (!formDutyNo) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Missing Duty Number',
+        detail:
+          'Please select Duty Number for all selected rows before calculating.',
+      });
+      return;
+    }
+
+    // ✅ 2. Proceed with calculation if all DutyNo are valid
+    let totalDays = 0;
+    let totalAmount = 0;
+    let totalMinutes = 0;
+    let totalhrs = 0;
+
+    selected.forEach((item: any) => {
+      const fromDate = new Date(item.fromDate);
+      const toDate = new Date(item.toDate);
+
+      if (!isNaN(fromDate.getTime()) && !isNaN(toDate.getTime())) {
+        const diffTime = toDate.getTime() - fromDate.getTime();
+        const days = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
+        totalDays += days;
+
+        const setup = this.monthlySetupData?.find(
+          (s: any) => s.DutyNo === item.DutyNo
+        );
+        const dutyAmt = setup?.DutyAmt ?? 0;
+        const amount = (dutyAmt / 30) * days;
+        totalAmount += amount;
+      }
+
+      // ⏱️ Time calculation
+      if (item.fromTime && item.toTime) {
+        const [fromHours, fromMinutes] = item.fromTime.split(':').map(Number);
+        const [toHours, toMinutes] = item.toTime.split(':').map(Number);
+
+        const start = new Date();
+        const end = new Date();
+
+        start.setHours(fromHours, fromMinutes, 0, 0);
+        end.setHours(toHours, toMinutes, 0, 0);
+
+        if (end < start) {
+          end.setDate(end.getDate() + 1); // Overnight shift
+        }
+
+        const diff = (end.getTime() - start.getTime()) / (1000 * 60);
+        totalMinutes += diff;
+
+        const setup = this.monthlySetupData?.find(
+          (s: any) => s.DutyNo === item.DutyNo
+        );
+        if (setup?.GrgInTime && setup?.GrgOutTime) {
+          const [inH, inM] = setup.GrgInTime.split(':').map(Number);
+          const [outH, outM] = setup.GrgOutTime.split(':').map(Number);
+
+          const inDate = new Date();
+          const outDate = new Date();
+
+          inDate.setHours(inH, inM, 0, 0);
+          outDate.setHours(outH, outM, 0, 0);
+
+          if (outDate < inDate) {
+            outDate.setDate(outDate.getDate() + 1);
+          }
+
+          const diffMs = outDate.getTime() - inDate.getTime();
+          totalhrs = diffMs / (1000 * 60 * 60);
+        }
+      }
+    });
+
+    const totalHoursDecimal = totalMinutes / 60;
+    this.totalTimeText = `${totalHoursDecimal.toFixed(2)} hrs`;
+
+    if (Number(this.totalTimeText) > totalhrs) {
+      this.extraHour = Number(this.totalTimeText) - totalhrs;
+    }
+
+    // ✅ Set totals to UI-bound variables
+    this.totalSelectedDays = totalDays;
+    this.totalCalculatedAmount = totalAmount;
+    this.totalExtraHour = this.extraHour;
+
+    console.log('Total  hour:', this.totalTimeText);
+    console.log('Total duty days:', totalDays);
+    console.log('Total duty amount:', totalAmount);
+    console.log('Extra Hour:', this.extraHour);
+  }
 
   // Column 1
   fixedAmount: number = 0;
@@ -624,9 +720,10 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
   desc: string = '';
 
   calculateBillAndLog() {
+    this.calculateTotals(this.mainDutyList);
     // Auto-fill some fields with example values (for demo/testing)
     this.fixedAmount = this.totalCalculatedAmount;
-    this.extraHours = 3;
+    this.extraHours = this.totalExtraHour;
     this.extrakm = 15;
     this.fuelAmount = 500;
     this.numDays = this.totalSelectedDays;
@@ -642,14 +739,13 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
     this.billTotal2 = this.billTotal;
     this.amount2 = this.amountPayable;
     this.desc2 = 'Sample Description';
-
   }
 
   logBillingFormValues() {
     const billingData = {
       // Column 1
       fixedAmount: this.totalCalculatedAmount,
-      extraHours: this.extraHours,
+      extraHours: this.totalExtraHour,
       extrakm: this.extrakm,
       exceptDayHrs: this.exceptDayHrs,
       extraDaykm: this.extraDaykm,
@@ -682,10 +778,8 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
       amountPayable: this.amountPayable,
 
       // Extra
-      desc: this.desc
+      desc: this.desc,
     };
     console.log('📋 Billing Form Values:', billingData);
   }
-
-
 }
