@@ -65,7 +65,7 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
     private _invoice: InvoiceService,
     private _minvoice: MinvoiceService,
     private _helperService: HelperService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.commonApiService.registerPageHandler((msg) => {
@@ -120,7 +120,7 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
           rt = true;
         } else if (msg.for === 'minvoice.getMonthlySetupCode') {
           this.monthlySetupData = msg.data;
-          console.log("setupdata",this.monthlySetupData)
+          console.log("setupdata", this.monthlySetupData)
         }
       }
       if (rt == false) {
@@ -184,9 +184,7 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
   totalRecords = 0;
   totalSelectedDays: number = 0;
   totalCalculatedAmount: number = 0;
-  totalTimeText: string = '';
-  extraHour : number = 0
-
+  totalSelectedKm: number = 0;
 
   invoices = [
     {
@@ -240,33 +238,33 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
   }
 
   private mapCarAndDutyTypesToDutyData() {
-  if (!this.dutyTableData?.length) return;
+    if (!this.dutyTableData?.length) return;
 
-  this.dutyTableData.forEach((duty: any) => {
-    //  Car Type Mapping
-    const carType = this.carTypes?.find((c: any) => c.id == duty.CarType);
-    duty.CarTypeName = carType ? carType.car_type : '';
+    this.dutyTableData.forEach((duty: any) => {
+      //  Car Type Mapping
+      const carType = this.carTypes?.find((c: any) => c.id == duty.CarType);
+      duty.CarTypeName = carType ? carType.car_type : '';
 
-    //  Duty Type Mapping
-    const dutyType = this.dutyTypes.find((d: any) => d.value == duty.DutyType);
-    duty.DutyTypeName = dutyType ? dutyType.label : '';
+      //  Duty Type Mapping
+      const dutyType = this.dutyTypes.find((d: any) => d.value == duty.DutyType);
+      duty.DutyTypeName = dutyType ? dutyType.label : '';
 
-    //  Date-Time Handling
-    if (duty.GarageOutDate) {
-      const out = new Date(duty.GarageOutDate);
-      duty.fromDate = out.toISOString().split('T')[0];
-      duty.fromTime = out.toTimeString().slice(0, 5);
-    }
+      //  Date-Time Handling
+      if (duty.GarageOutDate) {
+        const out = new Date(duty.GarageOutDate);
+        duty.fromDate = out.toISOString().split('T')[0];
+        duty.fromTime = out.toTimeString().slice(0, 5);
+      }
 
-    if (duty.GarageInDate) {
-      const inDate = new Date(duty.GarageInDate);
-      duty.toDate = inDate.toISOString().split('T')[0];
-      duty.toTime = inDate.toTimeString().slice(0, 5);
-    }
-  });
+      if (duty.GarageInDate) {
+        const inDate = new Date(duty.GarageInDate);
+        duty.toDate = inDate.toISOString().split('T')[0];
+        duty.toTime = inDate.toTimeString().slice(0, 5);
+      }
+    });
 
-  this.cdr.detectChanges();
-}
+    this.cdr.detectChanges();
+  }
 
 
   checkAndLoadDutyTable() {
@@ -541,80 +539,49 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
   mainDutyList: any[] = []; // this holds the final duty list shown in main UI
 
   saveSelectedDuties() {
-  const selected = this.dutyTableData.filter((item: any) => item.selected);
+    const selected = this.dutyTableData.filter((item: any) => item.selected);
 
-  let totalDays = 0;
-  let totalAmount = 0;
-  let totalMinutes = 0;
+    let totalDays = 0;
+    let totalAmount = 0;
+    let totalKm = 0; // ✅ New variable to store total kilometers
 
-  selected.forEach((item: any) => {
+    selected.forEach((item: any) => {
+      const fromDate = new Date(item.fromDate);
+      const toDate = new Date(item.toDate);
 
-    //  Find Totalday from monthlySetupData based on DutyNo
-    const fromDate = new Date(item.fromDate);
-    const toDate = new Date(item.toDate);
+      if (!isNaN(fromDate.getTime()) && !isNaN(toDate.getTime())) {
+        const diffTime = toDate.getTime() - fromDate.getTime();
+        const days = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
+        totalDays += days;
 
-    if (!isNaN(fromDate.getTime()) && !isNaN(toDate.getTime())) {
-      const diffTime = toDate.getTime() - fromDate.getTime();
-      const days = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
-      totalDays += days;
+        // 🔍 Find DutyAmt from monthlySetupData based on DutyNo
+        const setup = this.monthlySetupData?.find((s: any) => s.DutyNo === item.DutyNo);
+        const dutyAmt = setup?.DutyAmt ?? 0;
 
-      //  Find TotalAmount from monthlySetupData based on DutyNo
-      const setup = this.monthlySetupData?.find((s: any) => s.DutyNo === item.DutyNo);
-      const dutyAmt = setup?.DutyAmt ?? 0;
+        const amount = (dutyAmt / 30) * days;
+        totalAmount += amount;
 
-      const amount = (dutyAmt / 30) * days;
-      totalAmount += amount;
-    }
-
-    // --- Total Time Calculation in Minutes ---
-    if (item.fromTime && item.toTime) {
-      const [fromHours, fromMinutes] = item.fromTime.split(":").map(Number);
-      const [toHours, toMinutes] = item.toTime.split(":").map(Number);
-
-      let start = new Date();
-      let end = new Date();
-
-      start.setHours(fromHours, fromMinutes, 0, 0);
-      end.setHours(toHours, toMinutes, 0, 0);
-
-      if (end < start) {
-        end.setDate(end.getDate() + 1); // Overnight
-      }
-
-      const diff = (end.getTime() - start.getTime()) / (1000 * 60);
-      totalMinutes += diff;
-
-        // Convert total minutes to decimal hours
-      const totalHoursDecimal = totalMinutes / 60;
-      this.totalTimeText = `${totalHoursDecimal.toFixed(2)} hrs`;
-
-      const setup = this.monthlySetupData?.find((s: any) => s.DutyNo === item.DutyNo);
-      const totalhrs = setup?.TotHrs ?? 0;
-
-      if(this.totalTimeText > totalhrs){
-       const extraHrs = (Number(this.totalTimeText) - totalhrs)
-       this.extraHour = extraHrs;
+        const km = Number(item.totalKm) || 0;
+        totalKm += km;
 
       }
-      console.log("Extrahour:",this.extraHour)
-    }
 
-    this.mainDutyList.push({ ...item });
-  });
+      // ✅ Add kilometers if available
 
+      this.mainDutyList.push({ ...item });
+    });
 
+    console.log("Total selected duty days:", totalDays);
+    console.log("Total selected duty amount:", totalAmount);
+    console.log("Total selected kilometers:", totalKm);
 
-   this.totalSelectedDays = totalDays;
-   this.totalCalculatedAmount = totalAmount;
+    this.totalSelectedDays = totalDays;
+    this.totalCalculatedAmount = totalAmount;
+    this.totalSelectedKm = totalKm; // ✅ Store for use elsewhere
 
+    this.displayDuty = false;
 
-   console.log("Total selected hour:", this.totalTimeText);
-   console.log("Total selected duty days:", totalDays);
-   console.log("Total selected duty amount:", totalAmount);
-
-
-  this.displayDuty = false;
-}
+  }
 
 
   // After add duty ui and table
@@ -656,69 +623,69 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
   // Extra
   desc: string = '';
 
-calculateBillAndLog() {
-  // Auto-fill some fields with example values (for demo/testing)
-  this.fixedAmount = this.totalCalculatedAmount;
-  this.extraHours = 3;
-  this.extrakm = 15;
-  this.fuelAmount = 500;
-  this.numDays = this.totalSelectedDays;
-  this.rate1 = 1000;
-  this.rate2 = 800;
-  this.rate3 = 1200;
-  this.mobileAmount = 150;
-  this.billTotal = this.fixedAmount + this.fuelAmount + this.rate1;
-  this.amountPayable = this.billTotal - this.advance;
+  calculateBillAndLog() {
+    // Auto-fill some fields with example values (for demo/testing)
+    this.fixedAmount = this.totalCalculatedAmount;
+    this.extraHours = 3;
+    this.extrakm = 15;
+    this.fuelAmount = 500;
+    this.numDays = this.totalSelectedDays;
+    this.rate1 = 1000;
+    this.rate2 = 800;
+    this.rate3 = 1200;
+    this.mobileAmount = 150;
+    this.billTotal = this.fixedAmount + this.fuelAmount + this.rate1;
+    this.amountPayable = this.billTotal - this.advance;
 
-  // Optional: Update other dependent fields
-  this.amountPayableText = `₹${this.amountPayable.toFixed(2)}`;
-  this.billTotal2 = this.billTotal;
-  this.amount2 = this.amountPayable;
-  this.desc2 = 'Sample Description';
+    // Optional: Update other dependent fields
+    this.amountPayableText = `₹${this.amountPayable.toFixed(2)}`;
+    this.billTotal2 = this.billTotal;
+    this.amount2 = this.amountPayable;
+    this.desc2 = 'Sample Description';
 
-}
+  }
 
-logBillingFormValues() {
-  const billingData = {
-    // Column 1
-    fixedAmount: this.totalCalculatedAmount,
-    extraHours: this.extraHours,
-    extrakm: this.extrakm,
-    exceptDayHrs: this.exceptDayHrs,
-    extraDaykm: this.extraDaykm,
-    fuelAmount: this.fuelAmount,
+  logBillingFormValues() {
+    const billingData = {
+      // Column 1
+      fixedAmount: this.totalCalculatedAmount,
+      extraHours: this.extraHours,
+      extrakm: this.extrakm,
+      exceptDayHrs: this.exceptDayHrs,
+      extraDaykm: this.extraDaykm,
+      fuelAmount: this.fuelAmount,
 
-    // Column 2
-    numDays: this.numDays,
-    rate1: this.rate1,
-    rate2: this.rate2,
-    rate3: this.rate3,
-    rate4: this.rate4,
-    mobileAmount: this.mobileAmount,
+      // Column 2
+      numDays: this.numDays,
+      rate1: this.rate1,
+      rate2: this.rate2,
+      rate3: this.rate3,
+      rate4: this.rate4,
+      mobileAmount: this.mobileAmount,
 
-    // Column 3
-    fixedAmount2: this.fixedAmount2,
-    amountPayableText: this.amountPayableText,
-    billTotal2: this.billTotal2,
-    advance2: this.advance2,
-    amount2: this.amount2,
-    desc2: this.desc2,
-    isParkingTaxApplied: this.isParkingTaxApplied,
+      // Column 3
+      fixedAmount2: this.fixedAmount2,
+      amountPayableText: this.amountPayableText,
+      billTotal2: this.billTotal2,
+      advance2: this.advance2,
+      amount2: this.amount2,
+      desc2: this.desc2,
+      isParkingTaxApplied: this.isParkingTaxApplied,
 
-    // Column 4
-    billTotal: this.billTotal,
-    advance: this.advance,
-    serviceTax: this.serviceTax,
-    eduCess: this.eduCess,
-    sbCess: this.sbCess,
-    roundOff: this.roundOff,
-    amountPayable: this.amountPayable,
+      // Column 4
+      billTotal: this.billTotal,
+      advance: this.advance,
+      serviceTax: this.serviceTax,
+      eduCess: this.eduCess,
+      sbCess: this.sbCess,
+      roundOff: this.roundOff,
+      amountPayable: this.amountPayable,
 
-    // Extra
-    desc: this.desc
-  };
-  console.log('📋 Billing Form Values:', billingData);
-}
+      // Extra
+      desc: this.desc
+    };
+    console.log('📋 Billing Form Values:', billingData);
+  }
 
 
 }
