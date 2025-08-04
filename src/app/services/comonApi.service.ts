@@ -50,6 +50,11 @@ export class commonService extends BaseService {
   this.call('common.guestFilterBySearch', payload);
 }
 
+
+  carSearchByCarNo(payload: { cartype_id: number; Search: string }): void {
+  this.call('common.searchBycarNo', payload);
+}
+
   protected handleMessage(msg: any): boolean {
     return false;
   }
