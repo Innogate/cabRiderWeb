@@ -52,6 +52,7 @@ import { HelperService } from '../../../../services/helper.service';
   styleUrl: './monthly-invoice-create.component.css',
 })
 export class MonthlyInvoiceCreateComponent implements OnInit {
+
   constructor(
     private fb: FormBuilder,
     private carTypeMaster: carTypeMasterService,
@@ -556,6 +557,8 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
   exceptDayHrs: any;
   extraDaykm: any;
   fuelAmount: any;
+  Sgst: any;
+
 
   // Column 2
   numDays: any;
@@ -564,6 +567,7 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
   rate3: any;
   rate4: any;
   mobileAmount: any;
+  Cgst: any;
 
   // Column 3
   fixedAmount2: any;
@@ -572,6 +576,7 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
   advance2: any;
   amount2: any;
   desc2: string = '';
+  igst: any;
   isParkingTaxApplied: boolean = false;
 
   // Column 4
