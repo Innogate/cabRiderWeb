@@ -52,6 +52,7 @@ import { HelperService } from '../../../../services/helper.service';
   styleUrl: './monthly-invoice-create.component.css',
 })
 export class MonthlyInvoiceCreateComponent implements OnInit {
+
   constructor(
     private fb: FormBuilder,
     private carTypeMaster: carTypeMasterService,
@@ -180,6 +181,7 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
   tableLoading = false;
   totalRecords = 0;
   totalSelectedDays: number = 0;
+  totalSelectedKm: number = 0;
   totalCalculatedAmount: number = 0;
   totalTimeText: string = '';
   extraHour: number = 0;
@@ -577,7 +579,7 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
 
     this.totalSelectedDays = totalDays;
     this.totalCalculatedAmount = totalAmount;
-    this.totalSelectedDays = totalKm; // ✅ Store for use elsewhere
+    this.totalSelectedKm = totalKm; // ✅ Store for use elsewhere
 
     this.displayDuty = false;
 
@@ -670,6 +672,7 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
       this.extraHour = Number(this.totalTimeText) - totalhrs;
     }
 
+
     // ✅ Set totals to UI-bound variables
     this.totalSelectedDays = totalDays;
     this.totalCalculatedAmount = totalAmount;
@@ -682,38 +685,38 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
   }
 
   // Column 1
-  fixedAmount: number = 0;
-  extraHours: number = 0;
-  extrakm: number = 0;
-  exceptDayHrs: number = 0;
-  extraDaykm: number = 0;
-  fuelAmount: number = 0;
+  fixedAmount: any;
+  extraHours: any;
+  extrakm: any;
+  exceptDayHrs: any;
+  extraDaykm: any;
+  fuelAmount: any;
 
   // Column 2
-  numDays: number = 0;
-  rate1: number = 0;
-  rate2: number = 0;
-  rate3: number = 0;
-  rate4: number = 0;
-  mobileAmount: number = 0;
+  numDays: any;
+  rate1: any;
+  rate2: any;
+  rate3: any;
+  rate4: any;
+  mobileAmount: any;
 
   // Column 3
-  fixedAmount2: number = 0;
+  fixedAmount2: any;
   amountPayableText: string = '';
-  billTotal2: number = 0;
-  advance2: number = 0;
-  amount2: number = 0;
+  billTotal2: any;
+  advance2: any;
+  amount2: any;
   desc2: string = '';
   isParkingTaxApplied: boolean = false;
 
   // Column 4
-  billTotal: number = 0;
-  advance: number = 0;
-  serviceTax: number = 0;
-  eduCess: number = 0;
-  sbCess: number = 0;
-  roundOff: number = 0;
-  amountPayable: number = 0;
+  billTotal: any;
+  advance: any;
+  serviceTax: any;
+  eduCess: any;
+  sbCess: any;
+  roundOff: any;
+  amountPayable: any;
 
   // Extra
   desc: string = '';
@@ -723,21 +726,22 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
     // Auto-fill some fields with example values (for demo/testing)
     this.fixedAmount = this.totalCalculatedAmount;
     this.extraHours = this.totalExtraHour;
-    this.extrakm = 15;
-    this.fuelAmount = 500;
+    this.extrakm = this.totalSelectedKm ;
+
     this.numDays = this.totalSelectedDays;
-    this.rate1 = 1000;
-    this.rate2 = 800;
-    this.rate3 = 1200;
-    this.mobileAmount = 150;
-    this.billTotal = this.fixedAmount + this.fuelAmount + this.rate1;
-    this.amountPayable = this.billTotal - this.advance;
+    // this.rate1 = 0;
+    // this.rate2 = 800;
+    // this.rate3 = 1200;
+    // this.mobileAmount = 150;
+    // this.fuelAmount = 0;
+    // this.billTotal = this.fixedAmount + this.fuelAmount + this.rate1;
+    // this.amountPayable = this.billTotal - this.advance;
 
     // Optional: Update other dependent fields
-    this.amountPayableText = `₹${this.amountPayable.toFixed(2)}`;
-    this.billTotal2 = this.billTotal;
-    this.amount2 = this.amountPayable;
-    this.desc2 = 'Sample Description';
+    // this.amountPayableText = `₹${this.amountPayable.toFixed(2)}`;
+    // this.billTotal2 = this.billTotal;
+    // this.amount2 = this.amountPayable;
+    // this.desc2 = 'Sample Description';
   }
 
   logBillingFormValues() {
