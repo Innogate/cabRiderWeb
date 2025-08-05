@@ -2,9 +2,24 @@ import { Injectable } from '@angular/core';
 import { WebSocketService } from './websocket.service';
 import { BaseService } from './base.service';
 
+export interface GuestPayload {
+  id: number;
+  PartyID: number;
+  party_name: string;
+  GuestName: string;
+  AddrType: string;
+  Address: string;
+  ContactNo: string;
+  AditionalContactNo: string;
+  EmailID: string;
+  Honorific: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
+
+
 export class guestMasterService extends BaseService {
   constructor(ws: WebSocketService) {
     super(ws);
@@ -14,8 +29,9 @@ export class guestMasterService extends BaseService {
     this.call('master.gatAllGuestMaster', payload);
   }
 
-  createGuest(id: any, PartyID: any, GuestName: string, AddrType: string, Addrr: string, ContactNo: string, WhatsappNo: string, Email_ID: string, Honorific: string){
-    this.call('master.createGuestMaster', {id, PartyID, GuestName, AddrType, Addrr, ContactNo, WhatsappNo, Email_ID, Honorific});
+  createGuest(payload:GuestPayload){
+    
+    this.call('master.createGuestMaster', payload);
   }
 
 //   Delete(payload: any){
