@@ -545,6 +545,7 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
     selected.forEach((item: any) => {
       this.mainDutyList.push({ ...item });
     });
+    console.log("maindutylist:", this.mainDutyList)
     this.displayDuty = false;
   }
 
@@ -738,45 +739,56 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
     // this.desc2 = 'Sample Description';
   }
 
-  logBillingFormValues() {
-    const billingData = {
-      // Column 1
-      fixedAmount: this.totalCalculatedAmount,
-      extraHours: this.totalExtraHour,
-      extrakm: this.extrakm,
-      exceptDayHrs: this.exceptDayHrs,
-      extraDaykm: this.extraDaykm,
-      fuelAmount: this.fuelAmount,
+  getBillingFormData() {
+  return {
+    // Column 1
+    fixedAmount: this.totalCalculatedAmount,
+    extraHours: this.totalExtraHour,
+    extrakm: this.extrakm,
+    exceptDayHrs: this.exceptDayHrs,
+    extraDaykm: this.extraDaykm,
+    fuelAmount: this.fuelAmount,
 
-      // Column 2
-      numDays: this.numDays,
-      rate1: this.rate1,
-      rate2: this.rate2,
-      rate3: this.rate3,
-      rate4: this.rate4,
-      mobileAmount: this.mobileAmount,
+    // Column 2
+    numDays: this.numDays,
+    rate1: this.rate1,
+    rate2: this.rate2,
+    rate3: this.rate3,
+    rate4: this.rate4,
+    mobileAmount: this.mobileAmount,
 
-      // Column 3
-      fixedAmount2: this.fixedAmount2,
-      amountPayableText: this.amountPayableText,
-      billTotal2: this.billTotal2,
-      advance2: this.advance2,
-      amount2: this.amount2,
-      desc2: this.desc2,
-      isParkingTaxApplied: this.isParkingTaxApplied,
+    // Column 3
+    fixedAmount2: this.fixedAmount2,
+    amountPayableText: this.amountPayableText,
+    billTotal2: this.billTotal2,
+    advance2: this.advance2,
+    amount2: this.amount2,
+    desc2: this.desc2,
+    isParkingTaxApplied: this.isParkingTaxApplied,
 
-      // Column 4
-      billTotal: this.billTotal,
-      advance: this.advance,
-      serviceTax: this.serviceTax,
-      eduCess: this.eduCess,
-      sbCess: this.sbCess,
-      roundOff: this.roundOff,
-      amountPayable: this.amountPayable,
+    // Column 4
+    billTotal: this.billTotal,
+    advance: this.advance,
+    serviceTax: this.serviceTax,
+    eduCess: this.eduCess,
+    sbCess: this.sbCess,
+    roundOff: this.roundOff,
+    amountPayable: this.amountPayable,
 
-      // Extra
-      desc: this.desc,
-    };
-    console.log('📋 Billing Form Values:', billingData);
-  }
+    // Extra
+    desc: this.desc,
+  };
+}
+logBillingFormValues() {
+  const payload = {
+    ...this.getBillingFormData(),
+    id: this.mainDutyList.map(d => d.id)
+  };
+
+  this._minvoice.createMonthlyBilling(payload);
+  console.log(' Final Payload:', payload);
+}
+
+
+
 }
