@@ -52,7 +52,6 @@ import { HelperService } from '../../../../services/helper.service';
   styleUrl: './monthly-invoice-create.component.css',
 })
 export class MonthlyInvoiceCreateComponent implements OnInit {
-
   constructor(
     private fb: FormBuilder,
     private carTypeMaster: carTypeMasterService,
@@ -63,7 +62,7 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
     private _invoice: InvoiceService,
     private _minvoice: MinvoiceService,
     private _helperService: HelperService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.commonApiService.registerPageHandler((msg) => {
@@ -234,7 +233,7 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
       RoundOff: ['0'],
       NetAmount: ['0'],
       Advance: [''],
-      DutyNo: [''],
+      SetupCode: [''],
     });
   }
 
@@ -542,147 +541,13 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
 
   saveSelectedDuties() {
     const selected = this.dutyTableData.filter((item: any) => item.selected);
-
-    let totalDays = 0;
-    let totalAmount = 0;
-    let totalKm = 0; // ✅ New variable to store total kilometers
-
     selected.forEach((item: any) => {
-      const fromDate = new Date(item.fromDate);
-      const toDate = new Date(item.toDate);
-
-      if (!isNaN(fromDate.getTime()) && !isNaN(toDate.getTime())) {
-        const diffTime = toDate.getTime() - fromDate.getTime();
-        const days = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
-        totalDays += days;
-
-        // 🔍 Find DutyAmt from monthlySetupData based on DutyNo
-        const setup = this.monthlySetupData?.find((s: any) => s.DutyNo === item.DutyNo);
-        const dutyAmt = setup?.DutyAmt ?? 0;
-
-        const amount = (dutyAmt / 30) * days;
-        totalAmount += amount;
-
-        const km = Number(item.totalKm) || 0;
-        totalKm += km;
-
-      }
-
-      // ✅ Add kilometers if available
-
       this.mainDutyList.push({ ...item });
     });
-
-    console.log("Total selected duty days:", totalDays);
-    console.log("Total selected duty amount:", totalAmount);
-    console.log("Total selected kilometers:", totalKm);
-
-    this.totalSelectedDays = totalDays;
-    this.totalCalculatedAmount = totalAmount;
-    this.totalSelectedKm = totalKm; // ✅ Store for use elsewhere
-
     this.displayDuty = false;
-
   }
 
-
-  // After add duty ui and table
-
-  calculateTotals(selected: any[]) {
-    // const formDutyNo = (this.invoiceForm.get('DutyNo')?.value);
-
-    // if (!formDutyNo) {
-    //   this.messageService.add({
-    //     severity: 'warn',
-    //     summary: 'Missing Duty Number',
-    //     detail:
-    //       'Please select Duty Number for all selected rows before calculating.',
-    //   });
-    //   return;
-    // }
-
-    // ✅ 2. Proceed with calculation if all DutyNo are valid
-    let totalDays = 0;
-    let totalAmount = 0;
-    let totalMinutes = 0;
-    let totalhrs = 0;
-
-    selected.forEach((item: any) => {
-      const fromDate = new Date(item.fromDate);
-      const toDate = new Date(item.toDate);
-
-      if (!isNaN(fromDate.getTime()) && !isNaN(toDate.getTime())) {
-        const diffTime = toDate.getTime() - fromDate.getTime();
-        const days = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
-        totalDays += days;
-
-        const setup = this.monthlySetupData?.find(
-          (s: any) => s.DutyNo === item.DutyNo
-        );
-        const dutyAmt = setup?.DutyAmt ?? 0;
-        const amount = (dutyAmt / 30) * days;
-        totalAmount += amount;
-      }
-
-      // ⏱️ Time calculation
-      if (item.fromTime && item.toTime) {
-        const [fromHours, fromMinutes] = item.fromTime.split(':').map(Number);
-        const [toHours, toMinutes] = item.toTime.split(':').map(Number);
-
-        const start = new Date();
-        const end = new Date();
-
-        start.setHours(fromHours, fromMinutes, 0, 0);
-        end.setHours(toHours, toMinutes, 0, 0);
-
-        if (end < start) {
-          end.setDate(end.getDate() + 1); // Overnight shift
-        }
-
-        const diff = (end.getTime() - start.getTime()) / (1000 * 60);
-        totalMinutes += diff;
-
-        const setup = this.monthlySetupData?.find(
-          (s: any) => s.DutyNo === item.DutyNo
-        );
-        if (setup?.GrgInTime && setup?.GrgOutTime) {
-          const [inH, inM] = setup.GrgInTime.split(':').map(Number);
-          const [outH, outM] = setup.GrgOutTime.split(':').map(Number);
-
-          const inDate = new Date();
-          const outDate = new Date();
-
-          inDate.setHours(inH, inM, 0, 0);
-          outDate.setHours(outH, outM, 0, 0);
-
-          if (outDate < inDate) {
-            outDate.setDate(outDate.getDate() + 1);
-          }
-
-          const diffMs = outDate.getTime() - inDate.getTime();
-          totalhrs = diffMs / (1000 * 60 * 60);
-        }
-      }
-    });
-
-    const totalHoursDecimal = totalMinutes / 60;
-    this.totalTimeText = `${totalHoursDecimal.toFixed(2)} hrs`;
-
-    if (Number(this.totalTimeText) > totalhrs) {
-      this.extraHour = Number(this.totalTimeText) - totalhrs;
-    }
-
-
-    // ✅ Set totals to UI-bound variables
-    this.totalSelectedDays = totalDays;
-    this.totalCalculatedAmount = totalAmount;
-    this.totalExtraHour = this.extraHour;
-
-    console.log('Total  hour:', this.totalTimeText);
-    console.log('Total duty days:', totalDays);
-    console.log('Total duty amount:', totalAmount);
-    console.log('Extra Hour:', this.extraHour);
-  }
+  // AFTER ADD DUTY UI
 
   // Column 1
   fixedAmount: any;
@@ -721,13 +586,137 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
   // Extra
   desc: string = '';
 
+  calculateTotals(selected: any[]) {
+    const setupCode = this.invoiceForm.get('SetupCode')?.value;
+    // console.log('setupcode:', setupCode);
+
+    if (!setupCode) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Missing Setup Code',
+        detail: 'Please select Duty Setup Code before calculating.',
+      });
+      return;
+    }
+
+    let totalDays = 0;
+    let totalAmount = 0;
+    let totalMinutes = 0;
+    let totalhrs = 0;
+    this.extraHour = 0; // Reset
+    let totalKm = 0; // ✅ New variable to store total kilometers
+
+    const setup = this.monthlySetupData?.find((s: any) => s.id === setupCode);
+    // console.log('setup', setup);
+
+    if (!setup) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Setup Code Not Found',
+        detail: 'Selected Setup Code not found in Monthly Setup Data.',
+      });
+      return;
+    }
+
+    selected.forEach((item: any) => {
+      const fromDate = new Date(item.fromDate);
+      const toDate = new Date(item.toDate);
+
+      //  Day calculation
+      if (!isNaN(fromDate.getTime()) && !isNaN(toDate.getTime())) {
+        const diffTime = toDate.getTime() - fromDate.getTime();
+        const days = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
+        totalDays += days;
+
+        const dutyAmt = setup?.DutyAmt ?? 0;
+        // console.log('dutyamt', dutyAmt);
+        const amount = (dutyAmt / 30) * days;
+        totalAmount += amount;
+
+        const km = Number(item.TotalKm) || 0;
+        totalKm += km;
+      }
+
+      //  Time calculation
+      if (item.fromTime && item.toTime) {
+        const [fromHours, fromMinutes] = item.fromTime.split(':').map(Number);
+        const [toHours, toMinutes] = item.toTime.split(':').map(Number);
+
+        const start = new Date();
+        const end = new Date();
+
+        start.setHours(fromHours, fromMinutes, 0, 0);
+        end.setHours(toHours, toMinutes, 0, 0);
+
+        if (end < start) {
+          end.setDate(end.getDate() + 1); // Overnight
+        }
+
+        const diff = (end.getTime() - start.getTime()) / (1000 * 60); // minutes
+        totalMinutes += diff;
+      }
+    });
+
+    // 📊 Final calculations
+    const totalHoursDecimal = totalMinutes / 60;
+    this.totalTimeText = `${totalHoursDecimal.toFixed(2)} hrs`;
+    // console.log('tabletime:', this.totalTimeText);
+
+    // 🕒 Grg time check
+    if (setup?.GrgInTime && setup?.GrgOutTime) {
+      const inTime = new Date(setup.GrgInTime);
+      const outTime = new Date(setup.GrgOutTime);
+      // console.log(inTime,outTime)
+
+      if (isNaN(inTime.getTime()) || isNaN(outTime.getTime())) {
+        // console.warn('Invalid GrgInTime or GrgOutTime');
+        return;
+      }
+
+      const inDate = new Date();
+      const outDate = new Date();
+
+      inDate.setHours(inTime.getHours(), inTime.getMinutes(), 0, 0);
+      outDate.setHours(outTime.getHours(), outTime.getMinutes(), 0, 0);
+
+      // console.log(' Converted Grg Times →', inDate, outDate);
+
+      if (outDate < inDate) {
+        outDate.setDate(outDate.getDate() + 1); // overnight shift
+      }
+
+      const diffMs = outDate.getTime() - inDate.getTime();
+      const totalhrs = diffMs / (1000 * 60 * 60); // hours
+      // console.log(' Total Grg hours:', totalhrs);
+
+      const totalHoursDecimal = this.totalTimeText
+        ? parseFloat(this.totalTimeText)
+        : 0;
+
+      if (totalHoursDecimal > totalhrs) {
+        this.extraHour = totalHoursDecimal - totalhrs;
+      }
+    }
+
+    //  Set to UI-bound variables
+    this.totalSelectedDays = totalDays;
+    this.totalCalculatedAmount = totalAmount;
+    this.totalExtraHour = this.extraHour;
+    this.totalSelectedKm = totalKm; //  Store for use elsewhere
+
+    console.log('Total selected kilometers:', totalKm);
+    console.log(' Total Time:', this.totalTimeText);
+    console.log(' Total Days:', totalDays);
+    console.log(' Total Amount:', totalAmount);
+    console.log(' Extra Hour:', this.extraHour);
+  }
+
   calculateBillAndLog() {
     this.calculateTotals(this.mainDutyList);
     // Auto-fill some fields with example values (for demo/testing)
     this.fixedAmount = this.totalCalculatedAmount;
     this.extraHours = this.totalExtraHour;
-    this.extrakm = this.totalSelectedKm ;
-
+    this.extrakm = this.totalSelectedKm;
     this.numDays = this.totalSelectedDays;
     // this.rate1 = 0;
     // this.rate2 = 800;
