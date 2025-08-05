@@ -18,6 +18,13 @@ export class MinvoiceService extends BaseService {
     this.call('minvoice.getMonthlyBookingList', payload);
   }
 
+  createMonthlyBilling(payload:any){
+    this.call('minvoice.createMonthlyBilling', payload);
+    console.log("payload:", payload)
+
+  }
+
+
   protected handleMessage(msg: any): boolean {
     return false;
   }
