@@ -4,7 +4,7 @@
     </app-dynamic-table>
 </div>
 
-<div class="min-h-screen p-4" *ngIf="showForm">
+<div class="min-h-screen p-4" *ngIf="showForm" (ngSubmit)="savePartyRate()">
     <form [formGroup]="partyRateForm"
         class="max-w-8xl mx-auto bg-white rounded-xl shadow-md overflow-hidden">
         <!-- Header -->
@@ -220,7 +220,7 @@
 
         <!-- Footer with Submit Button -->
         <div class="bg-sky-400 px-6 py-4 border-t border-gray-200 flex justify-end">
-            <button type="submit" [disabled]="form.invalid"
+            <button type="submit" 
                 class="px-6 py-3 bg-sky-600 text-white font-medium rounded-lg shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
                 Save Party Information
             </button>
@@ -278,8 +278,8 @@
                     <i class="pi pi-calendar text-indigo-600"></i>
                     <label for="" class="text-sm font-medium">Effect Date</label>
                 </div>
-                <p-calendar formControlName="RtEfDate" size="large" dateFormat="dd/mm/yy" appendTo="body" placeholder="dd/mm/yyyy"
-                    class="w-full"></p-calendar>
+                <p-calendar formControlName="RtEfDate" size="large" dateFormat="dd/mm/yy" placeholder="dd/mm/yyyy" appendTo="body"
+                class="w-full"></p-calendar>
             </div>
         </div>
 
