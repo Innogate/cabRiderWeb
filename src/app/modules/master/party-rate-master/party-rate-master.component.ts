@@ -57,6 +57,7 @@ export class PartyRateMasterComponent implements OnInit, AfterViewInit, OnDestro
   showOption = false;
   previewData: any[] = [];
   editIndex: number | null = null;
+  tablevalue: any;
 
 
   tabs = ['Normal', 'HRS/KM slab', 'Day/KM', 'Transfer'];
@@ -132,6 +133,24 @@ export class PartyRateMasterComponent implements OnInit, AfterViewInit, OnDestro
         this.CityName = msg.data;
       } else if(msg.for === 'getAllPartyDropdown'){
         this.partyName = msg.data
+      } else if (msg.for == 'createUpdatePartyRate') {
+        if (msg.StatusID === 1) {
+          const updated = msg.data[0];  // access the first item in data array
+
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: msg.StatusMessage });
+          this.showForm = false;
+          this.form.reset();
+
+          const index = this.data.findIndex((v: any) => v.id == updated.id);
+          if (index !== -1) {
+            this.data[index] = { ...updated };
+          } else {
+            this.data.push(updated)
+          }
+        } else {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: msg.StatusMessage });
+        }
+
       }
       return true;
     });
@@ -145,6 +164,7 @@ export class PartyRateMasterComponent implements OnInit, AfterViewInit, OnDestro
   ngAfterViewInit(): void {
     this.loadPartyRates();
     this.loadCities();
+    this.loadPartyNameDropdown();
   }
 
 
@@ -156,7 +176,7 @@ export class PartyRateMasterComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   loadPartyNameDropdown(){
-      this.comonApiService.gateAllPartyNameDropdown()
+      this.comonApiService.gateAllPartyNameDropdown();
   }
 
   createForm() {
@@ -186,7 +206,7 @@ export class PartyRateMasterComponent implements OnInit, AfterViewInit, OnDestro
 
     this.partyRateForm = this.fb.group({
       city_id: ['', Validators.required],
-      party_id: ['', Validators.required],
+      party_id: [''],
       PartyAddr: [''],
       PinCode: [''],
       GSTNo: [''],
@@ -204,7 +224,7 @@ export class PartyRateMasterComponent implements OnInit, AfterViewInit, OnDestro
     const baseControls: Record<string, any> = {
       carType: [null, Validators.required],
       includeTax: [null, Validators.required],
-      rateEffectDate: [null, Validators.required],
+      rateEffectDate: [null],
       nightHaltTime: [null],
       nightHaltAmount: [0, Validators.min(0)],
       earlyHaltTime: [null],
@@ -256,17 +276,17 @@ export class PartyRateMasterComponent implements OnInit, AfterViewInit, OnDestro
     this.tabFormArrays[tabType].push(this.createRateRow(tabType));
   }
 
-  removeRow(index: number) {
-    if (this.currentTabArray.length > 1) {
-      this.currentTabArray.removeAt(index);
-    } else {
-      this.messageService.add({
-        severity: 'warn',
-        summary: 'Warning',
-        detail: 'At least one row is required'
-      });
-    }
-  }
+  // removeRow(index: number) {
+  //   if (this.currentTabArray.length > 1) {
+  //     this.currentTabArray.removeAt(index);
+  //   } else {
+  //     this.messageService.add({
+  //       severity: 'warn',
+  //       summary: 'Warning',
+  //       detail: 'At least one row is required'
+  //     });
+  //   }
+  // }
 
   filterCity(event: any) {
     const query = event.query.toLowerCase();
@@ -282,7 +302,8 @@ export class PartyRateMasterComponent implements OnInit, AfterViewInit, OnDestro
         this.loadPartyNameDropdown();
         break;
       case 'delete':
-        this.deletePartyRate(event.data.id);
+        this.deletePartyRate(event.data)
+        this.tablevalue=event.data
         break;
       case 'add':
         this.loadPartyNameDropdown()
@@ -306,38 +327,12 @@ export class PartyRateMasterComponent implements OnInit, AfterViewInit, OnDestro
       ContactNo: data.ContactNo,
       EMailID: data.EMailID
     });
-
-    // Clear all tab arrays
-    this.tabs.forEach(tab => {
-      while (this.tabFormArrays[tab].length) {
-        this.tabFormArrays[tab].removeAt(0);
-      }
-    });
-
-    // Add data rows to appropriate tabs
-    if (data.rates?.length) {
-      data.rates.forEach((rate: any) => {
-        this.tabFormArrays[rate.type].push(this.fb.group({
-          ...this.createRateRow(rate.type).controls,
-          ...rate
-        }));
-      });
-    } else {
-      this.tabs.forEach(tab => this.addRow(tab));
-    }
   }
 
   addNewPartyRate() {
     this.heading = 'ADD PARTY RATE';
     this.showForm = true;
     this.form.reset();
-    // Clear all tab arrays and add one row to each
-    this.tabs.forEach(tab => {
-      while (this.tabFormArrays[tab].length) {
-        this.tabFormArrays[tab].removeAt(0);
-      }
-      this.addRow(tab);
-    });
   }
 
   deletePartyRate(id: number) {
@@ -475,6 +470,25 @@ onDeleteRow(index: number) {
     detail: 'Row deleted successfully'
   });
 }
+
+
+savePartyRate() {
+    if (this.form.invalid) {
+      this.form.touched
+      this.messageService.add({ severity: "warning", summary: "warning", detail: 'Invalid Form Data' })
+      return;
+    }
+    const payload = {
+      ...this.form.value,
+      // city_id: this.form.value.city_id?.Id,
+      // pin_code: "" + this.form.value.pin_code,
+      // mobileno: "" + this.form.value.mobileno,
+      // whatsappno: "" + this.form.value.whatsappno,
+      // bank_acno: "" + this.form.value.bank_acno,
+      // phone_no: "" + this.form.value.phone_no,
+    }
+    this.partyRateMasterService.createUpdatePartyRate(payload)
+  }
 
 
   
