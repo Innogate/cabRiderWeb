@@ -63,7 +63,7 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
     private _invoice: InvoiceService,
     private _minvoice: MinvoiceService,
     private _helperService: HelperService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.commonApiService.registerPageHandler((msg) => {
@@ -720,7 +720,7 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
   calculateBillAndLog() {
     this.calculateTotals(this.mainDutyList);
     // Auto-fill some fields with example values (for demo/testing)
-    this.fixedAmount = this.totalCalculatedAmount;
+    this.amountPayable = this.totalCalculatedAmount.toFixed(2);
     this.extraHours = this.totalExtraHour;
     this.extrakm = this.totalSelectedKm;
     this.numDays = this.totalSelectedDays;
@@ -740,54 +740,54 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
   }
 
   getBillingFormData() {
-  return {
-    // Column 1
-    fixedAmount: this.totalCalculatedAmount,
-    extraHours: this.totalExtraHour,
-    extrakm: this.extrakm,
-    exceptDayHrs: this.exceptDayHrs,
-    extraDaykm: this.extraDaykm,
-    fuelAmount: this.fuelAmount,
+    return {
+      // Column 1
+      fixedAmount: this.totalCalculatedAmount,
+      extraHours: this.totalExtraHour,
+      extrakm: this.extrakm,
+      exceptDayHrs: this.exceptDayHrs,
+      extraDaykm: this.extraDaykm,
+      fuelAmount: this.fuelAmount,
 
-    // Column 2
-    numDays: this.numDays,
-    rate1: this.rate1,
-    rate2: this.rate2,
-    rate3: this.rate3,
-    rate4: this.rate4,
-    mobileAmount: this.mobileAmount,
+      // Column 2
+      numDays: this.numDays,
+      rate1: this.rate1,
+      rate2: this.rate2,
+      rate3: this.rate3,
+      rate4: this.rate4,
+      mobileAmount: this.mobileAmount,
 
-    // Column 3
-    fixedAmount2: this.fixedAmount2,
-    amountPayableText: this.amountPayableText,
-    billTotal2: this.billTotal2,
-    advance2: this.advance2,
-    amount2: this.amount2,
-    desc2: this.desc2,
-    isParkingTaxApplied: this.isParkingTaxApplied,
+      // Column 3
+      fixedAmount2: this.fixedAmount2,
+      amountPayableText: this.amountPayableText,
+      billTotal2: this.billTotal2,
+      advance2: this.advance2,
+      amount2: this.amount2,
+      desc2: this.desc2,
+      isParkingTaxApplied: this.isParkingTaxApplied,
 
-    // Column 4
-    billTotal: this.billTotal,
-    advance: this.advance,
-    serviceTax: this.serviceTax,
-    eduCess: this.eduCess,
-    sbCess: this.sbCess,
-    roundOff: this.roundOff,
-    amountPayable: this.amountPayable,
+      // Column 4
+      billTotal: this.billTotal,
+      advance: this.advance,
+      serviceTax: this.serviceTax,
+      eduCess: this.eduCess,
+      sbCess: this.sbCess,
+      roundOff: this.roundOff,
+      amountPayable: this.amountPayable,
 
-    // Extra
-    desc: this.desc,
-  };
-}
-logBillingFormValues() {
-  const payload = {
-    ...this.getBillingFormData(),
-    id: this.mainDutyList.map(d => d.id)
-  };
+      // Extra
+      desc: this.desc,
+    };
+  }
+  logBillingFormValues() {
+    const payload = {
+      ...this.getBillingFormData(),
+      id: this.mainDutyList.map(d => d.id)
+    };
 
-  this._minvoice.createMonthlyBilling(payload);
-  console.log(' Final Payload:', payload);
-}
+    this._minvoice.createMonthlyBilling(payload);
+    console.log(' Final Payload:', payload);
+  }
 
 
 
