@@ -391,7 +391,7 @@
 
   <!-- Show only after duties are added -->
   <!-- *ngIf="mainDutyList.length > 0" -->
-  <div *ngIf="mainDutyList.length > 0" class="p-8 mt-8 bg-white border rounded-2xl space-y-8 max-w-screen-xl mx-auto"
+  <div  class="p-8 mt-8 bg-white border rounded-2xl space-y-8 max-w-screen-xl mx-auto"
   >
     <!-- 🟡 Table Section -->
     <div class="p-4 rounded-xl bg-gradient-to-br from-sky-50 via-sky-50 to-blue-50 mt-6 border">
@@ -544,6 +544,10 @@
         <label class="font-medium text-gray-700">⛽ Fuel Amount:</label>
         <input type="number" pInputText [(ngModel)]="fuelAmount" class="w-44 text-right" />
       </div>
+      <div class="flex justify-between items-center">
+        <label class="font-medium text-gray-700"> Sgst:</label>
+        <input type="number" pInputText [(ngModel)]="Sgst" class="w-44 text-right" />
+      </div>
     </div>
 
     <!-- Column 2 -->
@@ -571,6 +575,10 @@
       <div class="flex justify-between items-center">
         <label class="font-medium text-gray-700">📱 Mobile Amount:</label>
         <input type="number" pInputText [(ngModel)]="mobileAmount" class="w-44 text-right" />
+      </div>
+       <div class="flex justify-between items-center">
+        <label class="font-medium text-gray-700"> Cgst:</label>
+        <input type="number" pInputText [(ngModel)]="Cgst" class="w-44 text-right" />
       </div>
     </div>
 
@@ -600,10 +608,11 @@
         <label class="font-medium text-gray-700">📝 Description:</label>
         <input type="text" pInputText [(ngModel)]="desc2" class="w-44 text-right font-bold" />
       </div>
-      <div class="flex justify-between items-center">
-        <label class="font-medium text-gray-700">☑️ Serv.Tax on Parking:</label>
-        <input type="checkbox" [(ngModel)]="isParkingTaxApplied" class="size-5" />
+       <div class="flex justify-between items-center">
+        <label class="font-medium text-gray-700"> Igst:</label>
+        <input type="number" pInputText [(ngModel)]="igst" class="w-44 text-right" />
       </div>
+
     </div>
 
     <!-- Column 4 -->
@@ -616,10 +625,7 @@
         <label class="font-medium text-gray-700">💸 Advance:</label>
         <input type="number" pInputText [(ngModel)]="advance" class="w-44 text-right" />
       </div>
-      <div class="flex justify-between items-center">
-        <label class="font-medium text-gray-700">🧾 Service Tax:</label>
-        <input type="number" pInputText [(ngModel)]="serviceTax" class="w-44 text-right" />
-      </div>
+
       <div class="flex justify-between items-center">
         <label class="font-medium text-gray-700">📚 Edu.Cess:</label>
         <input type="number" pInputText [(ngModel)]="eduCess" class="w-44 text-right" />
@@ -636,8 +642,20 @@
         <label class="font-bold text-gray-800">💳 Amount Payable:</label>
         <input type="number" pInputText [(ngModel)]="amountPayable" class="w-44 text-right font-semibold" />
       </div>
+      <div class="flex justify-between items-center">
+        <label class="font-medium text-gray-700">☑️ Serv.Tax on Parking and Others:</label>
+        <input type="checkbox" [(ngModel)]="isParkingTaxApplied" class="size-5" />
+      </div>
     </div>
-
+    <div class="flex justify-start text-right mt-6">
+    <button
+      pButton
+      type="submit"
+      (click)="logBillingFormValues()"
+      label="Save"
+      icon="pi pi-save"
+    ></button>
+  </div>
 
   </div>
 </div>
