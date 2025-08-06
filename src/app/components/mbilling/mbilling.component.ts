@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -18,23 +18,20 @@ import { RippleModule } from 'primeng/ripple';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { TooltipModule } from 'primeng/tooltip';
-import { globalRequestHandler } from '../../../../utils/global';
-import { carTypeMasterService } from './../../../../services/carTypeMaster.service';
+import { globalRequestHandler } from '../../utils/global';
+import { carTypeMasterService } from '../../services/carTypeMaster.service';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
-import { commonService } from '../../../../services/comonApi.service';
+import { commonService } from '../../services/comonApi.service';
 import { AutoComplete } from 'primeng/autocomplete';
-import { InvoiceService } from '../../../../services/invoice.service';
-import { MinvoiceService } from '../../../../services/minvoice.service';
-import { HelperService } from '../../../../services/helper.service';
-import { MbillingComponent } from '../../../../components/mbilling/mbilling.component';
+import { InvoiceService } from '../../services/invoice.service';
+import { MinvoiceService } from '../../services/minvoice.service';
+import { HelperService } from '../../services/helper.service';
 
 @Component({
-  selector: 'app-monthly-invoice-create',
+  selector: 'app-mbilling',
   imports: [
-    MbillingComponent,
     FormsModule,
-    AutoComplete,
     RadioButtonModule,
     TableModule,
     DropdownModule,
@@ -48,14 +45,13 @@ import { MbillingComponent } from '../../../../components/mbilling/mbilling.comp
     ReactiveFormsModule,
     DialogModule,
     CalendarModule,
-    BadgeModule,
-  ],
-  templateUrl: './monthly-invoice-create.component.html',
-  styleUrl: './monthly-invoice-create.component.css',
+    BadgeModule,],
+  templateUrl: './mbilling.component.html',
+  styleUrl: './mbilling.component.css'
 })
-export class MonthlyInvoiceCreateComponent implements OnInit {
+export class MbillingComponent{
 
-  constructor(
+ constructor(
     private fb: FormBuilder,
     private carTypeMaster: carTypeMasterService,
     private router: Router,
@@ -65,10 +61,10 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
     private _invoice: InvoiceService,
     private _minvoice: MinvoiceService,
     private _helperService: HelperService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
-    this.commonApiService.registerPageHandler((msg) => {
+    this.carTypeMaster.registerPageHandler((msg) => {
       let rt = false;
       rt = globalRequestHandler(msg, this.router, this.messageService);
       if (msg.for) {
@@ -128,31 +124,23 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
       }
       return rt;
     });
-
-    this.getAllCity();
-    this.getAllBranches();
-    this.getAllParty();
-    this.getCarTypeName();
     this.getAllMonthlySetupCode();
-    this.getAllCompany();
-    this.init();
 
-    // Check for edit data
-    const editData = history.state?.editInvoice;
-    if (editData) {
-      this.isEditMode = true;
-      this.patchInvoice(editData);
+  }
+
+  @Input() selectedDuties: any[] = [];
+  @Input() mainDutyList: any[] = [];
+  @Input() invoiceForm!: FormGroup;
+
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['mainDutyList']) {
+      console.log('mainDutyList updated:', this.mainDutyList);
+    }
+    if (changes['selectedDuties']) {
+      console.log('selectedDuties updated:', this.selectedDuties);
     }
   }
-
-  ngOnDestroy(): void {
-    this._invoice.unregisterPageHandler();
-  }
-
-  taxType = 'cgst';
-  rcm = 'no';
-  billDate = new Date();
-
 
   searchText: any;
   selectedShow: any;
@@ -164,13 +152,6 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
     { label: 'OUTSTATION', value: '2' },
     { label: 'PICKUP', value: '3' },
     { label: 'DROP', value: '4' },
-  ];
-
-  invoiceForm!: FormGroup;
-
-  charges = [
-    { name: 'Fuel Surcharge', amount: 200 },
-    { name: 'Driver Allowance', amount: 100 },
   ];
 
   companies: any[] = [];
@@ -190,56 +171,6 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
   extraHour: number = 0;
   totalExtraHour: number = 0;
 
-  invoices = [
-    {
-      selected: false,
-      siNo: 'DguGFIJKK',
-      slipNo: 'SLP001',
-      dutyType: 'Local',
-      carNo: 'KA-01-AB-1234',
-      carType: 'Sedan',
-      project: 'ABC Corp Project',
-      guestName: 'John Doe',
-      fromDate: '2025-07-10',
-      toDate: '2025-07-10',
-      fromTime: '09:00',
-      toTime: '18:00',
-      fromKm: 12000,
-      toKm: 12200,
-      totalTime: '9h',
-      totalKm: 200,
-      netAmount: 1500,
-    },
-  ];
-
-  init() {
-    this.invoiceForm = this.fb.group({
-      id: [''],
-      City: [''],
-      duty_type: [''],
-      branch_id: [''],
-      company_id: [''],
-      branch: [''],
-      party_id: [''],
-      city_id: [''],
-      BillNo: ['NEW'],
-      BillDate: [new Date()],
-      taxtype: ['cgst'],
-      rcm: ['no'],
-      GrossAmount: ['0'],
-      OtherCharges: ['0'],
-      Discount: [''],
-      CGSTPer: [''],
-      CGST: ['0'],
-      SGSTPer: [''],
-      SGST: ['0'],
-      OtherCharges2: ['0'],
-      RoundOff: ['0'],
-      NetAmount: ['0'],
-      Advance: [''],
-      SetupCode: [''],
-    });
-  }
 
   private mapCarAndDutyTypesToDutyData() {
     if (!this.dutyTableData?.length) return;
@@ -330,50 +261,6 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
   selectedPartyModel: any = null;
   selectedCityModel: any = null;
 
-  patchInvoice(invoice: any) {
-    const foundBranch = this.branches.find(
-      (branch) => branch.branch_name == invoice.branch
-    );
-    const foundParty = this.PartyName.find(
-      (p) => p.value === invoice.party_name
-    );
-    const foundCity = this.cities.find((c) => c.value === invoice.City);
-
-    this.selectedBranchModel = foundBranch || null;
-    this.selectedPartyModel = foundParty || null;
-    this.selectedCityModel = foundCity || null;
-
-    this.invoiceForm.patchValue({
-      id: invoice.id || '',
-      branch_id: foundBranch?.Id || null, // Use Id from matched branch
-      party_id: foundParty?.value || null,
-      city_id: foundCity?.value || null,
-      City: invoice.City || '',
-      duty_type: invoice.duty_type || '',
-      company_id: invoice.company_id || '',
-      branch: invoice.branch || '',
-      BillNo: invoice.BillNo || 'NEW',
-      BillDate: invoice.BillDate
-        ? new Date(invoice.BillDate.replace(/-/g, '/'))
-        : new Date(),
-      taxtype: invoice.taxtype ?? 'cgst',
-      rcm: invoice.rcm ?? 'yes',
-      GrossAmount: invoice.GrossAmount || '0',
-      OtherCharges: invoice.OtherCharges || '0',
-      Discount: invoice.Discount || '',
-      CGSTPer: invoice.CGSTPer || '',
-      CGST: invoice.CGST || '0',
-      SGSTPer: invoice.SGSTPer || '',
-      SGST: invoice.SGST || '0',
-      OtherCharges2: invoice.OtherCharges2 || '0',
-      RoundOff: invoice.RoundOff || '0',
-      NetAmount: invoice.NetAmount || '0',
-      Advance: invoice.Advance || '',
-    });
-
-    console.log('Selected Branch:', this.selectedBranchModel);
-    console.log('Patched Invoice:', this.invoiceForm.value);
-  }
 
   // AutoComplete
   PartyName: any[] = []; // original full list
@@ -382,31 +269,6 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
   companyList: any[] = [];
   filteredCompanies: any[] = [];
 
-  filterPartyName(event: any) {
-    const query = event.query?.toLowerCase() || '';
-    this.filteredPartyName = this.PartyName.filter((party) => {
-      const name = party.party_name?.toLowerCase() || '';
-      return name.includes(query);
-    });
-  }
-
-  filterCities(event: any) {
-    if (!this.cities) return;
-    const query = event.query.toLowerCase();
-    this.filteredCities = this.cities.filter((city) =>
-      city.CityName.toLowerCase().includes(query)
-    );
-  }
-
-  filteredBranches: any[] = [];
-
-  filterBranches(event: any) {
-    if (!this.branches) return;
-    const query = event.query.toLowerCase();
-    this.filteredBranches = this.branches.filter((branch) =>
-      branch.branch_name.toLowerCase().includes(query)
-    );
-  }
 
   filteredCodes: any[] = [];
   selectedCode: any[] = [];
@@ -423,131 +285,21 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
     );
   }
 
-  filterCompany(event: any) {
-    if (!this.companies) return;
-    const query = event.query.toLowerCase();
-    this.filteredCompanies = this.companies.filter((companies) =>
-      companies.Name.toLowerCase().includes(query)
-    );
-  }
 
   // API CALLS
 
-  getAllCity() {
-    this.commonApiService.GatAllCityDropDown({});
-  }
-
-  getAllBranches() {
-    this._helperService.getBranchDropdown();
-  }
-
-  getAllParty() {
-    this._helperService.getPartyDropdown();
-  }
 
   getAllMonthlySetupCode() {
     this.commonApiService.getMonthlySetupCode({});
   }
 
-  getAllCompany() {
-    this._helperService.getCompanyDropdown();
-  }
 
-  carTypeSearch = '';
 
-  getCarTypeName() {
-    // console.log('getCarTypeName');
-    this.carTypeMaster.GateAllCarType({
-      PageNo: 1,
-      PageSize: 10,
-      Search: this.carTypeSearch,
-    });
-  }
 
-  // OnSelect Functions
-  onBranchSelect(branch: any) {
-    if (this.invoiceForm) {
-      this.invoiceForm.get('branch_id')?.setValue(branch.value.id);
-      this.checkAndLoadDutyTable();
-    }
-    console.log(branch);
-  }
 
-  onCitySelect(city: any) {
-    if (this.invoiceForm) {
-      this.invoiceForm.get('city_id')?.setValue(city.value.Id);
-      this.checkAndLoadDutyTable();
-    }
-  }
-
-  onPartyNameSelect(party: any) {
-    if (this.invoiceForm) {
-      this.invoiceForm.get('party_id')?.setValue(party.value.id);
-      this.checkAndLoadDutyTable();
-    }
-  }
-
-  onCodeSelect(codeObj: any) {
-    if (this.invoiceForm) {
-      this.invoiceForm.get('SetupCode')?.setValue(codeObj.value.id);
-    }
-    console.log('Selected Duty Setup Code:', codeObj);
-  }
-
-  onCompanySelect(company: any) {
-    if (this.invoiceForm) {
-      this.invoiceForm.get('company_id')?.setValue(company.value.Id);
-      this.checkAndLoadDutyTable();
-    }
-    console.log(company);
-  }
-
-  save() {
-    const formData = {
-      ...this.invoiceForm.value,
-      duties: this.invoices,
-    };
-
-    if (this.isEditMode) {
-      console.log('📝 Updating invoice:', formData);
-      // this.commonApiService.updateInvoice(formData).subscribe(...)
-    } else {
-      console.log('🆕 Creating new invoice:', formData);
-      // this.commonApiService.createInvoice(formData).subscribe(...)
-    }
-  }
-
-  searchInvoices() {
-    throw new Error('Method not implemented.');
-  }
-
-  addVendorInvoice() {
-    // Logic to add invoice
-  }
-
-  viewInvoice(invoice: any) {
-    // Logic to view invoice
-  }
-
-  editInvoice(invoice: any) {
-    // Logic to edit invoice
-  }
-
-  deleteInvoice(invoice: any) {
-    // Logic to delete invoice
-  }
 
   //ADD DUTY
 
-  selectedDuties: any[] = []; // to store selected rows
-
-  mainDutyList: any[] = []; // this holds the final duty list shown in main UI
-
-saveSelectedDuties() {
-  const selected = this.dutyTableData.filter((item: any) => item.selected);
-  this.mainDutyList = [...this.mainDutyList, ...selected.map(item => ({ ...item }))];
-  this.displayDuty = false;
-}
 
   // AFTER ADD DUTY UI
 
@@ -719,8 +471,9 @@ saveSelectedDuties() {
 
   calculateBillAndLog() {
     this.calculateTotals(this.mainDutyList);
+
     // Auto-fill some fields with example values (for demo/testing)
-    this.amountPayable = this.totalCalculatedAmount.toFixed(2);
+    this.fixedAmount = this.totalCalculatedAmount;
     this.extraHours = this.totalExtraHour;
     this.extrakm = this.totalSelectedKm;
     this.numDays = this.totalSelectedDays;
@@ -740,54 +493,55 @@ saveSelectedDuties() {
   }
 
   getBillingFormData() {
-    return {
-      // Column 1
-      fixedAmount: this.totalCalculatedAmount,
-      extraHours: this.totalExtraHour,
-      extrakm: this.extrakm,
-      exceptDayHrs: this.exceptDayHrs,
-      extraDaykm: this.extraDaykm,
-      fuelAmount: this.fuelAmount,
+  return {
+    // Column 1
+    fixedAmount: this.totalCalculatedAmount,
+    extraHours: this.totalExtraHour,
+    extrakm: this.extrakm,
+    exceptDayHrs: this.exceptDayHrs,
+    extraDaykm: this.extraDaykm,
+    fuelAmount: this.fuelAmount,
 
-      // Column 2
-      numDays: this.numDays,
-      rate1: this.rate1,
-      rate2: this.rate2,
-      rate3: this.rate3,
-      rate4: this.rate4,
-      mobileAmount: this.mobileAmount,
+    // Column 2
+    numDays: this.numDays,
+    rate1: this.rate1,
+    rate2: this.rate2,
+    rate3: this.rate3,
+    rate4: this.rate4,
+    mobileAmount: this.mobileAmount,
 
-      // Column 3
-      fixedAmount2: this.fixedAmount2,
-      amountPayableText: this.amountPayableText,
-      billTotal2: this.billTotal2,
-      advance2: this.advance2,
-      amount2: this.amount2,
-      desc2: this.desc2,
-      isParkingTaxApplied: this.isParkingTaxApplied,
+    // Column 3
+    fixedAmount2: this.fixedAmount2,
+    amountPayableText: this.amountPayableText,
+    billTotal2: this.billTotal2,
+    advance2: this.advance2,
+    amount2: this.amount2,
+    desc2: this.desc2,
+    isParkingTaxApplied: this.isParkingTaxApplied,
 
-      // Column 4
-      billTotal: this.billTotal,
-      advance: this.advance,
-      serviceTax: this.serviceTax,
-      eduCess: this.eduCess,
-      sbCess: this.sbCess,
-      roundOff: this.roundOff,
-      amountPayable: this.amountPayable,
+    // Column 4
+    billTotal: this.billTotal,
+    advance: this.advance,
+    serviceTax: this.serviceTax,
+    eduCess: this.eduCess,
+    sbCess: this.sbCess,
+    roundOff: this.roundOff,
+    amountPayable: this.amountPayable,
 
-      // Extra
-      desc: this.desc,
-    };
-  }
-  logBillingFormValues() {
-    const payload = {
-      ...this.getBillingFormData(),
-      id: this.mainDutyList.map(d => d.id)
-    };
+    // Extra
+    desc: this.desc,
+  };
+}
 
-    this._minvoice.createMonthlyBilling(payload);
-    console.log(' Final Payload:', payload);
-  }
+logBillingFormValues() {
+  const payload = {
+    ...this.getBillingFormData(),
+    id: this.mainDutyList.map(d => d.id)
+  };
+
+  this._minvoice.createMonthlyBilling(payload);
+  console.log(' Final Payload:', payload);
+}
 
 
 
