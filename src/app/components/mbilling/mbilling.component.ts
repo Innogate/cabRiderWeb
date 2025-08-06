@@ -1,5 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, Input, OnInit, SimpleChanges } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnInit,
+  SimpleChanges,
+} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -45,13 +51,13 @@ import { HelperService } from '../../services/helper.service';
     ReactiveFormsModule,
     DialogModule,
     CalendarModule,
-    BadgeModule,],
+    BadgeModule,
+  ],
   templateUrl: './mbilling.component.html',
-  styleUrl: './mbilling.component.css'
+  styleUrl: './mbilling.component.css',
 })
-export class MbillingComponent{
-
- constructor(
+export class MbillingComponent {
+  constructor(
     private fb: FormBuilder,
     private carTypeMaster: carTypeMasterService,
     private router: Router,
@@ -125,13 +131,11 @@ export class MbillingComponent{
       return rt;
     });
     this.getAllMonthlySetupCode();
-
   }
 
   @Input() selectedDuties: any[] = [];
   @Input() mainDutyList: any[] = [];
   @Input() invoiceForm!: FormGroup;
-
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['mainDutyList']) {
@@ -170,7 +174,6 @@ export class MbillingComponent{
   totalTimeText: string = '';
   extraHour: number = 0;
   totalExtraHour: number = 0;
-
 
   private mapCarAndDutyTypesToDutyData() {
     if (!this.dutyTableData?.length) return;
@@ -261,14 +264,12 @@ export class MbillingComponent{
   selectedPartyModel: any = null;
   selectedCityModel: any = null;
 
-
   // AutoComplete
   PartyName: any[] = []; // original full list
   filteredPartyName: any[] = []; // used by the autocomplete
   filteredCities: any[] = [];
   companyList: any[] = [];
   filteredCompanies: any[] = [];
-
 
   filteredCodes: any[] = [];
   selectedCode: any[] = [];
@@ -285,21 +286,13 @@ export class MbillingComponent{
     );
   }
 
-
   // API CALLS
-
 
   getAllMonthlySetupCode() {
     this.commonApiService.getMonthlySetupCode({});
   }
 
-
-
-
-
-
   //ADD DUTY
-
 
   // AFTER ADD DUTY UI
 
@@ -311,7 +304,6 @@ export class MbillingComponent{
   extraDaykm: any;
   fuelAmount: any;
   Sgst: any;
-
 
   // Column 2
   numDays: any;
@@ -376,23 +368,34 @@ export class MbillingComponent{
       return;
     }
 
+    const seenDateRanges = new Set<string>(); // Track already processed date pairs
+
     selected.forEach((item: any) => {
       const fromDate = new Date(item.fromDate);
       const toDate = new Date(item.toDate);
 
       //  Day calculation
       if (!isNaN(fromDate.getTime()) && !isNaN(toDate.getTime())) {
-        const diffTime = toDate.getTime() - fromDate.getTime();
-        const days = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
-        totalDays += days;
+        const dateKey = `${fromDate.toDateString()}_${toDate.toDateString()}`;
 
-        const dutyAmt = setup?.DutyAmt ?? 0;
-        // console.log('dutyamt', dutyAmt);
-        const amount = (dutyAmt / 30) * days;
-        totalAmount += amount;
+        if (!seenDateRanges.has(dateKey)) {
+          seenDateRanges.add(dateKey); // Mark as seen
 
-        const km = Number(item.TotalKm) || 0;
-        totalKm += km;
+          const diffTime = toDate.getTime() - fromDate.getTime();
+          const days = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
+
+          totalDays += days;
+
+          const dutyAmt = setup?.DutyAmt ?? 0;
+          const amount = (dutyAmt / 30) * days;
+          totalAmount += amount;
+
+          const km = Number(item.TotalKm) || 0;
+          totalKm += km;
+        } else {
+          // Duplicate date, don't add days or amount
+          console.log(`Duplicate date found: ${dateKey}, skipping day count`);
+        }
       }
 
       //  Time calculation
@@ -493,56 +496,53 @@ export class MbillingComponent{
   }
 
   getBillingFormData() {
-  return {
-    // Column 1
-    fixedAmount: this.totalCalculatedAmount,
-    extraHours: this.totalExtraHour,
-    extrakm: this.extrakm,
-    exceptDayHrs: this.exceptDayHrs,
-    extraDaykm: this.extraDaykm,
-    fuelAmount: this.fuelAmount,
+    return {
+      // Column 1
+      fixedAmount: this.totalCalculatedAmount,
+      extraHours: this.totalExtraHour,
+      extrakm: this.extrakm,
+      exceptDayHrs: this.exceptDayHrs,
+      extraDaykm: this.extraDaykm,
+      fuelAmount: this.fuelAmount,
 
-    // Column 2
-    numDays: this.numDays,
-    rate1: this.rate1,
-    rate2: this.rate2,
-    rate3: this.rate3,
-    rate4: this.rate4,
-    mobileAmount: this.mobileAmount,
+      // Column 2
+      numDays: this.numDays,
+      rate1: this.rate1,
+      rate2: this.rate2,
+      rate3: this.rate3,
+      rate4: this.rate4,
+      mobileAmount: this.mobileAmount,
 
-    // Column 3
-    fixedAmount2: this.fixedAmount2,
-    amountPayableText: this.amountPayableText,
-    billTotal2: this.billTotal2,
-    advance2: this.advance2,
-    amount2: this.amount2,
-    desc2: this.desc2,
-    isParkingTaxApplied: this.isParkingTaxApplied,
+      // Column 3
+      fixedAmount2: this.fixedAmount2,
+      amountPayableText: this.amountPayableText,
+      billTotal2: this.billTotal2,
+      advance2: this.advance2,
+      amount2: this.amount2,
+      desc2: this.desc2,
+      isParkingTaxApplied: this.isParkingTaxApplied,
 
-    // Column 4
-    billTotal: this.billTotal,
-    advance: this.advance,
-    serviceTax: this.serviceTax,
-    eduCess: this.eduCess,
-    sbCess: this.sbCess,
-    roundOff: this.roundOff,
-    amountPayable: this.amountPayable,
+      // Column 4
+      billTotal: this.billTotal,
+      advance: this.advance,
+      serviceTax: this.serviceTax,
+      eduCess: this.eduCess,
+      sbCess: this.sbCess,
+      roundOff: this.roundOff,
+      amountPayable: this.amountPayable,
 
-    // Extra
-    desc: this.desc,
-  };
-}
+      // Extra
+      desc: this.desc,
+    };
+  }
 
-logBillingFormValues() {
-  const payload = {
-    ...this.getBillingFormData(),
-    id: this.mainDutyList.map(d => d.id)
-  };
+  logBillingFormValues() {
+    const payload = {
+      ...this.getBillingFormData(),
+      id: this.mainDutyList.map((d) => d.id),
+    };
 
-  this._minvoice.createMonthlyBilling(payload);
-  console.log(' Final Payload:', payload);
-}
-
-
-
+    this._minvoice.createMonthlyBilling(payload);
+    console.log(' Final Payload:', payload);
+  }
 }
