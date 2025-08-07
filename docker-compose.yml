@@ -9,7 +9,6 @@ services:
       - VERSION=${VERSION}
       - API_URL=${API_URL}
     volumes:
-      - dotfiles:/home/vscode
       - .:/app
 
 volumes:
