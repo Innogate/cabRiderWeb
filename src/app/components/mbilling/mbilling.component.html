@@ -194,20 +194,20 @@
     <!-- Column 3 -->
     <div class="space-y-5">
       <div class="flex justify-between items-center">
-        <label class="font-medium text-gray-700">Fixed Amount:</label>
-        <input type="number" pInputText [(ngModel)]="fixedAmount2" class="w-44 text-right" />
+        <label class="font-medium text-gray-700">💳 Amount:</label>
+        <input type="number" pInputText [(ngModel)]="Amount" class="w-44 text-right" />
       </div>
       <div class="flex justify-between items-center">
-        <label class="font-medium text-gray-700">💳 Amount (Text):</label>
-        <input type="text" pInputText [(ngModel)]="amountPayableText" class="w-44 text-right" />
+        <label class="font-medium text-gray-700">💳 Amount:</label>
+        <input type="number" pInputText [(ngModel)]="extaHAmount" class="w-44 text-right" />
       </div>
       <div class="flex justify-between items-center">
         <label class="font-semibold text-green-600">💳 Bill Total:</label>
         <input type="number" pInputText [(ngModel)]="billTotal2" class="w-44 text-right font-bold text-green-700" />
       </div>
       <div class="flex justify-between items-center">
-        <label class="font-medium text-gray-700">💳 Advance:</label>
-        <input type="number" pInputText [(ngModel)]="advance2" class="w-44 text-right" />
+        <label class="font-medium text-gray-700">💳 Amount:</label>
+        <input type="number" pInputText [(ngModel)]="amount3" class="w-44 text-right" />
       </div>
       <div class="flex justify-between items-center">
         <label class="font-semibold text-gray-800">💳 Amount:</label>
@@ -235,11 +235,11 @@
         <input type="number" pInputText [(ngModel)]="advance" class="w-44 text-right" />
       </div>
 
-      <div class="flex justify-between items-center">
+      <div class="flex justify-between items-center" [ngStyle]="{ visibility: 'hidden' }">
         <label class="font-medium text-gray-700">📚 Edu.Cess:</label>
         <input type="number" pInputText [(ngModel)]="eduCess" class="w-44 text-right" />
       </div>
-      <div class="flex justify-between items-center">
+      <div class="flex justify-between items-center" [ngStyle]="{ visibility: 'hidden' }" >
         <label class="font-medium text-gray-700">💡 SB Cess:</label>
         <input type="number" pInputText [(ngModel)]="sbCess" class="w-44 text-right" />
       </div>
@@ -251,7 +251,7 @@
         <label class="font-bold text-gray-800">💳 Amount Payable:</label>
         <input type="number" pInputText [(ngModel)]="amountPayable" class="w-44 text-right font-semibold" />
       </div>
-      <div class="flex justify-between items-center">
+      <div class="flex justify-between items-center" [ngStyle]="{ visibility: 'hidden' }">
         <label class="font-medium text-gray-700">☑️ Serv.Tax on Parking and Others:</label>
         <input type="checkbox" [(ngModel)]="isParkingTaxApplied" class="size-5" />
       </div>
