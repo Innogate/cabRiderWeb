@@ -174,6 +174,10 @@ export class MbillingComponent {
   totalTimeText: string = '';
   extraHour: number = 0;
   totalExtraHour: number = 0;
+  totalextraKmRate: number = 0;
+  totalextraHourAmount: number = 0;
+  salary: number = 0;
+  totalextraHourRate: number = 0;
 
   private mapCarAndDutyTypesToDutyData() {
     if (!this.dutyTableData?.length) return;
@@ -315,10 +319,10 @@ export class MbillingComponent {
   Cgst: any;
 
   // Column 3
-  fixedAmount2: any;
-  amountPayableText: string = '';
+  Amount: any;
+  extaHAmount: any;
   billTotal2: any;
-  advance2: any;
+  amount3: any;
   amount2: any;
   desc2: string = '';
   igst: any;
@@ -352,7 +356,9 @@ export class MbillingComponent {
     let totalDays = 0;
     let totalAmount = 0;
     let totalMinutes = 0;
-    let totalhrs = 0;
+    let groseAmount = 0;
+    let extraHourRate = 0;
+    let extraKmRate = 0;
     this.extraHour = 0; // Reset
     let totalKm = 0; // ✅ New variable to store total kilometers
 
@@ -387,8 +393,15 @@ export class MbillingComponent {
           totalDays += days;
 
           const dutyAmt = setup?.DutyAmt ?? 0;
-          const amount = (dutyAmt / 30) * days;
+          const amount = Number(((dutyAmt / 30) * days).toFixed(2));
           totalAmount += amount;
+          groseAmount = dutyAmt;
+
+          const extraDayHrsRate = setup?.OTRate ?? 0;
+          extraHourRate = extraDayHrsRate;
+
+          const extraKMRate = setup?.ExtraDayKMRate ?? 0;
+          extraKmRate = extraKMRate;
 
           const km = Number(item.TotalKm) || 0;
           totalKm += km;
@@ -421,47 +434,50 @@ export class MbillingComponent {
     // 📊 Final calculations
     const totalHoursDecimal = totalMinutes / 60;
     this.totalTimeText = `${totalHoursDecimal.toFixed(2)} hrs`;
-    // console.log('tabletime:', this.totalTimeText);
+    console.log('tabletime:', this.totalTimeText);
 
-    // 🕒 Grg time check
-    if (setup?.GrgInTime && setup?.GrgOutTime) {
-      const inTime = new Date(setup.GrgInTime);
-      const outTime = new Date(setup.GrgOutTime);
-      // console.log(inTime,outTime)
+    // 🕒 Time Check using FromTime and ToTime
+    if (setup?.FromTime && setup?.ToTime) {
+      const fromTime = new Date(setup.FromTime);
+      const toTime = new Date(setup.ToTime);
+      console.log(fromTime, toTime);
 
-      if (isNaN(inTime.getTime()) || isNaN(outTime.getTime())) {
-        // console.warn('Invalid GrgInTime or GrgOutTime');
+      if (isNaN(fromTime.getTime()) || isNaN(toTime.getTime())) {
+        console.warn('Invalid time format');
         return;
       }
 
-      const inDate = new Date();
-      const outDate = new Date();
+      const fromDate = new Date();
+      const toDate = new Date();
 
-      inDate.setHours(inTime.getHours(), inTime.getMinutes(), 0, 0);
-      outDate.setHours(outTime.getHours(), outTime.getMinutes(), 0, 0);
+      fromDate.setHours(fromTime.getHours(), fromTime.getMinutes(), 0, 0);
+      toDate.setHours(toTime.getHours(), toTime.getMinutes(), 0, 0);
+      console.log(' Converted Grg Times →', fromDate, toDate);
 
-      // console.log(' Converted Grg Times →', inDate, outDate);
-
-      if (outDate < inDate) {
-        outDate.setDate(outDate.getDate() + 1); // overnight shift
+      // Handle overnight shift (e.g. 8 PM to 6 AM next day)
+      if (toDate < fromDate) {
+        toDate.setDate(toDate.getDate() + 1);
       }
 
-      const diffMs = outDate.getTime() - inDate.getTime();
-      const totalhrs = diffMs / (1000 * 60 * 60); // hours
-      // console.log(' Total Grg hours:', totalhrs);
+      const diffMs = toDate.getTime() - fromDate.getTime();
+      const totalhrs = diffMs / (1000 * 60 * 60); // in hours
+      console.log(' Total hours:', totalhrs);
 
       const totalHoursDecimal = this.totalTimeText
         ? parseFloat(this.totalTimeText)
         : 0;
 
       if (totalHoursDecimal > totalhrs) {
-        this.extraHour = totalHoursDecimal - totalhrs;
+        this.extraHour = Number((totalHoursDecimal - totalhrs).toFixed(2));
       }
     }
 
     //  Set to UI-bound variables
     this.totalSelectedDays = totalDays;
     this.totalCalculatedAmount = totalAmount;
+    this.salary = groseAmount;
+    this.totalextraHourRate = extraHourRate;
+    this.totalextraKmRate = extraKmRate;
     this.totalExtraHour = this.extraHour;
     this.totalSelectedKm = totalKm; //  Store for use elsewhere
 
@@ -476,12 +492,18 @@ export class MbillingComponent {
     this.calculateTotals(this.mainDutyList);
 
     // Auto-fill some fields with example values (for demo/testing)
-    this.fixedAmount = this.totalCalculatedAmount;
+    this.fixedAmount = this.salary;
     this.extraHours = this.totalExtraHour;
     this.extrakm = this.totalSelectedKm;
     this.numDays = this.totalSelectedDays;
-    // this.rate1 = 0;
-    // this.rate2 = 800;
+    this.Amount = this.totalCalculatedAmount;
+
+    this.rate1 = this.totalextraHourRate;
+    this.extaHAmount = this.totalextraHourRate * this.totalExtraHour;
+
+    this.rate2 = this.totalextraKmRate;
+    this.billTotal2 = this.extrakm * this.rate2;
+
     // this.rate3 = 1200;
     // this.mobileAmount = 150;
     // this.fuelAmount = 0;
@@ -490,7 +512,6 @@ export class MbillingComponent {
 
     // Optional: Update other dependent fields
     // this.amountPayableText = `₹${this.amountPayable.toFixed(2)}`;
-    // this.billTotal2 = this.billTotal;
     // this.amount2 = this.amountPayable;
     // this.desc2 = 'Sample Description';
   }
@@ -498,7 +519,7 @@ export class MbillingComponent {
   getBillingFormData() {
     return {
       // Column 1
-      fixedAmount: this.totalCalculatedAmount,
+      fixedAmount: this.fixedAmount,
       extraHours: this.totalExtraHour,
       extrakm: this.extrakm,
       exceptDayHrs: this.exceptDayHrs,
@@ -514,10 +535,10 @@ export class MbillingComponent {
       mobileAmount: this.mobileAmount,
 
       // Column 3
-      fixedAmount2: this.fixedAmount2,
-      amountPayableText: this.amountPayableText,
+      fixedAmount2: this.Amount,
+      extaHAmount: this.extaHAmount,
       billTotal2: this.billTotal2,
-      advance2: this.advance2,
+      amount3: this.amount3,
       amount2: this.amount2,
       desc2: this.desc2,
       isParkingTaxApplied: this.isParkingTaxApplied,
