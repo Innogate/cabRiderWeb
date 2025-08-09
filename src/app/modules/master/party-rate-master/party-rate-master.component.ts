@@ -53,18 +53,10 @@ export class PartyRateMasterComponent implements OnInit, AfterViewInit, OnDestro
   filteredCities: any[] = [];
   showCustomPanel = false;
   activeTabIndex = 0;
-  tabFormArrays: { [key: string]: FormArray };
   showOption = false;
   previewData: any[] = [];
   editIndex: number | null = null;
   tablevalue: any;
-
-
-  tabs = ['Normal', 'HRS/KM slab', 'Day/KM', 'Transfer'];
-  currentTabType = this.tabs[0];
-
-  // Store separate form arrays for each tab
-
 
   rateTypes = [
     { label: 'Normal', value: 'Normal' },
@@ -72,9 +64,6 @@ export class PartyRateMasterComponent implements OnInit, AfterViewInit, OnDestro
     { label: 'Day/KM', value: 'Day/KM' },
     { label: 'Transfer', value: 'Transfer' }
   ];
-
-  
-
 
   carTypes = [
     { label: 'Sedan', value: 'Sedan' },
@@ -113,12 +102,6 @@ export class PartyRateMasterComponent implements OnInit, AfterViewInit, OnDestro
     private comonApiService: commonService,
     private fb: FormBuilder
   ) {
-    this.tabFormArrays = {
-      'Normal': this.fb.array([]),
-      'HRS/KM slab': this.fb.array([]),
-      'Day/KM': this.fb.array([]),
-      'Transfer': this.fb.array([])
-    };
     this.createForm();
   }
   ngOnInit(): void {
@@ -182,7 +165,7 @@ export class PartyRateMasterComponent implements OnInit, AfterViewInit, OnDestro
   createForm() {
     this.form = this.fb.group({
       id: [0],
-      car_type: ['', Validators.required],
+      car_type: [''],
       HigherRate: [''],
       Hours: [''],
       KM: [''],
@@ -205,88 +188,17 @@ export class PartyRateMasterComponent implements OnInit, AfterViewInit, OnDestro
 
 
     this.partyRateForm = this.fb.group({
-      city_id: ['', Validators.required],
+      city_id: [''],
       party_id: [''],
       PartyAddr: [''],
       PinCode: [''],
       GSTNo: [''],
       ContactPersonName: [''],
-      ContactNo: ['', [Validators.pattern('[0-9]{10}')]],
+      ContactNo: [''],
       EMailID: ['', [Validators.email]],
     });
   }
 
-  get currentTabArray(): FormArray {
-    return this.tabFormArrays[this.form.get('currentTab')?.value];
-  }
-
-  createRateRow(tabType: string): FormGroup {
-    const baseControls: Record<string, any> = {
-      carType: [null, Validators.required],
-      includeTax: [null, Validators.required],
-      rateEffectDate: [null],
-      nightHaltTime: [null],
-      nightHaltAmount: [0, Validators.min(0)],
-      earlyHaltTime: [null],
-      earlyHaltAmount: [0, Validators.min(0)],
-      type: [tabType],
-      hourRate: [null],
-      kmRate: [null],
-      minHrs: [null],
-      minKm: [null],
-      hours: [null],
-      km: [null],
-      amount: [null],
-      extraHoursRate: [null],
-      extraKmRate: [null],
-      whicheverHigher: [false],
-      transferType: [null]
-    };
-
-    // Add tab-specific validators
-    switch (tabType) {
-      case 'Normal':
-        baseControls['hourRate'] = [null, [Validators.required, Validators.min(0)]];
-        baseControls['kmRate'] = [null, [Validators.required, Validators.min(0)]];
-        baseControls['minHrs'] = [null, [Validators.required, Validators.min(1)]];
-        baseControls['minKm'] = [null, [Validators.required, Validators.min(1)]];
-        break;
-      case 'HRS/KM slab':
-        baseControls['hours'] = [null, [Validators.required, Validators.min(1)]];
-        baseControls['km'] = [null, [Validators.required, Validators.min(1)]];
-        baseControls['amount'] = [null, [Validators.required, Validators.min(0)]];
-        baseControls['extraHoursRate'] = [null, [Validators.required, Validators.min(0)]];
-        baseControls['extraKmRate'] = [null, [Validators.required, Validators.min(0)]];
-        break;
-      case 'Day/KM':
-        baseControls['km'] = [null, [Validators.required, Validators.min(1)]];
-        baseControls['amount'] = [null, [Validators.required, Validators.min(0)]];
-        baseControls['extraKmRate'] = [null, [Validators.required, Validators.min(0)]];
-        break;
-      case 'Transfer':
-        baseControls['transferType'] = [null, Validators.required];
-        baseControls['amount'] = [null, [Validators.required, Validators.min(0)]];
-        break;
-    }
-
-    return this.fb.group(baseControls);
-  }
-
-  addRow(tabType: string = this.form.get('currentTab')?.value) {
-    this.tabFormArrays[tabType].push(this.createRateRow(tabType));
-  }
-
-  // removeRow(index: number) {
-  //   if (this.currentTabArray.length > 1) {
-  //     this.currentTabArray.removeAt(index);
-  //   } else {
-  //     this.messageService.add({
-  //       severity: 'warn',
-  //       summary: 'Warning',
-  //       detail: 'At least one row is required'
-  //     });
-  //   }
-  // }
 
   filterCity(event: any) {
     const query = event.query.toLowerCase();
@@ -345,72 +257,6 @@ export class PartyRateMasterComponent implements OnInit, AfterViewInit, OnDestro
     this.comonApiService.GatAllCityDropDown({});
   }
 
-  toggleCustomPanel() {
-    this.showCustomPanel = !this.showCustomPanel;
-  }
-
-  // onTabChange(event: TabViewChangeEvent) {
-  //   this.activeTabIndex = event.index;
-  //   this.currentTabType = this.tabs[this.activeTabIndex];
-  //   this.form.get('currentTab')?.setValue(this.currentTabType);
-  // }
-
-  // logData() {
-  //   console.log('Form data:', {
-  //     ...this.form.value,
-  //     rates: this.getAllTabData()
-  //   });
-  // }
-
-  // getAllTabData() {
-  //   const allData: any[] = [];
-  //   this.tabs.forEach(tab => {
-  //     this.tabFormArrays[tab].controls.forEach((control: AbstractControl) => {
-  //       if (control instanceof FormGroup) {
-  //         allData.push({
-  //           ...control.value,
-  //           type: tab
-  //         });
-  //       }
-  //     });
-  //   });
-  //   return allData;
-  // }
-
-  // save() {
-  //   if (this.form.valid) {
-  //     const formData = {
-  //       ...this.form.value,
-  //       rates: this.getAllTabData()
-  //     };
-
-  //     console.log("Saving data:", formData);
-  //     this.messageService.add({
-  //       severity: 'success',
-  //       summary: 'Success',
-  //       detail: 'Party rate saved successfully'
-  //     });
-
-  //     this.showForm = false;
-  //     this.loadPartyRates();
-  //   } else {
-  //     this.messageService.add({
-  //       severity: 'error',
-  //       summary: 'Error',
-  //       detail: 'Please fill all required fields correctly'
-  //     });
-  //     this.markAllAsTouched();
-  //   }
-  // }
-
-  // markAllAsTouched() {
-  //   this.form.markAllAsTouched();
-  //   this.tabs.forEach(tab => {
-  //     this.tabFormArrays[tab].controls.forEach(group => {
-  //       group.markAllAsTouched();
-  //     });
-  //   });
-  // }
 
   viewOption() {
     this.showOption = !this.showOption;
@@ -432,7 +278,21 @@ export class PartyRateMasterComponent implements OnInit, AfterViewInit, OnDestro
       this.previewData[this.editIndex] = formValue;
       this.editIndex = null;
     } else {
-      this.previewData.push(formValue);
+      let rawDate = this.form.get('RtEfDate')?.value;
+      let formattedDate = null;
+
+      if (rawDate) {
+        if (typeof rawDate === 'string') {
+          rawDate = new Date(rawDate);
+        }
+
+        formattedDate = `${rawDate.getFullYear()}-${(rawDate.getMonth() + 1).toString().padStart(2, '0')}-${rawDate.getDate().toString().padStart(2, '0')}`;
+      }
+
+      this.previewData.push({
+        ...this.form.value,
+        RtEfDate: formattedDate
+      });
     }
 
     this.showOption = false;
@@ -479,15 +339,14 @@ savePartyRate() {
       return;
     }
     const payload = {
-      ...this.form.value,
-      // city_id: this.form.value.city_id?.Id,
-      // pin_code: "" + this.form.value.pin_code,
-      // mobileno: "" + this.form.value.mobileno,
-      // whatsappno: "" + this.form.value.whatsappno,
-      // bank_acno: "" + this.form.value.bank_acno,
-      // phone_no: "" + this.form.value.phone_no,
-    }
-    this.partyRateMasterService.createUpdatePartyRate(payload)
+      ...this.partyRateForm.value,
+      city_id: this.partyRateForm.value.city_id?.Id,
+      ContactNo: "" + this.partyRateForm.value.ContactNo,
+      PinCode: "" + this.partyRateForm.value.PinCode,
+      postJsonData: this.previewData
+}
+    this.partyRateMasterService.createUpdatePartyRate(payload);
+    console.log(payload);
   }
 
 
