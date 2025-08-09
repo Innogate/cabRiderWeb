@@ -13,8 +13,8 @@
 
     <!-- Car Type -->
     <div>
-      <div class="flex items-center gap-2 mb-1 text-gray-700">
-        <i class="pi pi-car text-indigo-600"></i>
+      <div class="flex items-center gap-2 mb-1 text-slate-950">
+        <i class="pi pi-car text-green-400"></i>
         <label for="car_type" class="text-sm font-medium">Car Type</label>
       </div>
       <input id="car_type" pInputText type="text" formControlName="car_type"
@@ -23,8 +23,8 @@
 
     <!-- Index Order -->
     <div>
-      <div class="flex items-center gap-2 mb-1 text-gray-700">
-        <i class="pi pi-sort-numeric-up text-indigo-600"></i>
+      <div class="flex items-center gap-2 mb-1 text-slate-950">
+        <i class="pi pi-sort-numeric-up text-yellow-300"></i>
         <label for="index_order" class="text-sm font-medium">Index Order</label>
       </div>
       <input id="index_order" pInputText type="number"  formControlName="index_order"
@@ -33,8 +33,8 @@
 
     <!-- Sitting Capacity -->
     <div>
-      <div class="flex items-center gap-2 mb-1 text-gray-700">
-        <i class="pi pi-users text-indigo-600"></i>
+      <div class="flex items-center gap-2 mb-1 text-slate-950">
+        <i class="pi pi-users text-rose-400"></i>
         <label for="sitting_capacity" class="text-sm font-medium">Sitting Capacity</label>
       </div>
       <input id="sitting_capacity" pInputText type="number" 
@@ -45,7 +45,7 @@
 
     <!-- Buttons -->
     <div class="flex justify-end gap-2 mt-4">
-      <button pButton type="button" label="Cancel" class="p-button-secondary" (click)="showForm = false"></button>
+      <button pButton type="button" label="Cancel" class="p-button-secondary" (click)="showForm = false" ></button>
       <button pButton type="submit" label="Save" [disabled]="form.invalid"></button>
     </div>
 
