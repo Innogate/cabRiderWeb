@@ -30,7 +30,7 @@
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1 "><i
                                     class="pi pi-user-edit mr-2 text-yellow-700"></i>Select Party</label>
-                            <p-dropdown formControlName="party_name" optionLabel="party_name" optionValue="id"
+                            <p-dropdown formControlName="PartyID" optionLabel="party_name" optionValue="id"
                                 [options]="partyname" placeholder="Select Option"
                                 class="w-full border border-gray-300 rounded-lg">
                             </p-dropdown>
@@ -115,7 +115,7 @@
                         </div>
                         <div *ngIf="!isEditMode">
                             <label class="block text-sm font-medium text-gray-700 mb-1">Address</label>
-                            <textarea formControlName="Address" pInputTextarea
+                            <textarea formControlName="Addrr" pInputTextarea
                                 class="w-full border border-gray-300 rounded-lg p-3" placeholder="Enter Address"
                                 rows="3"></textarea>
                         </div>
@@ -146,10 +146,10 @@
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1"><i
-                                    class="pi pi-phone mr-2 text-yellow-500"></i>Additional Contact No</label>
+                                    class="pi pi-phone mr-2 text-yellow-500"></i>Whatsapp No</label>
                             <input type="text" pInputText
                                 class="w-full border border-gray-300 rounded-lg p-3 text-uppercase"
-                                placeholder="Additional Contact No" formControlName="AditionalContactNo">
+                                placeholder="Additional Contact No" formControlName="WhatsappNo">
                             <span
                                 *ngIf="form.get('AditionalContactNo')?.invalid && form.get('AditionalContactNo')?.touched"
                                 class="text-red-600 text-sm">
@@ -162,8 +162,8 @@
                                     class="text-red-500">*</span></label>
                             <input type="text" pInputText
                                 class="w-full border border-gray-300 rounded-lg p-3 text-uppercase" placeholder="Email"
-                                formControlName="EmailID">
-                            <span *ngIf="form.get('EmailID')?.invalid && form.get('EmailID')?.touched"
+                                formControlName="Email_ID">
+                            <span *ngIf="form.get('Email_ID')?.invalid && form.get('Email_ID')?.touched"
                                 class="text-red-600 text-sm">
                                 Please enter a valid email address.
                             </span>

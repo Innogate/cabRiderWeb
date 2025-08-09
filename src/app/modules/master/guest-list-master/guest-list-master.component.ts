@@ -46,15 +46,14 @@ export class GuestListMasterComponent implements OnInit,OnDestroy,AfterViewInit 
       this.form = this.fb.group({
         active: ['Y'],
         AddrType: [''],
-        Address: [''],
-        AditionalContactNo: ['', [Validators.pattern(/^[6-9]\d{9}$/)]],
+        Addrr: [''],
+        WhatsappNo: ['', [Validators.pattern(/^[6-9]\d{9}$/)]],
         ContactNo: ['', [Validators.pattern(/^[6-9]\d{9}$/)]],
-        EmailID: ['', [Validators.email]],
+        Email_ID: ['', [Validators.email]],
         GuestName: ['', [Validators.required, Validators.minLength(3), Validators.pattern(/^[A-Za-z\s]+$/)]],
         Honorific: [''],
         PartyID: [''],
         id: [0],
-        party_name: [''],
 
       })
     }
@@ -64,58 +63,58 @@ export class GuestListMasterComponent implements OnInit,OnDestroy,AfterViewInit 
       this.guestlistMasterService.registerPageHandler((msg) => {
         console.log(msg);
         globalRequestHandler(msg, this.router, this.messageService);
-        if(msg.for === "getallguest"){
-          this.isLoading=false
-          this.data=msg.data
-        } else if (msg. for === "getAllPartyDropdown"){
+        if (msg.for === "getallguest") {
+          this.isLoading = false
+          this.data = msg.data
+        } else if (msg.for === "getAllPartyDropdown") {
           this.partyname = msg.data;
-        } else if (msg.for == 'createUpdateVendorMaster') {
-        if (msg.StatusID === 1) {
-          const updated = msg.data[0];  // access the first item in data array
+        } else if (msg.for == 'createUpdateGuest') {
+          if (msg.StatusID === 1) {
+            const updated = msg.data[0];  // access the first item in data array
 
-          this.messageService.add({ severity: 'success', summary: 'Success', detail: msg.StatusMessage });
-          this.showForm = false;
-          this.form.reset();
+            this.messageService.add({ severity: 'success', summary: 'Success', detail: msg.StatusMessage });
+            this.showForm = false;
+            this.form.reset();
 
-          const index = this.data.findIndex((v: any) => v.id == updated.id);
-          if (index !== -1) {
-            this.data[index] = { ...updated };
+            const index = this.data.findIndex((v: any) => v.id == updated.id);
+            if (index !== -1) {
+              this.data[index] = { ...updated };
+            } else {
+              this.data.push(updated)
+            }
           } else {
-            this.data.push(updated)
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: msg.StatusMessage });
           }
-        } else {
-          this.messageService.add({ severity: 'error', summary: 'Error', detail: msg.StatusMessage });
-        }
 
-      } else if (msg.for === "deleteData") {
-        if (msg.StatusMessage === "success") {
-          const index = this.data.findIndex((v: any) => v.id == this.tablevalue.id);
-          if (index !== -1) {
-            this.data.splice(index, 1);
-          } 
-          this.messageService.add({ severity: 'success', summary: 'Success', detail: msg.StatusMessage })
-        } else {
-          this.messageService.add({ severity: 'error', summary: 'Error', detail: "Cannot Delete data" })
+        } else if (msg.for === "deleteData") {
+          if (msg.StatusMessage === "success") {
+            const index = this.data.findIndex((v: any) => v.id == this.tablevalue.id);
+            if (index !== -1) {
+              this.data.splice(index, 1);
+            }
+            this.messageService.add({ severity: 'success', summary: 'Success', detail: msg.StatusMessage })
+          } else {
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: "Cannot Delete data" })
+          }
         }
-      } 
         return true;
       });
-      
-    }
-  
-  
-    ngOnDestroy(): void {
-      this.guestlistMasterService.unregisterPageHandler();
-      this.comonApiService.unregisterPageHandler();
-    }
-  
-    ngAfterViewInit(): void {
-      const payload = {
-        id: 0,
-        PageNo: 1,
-        PageSize: 1000,
-        Search: "",
-      };
+
+  }
+
+
+  ngOnDestroy(): void {
+    this.guestlistMasterService.unregisterPageHandler();
+    this.comonApiService.unregisterPageHandler();
+  }
+
+  ngAfterViewInit(): void {
+    const payload = {
+      id: 0,
+      PageNo: 1,
+      PageSize: 1000,
+      Search: "",
+    };
       this.guestlistMasterService.getAllGuest(payload)
       this.comonApiService.gateAllPartyNameDropdown();
     }
@@ -193,7 +192,6 @@ export class GuestListMasterComponent implements OnInit,OnDestroy,AfterViewInit 
 
   saveGuest() {
     console.log("form value", this.form.value)
-    this.messageService.add({ severity: 'success', summary: 'Success', detail: "save sucessfull" });
     if (this.form.invalid) {
       this.form.touched
       this.messageService.add({ severity: "warning", summary: "warning", detail: 'Invalid Form Data' });
@@ -201,19 +199,19 @@ export class GuestListMasterComponent implements OnInit,OnDestroy,AfterViewInit 
     }
     const payload = {
       ...this.form.value,
-      Address: "" + this.form.value.Address,
+      // Address: "" + this.form.value.Address,
       // AditionalContactNo: "" + this.form.value.AditionalContactNo,
       // EmailID: "" + this.form.value.EmailID,
       // party_name: "" + this.form.value.party_name,
       
     }
-    this.guestlistMasterService.createGuest(payload)
+     this.guestlistMasterService.createGuest(payload)
   }
 
   private deleteguest(guest: any) {
     this.messageService.add({ severity: 'contrast', summary: 'Info', detail: 'Please wait processing...' });
     const payload = {
-      table_name: "getallguest",
+      table_name: "getAllGuest",
       column_name: "id",
       column_value: "" + guest.id,
     }
