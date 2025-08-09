@@ -78,7 +78,7 @@ export class CarTypeMasterComponent implements OnInit, OnDestroy, AfterViewInit 
     { header: 'ID', field: 'id' },
     { header: 'Car Type', field: 'car_type', icon: 'pi pi-car', styleClass: 'text-red-600' },
     { header: 'Sitting Capacity', field: 'sitting_capacity', icon: 'pi pi-check-circle', styleClass: 'text-green-600' },
-    { header: 'Index Order', field: 'index_order', icon: 'pi pi-index', styleClass: 'text-blue-600' },
+    { header: 'Index Order', field: 'index_order', icon: 'pi pi-mars', styleClass: 'text-blue-600' },
   ];
 
 
