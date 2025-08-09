@@ -75,52 +75,29 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
         if (msg.for === 'CarTypeGate') {
           this.carTypes = msg.data;
           this.mapCarAndDutyTypesToDutyData();
-          console.log('cartype', this.carTypes);
           rt = true;
         } else if (msg.for === 'getAllCityDropdown') {
           this.cities = msg.data;
-          const city = this.cities.find((c: any) => c.Id == 1);
-          if (city) {
-            console.log(city);
-          } else {
-            console.log('no data foundcity');
-          }
           rt = true;
         } else if (msg.for === 'branchDropdown') {
           this.branches = msg.data;
-          console.log('branches :', this.branches);
           rt = true;
         } else if (msg.for === 'partyDropdown') {
           this.PartyName = msg.data;
-          console.log('party:', msg.data);
-          const party = this.PartyName.find((c: any) => c.id === 1398);
-          if (party) {
-            console.log(party);
-          } else {
-            console.log('no data foundparty');
-          }
           rt = true;
         } else if (msg.for === 'companyDropdown') {
           this.companies = msg.data;
-          console.log('companies', this.companies);
-          const company = this.companies.find((c: any) => c.Id == 81);
-          if (company) {
-            console.log(company);
-          } else {
-            console.log('no data found');
-          }
           rt = true;
         } else if (msg.for === 'minvoice.getMonthlyBookingList') {
           this.dutyTableData = msg.data || [];
           this.totalRecords = msg.total || 0;
           this.mapCarAndDutyTypesToDutyData();
-          console.log('dutytable data:', this.dutyTableData);
           this.tableLoading = false;
           this.cdr.detectChanges();
           rt = true;
         } else if (msg.for === 'minvoice.getMonthlySetupCode') {
           this.monthlySetupData = msg.data;
-          console.log('setupdata', this.monthlySetupData);
+          rt = true;
         }
       }
       if (rt == false) {
@@ -278,13 +255,6 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
     const city_id = Number(this.invoiceForm.get('city_id')?.value);
     const company_id = Number(this.invoiceForm.get('company_id')?.value);
 
-    console.log('Selected Values:', {
-      party_id,
-      branch_id,
-      city_id,
-      company_id,
-    });
-
     // Call only when all values are valid numbers and not NaN
     if (
       !isNaN(party_id) &&
@@ -317,9 +287,6 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
       from_city_id: cityId,
       company_id: companyId,
     };
-
-    console.log('Duty Table Payload:', payload);
-
     this.tableLoading = true;
     this._minvoice.getMonthlyBookingList(payload);
   }
@@ -370,9 +337,6 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
       NetAmount: invoice.NetAmount || '0',
       Advance: invoice.Advance || '',
     });
-
-    console.log('Selected Branch:', this.selectedBranchModel);
-    console.log('Patched Invoice:', this.invoiceForm.value);
   }
 
   // AutoComplete
@@ -456,7 +420,6 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
   carTypeSearch = '';
 
   getCarTypeName() {
-    // console.log('getCarTypeName');
     this.carTypeMaster.GateAllCarType({
       PageNo: 1,
       PageSize: 10,
@@ -470,7 +433,6 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
       this.invoiceForm.get('branch_id')?.setValue(branch.value.id);
       this.checkAndLoadDutyTable();
     }
-    console.log(branch);
   }
 
   onCitySelect(city: any) {
@@ -491,7 +453,6 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
     if (this.invoiceForm) {
       this.invoiceForm.get('SetupCode')?.setValue(codeObj.value.id);
     }
-    console.log('Selected Duty Setup Code:', codeObj);
   }
 
   onCompanySelect(company: any) {
@@ -499,7 +460,6 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
       this.invoiceForm.get('company_id')?.setValue(company.value.Id);
       this.checkAndLoadDutyTable();
     }
-    console.log(company);
   }
 
   save() {
@@ -507,14 +467,6 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
       ...this.invoiceForm.value,
       duties: this.invoices,
     };
-
-    if (this.isEditMode) {
-      console.log('📝 Updating invoice:', formData);
-      // this.commonApiService.updateInvoice(formData).subscribe(...)
-    } else {
-      console.log('🆕 Creating new invoice:', formData);
-      // this.commonApiService.createInvoice(formData).subscribe(...)
-    }
   }
 
   searchInvoices() {
@@ -594,7 +546,6 @@ saveSelectedDuties() {
 
   calculateTotals(selected: any[]) {
     const setupCode = this.invoiceForm.get('SetupCode')?.value;
-    // console.log('setupcode:', setupCode);
 
     if (!setupCode) {
       this.messageService.add({
@@ -613,7 +564,6 @@ saveSelectedDuties() {
     let totalKm = 0; // ✅ New variable to store total kilometers
 
     const setup = this.monthlySetupData?.find((s: any) => s.id === setupCode);
-    // console.log('setup', setup);
 
     if (!setup) {
       this.messageService.add({
@@ -635,7 +585,6 @@ saveSelectedDuties() {
         totalDays += days;
 
         const dutyAmt = setup?.DutyAmt ?? 0;
-        // console.log('dutyamt', dutyAmt);
         const amount = (dutyAmt / 30) * days;
         totalAmount += amount;
 
@@ -666,16 +615,13 @@ saveSelectedDuties() {
     // 📊 Final calculations
     const totalHoursDecimal = totalMinutes / 60;
     this.totalTimeText = `${totalHoursDecimal.toFixed(2)} hrs`;
-    // console.log('tabletime:', this.totalTimeText);
 
     // 🕒 Grg time check
     if (setup?.GrgInTime && setup?.GrgOutTime) {
       const inTime = new Date(setup.GrgInTime);
       const outTime = new Date(setup.GrgOutTime);
-      // console.log(inTime,outTime)
 
       if (isNaN(inTime.getTime()) || isNaN(outTime.getTime())) {
-        // console.warn('Invalid GrgInTime or GrgOutTime');
         return;
       }
 
@@ -685,7 +631,6 @@ saveSelectedDuties() {
       inDate.setHours(inTime.getHours(), inTime.getMinutes(), 0, 0);
       outDate.setHours(outTime.getHours(), outTime.getMinutes(), 0, 0);
 
-      // console.log(' Converted Grg Times →', inDate, outDate);
 
       if (outDate < inDate) {
         outDate.setDate(outDate.getDate() + 1); // overnight shift
@@ -693,7 +638,6 @@ saveSelectedDuties() {
 
       const diffMs = outDate.getTime() - inDate.getTime();
       const totalhrs = diffMs / (1000 * 60 * 60); // hours
-      // console.log(' Total Grg hours:', totalhrs);
 
       const totalHoursDecimal = this.totalTimeText
         ? parseFloat(this.totalTimeText)
@@ -709,86 +653,5 @@ saveSelectedDuties() {
     this.totalCalculatedAmount = totalAmount;
     this.totalExtraHour = this.extraHour;
     this.totalSelectedKm = totalKm; //  Store for use elsewhere
-
-    console.log('Total selected kilometers:', totalKm);
-    console.log(' Total Time:', this.totalTimeText);
-    console.log(' Total Days:', totalDays);
-    console.log(' Total Amount:', totalAmount);
-    console.log(' Extra Hour:', this.extraHour);
   }
-
-  calculateBillAndLog() {
-    this.calculateTotals(this.mainDutyList);
-    // Auto-fill some fields with example values (for demo/testing)
-    this.amountPayable = this.totalCalculatedAmount.toFixed(2);
-    this.extraHours = this.totalExtraHour;
-    this.extrakm = this.totalSelectedKm;
-    this.numDays = this.totalSelectedDays;
-    // this.rate1 = 0;
-    // this.rate2 = 800;
-    // this.rate3 = 1200;
-    // this.mobileAmount = 150;
-    // this.fuelAmount = 0;
-    // this.billTotal = this.fixedAmount + this.fuelAmount + this.rate1;
-    // this.amountPayable = this.billTotal - this.advance;
-
-    // Optional: Update other dependent fields
-    // this.amountPayableText = `₹${this.amountPayable.toFixed(2)}`;
-    // this.billTotal2 = this.billTotal;
-    // this.amount2 = this.amountPayable;
-    // this.desc2 = 'Sample Description';
-  }
-
-  getBillingFormData() {
-    return {
-      // Column 1
-      fixedAmount: this.totalCalculatedAmount,
-      extraHours: this.totalExtraHour,
-      extrakm: this.extrakm,
-      exceptDayHrs: this.exceptDayHrs,
-      extraDaykm: this.extraDaykm,
-      fuelAmount: this.fuelAmount,
-
-      // Column 2
-      numDays: this.numDays,
-      rate1: this.rate1,
-      rate2: this.rate2,
-      rate3: this.rate3,
-      rate4: this.rate4,
-      mobileAmount: this.mobileAmount,
-
-      // Column 3
-      fixedAmount2: this.fixedAmount2,
-      amountPayableText: this.amountPayableText,
-      billTotal2: this.billTotal2,
-      advance2: this.advance2,
-      amount2: this.amount2,
-      desc2: this.desc2,
-      isParkingTaxApplied: this.isParkingTaxApplied,
-
-      // Column 4
-      billTotal: this.billTotal,
-      advance: this.advance,
-      serviceTax: this.serviceTax,
-      eduCess: this.eduCess,
-      sbCess: this.sbCess,
-      roundOff: this.roundOff,
-      amountPayable: this.amountPayable,
-
-      // Extra
-      desc: this.desc,
-    };
-  }
-  logBillingFormValues() {
-    const payload = {
-      ...this.getBillingFormData(),
-      id: this.mainDutyList.map(d => d.id)
-    };
-
-    this._minvoice.createMonthlyBilling(payload);
-    console.log(' Final Payload:', payload);
-  }
-
-
-
 }
