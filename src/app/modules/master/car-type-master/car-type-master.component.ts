@@ -8,13 +8,12 @@ import { DialogModule } from 'primeng/dialog';
 import { globalRequestHandler } from '../../../utils/global';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
-
-
+import { SidebarModule } from 'primeng/sidebar';
 
 
 @Component({
   selector: 'app-car-type-master',
-  imports: [DynamicTableComponent, DialogModule, ReactiveFormsModule, InputTextModule, ButtonModule],
+  imports: [DynamicTableComponent, DialogModule, ReactiveFormsModule, InputTextModule, ButtonModule, SidebarModule],
   templateUrl: './car-type-master.component.html',
   styleUrls: ['./car-type-master.component.css']
 })
@@ -24,6 +23,7 @@ export class CarTypeMasterComponent implements OnInit, OnDestroy, AfterViewInit 
   users: any[] = [];
   showForm: boolean = false;
   form!: FormGroup;
+  isLoading: boolean = true;
 
   constructor(
     private carTypeMasterService: carTypeMasterService,
@@ -47,12 +47,12 @@ export class CarTypeMasterComponent implements OnInit, OnDestroy, AfterViewInit 
       globalRequestHandler(msg, this.router, this.messageService);
       if (msg.for == 'CarTypeGate') {
         this.users = msg.data; // or however your API responds
+        this.isLoading = false;
       } else if (msg.for == 'CarTypeAddUpdate') {
         this.messageService.add({ severity: 'success', summary: 'Success', detail: msg.StatusMessage });
+        this.showForm = false;
       } else if(msg.for == 'CarTypeDel'){
         this.messageService.add({severity: 'success', summary: 'Success', detail: msg.StatusMessage})
-      } else {
-        this.messageService.add({ severity: 'warn', summary: 'Warning', detail: msg?.message || 'No data found' });
       }
       return true;
     });
@@ -76,9 +76,9 @@ export class CarTypeMasterComponent implements OnInit, OnDestroy, AfterViewInit 
 
   columns = [
     { header: 'ID', field: 'id' },
-    { header: 'Car Type', field: 'car_type', icon: 'pi pi-car' },
+    { header: 'Car Type', field: 'car_type', icon: 'pi pi-car', styleClass: 'text-red-600' },
     { header: 'Sitting Capacity', field: 'sitting_capacity', icon: 'pi pi-check-circle', styleClass: 'text-green-600' },
-    { header: 'Index Order', field: 'index_order', },
+    { header: 'Index Order', field: 'index_order', icon: 'pi pi-mars', styleClass: 'text-blue-600' },
   ];
 
 

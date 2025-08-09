@@ -29,7 +29,7 @@ export class DynamicTableComponent {
 
   @Input() columns: any[] = [];
   @Input() data: any[] = [];
-  @Input() rows: number = 10;
+  @Input() rows: number = 15;
   @Input() rowActions: {
     label?: string;
     icon: string;
