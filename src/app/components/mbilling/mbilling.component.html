@@ -97,7 +97,17 @@
     class="col-span-full w-full p-8 border rounded-3xl bg-gradient-to-br from-sky-50 via-sky-50 to-blue-50 space-y-10">
 
     <!-- 🔘 Top Action -->
-    <div class="flex justify-end">
+    <div class="flex justify-end gap-2">
+      <div *ngIf="selectedMonthlyDuty" class="flex flex-col gap-2">
+          <div class="flex gap-2">
+            <li>DutyNo: {{selectedMonthlyDuty.DutyNo}}</li>
+            <li>FromTime: {{selectedMonthlyDuty.FromTime}}</li>
+            <li>ToTime: {{selectedMonthlyDuty.ToTime}}</li>
+            <li>TotalKM IN MMaster: {{selectedMonthlyDuty.TotalKM}}</li>
+            <li>KMRate: {{selectedMonthlyDuty.KMRate}}</li>
+            <li>ExtraDayKMRate: {{selectedMonthlyDuty.ExtraDayKMRate}}</li>
+          </div>
+      </div>
       <button pButton label="Calculate Bill" icon="pi pi-calculator" (click)="calculateBillAndLog()"
         class="p-button-lg p-button-primary rounded-xl shadow-md hover:scale-105 transition-transform"></button>
     </div>

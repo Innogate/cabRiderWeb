@@ -67,7 +67,7 @@ export class MbillingComponent {
     private _invoice: InvoiceService,
     private _minvoice: MinvoiceService,
     private _helperService: HelperService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.carTypeMaster.registerPageHandler((msg) => {
@@ -77,52 +77,39 @@ export class MbillingComponent {
         if (msg.for === 'CarTypeGate') {
           this.carTypes = msg.data;
           this.mapCarAndDutyTypesToDutyData();
-          console.log('cartype', this.carTypes);
           rt = true;
         } else if (msg.for === 'getAllCityDropdown') {
           this.cities = msg.data;
           const city = this.cities.find((c: any) => c.Id == 1);
           if (city) {
-            console.log(city);
           } else {
-            console.log('no data foundcity');
           }
           rt = true;
         } else if (msg.for === 'branchDropdown') {
           this.branches = msg.data;
-          console.log('branches :', this.branches);
           rt = true;
         } else if (msg.for === 'partyDropdown') {
           this.PartyName = msg.data;
-          console.log('party:', msg.data);
           const party = this.PartyName.find((c: any) => c.id === 1398);
           if (party) {
-            console.log(party);
           } else {
-            console.log('no data foundparty');
           }
           rt = true;
         } else if (msg.for === 'companyDropdown') {
           this.companies = msg.data;
-          console.log('companies', this.companies);
           const company = this.companies.find((c: any) => c.Id == 81);
           if (company) {
-            console.log(company);
-          } else {
-            console.log('no data found');
           }
           rt = true;
         } else if (msg.for === 'minvoice.getMonthlyBookingList') {
           this.dutyTableData = msg.data || [];
           this.totalRecords = msg.total || 0;
           this.mapCarAndDutyTypesToDutyData();
-          console.log('dutytable data:', this.dutyTableData);
           this.tableLoading = false;
           this.cdr.detectChanges();
           rt = true;
         } else if (msg.for === 'minvoice.getMonthlySetupCode') {
           this.monthlySetupData = msg.data;
-          console.log('setupdata', this.monthlySetupData);
         }
       }
       if (rt == false) {
@@ -139,10 +126,8 @@ export class MbillingComponent {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['mainDutyList']) {
-      console.log('mainDutyList updated:', this.mainDutyList);
     }
     if (changes['selectedDuties']) {
-      console.log('selectedDuties updated:', this.selectedDuties);
     }
   }
 
@@ -178,6 +163,9 @@ export class MbillingComponent {
   totalextraHourAmount: number = 0;
   salary: number = 0;
   totalextraHourRate: number = 0;
+
+  // DODO
+  selectedMonthlyDuty?: any;
 
   private mapCarAndDutyTypesToDutyData() {
     if (!this.dutyTableData?.length) return;
@@ -216,13 +204,6 @@ export class MbillingComponent {
     const city_id = Number(this.invoiceForm.get('city_id')?.value);
     const company_id = Number(this.invoiceForm.get('company_id')?.value);
 
-    console.log('Selected Values:', {
-      party_id,
-      branch_id,
-      city_id,
-      company_id,
-    });
-
     // Call only when all values are valid numbers and not NaN
     if (
       !isNaN(party_id) &&
@@ -256,8 +237,6 @@ export class MbillingComponent {
       company_id: companyId,
     };
 
-    console.log('Duty Table Payload:', payload);
-
     this.tableLoading = true;
     this._minvoice.getMonthlyBookingList(payload);
   }
@@ -269,8 +248,8 @@ export class MbillingComponent {
   selectedCityModel: any = null;
 
   // AutoComplete
-  PartyName: any[] = []; // original full list
-  filteredPartyName: any[] = []; // used by the autocomplete
+  PartyName: any[] = [];
+  filteredPartyName: any[] = [];
   filteredCities: any[] = [];
   companyList: any[] = [];
   filteredCompanies: any[] = [];
@@ -342,7 +321,6 @@ export class MbillingComponent {
 
   calculateTotals(selected: any[]) {
     const setupCode = this.invoiceForm.get('SetupCode')?.value;
-    // console.log('setupcode:', setupCode);
 
     if (!setupCode) {
       this.messageService.add({
@@ -359,11 +337,11 @@ export class MbillingComponent {
     let groseAmount = 0;
     let extraHourRate = 0;
     let extraKmRate = 0;
-    this.extraHour = 0; // Reset
-    let totalKm = 0; // ✅ New variable to store total kilometers
+    this.extraHour = 0;
+    let totalKm = 0;
 
     const setup = this.monthlySetupData?.find((s: any) => s.id === setupCode);
-    // console.log('setup', setup);
+    this.selectedMonthlyDuty = setup;
 
     if (!setup) {
       this.messageService.add({
@@ -376,6 +354,7 @@ export class MbillingComponent {
 
     const seenDateRanges = new Set<string>(); // Track already processed date pairs
 
+    // ** CALCULATE ALL Table Row
     selected.forEach((item: any) => {
       const fromDate = new Date(item.fromDate);
       const toDate = new Date(item.toDate);
@@ -400,20 +379,29 @@ export class MbillingComponent {
           const extraDayHrsRate = setup?.OTRate ?? 0;
           extraHourRate = extraDayHrsRate;
 
-          const extraKMRate = setup?.ExtraDayKMRate ?? 0;
-          extraKmRate = extraKMRate;
+
 
           const km = Number(item.TotalKm) || 0;
           totalKm += km;
         } else {
-          // Duplicate date, don't add days or amount
           console.log(`Duplicate date found: ${dateKey}, skipping day count`);
         }
       }
 
-      //  Time calculation
-      if (item.fromTime && item.toTime) {
-        const [fromHours, fromMinutes] = item.fromTime.split(':').map(Number);
+      const extraKMRate = setup?.ExtraDayKMRate ?? 0;
+      extraKmRate = extraKMRate;
+
+      // ** Final Calculation
+      if (totalKm > setup.TotalKm) {
+        totalKm = totalKm - setup.TotalKm;
+      }
+      else {
+        totalKm = 0;
+      }
+
+      //! Time calculation
+      if (item.GarageOutTime && item.toTime) {
+        const [fromHours, fromMinutes] = item.GarageOutTime.split(':').map(Number);
         const [toHours, toMinutes] = item.toTime.split(':').map(Number);
 
         const start = new Date();
@@ -434,16 +422,12 @@ export class MbillingComponent {
     // 📊 Final calculations
     const totalHoursDecimal = totalMinutes / 60;
     this.totalTimeText = `${totalHoursDecimal.toFixed(2)} hrs`;
-    console.log('tabletime:', this.totalTimeText);
-
     // 🕒 Time Check using FromTime and ToTime
     if (setup?.FromTime && setup?.ToTime) {
       const fromTime = new Date(setup.FromTime);
       const toTime = new Date(setup.ToTime);
-      console.log(fromTime, toTime);
 
       if (isNaN(fromTime.getTime()) || isNaN(toTime.getTime())) {
-        console.warn('Invalid time format');
         return;
       }
 
@@ -452,7 +436,6 @@ export class MbillingComponent {
 
       fromDate.setHours(fromTime.getHours(), fromTime.getMinutes(), 0, 0);
       toDate.setHours(toTime.getHours(), toTime.getMinutes(), 0, 0);
-      console.log(' Converted Grg Times →', fromDate, toDate);
 
       // Handle overnight shift (e.g. 8 PM to 6 AM next day)
       if (toDate < fromDate) {
@@ -461,7 +444,6 @@ export class MbillingComponent {
 
       const diffMs = toDate.getTime() - fromDate.getTime();
       const totalhrs = diffMs / (1000 * 60 * 60); // in hours
-      console.log(' Total hours:', totalhrs);
 
       const totalHoursDecimal = this.totalTimeText
         ? parseFloat(this.totalTimeText)
@@ -476,7 +458,7 @@ export class MbillingComponent {
     this.totalSelectedDays = totalDays;
     this.totalCalculatedAmount = totalAmount;
     this.salary = groseAmount;
-    this.totalextraHourRate = extraHourRate;
+    this.totalextraHourRate = extraHourRate
     this.totalextraKmRate = extraKmRate;
     this.totalExtraHour = this.extraHour;
     this.totalSelectedKm = totalKm; //  Store for use elsewhere
@@ -503,17 +485,6 @@ export class MbillingComponent {
 
     this.rate2 = this.totalextraKmRate;
     this.billTotal2 = this.extrakm * this.rate2;
-
-    // this.rate3 = 1200;
-    // this.mobileAmount = 150;
-    // this.fuelAmount = 0;
-    // this.billTotal = this.fixedAmount + this.fuelAmount + this.rate1;
-    // this.amountPayable = this.billTotal - this.advance;
-
-    // Optional: Update other dependent fields
-    // this.amountPayableText = `₹${this.amountPayable.toFixed(2)}`;
-    // this.amount2 = this.amountPayable;
-    // this.desc2 = 'Sample Description';
   }
 
   getBillingFormData() {
@@ -564,6 +535,5 @@ export class MbillingComponent {
     };
 
     this._minvoice.createMonthlyBilling(payload);
-    console.log(' Final Payload:', payload);
   }
 }
