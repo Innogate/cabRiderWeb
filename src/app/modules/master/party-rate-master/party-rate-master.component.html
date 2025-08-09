@@ -4,8 +4,8 @@
     </app-dynamic-table>
 </div>
 
-<div class="min-h-screen p-4" *ngIf="showForm" (ngSubmit)="savePartyRate()">
-    <form [formGroup]="partyRateForm"
+<div class="min-h-screen p-4" *ngIf="showForm">
+    <form [formGroup]="partyRateForm" (ngSubmit)="savePartyRate()"
         class="max-w-8xl mx-auto bg-white rounded-xl shadow-md overflow-hidden">
         <!-- Header -->
         <div class="bg-sky-600 px-6 py-4 rounded-t-lg flex justify-between items-center">
@@ -85,7 +85,7 @@
                                 <i class="pi pi-mobile text-red-700"></i>
                                 <label class="block text-sm font-medium text-slate-950 mb-1">Contact Number</label>
                             </div>
-                            <input type="text" formControlName="ContactNo" pInputText
+                            <input type="number" formControlName="ContactNo" pInputText
                                 class="w-full border border-gray-300 rounded-lg p-3" placeholder="Phone number">
                         </div>
                     </div>
@@ -130,7 +130,7 @@
                                 <i class="pi pi-map-marker text-fuchsia-500"></i>
                                 <label class="block text-sm font-medium text-slate-950 mb-1">Pin Code</label>
                             </div>
-                            <input type="text" formControlName="PinCode" pInputText
+                            <input type="number" formControlName="PinCode" pInputText
                                 class="w-full border border-gray-300 rounded-lg p-3" placeholder="Postal code">
                         </div>
                     </div>
@@ -155,7 +155,7 @@
   <p-table [value]="previewData ? [previewData] : []" *ngIf="previewData"
    class="p-datatable-gridlines rounded-xl">
     <ng-template pTemplate="header">
-      <tr class="bg-blue-100 text-gray-800 text-sm font-semibold">
+      <tr class="bg-blue-100 text-gray-800 text-xs font-semibold">
         <th class="py-2 px-3">Rate Type</th>
         <th class="py-2 px-3">Car Type</th>
         <th class="py-2 px-3">Hour Rate</th>
@@ -177,7 +177,7 @@
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-row>
-      <tr class="text-gray-800 hover:bg-blue-50 transition-all text-sm" *ngFor="let row of previewData; let i = index">
+      <tr class="text-gray-800 hover:bg-blue-50 transition-all text-xs" *ngFor="let row of previewData; let i = index">
         <td class="py-2 px-3">{{ row.rateType }}</td>
         <td class="py-2 px-3">{{ row.car_type }}</td>
         <td class="py-2 px-3">{{ row.Hours }}</td>
@@ -185,7 +185,7 @@
         <td class="py-2 px-3">{{ row.MinHr }}</td>
         <td class="py-2 px-3">{{ row.MinKm }}</td>
         <td class="py-2 px-3">{{ row.IncludeTax }}</td>
-        <td class="py-2 px-3">{{ row.RtEfDate | date:'dd/MM/yyyy' }}</td>
+        <td class="py-2 px-3">{{ row.RtEfDate }}</td>
         <td class="py-2 px-3">{{ row.NHTime }}</td>
         <td class="py-2 px-3">{{ row.NHAmount }}</td>
         <td class="py-2 px-3">{{ row.EHTime }}</td>
@@ -265,7 +265,7 @@
             <!-- Include Tax -->
             <div>
                 <div class="flex items-center gap-2 mb-1 text-gray-700">
-                    <i class="pi pi-sort-numeric-up text-indigo-600"></i>
+                    <i class="pi pi-check-circle text-indigo-600"></i>
                     <label class="text-sm font-medium">Include Tax</label>
                 </div>
                 <p-dropdown [options]="includeTaxOptions" formControlName="IncludeTax" placeholder="Include Tax"
@@ -292,7 +292,7 @@
                 <!-- Hour Rate -->
                 <div>
                     <div class="flex items-center gap-2 mb-1 text-gray-700">
-                        <i class="pi pi-car text-indigo-600"></i>
+                        <i class="pi pi-clock text-indigo-600"></i>
                         <label for="" class="text-sm font-medium">Hour Rate</label>
                     </div>
                     <input pInputText formControlName="Hours" placeholder="Hour Rate" />
@@ -301,7 +301,7 @@
                 <!-- KM Rate -->
                 <div>
                     <div class="flex items-center gap-2 mb-1 text-gray-700">
-                        <i class="pi pi-sort-numeric-up text-indigo-600"></i>
+                        <i class="pi pi-arrow-up text-indigo-600"></i>
                         <label class="text-sm font-medium">KM Rate</label>
                     </div>
                     <input pInputText formControlName="KM" placeholder="KM Rate" />
@@ -310,7 +310,7 @@
                 <!-- Min Hrs -->
                 <div>
                     <div class="flex items-center gap-2 mb-1 text-gray-700">
-                        <i class="pi pi-calendar text-indigo-600"></i>
+                        <i class="pi pi-clock text-indigo-600"></i>
                         <label for="" class="text-sm font-medium">Min Hrs</label>
                     </div>
                     <input pInputText formControlName="MinHr" placeholder="Min Hrs" />
@@ -319,7 +319,7 @@
                 <!-- Min KM -->
                 <div>
                     <div class="flex items-center gap-2 mb-1 text-gray-700">
-                        <i class="pi pi-calendar text-indigo-600"></i>
+                        <i class="pi pi-map-marker text-indigo-600"></i>
                         <label for="" class="text-sm font-medium">Min KM</label>
                     </div>
                     <input pInputText formControlName="MinKm" placeholder="Min KM" />
@@ -331,7 +331,7 @@
                 <!-- Night Halt Time -->
                 <div>
                     <div class="flex items-center gap-2 mb-1 text-gray-700">
-                        <i class="pi pi-car text-indigo-600"></i>
+                        <i class="pi pi-moon text-indigo-600"></i>
                         <label for="" class="text-sm font-medium">Night Halt Time</label>
                     </div>
                     <input pInputText formControlName="NHTime" placeholder="Night Halt Time" />
@@ -340,7 +340,7 @@
                 <!-- Night Halt Amount -->
                 <div>
                     <div class="flex items-center gap-2 mb-1 text-gray-700">
-                        <i class="pi pi-sort-numeric-up text-indigo-600"></i>
+                        <i class="pi pi-dollar text-indigo-600"></i>
                         <label class="text-sm font-medium">Night Halt Amount</label>
                     </div>
                     <input pInputText formControlName="NHAmount" placeholder="Night Halt Amount" />
@@ -349,7 +349,7 @@
                 <!-- Early Halt Time -->
                 <div>
                     <div class="flex items-center gap-2 mb-1 text-gray-700">
-                        <i class="pi pi-calendar text-indigo-600"></i>
+                        <i class="pi pi-history text-indigo-600"></i>
                         <label for="" class="text-sm font-medium">Early Halt Time</label>
                     </div>
                     <input pInputText formControlName="EHTime" placeholder="Early Halt Time" />
@@ -358,7 +358,7 @@
                 <!-- Early Halt Amount -->
                 <div>
                     <div class="flex items-center gap-2 mb-1 text-gray-700">
-                        <i class="pi pi-calendar text-indigo-600"></i>
+                        <i class="pi pi-dollar text-indigo-600"></i>
                         <label for="" class="text-sm font-medium">Early Halt Amount</label>
                     </div>
                     <input pInputText formControlName="EHAmount" placeholder="Early Halt Amount" />
@@ -375,7 +375,7 @@
                 <!-- Hours -->
                 <div>
                     <div class="flex items-center gap-2 mb-1 text-gray-700">
-                        <i class="pi pi-car text-indigo-600"></i>
+                        <i class="pi pi-clock text-indigo-600"></i>
                         <label for="" class="text-sm font-medium">Hours</label>
                     </div>
                     <input pInputText formControlName="Hours" />
@@ -384,7 +384,7 @@
                 <!-- KM -->
                 <div>
                     <div class="flex items-center gap-2 mb-1 text-gray-700">
-                        <i class="pi pi-sort-numeric-up text-indigo-600"></i>
+                        <i class="pi pi-arrow-up text-indigo-600"></i>
                         <label class="text-sm font-medium">KM</label>
                     </div>
                     <input pInputText formControlName="KM" />
@@ -393,7 +393,7 @@
                 <!-- Amount -->
                 <div>
                     <div class="flex items-center gap-2 mb-1 text-gray-700">
-                        <i class="pi pi-calendar text-indigo-600"></i>
+                        <i class="pi pi-dollar text-indigo-600"></i>
                         <label for="" class="text-sm font-medium">Amount</label>
                     </div>
                     <input pInputText formControlName="Amount" />
@@ -413,7 +413,7 @@
                 <!-- Night Halt Time -->
                 <div>
                     <div class="flex items-center gap-2 mb-1 text-gray-700">
-                        <i class="pi pi-car text-indigo-600"></i>
+                        <i class="pi pi-moon text-indigo-600"></i>
                         <label for="" class="text-sm font-medium">Night Halt Time</label>
                     </div>
                     <input pInputText formControlName="NHTime" placeholder="Night Halt Time" />
@@ -422,7 +422,7 @@
                 <!-- Night Halt Amount -->
                 <div>
                     <div class="flex items-center gap-2 mb-1 text-gray-700">
-                        <i class="pi pi-sort-numeric-up text-indigo-600"></i>
+                        <i class="pi pi-dollar text-indigo-600"></i>
                         <label class="text-sm font-medium">Night Halt Amount</label>
                     </div>
                     <input pInputText formControlName="NHAmount" placeholder="Night Halt Amount" />
@@ -431,7 +431,7 @@
                 <!-- Early Halt Time -->
                 <div>
                     <div class="flex items-center gap-2 mb-1 text-gray-700">
-                        <i class="pi pi-calendar text-indigo-600"></i>
+                        <i class="pi pi-history text-indigo-600"></i>
                         <label for="" class="text-sm font-medium">Early Halt Time</label>
                     </div>
                     <input pInputText formControlName="EHTime" placeholder="Early Halt Time" />
@@ -440,7 +440,7 @@
                 <!-- Early Halt Amount -->
                 <div>
                     <div class="flex items-center gap-2 mb-1 text-gray-700">
-                        <i class="pi pi-calendar text-indigo-600"></i>
+                        <i class="pi pi-dollar text-indigo-600"></i>
                         <label for="" class="text-sm font-medium">Early Halt Amount</label>
                     </div>
                     <input pInputText formControlName="EHAmount" placeholder="Early Halt Amount" />
@@ -452,7 +452,7 @@
                 <!-- Extra KM Rate -->
                 <div>
                     <div class="flex items-center gap-2 mb-1 text-gray-700">
-                        <i class="pi pi-calendar text-indigo-600"></i>
+                        <i class="pi pi-map-marker text-indigo-600"></i>
                         <label for="" class="text-sm font-medium">Extra KM Rate</label>
                     </div>
                     <input pInputText formControlName="ExtKmrate" />
@@ -461,7 +461,7 @@
                 <!-- Whichever Higher -->
                 <div>
                     <div class="flex items-center gap-2 mb-1 text-gray-700">
-                        <i class="pi pi-calendar text-indigo-600"></i>
+                        <i class="pi pi-chart-bar text-indigo-600"></i>
                         <label for="" class="text-sm font-medium">Whichever Higher</label>
                     </div>
                     <p-checkbox formControlName="HigherRate" binary="true"></p-checkbox>
@@ -476,7 +476,7 @@
                 <!-- KM -->
                 <div>
                     <div class="flex items-center gap-2 mb-1 text-gray-700">
-                        <i class="pi pi-sort-numeric-up text-indigo-600"></i>
+                        <i class="pi pi-arrow-up text-indigo-600"></i>
                         <label class="text-sm font-medium">KM</label>
                     </div>
                     <input pInputText formControlName="KM" class="w-full "/>
@@ -485,7 +485,7 @@
                 <!-- Amount -->
                 <div>
                     <div class="flex items-center gap-2 mb-1 text-gray-700">
-                        <i class="pi pi-calendar text-indigo-600"></i>
+                        <i class="pi pi-dollar text-indigo-600"></i>
                         <label for="" class="text-sm font-medium">Amount</label>
                     </div>
                     <input pInputText formControlName="Amount" class="w-full "/>
@@ -505,7 +505,7 @@
                 <!-- Night Halt Time -->
                 <div>
                     <div class="flex items-center gap-2 mb-1 text-gray-700">
-                        <i class="pi pi-car text-indigo-600"></i>
+                        <i class="pi pi-moon text-indigo-600"></i>
                         <label for="" class="text-sm font-medium">Night Halt Time</label>
                     </div>
                     <input pInputText formControlName="NHTime" placeholder="Night Halt Time" />
@@ -514,7 +514,7 @@
                 <!-- Night Halt Amount -->
                 <div>
                     <div class="flex items-center gap-2 mb-1 text-gray-700">
-                        <i class="pi pi-sort-numeric-up text-indigo-600"></i>
+                        <i class="pi pi-dollar text-indigo-600"></i>
                         <label class="text-sm font-medium">Night Halt Amount</label>
                     </div>
                     <input pInputText formControlName="NHAmount" placeholder="Night Halt Amount" />
@@ -523,7 +523,7 @@
                 <!-- Early Halt Time -->
                 <div>
                     <div class="flex items-center gap-2 mb-1 text-gray-700">
-                        <i class="pi pi-calendar text-indigo-600"></i>
+                        <i class="pi pi-history text-indigo-600"></i>
                         <label for="" class="text-sm font-medium">Early Halt Time</label>
                     </div>
                     <input pInputText formControlName="EHTime" placeholder="Early Halt Time" />
@@ -532,7 +532,7 @@
                 <!-- Early Halt Amount -->
                 <div>
                     <div class="flex items-center gap-2 mb-1 text-gray-700">
-                        <i class="pi pi-calendar text-indigo-600"></i>
+                        <i class="pi pi-dollar text-indigo-600"></i>
                         <label for="" class="text-sm font-medium">Early Halt Amount</label>
                     </div>
                     <input pInputText formControlName="EHAmount" placeholder="Early Halt Amount" />
@@ -547,7 +547,7 @@
                 <!-- Night Halt Time -->
                 <div>
                     <div class="flex items-center gap-2 mb-1 text-gray-700">
-                        <i class="pi pi-car text-indigo-600"></i>
+                        <i class="pi pi-moon text-indigo-600"></i>
                         <label for="" class="text-sm font-medium">Night Halt Time</label>
                     </div>
                     <p-dropdown formControlName="TransType" [options]="transferTypes" optionLabel="label"
@@ -557,7 +557,7 @@
                 <!-- Night Halt Amount -->
                 <div>
                     <div class="flex items-center gap-2 mb-1 text-gray-700">
-                        <i class="pi pi-sort-numeric-up text-indigo-600"></i>
+                        <i class="pi pi-dollar text-indigo-600"></i>
                         <label class="text-sm font-medium">Night Halt Amount</label>
                     </div>
                     <input pInputText formControlName="Amount" appendTo="body" class="w-full" />
