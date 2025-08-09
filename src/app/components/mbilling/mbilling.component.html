@@ -54,9 +54,6 @@
           <th class="py-3 px-4">
             <i class="pi pi-compass text-cyan-600 mr-1"></i> Total KM
           </th>
-          <th class="py-3 px-4">
-            <i class="pi pi-cog text-red-500 mr-1"></i> Action
-          </th>
         </tr>
       </ng-template>
 
@@ -72,21 +69,11 @@
           <td class="py-2 px-3">{{ duty.fromDate }}</td>
           <td class="py-2 px-3">{{ duty.toDate }}</td>
           <td class="py-2 px-3">{{ duty.GarageOutTime }}</td>
-          <td class="py-2 px-3">{{ duty.toTime }}</td>
+          <td class="py-2 px-3">{{ duty.GarageInDate }}</td>
           <td class="py-2 px-3">{{ duty.GarageOutKm }}</td>
           <td class="py-2 px-3">{{ duty.GarageInKm }}</td>
           <td class="py-2 px-3">{{ duty.TotalHour }}</td>
           <td class="py-2 px-3">{{ duty.TotalKm }}</td>
-          <td class="py-2 px-3">
-            <div class="flex gap-2 justify-center">
-              <button pButton icon="pi pi-pencil" class="p-button-sm p-button-warning p-button-rounded"
-                pTooltip="Edit"></button>
-              <button pButton icon="pi pi-trash" class="p-button-sm p-button-danger p-button-rounded"
-                pTooltip="Delete"></button>
-              <button pButton icon="pi pi-print" class="p-button-sm p-button-info p-button-rounded"
-                pTooltip="Print"></button>
-            </div>
-          </td>
         </tr>
       </ng-template>
     </p-table>
@@ -98,16 +85,6 @@
 
     <!-- 🔘 Top Action -->
     <div class="flex justify-end gap-2">
-      <div *ngIf="selectedMonthlyDuty" class="flex flex-col gap-2">
-          <div class="flex gap-2">
-            <li>DutyNo: {{selectedMonthlyDuty.DutyNo}}</li>
-            <li>FromTime: {{selectedMonthlyDuty.FromTime}}</li>
-            <li>ToTime: {{selectedMonthlyDuty.ToTime}}</li>
-            <li>TotalKM IN MMaster: {{selectedMonthlyDuty.TotalKM}}</li>
-            <li>KMRate: {{selectedMonthlyDuty.KMRate}}</li>
-            <li>ExtraDayKMRate: {{selectedMonthlyDuty.ExtraDayKMRate}}</li>
-          </div>
-      </div>
       <button pButton label="Calculate Bill" icon="pi pi-calculator" (click)="calculateBillAndLog()"
         class="p-button-lg p-button-primary rounded-xl shadow-md hover:scale-105 transition-transform"></button>
     </div>
@@ -150,7 +127,7 @@
       <div class="space-y-5">
         <div class="flex justify-between items-center">
           <label class="font-medium text-gray-700">📆 No. of Days:</label>
-          <input type="number" pInputText [(ngModel)]="numDays" class="w-44 text-right" />
+          <input type="number" pInputText [(ngModel)]="numDays" class="w-44 text-right" readonlys />
         </div>
         <div class="flex justify-between items-center">
           <label class="font-medium text-gray-700">💵 Rate:</label>
@@ -182,7 +159,7 @@
       <div class="space-y-5">
         <div class="flex justify-between items-center">
           <label class="font-medium text-gray-700">💳 Amount:</label>
-          <input type="number" pInputText [(ngModel)]="Amount" class="w-44 text-right" />
+          <input type="number" pInputText [(ngModel)]="Amount" class="w-44 text-right" readonlys/>
         </div>
         <div class="flex justify-between items-center">
           <label class="font-medium text-gray-700">💳 Amount:</label>

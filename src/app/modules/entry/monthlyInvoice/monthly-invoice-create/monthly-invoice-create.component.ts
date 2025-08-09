@@ -449,7 +449,9 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
     }
   }
 
+  selectedMontySetupCode: any;
   onCodeSelect(codeObj: any) {
+    this.selectedMontySetupCode = codeObj.value;
     if (this.invoiceForm) {
       this.invoiceForm.get('SetupCode')?.setValue(codeObj.value.id);
     }
@@ -495,163 +497,28 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
 
   mainDutyList: any[] = []; // this holds the final duty list shown in main UI
 
-saveSelectedDuties() {
-  const selected = this.dutyTableData.filter((item: any) => item.selected);
-  this.mainDutyList = [...this.mainDutyList, ...selected.map(item => ({ ...item }))];
-  this.displayDuty = false;
-}
+  saveSelectedDuties() {
+    const selected = this.dutyTableData.filter((item: any) => item.selected);
+    this.mainDutyList = [...this.mainDutyList, ...selected.map(item => ({ ...item }))];
+    this.displayDuty = false;
+  }
 
-  // AFTER ADD DUTY UI
-
-  // Column 1
-  fixedAmount: any;
-  extraHours: any;
-  extrakm: any;
-  exceptDayHrs: any;
-  extraDaykm: any;
-  fuelAmount: any;
-  Sgst: any;
-
-
-  // Column 2
-  numDays: any;
-  rate1: any;
-  rate2: any;
-  rate3: any;
-  rate4: any;
-  mobileAmount: any;
-  Cgst: any;
-
-  // Column 3
-  fixedAmount2: any;
-  amountPayableText: string = '';
-  billTotal2: any;
-  advance2: any;
-  amount2: any;
-  desc2: string = '';
-  igst: any;
-  isParkingTaxApplied: boolean = false;
-
-  // Column 4
-  billTotal: any;
-  advance: any;
-  serviceTax: any;
-  eduCess: any;
-  sbCess: any;
-  roundOff: any;
-  amountPayable: any;
-
-  // Extra
-  desc: string = '';
-
-  calculateTotals(selected: any[]) {
-    const setupCode = this.invoiceForm.get('SetupCode')?.value;
-
-    if (!setupCode) {
-      this.messageService.add({
-        severity: 'warn',
-        summary: 'Missing Setup Code',
-        detail: 'Please select Duty Setup Code before calculating.',
-      });
-      return;
-    }
-
-    let totalDays = 0;
-    let totalAmount = 0;
-    let totalMinutes = 0;
-    let totalhrs = 0;
-    this.extraHour = 0; // Reset
-    let totalKm = 0; // ✅ New variable to store total kilometers
-
-    const setup = this.monthlySetupData?.find((s: any) => s.id === setupCode);
-
-    if (!setup) {
+  addDutySection(){
+    // check all parameter are filled
+    if (!(
+      this.invoiceForm.get('branch_id')?.value &&
+      this.invoiceForm.get('city_id')?.value &&
+      this.invoiceForm.get('party_id')?.value &&
+      this.invoiceForm.get('SetupCode')?.value &&
+      this.invoiceForm.get('company_id')?.value
+    )) {
       this.messageService.add({
         severity: 'error',
-        summary: 'Setup Code Not Found',
-        detail: 'Selected Setup Code not found in Monthly Setup Data.',
+        summary: 'Error',
+        detail: 'Please fill all the required fields',
       });
       return;
     }
-
-    selected.forEach((item: any) => {
-      const fromDate = new Date(item.fromDate);
-      const toDate = new Date(item.toDate);
-
-      //  Day calculation
-      if (!isNaN(fromDate.getTime()) && !isNaN(toDate.getTime())) {
-        const diffTime = toDate.getTime() - fromDate.getTime();
-        const days = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
-        totalDays += days;
-
-        const dutyAmt = setup?.DutyAmt ?? 0;
-        const amount = (dutyAmt / 30) * days;
-        totalAmount += amount;
-
-        const km = Number(item.TotalKm) || 0;
-        totalKm += km;
-      }
-
-      //  Time calculation
-      if (item.fromTime && item.toTime) {
-        const [fromHours, fromMinutes] = item.fromTime.split(':').map(Number);
-        const [toHours, toMinutes] = item.toTime.split(':').map(Number);
-
-        const start = new Date();
-        const end = new Date();
-
-        start.setHours(fromHours, fromMinutes, 0, 0);
-        end.setHours(toHours, toMinutes, 0, 0);
-
-        if (end < start) {
-          end.setDate(end.getDate() + 1); // Overnight
-        }
-
-        const diff = (end.getTime() - start.getTime()) / (1000 * 60); // minutes
-        totalMinutes += diff;
-      }
-    });
-
-    // 📊 Final calculations
-    const totalHoursDecimal = totalMinutes / 60;
-    this.totalTimeText = `${totalHoursDecimal.toFixed(2)} hrs`;
-
-    // 🕒 Grg time check
-    if (setup?.GrgInTime && setup?.GrgOutTime) {
-      const inTime = new Date(setup.GrgInTime);
-      const outTime = new Date(setup.GrgOutTime);
-
-      if (isNaN(inTime.getTime()) || isNaN(outTime.getTime())) {
-        return;
-      }
-
-      const inDate = new Date();
-      const outDate = new Date();
-
-      inDate.setHours(inTime.getHours(), inTime.getMinutes(), 0, 0);
-      outDate.setHours(outTime.getHours(), outTime.getMinutes(), 0, 0);
-
-
-      if (outDate < inDate) {
-        outDate.setDate(outDate.getDate() + 1); // overnight shift
-      }
-
-      const diffMs = outDate.getTime() - inDate.getTime();
-      const totalhrs = diffMs / (1000 * 60 * 60); // hours
-
-      const totalHoursDecimal = this.totalTimeText
-        ? parseFloat(this.totalTimeText)
-        : 0;
-
-      if (totalHoursDecimal > totalhrs) {
-        this.extraHour = totalHoursDecimal - totalhrs;
-      }
-    }
-
-    //  Set to UI-bound variables
-    this.totalSelectedDays = totalDays;
-    this.totalCalculatedAmount = totalAmount;
-    this.totalExtraHour = this.extraHour;
-    this.totalSelectedKm = totalKm; //  Store for use elsewhere
+    this.displayDuty = true
   }
 }
