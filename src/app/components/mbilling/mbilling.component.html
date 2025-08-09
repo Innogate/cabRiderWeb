@@ -1,272 +1,243 @@
-  <!-- Show only after duties are added -->
-  <!-- *ngIf="mainDutyList.length > 0" -->
-  <div  class="p-8 mt-8 bg-white border rounded-2xl space-y-8 max-w-screen-xl mx-auto"
-  >
-    <!-- 🟡 Table Section -->
-    <div class="p-4 rounded-xl bg-gradient-to-br from-sky-50 via-sky-50 to-blue-50 mt-6 border">
-      <p-table
-        [value]="mainDutyList"
-        [paginator]="true"
-        [rows]="10"
-        [responsiveLayout]="'scroll'"
-        [resizableColumns]="true"
-        [showCurrentPageReport]="true"
-        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-        class="p-datatable-gridlines rounded-xl"
-      >
-        <ng-template pTemplate="header">
-          <tr class="bg-blue-500 text-gray-800 text-sm font-semibold">
-            <th class="py-3 px-4">
-              <i class="pi pi-sort-numeric-up text-blue-500 mr-1"></i> SI No.
-            </th>
-            <th class="py-3 px-4">
-              <i class="pi pi-id-card text-green-600 mr-1"></i> Slip No.
-            </th>
-            <th class="py-3 px-4">
-              <i class="pi pi-briefcase text-purple-600 mr-1"></i> Duty Type
-            </th>
-            <th class="py-3 px-4">
-              <i class="pi pi-car text-orange-500 mr-1"></i> Car No.
-            </th>
-            <th class="py-3 px-4">
-              <i class="pi pi-cog text-gray-700 mr-1"></i> Car Type
-            </th>
-            <th class="py-3 px-4">
-              <i class="pi pi-building text-pink-600 mr-1"></i> Project
-            </th>
-            <th class="py-3 px-4">
-              <i class="pi pi-user text-indigo-600 mr-1"></i> Guest Name
-            </th>
-            <th class="py-3 px-4">
-              <i class="pi pi-calendar text-teal-600 mr-1"></i> From Date
-            </th>
-            <th class="py-3 px-4">
-              <i class="pi pi-calendar-times text-red-600 mr-1"></i> To Date
-            </th>
-            <th class="py-3 px-4">
-              <i class="pi pi-clock text-yellow-600 mr-1"></i> From Time
-            </th>
-            <th class="py-3 px-4">
-              <i class="pi pi-clock text-yellow-700 mr-1"></i> To Time
-            </th>
-            <th class="py-3 px-4">
-              <i class="pi pi-directions text-blue-700 mr-1"></i> From KM
-            </th>
-            <th class="py-3 px-4">
-              <i class="pi pi-directions-alt text-blue-800 mr-1"></i> To KM
-            </th>
-            <th class="py-3 px-4">
-              <i class="pi pi-stopwatch text-lime-600 mr-1"></i> Total Time
-            </th>
-            <th class="py-3 px-4">
-              <i class="pi pi-compass text-cyan-600 mr-1"></i> Total KM
-            </th>
-            <th class="py-3 px-4">
-              <i class="pi pi-cog text-red-500 mr-1"></i> Action
-            </th>
-          </tr>
-        </ng-template>
+<!-- Show only after duties are added -->
+<!-- *ngIf="mainDutyList.length > 0" -->
+<div class="p-8 mt-8 bg-white border rounded-2xl space-y-8 max-w-screen-xl mx-auto">
+  <!-- 🟡 Table Section -->
+  <div class="p-4 rounded-xl bg-gradient-to-br from-sky-50 via-sky-50 to-blue-50 mt-6 border">
+    <p-table [value]="mainDutyList" [paginator]="true" [rows]="10" [responsiveLayout]="'scroll'"
+      [resizableColumns]="true" [showCurrentPageReport]="true"
+      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+      class="p-datatable-gridlines rounded-xl">
+      <ng-template pTemplate="header">
+        <tr class="bg-blue-500 text-gray-800 text-sm font-semibold">
+          <th class="py-3 px-4">
+            <i class="pi pi-sort-numeric-up text-blue-500 mr-1"></i> SI No.
+          </th>
+          <th class="py-3 px-4">
+            <i class="pi pi-id-card text-green-600 mr-1"></i> Slip No.
+          </th>
+          <th class="py-3 px-4">
+            <i class="pi pi-briefcase text-purple-600 mr-1"></i> Duty Type
+          </th>
+          <th class="py-3 px-4">
+            <i class="pi pi-car text-orange-500 mr-1"></i> Car No.
+          </th>
+          <th class="py-3 px-4">
+            <i class="pi pi-cog text-gray-700 mr-1"></i> Car Type
+          </th>
+          <th class="py-3 px-4">
+            <i class="pi pi-building text-pink-600 mr-1"></i> Project
+          </th>
+          <th class="py-3 px-4">
+            <i class="pi pi-user text-indigo-600 mr-1"></i> Guest Name
+          </th>
+          <th class="py-3 px-4">
+            <i class="pi pi-calendar text-teal-600 mr-1"></i> From Date
+          </th>
+          <th class="py-3 px-4">
+            <i class="pi pi-calendar-times text-red-600 mr-1"></i> To Date
+          </th>
+          <th class="py-3 px-4">
+            <i class="pi pi-clock text-yellow-600 mr-1"></i> From Time
+          </th>
+          <th class="py-3 px-4">
+            <i class="pi pi-clock text-yellow-700 mr-1"></i> To Time
+          </th>
+          <th class="py-3 px-4">
+            <i class="pi pi-directions text-blue-700 mr-1"></i> From KM
+          </th>
+          <th class="py-3 px-4">
+            <i class="pi pi-directions-alt text-blue-800 mr-1"></i> To KM
+          </th>
+          <th class="py-3 px-4">
+            <i class="pi pi-stopwatch text-lime-600 mr-1"></i> Total Time
+          </th>
+          <th class="py-3 px-4">
+            <i class="pi pi-compass text-cyan-600 mr-1"></i> Total KM
+          </th>
+          <th class="py-3 px-4">
+            <i class="pi pi-cog text-red-500 mr-1"></i> Action
+          </th>
+        </tr>
+      </ng-template>
 
-        <ng-template pTemplate="body" let-duty>
-          <tr class="hover:bg-blue-50 transition-all text-sm">
-            <td class="py-2 px-3">{{ duty.BookingNo }}</td>
-            <td class="py-2 px-3">{{ duty.SlipNo }}</td>
-            <td class="py-2 px-3">{{ duty.DutyTypeName }}</td>
-            <td class="py-2 px-3">{{ duty.CarNo }}</td>
-            <td class="py-2 px-3">{{ duty.CarType }}</td>
-            <td class="py-2 px-3">{{ duty.Project }}</td>
-            <td class="py-2 px-3">{{ duty.BookedBy }}</td>
-            <td class="py-2 px-3">{{ duty.fromDate }}</td>
-            <td class="py-2 px-3">{{ duty.toDate }}</td>
-            <td class="py-2 px-3">{{ duty.fromTime }}</td>
-            <td class="py-2 px-3">{{ duty.toTime }}</td>
-            <td class="py-2 px-3">{{ duty.GarageOutKm }}</td>
-            <td class="py-2 px-3">{{ duty.GarageInKm }}</td>
-            <td class="py-2 px-3">{{ duty.TotalHour }}</td>
-            <td class="py-2 px-3">{{ duty.TotalKm }}</td>
-            <td class="py-2 px-3">
-              <div class="flex gap-2 justify-center">
-                <button
-                  pButton
-                  icon="pi pi-pencil"
-                  class="p-button-sm p-button-warning p-button-rounded"
-                  pTooltip="Edit"
-                ></button>
-                <button
-                  pButton
-                  icon="pi pi-trash"
-                  class="p-button-sm p-button-danger p-button-rounded"
-                  pTooltip="Delete"
-                ></button>
-                <button
-                  pButton
-                  icon="pi pi-print"
-                  class="p-button-sm p-button-info p-button-rounded"
-                  pTooltip="Print"
-                ></button>
-              </div>
-            </td>
-          </tr>
-        </ng-template>
-      </p-table>
-    </div>
-
-   <!-- 💠 Billing Section -->
-<div class="col-span-full w-full p-8 border rounded-3xl bg-gradient-to-br from-sky-50 via-sky-50 to-blue-50 space-y-10">
-
-  <!-- 🔘 Top Action -->
-  <div class="flex justify-end">
-    <button
-      pButton
-      label="Calculate Bill"
-      icon="pi pi-calculator"
-      (click)="calculateBillAndLog()"
-      class="p-button-lg p-button-primary rounded-xl shadow-md hover:scale-105 transition-transform"
-    ></button>
+      <ng-template pTemplate="body" let-duty>
+        <tr class="hover:bg-blue-50 transition-all text-sm">
+          <td class="py-2 px-3">{{ duty.BookingNo }}</td>
+          <td class="py-2 px-3">{{ duty.SlipNo }}</td>
+          <td class="py-2 px-3">{{ duty.DutyTypeName }}</td>
+          <td class="py-2 px-3">{{ duty.CarNo }}</td>
+          <td class="py-2 px-3">{{ duty.CarType }}</td>
+          <td class="py-2 px-3">{{ duty.Project }}</td>
+          <td class="py-2 px-3">{{ duty.BookedBy }}</td>
+          <td class="py-2 px-3">{{ duty.fromDate }}</td>
+          <td class="py-2 px-3">{{ duty.toDate }}</td>
+          <td class="py-2 px-3">{{ duty.fromTime }}</td>
+          <td class="py-2 px-3">{{ duty.toTime }}</td>
+          <td class="py-2 px-3">{{ duty.GarageOutKm }}</td>
+          <td class="py-2 px-3">{{ duty.GarageInKm }}</td>
+          <td class="py-2 px-3">{{ duty.TotalHour }}</td>
+          <td class="py-2 px-3">{{ duty.TotalKm }}</td>
+          <td class="py-2 px-3">
+            <div class="flex gap-2 justify-center">
+              <button pButton icon="pi pi-pencil" class="p-button-sm p-button-warning p-button-rounded"
+                pTooltip="Edit"></button>
+              <button pButton icon="pi pi-trash" class="p-button-sm p-button-danger p-button-rounded"
+                pTooltip="Delete"></button>
+              <button pButton icon="pi pi-print" class="p-button-sm p-button-info p-button-rounded"
+                pTooltip="Print"></button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
   </div>
 
-  <!-- 🧾 Billing Summary Grid -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-    <!-- Column 1 -->
-    <div class="space-y-5">
-      <div class="flex justify-between items-center">
-        <label class="font-medium text-gray-700">💰 Fixed Amount:</label>
-        <input type="number" pInputText [(ngModel)]="fixedAmount" class="w-44 text-right" />
-      </div>
-      <div class="flex justify-between items-center">
-        <label class="font-medium text-gray-700">🕓 Extra Hours:</label>
-        <input type="number" pInputText [(ngModel)]="extraHours" class="w-44 text-right" />
-      </div>
-      <div class="flex justify-between items-center">
-        <label class="font-medium text-gray-700">🚗 Extra K.M:</label>
-        <input type="number" pInputText [(ngModel)]="extrakm" class="w-44 text-right" />
-      </div>
-      <div class="flex justify-between items-center">
-        <label class="font-medium text-gray-700">📉 Except Day Hrs:</label>
-        <input type="number" pInputText [(ngModel)]="exceptDayHrs" class="w-44 text-right" />
-      </div>
-      <div class="flex justify-between items-center">
-        <label class="font-medium text-gray-700">🚐 Extra Day K.M:</label>
-        <input type="number" pInputText [(ngModel)]="extraDaykm" class="w-44 text-right" />
-      </div>
-      <div class="flex justify-between items-center">
-        <label class="font-medium text-gray-700">⛽ Fuel Amount:</label>
-        <input type="number" pInputText [(ngModel)]="fuelAmount" class="w-44 text-right" />
-      </div>
-      <div class="flex justify-between items-center">
-        <label class="font-medium text-gray-700"> Sgst:</label>
-        <input type="number" pInputText [(ngModel)]="Sgst" class="w-44 text-right" />
-      </div>
+  <!-- 💠 Billing Section -->
+  <div
+    class="col-span-full w-full p-8 border rounded-3xl bg-gradient-to-br from-sky-50 via-sky-50 to-blue-50 space-y-10">
+
+    <!-- 🔘 Top Action -->
+    <div class="flex justify-end">
+      <button pButton label="Calculate Bill" icon="pi pi-calculator" (click)="calculateBillAndLog()"
+        class="p-button-lg p-button-primary rounded-xl shadow-md hover:scale-105 transition-transform"></button>
     </div>
 
-    <!-- Column 2 -->
-    <div class="space-y-5">
-      <div class="flex justify-between items-center">
-        <label class="font-medium text-gray-700">📆 No. of Days:</label>
-        <input type="number" pInputText [(ngModel)]="numDays" class="w-44 text-right" />
+    <!-- 🧾 Billing Summary Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+      <!-- Column 1 -->
+      <div class="space-y-5">
+        <div class="flex justify-between items-center">
+          <label class="font-medium text-gray-700">💰 Fixed Amount:</label>
+          <input type="number" pInputText [(ngModel)]="fixedAmount" class="w-44 text-right" />
+        </div>
+        <div class="flex justify-between items-center">
+          <label class="font-medium text-gray-700">🕓 Extra Hours:</label>
+          <input type="number" pInputText [(ngModel)]="extraHours" class="w-44 text-right" />
+        </div>
+        <div class="flex justify-between items-center">
+          <label class="font-medium text-gray-700">🚗 Extra K.M:</label>
+          <input type="number" pInputText [(ngModel)]="extrakm" class="w-44 text-right" />
+        </div>
+        <div class="flex justify-between items-center">
+          <label class="font-medium text-gray-700">📉 Except Day Hrs:</label>
+          <input type="number" pInputText [(ngModel)]="exceptDayHrs" class="w-44 text-right" />
+        </div>
+        <div class="flex justify-between items-center">
+          <label class="font-medium text-gray-700">🚐 Extra Day K.M:</label>
+          <input type="number" pInputText [(ngModel)]="extraDaykm" class="w-44 text-right" />
+        </div>
+        <div class="flex justify-between items-center">
+          <label class="font-medium text-gray-700">⛽ Fuel Amount:</label>
+          <input type="number" pInputText [(ngModel)]="fuelAmount" class="w-44 text-right" />
+        </div>
+        <div class="flex justify-between items-center">
+          <label class="font-medium text-gray-700"> Sgst:</label>
+          <input type="number" pInputText [(ngModel)]="Sgst" class="w-44 text-right" />
+        </div>
       </div>
-      <div class="flex justify-between items-center">
-        <label class="font-medium text-gray-700">💵 Rate:</label>
-        <input type="number" pInputText [(ngModel)]="rate1" class="w-44 text-right" />
+
+      <!-- Column 2 -->
+      <div class="space-y-5">
+        <div class="flex justify-between items-center">
+          <label class="font-medium text-gray-700">📆 No. of Days:</label>
+          <input type="number" pInputText [(ngModel)]="numDays" class="w-44 text-right" />
+        </div>
+        <div class="flex justify-between items-center">
+          <label class="font-medium text-gray-700">💵 Rate:</label>
+          <input type="number" pInputText [(ngModel)]="rate1" class="w-44 text-right" />
+        </div>
+        <div class="flex justify-between items-center">
+          <label class="font-medium text-gray-700">💴 Rate:</label>
+          <input type="number" pInputText [(ngModel)]="rate2" class="w-44 text-right" />
+        </div>
+        <div class="flex justify-between items-center">
+          <label class="font-medium text-gray-700">💵 Rate:</label>
+          <input type="number" pInputText [(ngModel)]="rate3" class="w-44 text-right" />
+        </div>
+        <div class="flex justify-between items-center">
+          <label class="font-medium text-gray-700">💵 Rate:</label>
+          <input type="number" pInputText [(ngModel)]="rate4" class="w-44 text-right" />
+        </div>
+        <div class="flex justify-between items-center">
+          <label class="font-medium text-gray-700">📱 Mobile Amount:</label>
+          <input type="number" pInputText [(ngModel)]="mobileAmount" class="w-44 text-right" />
+        </div>
+        <div class="flex justify-between items-center">
+          <label class="font-medium text-gray-700"> Cgst:</label>
+          <input type="number" pInputText [(ngModel)]="Cgst" class="w-44 text-right" />
+        </div>
       </div>
-      <div class="flex justify-between items-center">
-        <label class="font-medium text-gray-700">💴 Rate:</label>
-        <input type="number" pInputText [(ngModel)]="rate2" class="w-44 text-right" />
+
+      <!-- Column 3 -->
+      <div class="space-y-5">
+        <div class="flex justify-between items-center">
+          <label class="font-medium text-gray-700">💳 Amount:</label>
+          <input type="number" pInputText [(ngModel)]="Amount" class="w-44 text-right" />
+        </div>
+        <div class="flex justify-between items-center">
+          <label class="font-medium text-gray-700">💳 Amount:</label>
+          <input type="number" pInputText [(ngModel)]="extaHAmount" class="w-44 text-right" />
+        </div>
+        <div class="flex justify-between items-center">
+          <label class="font-semibold text-green-600">💳 Bill Total:</label>
+          <input type="number" pInputText [(ngModel)]="billTotal2" class="w-44 text-right font-bold text-green-700" />
+        </div>
+        <div class="flex justify-between items-center">
+          <label class="font-medium text-gray-700">💳 Amount:</label>
+          <input type="number" pInputText [(ngModel)]="amount3" class="w-44 text-right" />
+        </div>
+        <div class="flex justify-between items-center">
+          <label class="font-semibold text-gray-800">💳 Amount:</label>
+          <input type="number" pInputText [(ngModel)]="amount2" class="w-44 text-right font-bold" />
+        </div>
+        <div class="flex justify-between items-center">
+          <label class="font-medium text-gray-700">📝 Description:</label>
+          <input type="text" pInputText [(ngModel)]="desc2" class="w-44 text-right font-bold" />
+        </div>
+        <div class="flex justify-between items-center">
+          <label class="font-medium text-gray-700"> Igst:</label>
+          <input type="number" pInputText [(ngModel)]="igst" class="w-44 text-right" />
+        </div>
+
       </div>
-      <div class="flex justify-between items-center">
-        <label class="font-medium text-gray-700">💵 Rate:</label>
-        <input type="number" pInputText [(ngModel)]="rate3" class="w-44 text-right" />
+
+      <!-- Column 4 -->
+      <div class="space-y-5">
+        <div class="flex justify-between items-center">
+          <label class="font-semibold text-green-600">🧾 Bill Total:</label>
+          <input type="number" pInputText [(ngModel)]="billTotal" class="w-44 text-right font-bold text-green-700" />
+        </div>
+        <div class="flex justify-between items-center">
+          <label class="font-medium text-gray-700">💸 Advance:</label>
+          <input type="number" pInputText [(ngModel)]="advance" class="w-44 text-right" />
+        </div>
+
+        <div class="flex justify-between items-center" [ngStyle]="{ visibility: 'hidden' }">
+          <label class="font-medium text-gray-700">📚 Edu.Cess:</label>
+          <input type="number" pInputText [(ngModel)]="eduCess" class="w-44 text-right" />
+        </div>
+        <div class="flex justify-between items-center" [ngStyle]="{ visibility: 'hidden' }">
+          <label class="font-medium text-gray-700">💡 SB Cess:</label>
+          <input type="number" pInputText [(ngModel)]="sbCess" class="w-44 text-right" />
+        </div>
+        <div class="flex justify-between items-center">
+          <label class="font-medium text-gray-700">🔄 Round Off:</label>
+          <input type="number" pInputText [(ngModel)]="roundOff" class="w-44 text-right" />
+        </div>
+        <div class="flex justify-between items-center">
+          <label class="font-bold text-gray-800">💳 Amount Payable:</label>
+          <input type="number" pInputText [(ngModel)]="amountPayable" class="w-44 text-right font-semibold" />
+        </div>
+        <div class="flex justify-between items-center" [ngStyle]="{ visibility: 'hidden' }">
+          <label class="font-medium text-gray-700">☑️ Serv.Tax on Parking and Others:</label>
+          <input type="checkbox" [(ngModel)]="isParkingTaxApplied" class="size-5" />
+        </div>
       </div>
-      <div class="flex justify-between items-center">
-        <label class="font-medium text-gray-700">💵 Rate:</label>
-        <input type="number" pInputText [(ngModel)]="rate4" class="w-44 text-right" />
+      <div class="flex justify-start text-right mt-6">
+        <button pButton type="submit" (click)="logBillingFormValues()" label="Save" icon="pi pi-save"></button>
       </div>
-      <div class="flex justify-between items-center">
-        <label class="font-medium text-gray-700">📱 Mobile Amount:</label>
-        <input type="number" pInputText [(ngModel)]="mobileAmount" class="w-44 text-right" />
-      </div>
-       <div class="flex justify-between items-center">
-        <label class="font-medium text-gray-700"> Cgst:</label>
-        <input type="number" pInputText [(ngModel)]="Cgst" class="w-44 text-right" />
-      </div>
+
     </div>
-
-    <!-- Column 3 -->
-    <div class="space-y-5">
-      <div class="flex justify-between items-center">
-        <label class="font-medium text-gray-700">💳 Amount:</label>
-        <input type="number" pInputText [(ngModel)]="Amount" class="w-44 text-right" />
-      </div>
-      <div class="flex justify-between items-center">
-        <label class="font-medium text-gray-700">💳 Amount:</label>
-        <input type="number" pInputText [(ngModel)]="extaHAmount" class="w-44 text-right" />
-      </div>
-      <div class="flex justify-between items-center">
-        <label class="font-semibold text-green-600">💳 Bill Total:</label>
-        <input type="number" pInputText [(ngModel)]="billTotal2" class="w-44 text-right font-bold text-green-700" />
-      </div>
-      <div class="flex justify-between items-center">
-        <label class="font-medium text-gray-700">💳 Amount:</label>
-        <input type="number" pInputText [(ngModel)]="amount3" class="w-44 text-right" />
-      </div>
-      <div class="flex justify-between items-center">
-        <label class="font-semibold text-gray-800">💳 Amount:</label>
-        <input type="number" pInputText [(ngModel)]="amount2" class="w-44 text-right font-bold" />
-      </div>
-      <div class="flex justify-between items-center">
-        <label class="font-medium text-gray-700">📝 Description:</label>
-        <input type="text" pInputText [(ngModel)]="desc2" class="w-44 text-right font-bold" />
-      </div>
-       <div class="flex justify-between items-center">
-        <label class="font-medium text-gray-700"> Igst:</label>
-        <input type="number" pInputText [(ngModel)]="igst" class="w-44 text-right" />
-      </div>
-
-    </div>
-
-    <!-- Column 4 -->
-    <div class="space-y-5">
-      <div class="flex justify-between items-center">
-        <label class="font-semibold text-green-600">🧾 Bill Total:</label>
-        <input type="number" pInputText [(ngModel)]="billTotal" class="w-44 text-right font-bold text-green-700" />
-      </div>
-      <div class="flex justify-between items-center">
-        <label class="font-medium text-gray-700">💸 Advance:</label>
-        <input type="number" pInputText [(ngModel)]="advance" class="w-44 text-right" />
-      </div>
-
-      <div class="flex justify-between items-center" [ngStyle]="{ visibility: 'hidden' }">
-        <label class="font-medium text-gray-700">📚 Edu.Cess:</label>
-        <input type="number" pInputText [(ngModel)]="eduCess" class="w-44 text-right" />
-      </div>
-      <div class="flex justify-between items-center" [ngStyle]="{ visibility: 'hidden' }" >
-        <label class="font-medium text-gray-700">💡 SB Cess:</label>
-        <input type="number" pInputText [(ngModel)]="sbCess" class="w-44 text-right" />
-      </div>
-      <div class="flex justify-between items-center">
-        <label class="font-medium text-gray-700">🔄 Round Off:</label>
-        <input type="number" pInputText [(ngModel)]="roundOff" class="w-44 text-right" />
-      </div>
-      <div class="flex justify-between items-center">
-        <label class="font-bold text-gray-800">💳 Amount Payable:</label>
-        <input type="number" pInputText [(ngModel)]="amountPayable" class="w-44 text-right font-semibold" />
-      </div>
-      <div class="flex justify-between items-center" [ngStyle]="{ visibility: 'hidden' }">
-        <label class="font-medium text-gray-700">☑️ Serv.Tax on Parking and Others:</label>
-        <input type="checkbox" [(ngModel)]="isParkingTaxApplied" class="size-5" />
-      </div>
-    </div>
-    <div class="flex justify-start text-right mt-6">
-    <button
-      pButton
-      type="submit"
-      (click)="logBillingFormValues()"
-      label="Save"
-      icon="pi pi-save"
-    ></button>
   </div>
 
-  </div>
 </div>
-
-  </div>
