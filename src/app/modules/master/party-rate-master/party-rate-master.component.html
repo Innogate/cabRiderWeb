@@ -1,4 +1,4 @@
-<div class="card" *ngIf="!showForm">
+<div class="card bg-white shadow-sm rounded-lg" *ngIf="!showForm">
     <app-dynamic-table [columns]="columns" [loading]="isLoading" [data]="data" [headerTitle]="'PARTY RATE LIST'"
         [rowActions]="actions" (onAction)="handleAction($event)">
     </app-dynamic-table>
@@ -64,7 +64,33 @@
                                 placeholder="Enter full address"></textarea>
                         </div>
                     </div>
+
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <i class="pi pi-barcode text-green-700"></i>
+                            <label class="block text-sm font-medium text-slate-950 mb-1">GST Number</label>
+                        </div>
+                        <input type="text" formControlName="GSTNo" pInputText
+                            class="w-full border border-gray-300 rounded-lg p-3" placeholder="GSTIN">
+                    </div>
+
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex items-center space-x-2">
+                                <i class="pi pi-map-marker text-fuchsia-500"></i>
+                                <label class="block text-sm font-medium text-slate-950 mb-1">Pin Code</label>
+                            </div>
+                            <input type="number" formControlName="PinCode" pInputText
+                                class="w-full border border-gray-300 rounded-lg p-3" placeholder="Postal code">
+                        </div>
+                    </div>
                 </div>
+
+            </div>
+
+            <!-- Right Column -->
+            <div class="space-y-6">
+
 
                 <!-- Contact Information Card -->
                 <div class="bg-sky-100 p-5 rounded-lg border border-sky-400">
@@ -99,43 +125,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Right Column -->
-            <div class="space-y-6">
-                <!-- Tax & Identification Card -->
-                <div class="bg-sky-100 p-5 rounded-lg border border-sky-400">
-                    <h2 class="text-lg font-semibold text-slate-950 mb-4 pb-2 border-b border-sky-400">
-                        <i class="pi pi-id-card mr-2 text-sky-400"></i>Tax & Identification
-                    </h2>
-                    <div class="space-y-4">
-                        <div>
-                            <div class="flex items-center space-x-2">
-                                <i class="pi pi-barcode text-green-700"></i>
-                                <label class="block text-sm font-medium text-slate-950 mb-1">GST Number</label>
-                            </div>
-                            <input type="text" formControlName="GSTNo" pInputText
-                                class="w-full border border-gray-300 rounded-lg p-3" placeholder="GSTIN">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Location Information Card -->
-                <div class="bg-sky-100 p-5 rounded-lg border border-sky-400">
-                    <h2 class="text-lg font-semibold text-slate-950 mb-4 pb-2 border-b border-sky-400">
-                        <i class="pi pi-map mr-2 text-green-400"></i>Location Details
-                    </h2>
-                    <div class="space-y-4">
-                        <div>
-                            <div class="flex items-center space-x-2">
-                                <i class="pi pi-map-marker text-fuchsia-500"></i>
-                                <label class="block text-sm font-medium text-slate-950 mb-1">Pin Code</label>
-                            </div>
-                            <input type="number" formControlName="PinCode" pInputText
-                                class="w-full border border-gray-300 rounded-lg p-3" placeholder="Postal code">
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
 
         <!--View Option Button-->
@@ -148,79 +137,124 @@
 
 
         <!-- Preview Table for Entered Rate Details -->
-<div class="bg-white p-4 m-3 rounded-xl border border-gray-200 shadow-lg">
-  <h3 class="text-2xl sm:text-3xl font-bold text-blue-900 flex items-center gap-2 pb-4">
-    Preview
-</h3>
-  <p-table [value]="previewData ? [previewData] : []" *ngIf="previewData"
-   class="p-datatable-gridlines rounded-xl">
-    <ng-template pTemplate="header">
-      <tr class="bg-blue-100 text-gray-800 text-xs font-semibold">
-        <th class="py-2 px-3">Rate Type</th>
-        <th class="py-2 px-3">Car Type</th>
-        <th class="py-2 px-3">Hour Rate</th>
-        <th class="py-2 px-3">KM Rate</th>
-        <th class="py-2 px-3">Min Hrs</th>
-        <th class="py-2 px-3">Min KM</th>
-        <th class="py-2 px-3">Include Tax</th>
-        <th class="py-2 px-3">Effect Date</th>
-        <th class="py-2 px-3">NH Time</th>
-        <th class="py-2 px-3">NH Amount</th>
-        <th class="py-2 px-3">EH Time</th>
-        <th class="py-2 px-3">EH Amount</th>
-        <th class="py-2 px-3">Amount</th>
-        <th class="py-2 px-3">Extra Hrs Rate</th>
-        <th class="py-2 px-3">Extra KM Rate</th>
-        <th class="py-2 px-3">Whichever Higher</th>
-        <th class="py-2 px-3">Transfer Type</th>
-        <th class="py-2 px-3">Actions</th>
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-row>
-      <tr class="text-gray-800 hover:bg-blue-50 transition-all text-xs" *ngFor="let row of previewData; let i = index">
-        <td class="py-2 px-3">{{ row.rateType }}</td>
-        <td class="py-2 px-3">{{ row.car_type }}</td>
-        <td class="py-2 px-3">{{ row.Hours }}</td>
-        <td class="py-2 px-3">{{ row.KM }}</td>
-        <td class="py-2 px-3">{{ row.MinHr }}</td>
-        <td class="py-2 px-3">{{ row.MinKm }}</td>
-        <td class="py-2 px-3">{{ row.IncludeTax }}</td>
-        <td class="py-2 px-3">{{ row.RtEfDate }}</td>
-        <td class="py-2 px-3">{{ row.NHTime }}</td>
-        <td class="py-2 px-3">{{ row.NHAmount }}</td>
-        <td class="py-2 px-3">{{ row.EHTime }}</td>
-        <td class="py-2 px-3">{{ row.EHAmount }}</td>
-        <td class="py-2 px-3">{{ row.Amount }}</td>
-        <td class="py-2 px-3">{{ row.ExtHrrate }}</td>
-        <td class="py-2 px-3">{{ row.ExtKmrate }}</td>
-        <td class="py-2 px-3">{{ row.HigherRate ? 'Yes' : 'No' }}</td>
-        <td class="py-2 px-3">{{ row.TransType }}</td>
-        <td>
-            <div class="flex justify-center gap-2">
-              <button
-                pButton
-                icon="pi pi-pencil"
-                class="p-button-sm p-button-rounded p-button-warning"
-                (click)="onEditRow(i)"
-              ></button>
-              <button
-                pButton
-                icon="pi pi-trash"
-                class="p-button-sm p-button-rounded p-button-danger"
-                (click)="onDeleteRow(i)"
-              ></button>
-            </div>
-          </td>
-      </tr>
-    </ng-template>
-  </p-table>
-</div>
+        <!-- <div class="bg-white p-4 m-3 rounded-xl border border-gray-200 shadow-lg">
+            <h3 class="text-2xl sm:text-3xl font-bold text-blue-900 flex items-center gap-2 pb-4">
+                Preview
+            </h3>
+            <p-table [value]="previewData ? [previewData] : []" *ngIf="previewData"
+                class="p-datatable-gridlines rounded-xl">
+                <ng-template pTemplate="header">
+                    <tr class="bg-blue-100 text-gray-800 text-xs font-semibold">
+                        <th class="py-2 px-3">Rate Type</th>
+                        <th class="py-2 px-3">Car Type</th>
+                        <th class="py-2 px-3">Hour Rate</th>
+                        <th class="py-2 px-3">KM Rate</th>
+                        <th class="py-2 px-3">Min Hrs</th>
+                        <th class="py-2 px-3">Min KM</th>
+                        <th class="py-2 px-3">Include Tax</th>
+                        <th class="py-2 px-3">Effect Date</th>
+                        <th class="py-2 px-3">NH Time</th>
+                        <th class="py-2 px-3">NH Amount</th>
+                        <th class="py-2 px-3">EH Time</th>
+                        <th class="py-2 px-3">EH Amount</th>
+                        <th class="py-2 px-3">Amount</th>
+                        <th class="py-2 px-3">Extra Hrs Rate</th>
+                        <th class="py-2 px-3">Extra KM Rate</th>
+                        <th class="py-2 px-3">Whichever Higher</th>
+                        <th class="py-2 px-3">Transfer Type</th>
+                        <th class="py-2 px-3">Actions</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-row>
+                    <tr class="text-gray-800 hover:bg-blue-50 transition-all text-xs"
+                        *ngFor="let row of previewData; let i = index">
+                        <td class="py-2 px-3">{{ row.rateType }}</td>
+                        <td class="py-2 px-3">{{ row.car_type }}</td>
+                        <td class="py-2 px-3">{{ row.Hours }}</td>
+                        <td class="py-2 px-3">{{ row.KM }}</td>
+                        <td class="py-2 px-3">{{ row.MinHr }}</td>
+                        <td class="py-2 px-3">{{ row.MinKm }}</td>
+                        <td class="py-2 px-3">{{ row.IncludeTax }}</td>
+                        <td class="py-2 px-3">{{ row.RtEfDate }}</td>
+                        <td class="py-2 px-3">{{ row.NHTime }}</td>
+                        <td class="py-2 px-3">{{ row.NHAmount }}</td>
+                        <td class="py-2 px-3">{{ row.EHTime }}</td>
+                        <td class="py-2 px-3">{{ row.EHAmount }}</td>
+                        <td class="py-2 px-3">{{ row.Amount }}</td>
+                        <td class="py-2 px-3">{{ row.ExtHrrate }}</td>
+                        <td class="py-2 px-3">{{ row.ExtKmrate }}</td>
+                        <td class="py-2 px-3">{{ row.HigherRate ? 'Yes' : 'No' }}</td>
+                        <td class="py-2 px-3">{{ row.TransType }}</td>
+                        <td>
+                            <div class="flex justify-center gap-2">
+                                <button pButton icon="pi pi-pencil"
+                                    class="p-button-sm p-button-rounded p-button-warning"
+                                    (click)="onEditRow(i)"></button>
+                                <button pButton icon="pi pi-trash" class="p-button-sm p-button-rounded p-button-danger"
+                                    (click)="onDeleteRow(i)"></button>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div> -->
 
+        <div class="bg-white p-4 m-3 rounded-xl border border-gray-200 shadow-lg">
+            <h3
+                class="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-blue-600 via-indigo-500 to-purple-500 bg-clip-text text-transparent flex items-center gap-2 pb-4">
+                Preview
+            </h3>
+
+            <div *ngIf="previewData" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                <div *ngFor="let row of previewData; let i = index"
+                    class="border border-gray-200 rounded-xl p-4 shadow-sm hover:shadow-lg transition-all bg-gradient-to-br from-white via-blue-50 to-blue-100">
+                    <!-- Header -->
+                    <div class="flex justify-between items-center mb-3">
+                        <h4 class="text-lg font-semibold text-gray-800">
+                            {{ row.car_type }}
+                        </h4>
+                        <span class="px-2 py-1 text-xs rounded-full bg-blue-200 text-blue-800 font-medium">
+                            {{ row.rateType }}
+                        </span>
+                    </div>
+
+                    <!-- Details Grid -->
+                    <div class="grid grid-cols-2 gap-2 text-sm text-gray-700">
+                        <div><span class="font-medium">Hour Rate:</span> {{ row.Hours }}</div>
+                        <div><span class="font-medium">KM Rate:</span> {{ row.KM }}</div>
+                        <div><span class="font-medium">Min Hrs:</span> {{ row.MinHr }}</div>
+                        <div><span class="font-medium">Min KM:</span> {{ row.MinKm }}</div>
+                        <div><span class="font-medium">Include Tax:</span> {{ row.IncludeTax }}</div>
+                        <div><span class="font-medium">Effect Date:</span> {{ row.RtEfDate }}</div>
+                        <div><span class="font-medium">NH Time:</span> {{ row.NHTime }}</div>
+                        <div><span class="font-medium">NH Amount:</span> {{ row.NHAmount }}</div>
+                        <div><span class="font-medium">EH Time:</span> {{ row.EHTime }}</div>
+                        <div><span class="font-medium">EH Amount:</span> {{ row.EHAmount }}</div>
+                        <div><span class="font-medium">Amount:</span> {{ row.Amount }}</div>
+                        <div><span class="font-medium">Extra Hrs Rate:</span> {{ row.ExtHrrate }}</div>
+                        <div><span class="font-medium">Extra KM Rate:</span> {{ row.ExtKmrate }}</div>
+                        <div>
+                            <span class="font-medium">Higher Rate:</span>
+                            {{ row.HigherRate ? 'Yes' : 'No' }}
+                        </div>
+                        <div><span class="font-medium">Transfer Type:</span> {{ row.TransType }}</div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="flex justify-end gap-2 mt-4">
+                        <button pButton icon="pi pi-pencil" class="p-button-sm p-button-rounded p-button-warning"
+                            (click)="onEditRow(i)"></button>
+                        <button pButton icon="pi pi-trash" class="p-button-sm p-button-rounded p-button-danger"
+                            (click)="onDeleteRow(i)"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
 
         <!-- Footer with Submit Button -->
         <div class="bg-sky-400 px-6 py-4 border-t border-gray-200 flex justify-end">
-            <button type="submit" 
+            <button type="submit"
                 class="px-6 py-3 bg-sky-600 text-white font-medium rounded-lg shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
                 Save Party Information
             </button>
@@ -278,8 +312,8 @@
                     <i class="pi pi-calendar text-indigo-600"></i>
                     <label for="" class="text-sm font-medium">Effect Date</label>
                 </div>
-                <p-calendar formControlName="RtEfDate" size="large" dateFormat="dd/mm/yy" placeholder="dd/mm/yyyy" appendTo="body"
-                class="w-full"></p-calendar>
+                <p-calendar formControlName="RtEfDate" size="large" dateFormat="dd/mm/yy" placeholder="dd/mm/yyyy"
+                    appendTo="body" class="w-full"></p-calendar>
             </div>
         </div>
 
@@ -297,7 +331,7 @@
                     </div>
                     <input pInputText formControlName="Hours" placeholder="Hour Rate" />
                 </div>
-            
+
                 <!-- KM Rate -->
                 <div>
                     <div class="flex items-center gap-2 mb-1 text-gray-700">
@@ -306,7 +340,7 @@
                     </div>
                     <input pInputText formControlName="KM" placeholder="KM Rate" />
                 </div>
-            
+
                 <!-- Min Hrs -->
                 <div>
                     <div class="flex items-center gap-2 mb-1 text-gray-700">
@@ -315,7 +349,7 @@
                     </div>
                     <input pInputText formControlName="MinHr" placeholder="Min Hrs" />
                 </div>
-            
+
                 <!-- Min KM -->
                 <div>
                     <div class="flex items-center gap-2 mb-1 text-gray-700">
@@ -336,7 +370,7 @@
                     </div>
                     <input pInputText formControlName="NHTime" placeholder="Night Halt Time" />
                 </div>
-            
+
                 <!-- Night Halt Amount -->
                 <div>
                     <div class="flex items-center gap-2 mb-1 text-gray-700">
@@ -345,7 +379,7 @@
                     </div>
                     <input pInputText formControlName="NHAmount" placeholder="Night Halt Amount" />
                 </div>
-            
+
                 <!-- Early Halt Time -->
                 <div>
                     <div class="flex items-center gap-2 mb-1 text-gray-700">
@@ -354,7 +388,7 @@
                     </div>
                     <input pInputText formControlName="EHTime" placeholder="Early Halt Time" />
                 </div>
-            
+
                 <!-- Early Halt Amount -->
                 <div>
                     <div class="flex items-center gap-2 mb-1 text-gray-700">
@@ -380,7 +414,7 @@
                     </div>
                     <input pInputText formControlName="Hours" />
                 </div>
-            
+
                 <!-- KM -->
                 <div>
                     <div class="flex items-center gap-2 mb-1 text-gray-700">
@@ -389,7 +423,7 @@
                     </div>
                     <input pInputText formControlName="KM" />
                 </div>
-            
+
                 <!-- Amount -->
                 <div>
                     <div class="flex items-center gap-2 mb-1 text-gray-700">
@@ -398,7 +432,7 @@
                     </div>
                     <input pInputText formControlName="Amount" />
                 </div>
-            
+
                 <!-- Extra Hours Rate -->
                 <div>
                     <div class="flex items-center gap-2 mb-1 text-gray-700">
@@ -418,7 +452,7 @@
                     </div>
                     <input pInputText formControlName="NHTime" placeholder="Night Halt Time" />
                 </div>
-            
+
                 <!-- Night Halt Amount -->
                 <div>
                     <div class="flex items-center gap-2 mb-1 text-gray-700">
@@ -427,7 +461,7 @@
                     </div>
                     <input pInputText formControlName="NHAmount" placeholder="Night Halt Amount" />
                 </div>
-            
+
                 <!-- Early Halt Time -->
                 <div>
                     <div class="flex items-center gap-2 mb-1 text-gray-700">
@@ -436,7 +470,7 @@
                     </div>
                     <input pInputText formControlName="EHTime" placeholder="Early Halt Time" />
                 </div>
-            
+
                 <!-- Early Halt Amount -->
                 <div>
                     <div class="flex items-center gap-2 mb-1 text-gray-700">
@@ -457,7 +491,7 @@
                     </div>
                     <input pInputText formControlName="ExtKmrate" />
                 </div>
-            
+
                 <!-- Whichever Higher -->
                 <div>
                     <div class="flex items-center gap-2 mb-1 text-gray-700">
@@ -479,25 +513,25 @@
                         <i class="pi pi-arrow-up text-indigo-600"></i>
                         <label class="text-sm font-medium">KM</label>
                     </div>
-                    <input pInputText formControlName="KM" class="w-full "/>
+                    <input pInputText formControlName="KM" class="w-full " />
                 </div>
-            
+
                 <!-- Amount -->
                 <div>
                     <div class="flex items-center gap-2 mb-1 text-gray-700">
                         <i class="pi pi-dollar text-indigo-600"></i>
                         <label for="" class="text-sm font-medium">Amount</label>
                     </div>
-                    <input pInputText formControlName="Amount" class="w-full "/>
+                    <input pInputText formControlName="Amount" class="w-full " />
                 </div>
-            
+
                 <!-- Extra KM Rate -->
                 <div>
                     <div class="flex items-center gap-2 mb-1 text-gray-700">
                         <i class="pi pi-calendar text-indigo-600"></i>
                         <label for="" class="text-sm font-medium">Extra KM Rate</label>
                     </div>
-                    <input pInputText formControlName="ExtKmrate" class="w-full "/>
+                    <input pInputText formControlName="ExtKmrate" class="w-full " />
                 </div>
             </div>
 
@@ -510,7 +544,7 @@
                     </div>
                     <input pInputText formControlName="NHTime" placeholder="Night Halt Time" />
                 </div>
-            
+
                 <!-- Night Halt Amount -->
                 <div>
                     <div class="flex items-center gap-2 mb-1 text-gray-700">
@@ -519,7 +553,7 @@
                     </div>
                     <input pInputText formControlName="NHAmount" placeholder="Night Halt Amount" />
                 </div>
-            
+
                 <!-- Early Halt Time -->
                 <div>
                     <div class="flex items-center gap-2 mb-1 text-gray-700">
@@ -528,7 +562,7 @@
                     </div>
                     <input pInputText formControlName="EHTime" placeholder="Early Halt Time" />
                 </div>
-            
+
                 <!-- Early Halt Amount -->
                 <div>
                     <div class="flex items-center gap-2 mb-1 text-gray-700">
@@ -538,7 +572,7 @@
                     <input pInputText formControlName="EHAmount" placeholder="Early Halt Amount" />
                 </div>
             </div>
-            
+
         </ng-container>
 
         <!-- Transfer Fields -->
@@ -551,9 +585,10 @@
                         <label for="" class="text-sm font-medium">Night Halt Time</label>
                     </div>
                     <p-dropdown formControlName="TransType" [options]="transferTypes" optionLabel="label"
-                        optionValue="value" placeholder="Select Transfer Type" appendTo="body" class="w-full"></p-dropdown>
+                        optionValue="value" placeholder="Select Transfer Type" appendTo="body"
+                        class="w-full"></p-dropdown>
                 </div>
-            
+
                 <!-- Night Halt Amount -->
                 <div>
                     <div class="flex items-center gap-2 mb-1 text-gray-700">

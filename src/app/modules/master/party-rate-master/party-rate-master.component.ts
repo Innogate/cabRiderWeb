@@ -108,13 +108,13 @@ export class PartyRateMasterComponent implements OnInit, AfterViewInit, OnDestro
     this.partyRateMasterService.registerPageHandler((msg: any) => {
       console.log(msg)
       globalRequestHandler(msg, this.router, this.messageService);
-      
+
       if (msg.for === 'getallpartyrate') {
         this.data = msg.data;
         this.isLoading = false;
       } else if (msg.for === 'getAllCityDropdown') {
         this.CityName = msg.data;
-      } else if(msg.for === 'getAllPartyDropdown'){
+      } else if (msg.for === 'getAllPartyDropdown') {
         this.partyName = msg.data
       } else if (msg.for == 'createUpdatePartyRate') {
         if (msg.StatusID === 1) {
@@ -152,14 +152,14 @@ export class PartyRateMasterComponent implements OnInit, AfterViewInit, OnDestro
 
 
 
-    loadPartyRates() {
+  loadPartyRates() {
     this.isLoading = true;
     const payload = { id: 0, PageNo: 1, PageSize: 1000, Search: "" };
     this.partyRateMasterService.getAllPartyRate(payload);
   }
 
-  loadPartyNameDropdown(){
-      this.comonApiService.gateAllPartyNameDropdown();
+  loadPartyNameDropdown() {
+    this.comonApiService.gateAllPartyNameDropdown();
   }
 
   createForm() {
@@ -188,6 +188,7 @@ export class PartyRateMasterComponent implements OnInit, AfterViewInit, OnDestro
 
 
     this.partyRateForm = this.fb.group({
+      id: [0],
       city_id: [''],
       party_id: [''],
       PartyAddr: [''],
@@ -215,7 +216,7 @@ export class PartyRateMasterComponent implements OnInit, AfterViewInit, OnDestro
         break;
       case 'delete':
         this.deletePartyRate(event.data)
-        this.tablevalue=event.data
+        this.tablevalue = event.data
         break;
       case 'add':
         this.loadPartyNameDropdown()
@@ -229,16 +230,21 @@ export class PartyRateMasterComponent implements OnInit, AfterViewInit, OnDestro
     this.showForm = true;
     const city = this.CityName.find(c => c.Id == data.city_id);
 
-    this.form.patchValue({
+    console.log('City:', city);
+
+    this.partyRateForm.patchValue({
       city_id: city,
-      party_id: data.party_id,
-      PartyAddr: data.PartyAddr,
-      PinCode: data.PinCode,
-      GSTNo: data.GSTNo,
-      ContactPersonName: data.ContactPersonName,
-      ContactNo: data.ContactNo,
-      EMailID: data.EMailID
+      ...data
     });
+    // If data.partyratesummery is a JSON string
+    const parsedData = JSON.parse(data.partyratesummery);
+
+    // Make sure it's an array before pushing
+    if (Array.isArray(parsedData)) {
+      this.previewData.push(...parsedData); // Spread operator pushes all items
+    } else {
+      this.previewData.push(parsedData); // If it's a single object
+    }
   }
 
   addNewPartyRate() {
@@ -263,76 +269,77 @@ export class PartyRateMasterComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   updateRateTypeValidators(type: string) {
-  const fields = {
-    Normal: ['hourRate', 'kmRate', 'minHrs', 'minKm'],
-    'HRS/KM slab': ['hours', 'slabKm', 'slabAmount', 'extraHoursRate', 'extraKmRate'],
-    'Day/KM': ['dayKm', 'dayAmount', 'dayExtraKmRate'],
-    'Transfer': ['transferType', 'transferAmount']
-  }};
+    const fields = {
+      Normal: ['hourRate', 'kmRate', 'minHrs', 'minKm'],
+      'HRS/KM slab': ['hours', 'slabKm', 'slabAmount', 'extraHoursRate', 'extraKmRate'],
+      'Day/KM': ['dayKm', 'dayAmount', 'dayExtraKmRate'],
+      'Transfer': ['transferType', 'transferAmount']
+    }
+  };
 
   onFloatingFormSubmit() {
-  if (this.form.valid) {
-    const formValue = { ...this.form.value };
+    if (this.form.valid) {
+      const formValue = { ...this.form.value };
 
-    if (this.editIndex !== null) {
-      this.previewData[this.editIndex] = formValue;
-      this.editIndex = null;
-    } else {
-      let rawDate = this.form.get('RtEfDate')?.value;
-      let formattedDate = null;
+      if (this.editIndex !== null) {
+        this.previewData[this.editIndex] = formValue;
+        this.editIndex = null;
+      } else {
+        let rawDate = this.form.get('RtEfDate')?.value;
+        let formattedDate = null;
 
-      if (rawDate) {
-        if (typeof rawDate === 'string') {
-          rawDate = new Date(rawDate);
+        if (rawDate) {
+          if (typeof rawDate === 'string') {
+            rawDate = new Date(rawDate);
+          }
+
+          formattedDate = `${rawDate.getFullYear()}-${(rawDate.getMonth() + 1).toString().padStart(2, '0')}-${rawDate.getDate().toString().padStart(2, '0')}`;
         }
 
-        formattedDate = `${rawDate.getFullYear()}-${(rawDate.getMonth() + 1).toString().padStart(2, '0')}-${rawDate.getDate().toString().padStart(2, '0')}`;
+        this.previewData.push({
+          ...this.form.value,
+          RtEfDate: formattedDate
+        });
       }
 
-      this.previewData.push({
-        ...this.form.value,
-        RtEfDate: formattedDate
+      this.showOption = false;
+
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Success',
+        detail: 'Data saved successfully'
       });
+
+      this.form.reset();
+    } else {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Validation Error',
+        detail: 'Please fill required fields'
+      });
+      this.form.markAllAsTouched();
     }
-
-    this.showOption = false;
-
-    this.messageService.add({
-      severity: 'success',
-      summary: 'Success',
-      detail: 'Data saved successfully'
-    });
-
-    this.form.reset();
-  } else {
-    this.messageService.add({
-      severity: 'error',
-      summary: 'Validation Error',
-      detail: 'Please fill required fields'
-    });
-    this.form.markAllAsTouched();
   }
-}
 
 
-onEditRow(index: number) {
-  this.showForm = true;
-  this.form.patchValue(this.previewData[index]);
-  this.editIndex = index;
-  this.showOption = true;
-}
+  onEditRow(index: number) {
+    this.showForm = true;
+    this.form.patchValue(this.previewData[index]);
+    this.editIndex = index;
+    this.showOption = true;
+  }
 
-onDeleteRow(index: number) {
-  this.previewData.splice(index, 1); // Remove the row
-  this.messageService.add({
-    severity: 'info',
-    summary: 'Deleted',
-    detail: 'Row deleted successfully'
-  });
-}
+  onDeleteRow(index: number) {
+    this.previewData.splice(index, 1); // Remove the row
+    this.messageService.add({
+      severity: 'info',
+      summary: 'Deleted',
+      detail: 'Row deleted successfully'
+    });
+  }
 
 
-savePartyRate() {
+  savePartyRate() {
     if (this.form.invalid) {
       this.form.touched
       this.messageService.add({ severity: "warning", summary: "warning", detail: 'Invalid Form Data' })
@@ -344,11 +351,11 @@ savePartyRate() {
       ContactNo: "" + this.partyRateForm.value.ContactNo,
       PinCode: "" + this.partyRateForm.value.PinCode,
       postJsonData: this.previewData
-}
+    }
     this.partyRateMasterService.createUpdatePartyRate(payload);
     console.log(payload);
   }
 
 
-  
+
 }
