@@ -358,7 +358,6 @@ export class MbillingComponent {
     selected.forEach((item: any) => {
       const fromDate = new Date(item.fromDate);
       const toDate = new Date(item.toDate);
-
       //  Day calculation
       if (!isNaN(fromDate.getTime()) && !isNaN(toDate.getTime())) {
         const dateKey = `${fromDate.toDateString()}_${toDate.toDateString()}`;
@@ -382,8 +381,35 @@ export class MbillingComponent {
 
 
           const km = Number(item.TotalKm) || 0;
-          totalKm += km;
+          totalKm += km;      
+          
+          //! Time calculation
+          const workStartTimeDate = this.getDbTimeString(setup.FromTime);
+          const workEndTimeDate   = this.getDbTimeString(setup.ToTime);
+
+          if (item.GarageOutTime && item.GarageInDate) {
+            let diffTime = this.calculateExtraHours(
+              item.GarageOutDate,
+              item.GarageInDate,
+              workStartTimeDate,
+              workEndTimeDate
+            )
+            this.totalExtraHour += diffTime;
+          }
         } else {
+          //! Time calculation
+          const workStartTimeDate = this.getDbTimeString(setup.FromTime);
+          const workEndTimeDate   = this.getDbTimeString(setup.ToTime);
+
+          if (item.GarageOutTime && item.GarageInDate) {
+            let diffTime = this.calculateExtraHours(
+              item.GarageOutDate,
+              item.GarageInDate,
+              workStartTimeDate,
+              workEndTimeDate
+            )
+            this.totalExtraHour += diffTime;
+          }
           console.log(`Duplicate date found: ${dateKey}, skipping day count`);
         }
       }
@@ -397,25 +423,6 @@ export class MbillingComponent {
       }
       else {
         totalKm = 0;
-      }
-
-      //! Time calculation
-      if (item.GarageOutTime && item.toTime) {
-        const [fromHours, fromMinutes] = item.GarageOutTime.split(':').map(Number);
-        const [toHours, toMinutes] = item.toTime.split(':').map(Number);
-
-        const start = new Date();
-        const end = new Date();
-
-        start.setHours(fromHours, fromMinutes, 0, 0);
-        end.setHours(toHours, toMinutes, 0, 0);
-
-        if (end < start) {
-          end.setDate(end.getDate() + 1); // Overnight
-        }
-
-        const diff = (end.getTime() - start.getTime()) / (1000 * 60); // minutes
-        totalMinutes += diff;
       }
     });
 
@@ -460,7 +467,6 @@ export class MbillingComponent {
     this.salary = groseAmount;
     this.totalextraHourRate = extraHourRate
     this.totalextraKmRate = extraKmRate;
-    this.totalExtraHour = this.extraHour;
     this.totalSelectedKm = totalKm; //  Store for use elsewhere
 
     console.log('Total selected kilometers:', totalKm);
@@ -469,6 +475,66 @@ export class MbillingComponent {
     console.log(' Total Amount:', totalAmount);
     console.log(' Extra Hour:', this.extraHour);
   }
+
+ calculateExtraHours(
+    startDateInput: Date | string,
+    endDateInput: Date | string,
+    workStartTime: string, // "08:00"
+    workEndTime: string    // "20:00"
+): number {
+    // Convert to Date objects if strings are passed
+    const startDate = new Date(startDateInput);
+    let endDate = new Date(endDateInput);
+
+    // Helper: set a time on the same date as a reference date
+    const setTime = (baseDate: Date, timeStr: string): Date => {
+        const [h, m] = timeStr.split(":").map(Number);
+        const d = new Date(baseDate);
+        d.setHours(h, m, 0, 0);
+        return d;
+    };
+
+    // Handle overnight shifts (end next day)
+    if (endDate <= startDate) {
+        endDate = new Date(endDate.getTime() + 24 * 60 * 60 * 1000);
+    }
+
+    const workStart = setTime(startDate, workStartTime);
+    const workEnd = setTime(startDate, workEndTime);
+
+    let extraHours = 0;
+
+    // Entire shift outside duty hours → whole time is overtime
+    if (endDate <= workStart || startDate >= workEnd) {
+        extraHours = (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60);
+    } else {
+        // Before start time
+        if (startDate < workStart) {
+            extraHours += (workStart.getTime() - startDate.getTime()) / (1000 * 60 * 60);
+        }
+        // After end time
+        if (endDate > workEnd) {
+            extraHours += (endDate.getTime() - workEnd.getTime()) / (1000 * 60 * 60);
+        }
+    }
+
+    extraHours = parseFloat(extraHours.toFixed(2));
+
+    // Logging
+    console.log(
+        `Start Date: ${startDate.toISOString()}\n` +
+        `End Date: ${endDate.toISOString()}\n` +
+        `Work Start Time: ${workStartTime}\n` +
+        `Work End Time: ${workEndTime}\n` +
+        `Total Extra Hours: ${extraHours}\n`
+    );
+
+    return extraHours;
+}
+
+
+
+
 
   calculateBillAndLog() {
     this.calculateTotals(this.mainDutyList);
@@ -536,4 +602,21 @@ export class MbillingComponent {
 
     this._minvoice.createMonthlyBilling(payload);
   }
+
+  dateToTimeString(date: Date): string {
+    const hours = date.getHours().toString().padStart(2, "0");
+    const minutes = date.getMinutes().toString().padStart(2, "0");
+    return `${hours}:${minutes}`;
+}
+
+getDbTimeString(dateValue: string | Date): string {
+    const date = (typeof dateValue === "string") ? new Date(dateValue) : dateValue;
+    const hours = date.getUTCHours().toString().padStart(2, "0");
+    const minutes = date.getUTCMinutes().toString().padStart(2, "0");
+    return `${hours}:${minutes}`;
+}
+
+
+
+
 }

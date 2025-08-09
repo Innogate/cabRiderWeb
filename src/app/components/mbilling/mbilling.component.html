@@ -69,7 +69,7 @@
           <td class="py-2 px-3">{{ duty.fromDate }}</td>
           <td class="py-2 px-3">{{ duty.toDate }}</td>
           <td class="py-2 px-3">{{ duty.GarageOutTime }}</td>
-          <td class="py-2 px-3">{{ duty.GarageInDate }}</td>
+          <td class="py-2 px-3">{{ duty.GarageInDate | date:'HH:mm' }}</td>
           <td class="py-2 px-3">{{ duty.GarageOutKm }}</td>
           <td class="py-2 px-3">{{ duty.GarageInKm }}</td>
           <td class="py-2 px-3">{{ duty.TotalHour }}</td>
