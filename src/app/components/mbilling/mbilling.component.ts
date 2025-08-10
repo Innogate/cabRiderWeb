@@ -69,6 +69,10 @@ export class MbillingComponent {
     private _helperService: HelperService
   ) { }
 
+
+  // added 
+  totalKm: number = 0;
+  totalHours: number = 0;
   ngOnInit(): void {
     this.carTypeMaster.registerPageHandler((msg) => {
       let rt = false;
@@ -118,6 +122,7 @@ export class MbillingComponent {
       return rt;
     });
     this.getAllMonthlySetupCode();
+    
   }
 
   @Input() selectedDuties: any[] = [];
@@ -381,11 +386,11 @@ export class MbillingComponent {
 
 
           const km = Number(item.TotalKm) || 0;
-          totalKm += km;      
-          
+          totalKm += km;
+
           //! Time calculation
           const workStartTimeDate = this.getDbTimeString(setup.FromTime);
-          const workEndTimeDate   = this.getDbTimeString(setup.ToTime);
+          const workEndTimeDate = this.getDbTimeString(setup.ToTime);
 
           if (item.GarageOutTime && item.GarageInDate) {
             let diffTime = this.calculateExtraHours(
@@ -399,7 +404,7 @@ export class MbillingComponent {
         } else {
           //! Time calculation
           const workStartTimeDate = this.getDbTimeString(setup.FromTime);
-          const workEndTimeDate   = this.getDbTimeString(setup.ToTime);
+          const workEndTimeDate = this.getDbTimeString(setup.ToTime);
 
           if (item.GarageOutTime && item.GarageInDate) {
             let diffTime = this.calculateExtraHours(
@@ -476,27 +481,27 @@ export class MbillingComponent {
     console.log(' Extra Hour:', this.extraHour);
   }
 
- calculateExtraHours(
+  calculateExtraHours(
     startDateInput: Date | string,
     endDateInput: Date | string,
     workStartTime: string, // "08:00"
     workEndTime: string    // "20:00"
-): number {
+  ): number {
     // Convert to Date objects if strings are passed
     const startDate = new Date(startDateInput);
     let endDate = new Date(endDateInput);
 
     // Helper: set a time on the same date as a reference date
     const setTime = (baseDate: Date, timeStr: string): Date => {
-        const [h, m] = timeStr.split(":").map(Number);
-        const d = new Date(baseDate);
-        d.setHours(h, m, 0, 0);
-        return d;
+      const [h, m] = timeStr.split(":").map(Number);
+      const d = new Date(baseDate);
+      d.setHours(h, m, 0, 0);
+      return d;
     };
 
     // Handle overnight shifts (end next day)
     if (endDate <= startDate) {
-        endDate = new Date(endDate.getTime() + 24 * 60 * 60 * 1000);
+      endDate = new Date(endDate.getTime() + 24 * 60 * 60 * 1000);
     }
 
     const workStart = setTime(startDate, workStartTime);
@@ -506,31 +511,31 @@ export class MbillingComponent {
 
     // Entire shift outside duty hours → whole time is overtime
     if (endDate <= workStart || startDate >= workEnd) {
-        extraHours = (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60);
+      extraHours = (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60);
     } else {
-        // Before start time
-        if (startDate < workStart) {
-            extraHours += (workStart.getTime() - startDate.getTime()) / (1000 * 60 * 60);
-        }
-        // After end time
-        if (endDate > workEnd) {
-            extraHours += (endDate.getTime() - workEnd.getTime()) / (1000 * 60 * 60);
-        }
+      // Before start time
+      if (startDate < workStart) {
+        extraHours += (workStart.getTime() - startDate.getTime()) / (1000 * 60 * 60);
+      }
+      // After end time
+      if (endDate > workEnd) {
+        extraHours += (endDate.getTime() - workEnd.getTime()) / (1000 * 60 * 60);
+      }
     }
 
     extraHours = parseFloat(extraHours.toFixed(2));
 
     // Logging
     console.log(
-        `Start Date: ${startDate.toISOString()}\n` +
-        `End Date: ${endDate.toISOString()}\n` +
-        `Work Start Time: ${workStartTime}\n` +
-        `Work End Time: ${workEndTime}\n` +
-        `Total Extra Hours: ${extraHours}\n`
+      `Start Date: ${startDate.toISOString()}\n` +
+      `End Date: ${endDate.toISOString()}\n` +
+      `Work Start Time: ${workStartTime}\n` +
+      `Work End Time: ${workEndTime}\n` +
+      `Total Extra Hours: ${extraHours}\n`
     );
 
     return extraHours;
-}
+  }
 
 
 
@@ -607,14 +612,14 @@ export class MbillingComponent {
     const hours = date.getHours().toString().padStart(2, "0");
     const minutes = date.getMinutes().toString().padStart(2, "0");
     return `${hours}:${minutes}`;
-}
+  }
 
-getDbTimeString(dateValue: string | Date): string {
+  getDbTimeString(dateValue: string | Date): string {
     const date = (typeof dateValue === "string") ? new Date(dateValue) : dateValue;
     const hours = date.getUTCHours().toString().padStart(2, "0");
     const minutes = date.getUTCMinutes().toString().padStart(2, "0");
     return `${hours}:${minutes}`;
-}
+  }
 
 
 
