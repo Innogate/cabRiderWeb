@@ -73,6 +73,8 @@ export class MbillingComponent {
   // added 
   totalKm: number = 0;
   totalHours: number = 0;
+  showTotalHour: any = 0;
+  showTotalKm: any = 0;
   ngOnInit(): void {
     this.carTypeMaster.registerPageHandler((msg) => {
       let rt = false;
@@ -122,7 +124,7 @@ export class MbillingComponent {
       return rt;
     });
     this.getAllMonthlySetupCode();
-    
+
   }
 
   @Input() selectedDuties: any[] = [];
@@ -401,6 +403,8 @@ export class MbillingComponent {
             )
             this.totalExtraHour += diffTime;
           }
+
+          // total Hour calculation
         } else {
           //! Time calculation
           const workStartTimeDate = this.getDbTimeString(setup.FromTime);
@@ -417,6 +421,9 @@ export class MbillingComponent {
           }
           console.log(`Duplicate date found: ${dateKey}, skipping day count`);
         }
+        this.showTotalHour += item.TotalHour;
+        this.showTotalKm += item.TotalKm;
+
       }
 
       const extraKMRate = setup?.ExtraDayKMRate ?? 0;
@@ -620,6 +627,36 @@ export class MbillingComponent {
     const minutes = date.getUTCMinutes().toString().padStart(2, "0");
     return `${hours}:${minutes}`;
   }
+
+  calculateTimeDifference(item: any): number {
+    const garageOutTimeString = item.GarageOutTime;
+    const garageInDateString = item.GarageInDate;
+
+    if (typeof garageOutTimeString !== 'string' || typeof garageInDateString !== 'string') {
+      throw new Error('Invalid date format: GarageOutTime or GarageInDate is not a string');
+    }
+
+    const garageInDate = new Date(garageInDateString);
+
+    const [hours, minutes] = garageOutTimeString.split(':').map(Number);  // Parse the time (e.g., "19:00" => 19, 0)
+
+    const garageOutDate = new Date(garageInDate);
+    garageOutDate.setHours(hours);
+    garageOutDate.setMinutes(minutes);
+    garageOutDate.setSeconds(0);
+    garageOutDate.setMilliseconds(0);
+
+    const timeDifferenceInMillis = garageInDate.getTime() - garageOutDate.getTime();
+
+    if (timeDifferenceInMillis < 0) {
+      garageOutDate.setDate(garageOutDate.getDate() + 1);
+      return (garageInDate.getTime() - garageOutDate.getTime()) / (1000 * 60 * 60);
+    }
+
+    console.log("RETURN : ",timeDifferenceInMillis / (1000 * 60 * 60))
+    return timeDifferenceInMillis / (1000 * 60 * 60);
+  }
+
 
 
 
