@@ -75,6 +75,15 @@ export class MbillingComponent {
   totalHours: number = 0;
   showTotalHour: any = 0;
   showTotalKm: any = 0;
+
+  totalPaybleAmaunt: any =0;
+  totalPaybleGSTAmount: any = 0;
+
+  totalPaybleSGSTAmount: any = 0;
+  totalPaybleCGSTAmount: any = 0;
+  totalPaybleIGSTAmount: any = 0;
+
+  aboveAdvance: any =0;
   ngOnInit(): void {
     this.carTypeMaster.registerPageHandler((msg) => {
       let rt = false;
@@ -563,6 +572,8 @@ export class MbillingComponent {
 
     this.rate2 = this.totalextraKmRate;
     this.billTotal2 = this.extrakm * this.rate2;
+
+    this.totalPaybleAmaunt = (this.Amount + this.extaHAmount + this.totalextraKmRate)
   }
 
   getBillingFormData() {
@@ -628,34 +639,48 @@ export class MbillingComponent {
     return `${hours}:${minutes}`;
   }
 
-  calculateTimeDifference(item: any): number {
-    const garageOutTimeString = item.GarageOutTime;
-    const garageInDateString = item.GarageInDate;
-
-    if (typeof garageOutTimeString !== 'string' || typeof garageInDateString !== 'string') {
-      throw new Error('Invalid date format: GarageOutTime or GarageInDate is not a string');
+  calculateIGST() {
+    let igstPercentage = Number(this.igst);
+    let amount = this.totalPaybleAmaunt;
+    // Check if IGST percentage is provided
+    if (igstPercentage > 0) {
+      const igstAmount = (amount * igstPercentage) / 100;
+      this.totalPaybleIGSTAmount = igstAmount;
+    } else {
+      this.totalPaybleIGSTAmount = 0; // If no IGST percentage provided, return 0
     }
-
-    const garageInDate = new Date(garageInDateString);
-
-    const [hours, minutes] = garageOutTimeString.split(':').map(Number);  // Parse the time (e.g., "19:00" => 19, 0)
-
-    const garageOutDate = new Date(garageInDate);
-    garageOutDate.setHours(hours);
-    garageOutDate.setMinutes(minutes);
-    garageOutDate.setSeconds(0);
-    garageOutDate.setMilliseconds(0);
-
-    const timeDifferenceInMillis = garageInDate.getTime() - garageOutDate.getTime();
-
-    if (timeDifferenceInMillis < 0) {
-      garageOutDate.setDate(garageOutDate.getDate() + 1);
-      return (garageInDate.getTime() - garageOutDate.getTime()) / (1000 * 60 * 60);
-    }
-
-    console.log("RETURN : ",timeDifferenceInMillis / (1000 * 60 * 60))
-    return timeDifferenceInMillis / (1000 * 60 * 60);
+    this.calGST();
   }
+
+  calculateCGST() {
+    let cgstPercentage = Number(this.Cgst);
+    let amount = this.totalPaybleAmaunt;
+    // Check if CGST percentage is provided
+    if (cgstPercentage > 0) {
+      const cgstAmount = (amount * cgstPercentage) / 100;
+      this.totalPaybleCGSTAmount = cgstAmount;
+    } else {
+      this.totalPaybleCGSTAmount =  0; // If no CGST percentage provided, return 0
+    }
+    this.calGST()
+}
+
+calculateSGST() {
+  let sgstPercentage = Number(this.Sgst);
+  let amount = this.totalPaybleAmaunt;
+  // Check if SGST percentage is provided
+  if (sgstPercentage > 0) {
+    const sgstAmount = (amount * sgstPercentage) / 100;
+    this.totalPaybleSGSTAmount = sgstAmount;
+  } else {
+    this.totalPaybleSGSTAmount =  0; // If no SGST percentage provided, return 0
+  }
+  this.calGST()
+}
+
+calGST(){
+  this.totalPaybleGSTAmount = (this.totalPaybleCGSTAmount + this.totalPaybleIGSTAmount + this.totalPaybleSGSTAmount);
+}
 
 
 
