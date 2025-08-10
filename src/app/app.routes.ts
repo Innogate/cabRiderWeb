@@ -23,6 +23,7 @@ import { InvoiceRegisterComponent } from './modules/report/invoice-register/invo
 import { InvoiceAddComponent } from './modules/entry/invoice-add/invoice-add.component';
 
 import { PartyRateMasterComponent } from './modules/master/party-rate-master/party-rate-master.component';
+import { GuestListMasterComponent } from './modules/master/guest-list-master/guest-list-master.component';
 import { VendorMasterComponent } from './modules/master/vendor-master/vendor-master.component';
 import { FullBookingEntryComponent } from './modules/entry/booking/full-booking-entry/full-booking-entry.component';
 import { AddNewVendorInvoiceComponent } from './modules/entry/vendor-invoice-entry/add-new-vendor-invoice/add-new-vendor-invoice.component';
@@ -64,6 +65,7 @@ export const routes: Routes = [
             { path: 'master/vendor-master', component: VendorMasterComponent, canActivate: [AuthGuard] },
 
             { path: 'master/user-master', component: UserListMasterComponent, canActivate: [AuthGuard] },
+            { path: 'master/guest-list-master', component: GuestListMasterComponent, canActivate: [AuthGuard] },
         ],
         canActivate: [AuthGuard]
     },
