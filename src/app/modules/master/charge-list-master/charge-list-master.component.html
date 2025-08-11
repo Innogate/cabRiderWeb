@@ -1,59 +1,74 @@
 <div class="card">
-    <app-dynamic-table [columns]="columns" [data]="users" [headerTitle]="'CHARGES LIST'" [rowActions]="actions"
-        (onAction)="handleAction($event)">
+    <app-dynamic-table [columns]="columns" [data]="users" [loading]="isLoading" [headerTitle]="'CHARGES LIST'"
+        [rowActions]="actions" (onAction)="handleAction($event)">
     </app-dynamic-table>
 </div>
 
-<p-dialog [header]=header [(visible)]="showForm" [modal]="true" [style]="{ width: '90vw', maxWidth: '500px' }"
-    [closable]="true" [dismissableMask]="true" [breakpoints]="{ '960px': '75vw', '640px': '90vw' }"
-    styleClass="custom-dialog p-0 overflow-hidden rounded-xl shadow-lg">
 
+<p-sidebar [(visible)]="showForm" position="right" [modal]="true"
+    styleClass="!w-full sm:!w-[500px] lg:!w-[700px] !max-w-[90vw]">
 
-    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="px-2 space-y-4">
+    <div (click)="$event.stopPropagation()" class="flex flex-col h-full bg-white">
 
-        <div>
-            <div class="flex items-center gap-2 mb-1 text-gray-700">
-                <i class="pi pi-slack text-indigo-600"></i>
-                <label for="charge_name" class="text-sm font-medium">Charge Name</label>
-            </div>
-            <input id="charge_name" pInputText type="text" formControlName="charge_name"
-                class="w-full border border-indigo-200 rounded-md focus:border-indigo-500 focus:ring-indigo-500" />
+        <!-- Header -->
+        <div class="px-4 py-3 border-b border-gray-200 flex items-center justify-between sticky top-0 bg-white z-10">
+            <h2 class="text-lg font-semibold text-gray-800 flex items-center gap-2">
+                <i class="pi pi-plus-circle text-indigo-600 text-xl"></i>
+                {{ header }}
+            </h2>
+            <button pButton icon="pi pi-times" class="p-button-text p-button-rounded"
+                (click)="showForm = false"></button>
         </div>
 
-        <div class="flex gap-4">
-            <!-- Tally Name Field -->
-            <div class="w-1/2">
-                <div class="flex items-center gap-2 mb-1 text-gray-700">
-                    <i class="pi pi-file-o text-indigo-600"></i>
-                    <label for="TallyName" class="text-sm font-medium">Tally Name</label>
-                </div>
-                <input id="TallyName" pInputText type="text" formControlName="TallyName"
+        <!-- Form -->
+        <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex-1 px-4 py-4 space-y-5 overflow-y-auto">
+
+            <!-- Charge Name -->
+            <div>
+                <label for="charge_name" class="flex items-center gap-2 mb-1 text-sm font-medium text-gray-700">
+                    <i class="pi pi-tag text-indigo-600"></i>
+                    Charge Name
+                </label>
+                <input id="charge_name" pInputText type="text" formControlName="charge_name"
+                    placeholder="Enter charge name"
                     class="w-full border border-indigo-200 rounded-md focus:border-indigo-500 focus:ring-indigo-500" />
             </div>
 
-            <!-- Taxable Dropdown Field -->
-            <div class="w-1/2">
-                <div class="flex items-center gap-2 mb-1 text-gray-700">
-                    <i class="pi pi-sort-numeric-up text-indigo-600"></i>
-                    <label for="taxable" class="text-sm font-medium">Taxable</label>
+            <!-- Row: Tally Name & Taxable -->
+            <div class="flex flex-col sm:flex-row gap-4">
+                <!-- Tally Name -->
+                <div class="flex-1">
+                    <label for="TallyName" class="flex items-center gap-2 mb-1 text-sm font-medium text-gray-700">
+                        <i class="pi pi-file-edit text-indigo-600"></i>
+                        Tally Name
+                    </label>
+                    <input id="TallyName" pInputText type="text" formControlName="TallyName"
+                        placeholder="Enter tally name"
+                        class="w-full border border-indigo-200 rounded-md focus:border-indigo-500 focus:ring-indigo-500" />
                 </div>
-                <p-dropdown inputId="taxable" [options]="taxableOptions" [appendTo]="'body'" formControlName="taxable"
-                    optionLabel="label" optionValue="value" placeholder="Select Taxable"
-                    class="w-full border border-indigo-200 rounded-md focus:border-indigo-500 focus:ring-indigo-500">
-                </p-dropdown>
+
+                <!-- Taxable -->
+                <div class="flex-1">
+                    <label for="taxable" class="flex items-center gap-2 mb-1 text-sm font-medium text-gray-700">
+                        <i class="pi pi-percentage text-indigo-600"></i>
+                        Taxable
+                    </label>
+                    <p-dropdown inputId="taxable" [options]="taxableOptions" [appendTo]="'body'"
+                        formControlName="taxable" optionLabel="label" optionValue="value" placeholder="Select taxable"
+                        class="w-full border border-indigo-200 rounded-md focus:border-indigo-500 focus:ring-indigo-500">
+                    </p-dropdown>
+                </div>
             </div>
+
+        </form>
+
+        <!-- Footer Buttons -->
+        <div class="flex justify-end gap-2 p-4 border-t border-gray-200 sticky bottom-0 bg-white">
+            <button pButton type="button" label="Cancel" icon="pi pi-times" class="p-button-text"
+                (click)="showForm = false"></button>
+            <button pButton type="submit" label="Save" icon="pi pi-save" [disabled]="form.invalid"
+                (click)="onSubmit()"></button>
         </div>
 
-
-
-
-
-        <!-- Buttons -->
-        <div class="flex justify-end gap-2 mt-4">
-            <button pButton type="button" label="Cancel" class="p-button-secondary" (click)="showForm = false"></button>
-            <button pButton type="submit" label="Save" [disabled]="form.invalid"></button>
-        </div>
-
-    </form>
-
-</p-dialog>
+    </div>
+</p-sidebar>

@@ -41,6 +41,7 @@ export class DriverMasterComponent implements OnInit, OnDestroy, AfterViewInit {
   header: string = ''
   isLoading = true;
   filteredCities: any[] = [];
+  
 
   cityList: any[] = [
     { Id: 0, CityName: '' },
@@ -142,21 +143,18 @@ export class DriverMasterComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   columns = [
-    { header: 'ID', field: 'id' },
-    { header: 'Driver Name', field: 'drv_name', icon: 'pi pi-user', styleClass: 'text-red-600' },
-    { header: 'Address', field: 'address', icon: 'pi pi-map', styleClass: 'text-green-600' },
-    { header: 'City', field: 'CityName', icon: 'pi pi-map-marker', styleClass: 'text-yellow-600' },
-    { header: 'Pin Code', field: 'pin_code', icon: 'pi pi-slack' },
-    { header: 'Mobile No', field: 'mobileno', icon: 'pi pi-slack' },
-    { header: 'Driver Licenseno', field: 'drv_licenseno', icon: 'pi pi-slack' },
-    { header: 'Bank Name', field: 'bank_name', icon: 'pi pi-slack' },
-    { header: 'Bank Branch', field: 'bank_branch', icon: 'pi pi-slack' },
-    { header: 'Bank Account No', field: 'bank_acno', icon: 'pi pi-slack' },
-    { header: 'Bank Account Type', field: 'bank_actype', icon: 'pi pi-slack' },
+    { header: 'ID', field: 'id', icon: 'pi pi-hashtag', styleClass: 'text-gray-600' },
+    { header: 'Driver Name', field: 'drv_name', icon: 'pi pi-user', styleClass: 'text-blue-600' },
+    { header: 'Address', field: 'address', icon: 'pi pi-home', styleClass: 'text-green-600' },
+    { header: 'City', field: 'CityName', icon: 'pi pi-map-marker', styleClass: 'text-orange-500' },
+    { header: 'Pin Code', field: 'pin_code', icon: 'pi pi-envelope', styleClass: 'text-purple-500' },
+    { header: 'Mobile No', field: 'mobileno', icon: 'pi pi-phone', styleClass: 'text-teal-500' },
+    { header: 'Driver Licenseno', field: 'drv_licenseno', icon: 'pi pi-id-card', styleClass: 'text-indigo-500' },
+    { header: 'Bank Name', field: 'bank_name', icon: 'pi pi-building', styleClass: 'text-pink-500' },
+    { header: 'Bank Branch', field: 'bank_branch', icon: 'pi pi-briefcase', styleClass: 'text-yellow-600' },
+    { header: 'Bank Account No', field: 'bank_acno', icon: 'pi pi-credit-card', styleClass: 'text-red-500' },
+    { header: 'Bank Account Type', field: 'bank_actype', icon: 'pi pi-wallet', styleClass: 'text-emerald-500' },
   ];
-
-
-
 
   // Action buttons configuration
   actions = [
@@ -189,13 +187,14 @@ export class DriverMasterComponent implements OnInit, OnDestroy, AfterViewInit {
         active: this.form.value.active ?? '1',
         ref_by: this.form.value.ref_by ?? '0',
         whatsappno: String(this.form.value.whatsappno ?? ''),
-        mobileno: String(this.form.value.mobileno ?? '')
+        mobileno: String(this.form.value.mobileno ?? ''),
+        bank_actype: this.form.value.bank_actype?.value || null,
 
       };
       this.messageService.add({ severity: 'contrast', summary: 'Info', detail: 'Please wait processing...' });
       console.log("Value", value)
       this.driverMasterService.CreateUpdateDriver(value);
-      this.form.reset();
+      // this.form.reset();
     }
   }
 

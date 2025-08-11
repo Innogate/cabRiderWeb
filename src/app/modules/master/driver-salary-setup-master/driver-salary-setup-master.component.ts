@@ -64,7 +64,6 @@ export class DriverSalarySetupMasterComponent implements OnInit, OnDestroy, Afte
 
 
   constructor(
-    private driverMasterService: driverMasterService,
     private commonService: commonService,
     private driverSalaryService: driverSalarySetupMasterService,
     private messageService: MessageService,
@@ -74,28 +73,29 @@ export class DriverSalarySetupMasterComponent implements OnInit, OnDestroy, Afte
     this.form = this.fb.group({
       // create driver salary setup form
       id: [0],
-      DriverId: [null, Validators.required],
-      SetupDate: [null, Validators.required],
-      SalaryCalcOnDaysInMonth: [null, Validators.required],
-      SalaryCalcOnDays: [null, Validators.required],
-      SalaryType: [null, Validators.required],
-      SalaryPerDay: [null, Validators.required],
-      BasicSalary: [null, Validators.required],
-      SundayAmt: [null, Validators.required],
-      WashingAmt: [null, Validators.required],
-      MobileAmt: [null, Validators.required],
-      DayTotalWorkHours: [null, Validators.required],
-      WorkStartTime: [null, Validators.required],
-      WorkEndTime: [null, Validators.required],
-      OTRate: [null, Validators.required],
-      KMRun: [null, Validators.required],
-      KMRunAmt: [null, Validators.required],
-      KhurakiStartTime: [null, Validators.required],
-      KhurakiEndTime: [null, Validators.required],
-      KhurakiAmt: [null, Validators.required],
-      LocalNightAmt: [null, Validators.required],
-      OutStationNightAmt: [null, Validators.required],
-      OverTimeType: [null, Validators.required]
+      branch_id: [0],
+      DriverId: [],
+      SetupDate: [null],
+      SalaryCalcOnDaysInMonth: [null],
+      SalaryCalcOnDays: [null],
+      SalaryType: [null],
+      SalaryPerDay: [null],
+      BasicSalary: [null],
+      SundayAmt: [null],
+      WashingAmt: [null],
+      MobileAmt: [null],
+      DayTotalWorkHours: [null],
+      WorkStartTime: [null],
+      WorkEndTime: [null],
+      OTRate: [null],
+      KMRun: [null],
+      KMRunAmt: [null],
+      KhurakiStartTime: [null],
+      KhurakiEndTime: [null],
+      KhurakiAmt: [null],
+      LocalNightAmt: [null],
+      OutStationNightAmt: [null],
+      OverTimeType: [null]
     });
   }
 
@@ -141,12 +141,13 @@ export class DriverSalarySetupMasterComponent implements OnInit, OnDestroy, Afte
 
   async ngAfterViewInit(): Promise<void> {
     const payload = {
-      id: 0,
-      PageNo: 1,
-      PageSize: 1000,
-      Search: "",
-    };
-    this.driverSalaryService.GatAllDriverSalary(payload);
+    id: 0,
+    PageNo: 1,
+    PageSize: 1000,
+    Search: '',
+  };
+
+    this.driverSalaryService.getAllDriverSalary(payload);
     this.commonService.GatAllDriverDropDown({ vendor_id: 0})
   }
 
@@ -157,22 +158,21 @@ export class DriverSalarySetupMasterComponent implements OnInit, OnDestroy, Afte
     );
   }
 
-  columns = [
-    { header: 'ID', field: 'id' },
-    { header: 'Driver Name', field: 'DriverName', icon: 'pi pi-user', styleClass: 'text-red-600' },
-    { header: 'Month & Year', field: 'SetupDateFormat', icon: 'pi pi-map', styleClass: 'text-green-600' },
-    { header: 'Salary Type', field: 'SalaryType', icon: 'pi pi-map-marker', styleClass: 'text-yellow-600' },
-    { header: 'Salary Amount', field: 'BasicSalary', icon: 'pi pi-slack' },
-    { header: 'Mobile Expenses', field: 'MobileAmt', icon: 'pi pi-slack' },
-    { header: 'Washing Expenses', field: 'WashingAmt', icon: 'pi pi-slack' },
-    { header: 'Sunday Amount', field: 'SundayAmt', icon: 'pi pi-slack' },
-    { header: 'Over Time', field: 'OverTimeType', icon: 'pi pi-slack' },
-    { header: 'OT Rate', field: 'OTRate', icon: 'pi pi-slack' },
-    { header: 'Khuraki Time', field: 'KhurakiStartTime', icon: 'pi pi-slack' },
-    { header: 'Khuraki Amount', field: 'KhurakiAmt', icon: 'pi pi-slack' },
-    { header: 'Local Night Amount', field: 'LocalNightAmt', icon: 'pi pi-slack' },
-
-  ];
+columns = [
+  { header: 'ID', field: 'id', icon: 'pi pi-hashtag', styleClass: 'text-gray-600' },
+  { header: 'Driver Name', field: 'DriverName', icon: 'pi pi-user', styleClass: 'text-blue-600' },
+  { header: 'Month & Year', field: 'SetupDateFormat', icon: 'pi pi-calendar', styleClass: 'text-green-600' },
+  { header: 'Salary Type', field: 'SalaryType', icon: 'pi pi-briefcase', styleClass: 'text-purple-600' },
+  { header: 'Salary Amount', field: 'BasicSalary', icon: 'pi pi-wallet', styleClass: 'text-emerald-600' },
+  { header: 'Mobile Expenses', field: 'MobileAmt', icon: 'pi pi-mobile', styleClass: 'text-indigo-600' },
+  { header: 'Washing Expenses', field: 'WashingAmt', icon: 'pi pi-refresh', styleClass: 'text-cyan-600' },
+  { header: 'Sunday Amount', field: 'SundayAmt', icon: 'pi pi-sun', styleClass: 'text-amber-500' },
+  { header: 'Over Time', field: 'OverTimeType', icon: 'pi pi-clock', styleClass: 'text-pink-600' },
+  { header: 'OT Rate', field: 'OTRate', icon: 'pi pi-percentage', styleClass: 'text-orange-600' },
+  { header: 'Khuraki Time', field: 'KhurakiStartTime', icon: 'pi pi-stopwatch', styleClass: 'text-fuchsia-600' },
+  { header: 'Khuraki Amount', field: 'KhurakiAmt', icon: 'pi pi-dollar', styleClass: 'text-lime-600' },
+  { header: 'Local Night Amount', field: 'LocalNightAmt', icon: 'pi pi-moon', styleClass: 'text-sky-600' },
+];
 
 
 
@@ -202,20 +202,22 @@ export class DriverSalarySetupMasterComponent implements OnInit, OnDestroy, Afte
   }
 
   onSubmit() {
-    if (this.form?.valid) {
+     console.log("Form Value", this.form.value);
+    if (this.form) {
       const value = {
         ...this.form.value,
         city_id: this.form.value.city_id?.Id || null,
         active: this.form.value.active ?? '1',
         ref_by: this.form.value.ref_by ?? '0',
         whatsappno: String(this.form.value.whatsappno ?? ''),
-        mobileno: String(this.form.value.mobileno ?? '')
+        mobileno: String(this.form.value.mobileno ?? ''),
+        DriverId: this.form.value.DriverId?.id || null,
 
       };
       this.messageService.add({ severity: 'contrast', summary: 'Info', detail: 'Please wait processing...' });
       console.log("Value", value)
-      this.driverMasterService.CreateUpdateDriver(value);
-      this.form.reset();
+      this.driverSalaryService.createUpdateDriverSalary(value);
+      // this.form.reset();
     }
   }
 
