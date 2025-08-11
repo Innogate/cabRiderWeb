@@ -1,5 +1,613 @@
-<div class="card">
-    <app-dynamic-table [columns]="columns" [loading]="isLoading" [data]="data" [headerTitle]="'DRIVER LIST'"
+<div class="card bg-white shadow-sm rounded-lg" *ngIf="!showForm">
+    <app-dynamic-table [columns]="columns" [loading]="isLoading" [data]="data" [headerTitle]="'PARTY RATE LIST'"
         [rowActions]="actions" (onAction)="handleAction($event)">
     </app-dynamic-table>
 </div>
+
+<div class="min-h-screen p-4" *ngIf="showForm">
+    <form [formGroup]="partyRateForm" (ngSubmit)="savePartyRate()"
+        class="max-w-8xl mx-auto bg-white rounded-xl shadow-md overflow-hidden">
+        <!-- Header -->
+        <div class="bg-sky-600 px-6 py-4 rounded-t-lg flex justify-between items-center">
+            <h1 class="text-2xl font-semibold text-white">{{heading}}</h1>
+            <button type="button" class="text-white hover:text-gray-200 focus:outline-none" aria-label="Close"
+                (click)="showForm = false">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                    </path>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Main Form Content -->
+        <div class="p-6 grid grid-cols-1 lg:grid-cols-2 gap-8 bg-sky-200">
+            <!-- Left Column -->
+            <div class="space-y-6">
+                <!-- Party Information Card -->
+                <div class="bg-sky-100 p-5 rounded-lg border border-sky-400">
+                    <h2 class="text-lg font-semibold text-slate-950 mb-4 pb-2 border-b border-sky-400">
+                        <i class="pi pi-building mr-2 text-rose-900"></i>Party Details
+                    </h2>
+                    <div class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- Party Name Dropdown -->
+                            <div>
+                                <div class="flex items-center space-x-2">
+                                    <i class="pi pi-users text-orange-600"></i>
+                                    <label class="text-sm font-medium text-slate-950">Party Name</label>
+                                </div>
+                                <p-dropdown formControlName="party_id" [options]="partyName" optionLabel="party_name"
+                                    optionValue="id" placeholder="Select Party"
+                                    class="w-full border border-gray-300 rounded-lg">
+                                </p-dropdown>
+                            </div>
+
+                            <!-- City Autocomplete -->
+                            <div>
+                                <div class="flex items-center space-x-2">
+                                    <i class="pi pi-map-marker text-green-700"></i>
+                                    <label class="block text-sm font-medium text-slate-950 mb-1">City</label>
+                                </div>
+                                <p-autoComplete formControlName="city_id" [suggestions]="filteredCities"
+                                    (completeMethod)="filterCity($event)" field="CityName" [dropdown]="true"
+                                    placeholder="Select City" class="w-full border border-gray-300 rounded-lg">
+                                </p-autoComplete>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex items-center space-x-2">
+                                <i class="pi pi-home text-fuchsia-600"></i>
+                                <label class="block text-sm font-medium text-slate-950 mb-1">Address</label>
+                            </div>
+                            <textarea formControlName="PartyAddr" pInputTextarea rows="3"
+                                class="w-full border border-gray-300 rounded-lg p-3"
+                                placeholder="Enter full address"></textarea>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <i class="pi pi-barcode text-green-700"></i>
+                            <label class="block text-sm font-medium text-slate-950 mb-1">GST Number</label>
+                        </div>
+                        <input type="text" formControlName="GSTNo" pInputText
+                            class="w-full border border-gray-300 rounded-lg p-3" placeholder="GSTIN">
+                    </div>
+
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex items-center space-x-2">
+                                <i class="pi pi-map-marker text-fuchsia-500"></i>
+                                <label class="block text-sm font-medium text-slate-950 mb-1">Pin Code</label>
+                            </div>
+                            <input type="number" formControlName="PinCode" pInputText
+                                class="w-full border border-gray-300 rounded-lg p-3" placeholder="Postal code">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Right Column -->
+            <div class="space-y-6">
+
+
+                <!-- Contact Information Card -->
+                <div class="bg-sky-100 p-5 rounded-lg border border-sky-400">
+                    <h2 class="text-lg font-semibold text-slate-950 mb-4 pb-2 border-b border-sky-400">
+                        <i class="pi pi-phone mr-2 text-cyan-600"></i>Contact Information
+                    </h2>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <div class="flex items-center space-x-2">
+                                <i class="pi pi-user text-green-700"></i>
+                                <label class="block text-sm font-medium text-slate-950 mb-1">Contact Person</label>
+                            </div>
+                            <input type="text" formControlName="ContactPersonName" pInputText
+                                class="w-full border border-gray-300 rounded-lg p-3" placeholder="Name">
+                        </div>
+                        <div>
+                            <div class="flex items-center space-x-2">
+                                <i class="pi pi-mobile text-red-700"></i>
+                                <label class="block text-sm font-medium text-slate-950 mb-1">Contact Number</label>
+                            </div>
+                            <input type="number" formControlName="ContactNo" pInputText
+                                class="w-full border border-gray-300 rounded-lg p-3" placeholder="Phone number">
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <div class="flex items-center space-x-2">
+                            <i class="pi pi-envelope text-yellow-500"></i>
+                            <label class="block text-sm font-medium text-slate-950 mb-1">Email Address</label>
+                        </div>
+                        <input type="email" formControlName="EMailID" pInputText
+                            class="w-full border border-gray-300 rounded-lg p-3" placeholder="email@example.com">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--View Option Button-->
+        <div class="p-4 bg-gray-50 border-t border-gray-200 flex justify-between items-center">
+            <div>
+                <button pButton type="button" icon="pi pi-plus" label="Select Rate Type" class="p-button-success"
+                    (click)="viewOption()"></button>
+            </div>
+        </div>
+
+
+        <!-- Preview Table for Entered Rate Details -->
+        <!-- <div class="bg-white p-4 m-3 rounded-xl border border-gray-200 shadow-lg">
+            <h3 class="text-2xl sm:text-3xl font-bold text-blue-900 flex items-center gap-2 pb-4">
+                Preview
+            </h3>
+            <p-table [value]="previewData ? [previewData] : []" *ngIf="previewData"
+                class="p-datatable-gridlines rounded-xl">
+                <ng-template pTemplate="header">
+                    <tr class="bg-blue-100 text-gray-800 text-xs font-semibold">
+                        <th class="py-2 px-3">Rate Type</th>
+                        <th class="py-2 px-3">Car Type</th>
+                        <th class="py-2 px-3">Hour Rate</th>
+                        <th class="py-2 px-3">KM Rate</th>
+                        <th class="py-2 px-3">Min Hrs</th>
+                        <th class="py-2 px-3">Min KM</th>
+                        <th class="py-2 px-3">Include Tax</th>
+                        <th class="py-2 px-3">Effect Date</th>
+                        <th class="py-2 px-3">NH Time</th>
+                        <th class="py-2 px-3">NH Amount</th>
+                        <th class="py-2 px-3">EH Time</th>
+                        <th class="py-2 px-3">EH Amount</th>
+                        <th class="py-2 px-3">Amount</th>
+                        <th class="py-2 px-3">Extra Hrs Rate</th>
+                        <th class="py-2 px-3">Extra KM Rate</th>
+                        <th class="py-2 px-3">Whichever Higher</th>
+                        <th class="py-2 px-3">Transfer Type</th>
+                        <th class="py-2 px-3">Actions</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-row>
+                    <tr class="text-gray-800 hover:bg-blue-50 transition-all text-xs"
+                        *ngFor="let row of previewData; let i = index">
+                        <td class="py-2 px-3">{{ row.rateType }}</td>
+                        <td class="py-2 px-3">{{ row.car_type }}</td>
+                        <td class="py-2 px-3">{{ row.Hours }}</td>
+                        <td class="py-2 px-3">{{ row.KM }}</td>
+                        <td class="py-2 px-3">{{ row.MinHr }}</td>
+                        <td class="py-2 px-3">{{ row.MinKm }}</td>
+                        <td class="py-2 px-3">{{ row.IncludeTax }}</td>
+                        <td class="py-2 px-3">{{ row.RtEfDate }}</td>
+                        <td class="py-2 px-3">{{ row.NHTime }}</td>
+                        <td class="py-2 px-3">{{ row.NHAmount }}</td>
+                        <td class="py-2 px-3">{{ row.EHTime }}</td>
+                        <td class="py-2 px-3">{{ row.EHAmount }}</td>
+                        <td class="py-2 px-3">{{ row.Amount }}</td>
+                        <td class="py-2 px-3">{{ row.ExtHrrate }}</td>
+                        <td class="py-2 px-3">{{ row.ExtKmrate }}</td>
+                        <td class="py-2 px-3">{{ row.HigherRate ? 'Yes' : 'No' }}</td>
+                        <td class="py-2 px-3">{{ row.TransType }}</td>
+                        <td>
+                            <div class="flex justify-center gap-2">
+                                <button pButton icon="pi pi-pencil"
+                                    class="p-button-sm p-button-rounded p-button-warning"
+                                    (click)="onEditRow(i)"></button>
+                                <button pButton icon="pi pi-trash" class="p-button-sm p-button-rounded p-button-danger"
+                                    (click)="onDeleteRow(i)"></button>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div> -->
+
+        <div class="bg-white p-4 m-3 rounded-xl border border-gray-200 shadow-lg">
+            <h3
+                class="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-blue-600 via-indigo-500 to-purple-500 bg-clip-text text-transparent flex items-center gap-2 pb-4">
+                Preview
+            </h3>
+
+            <div *ngIf="previewData" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                <div *ngFor="let row of previewData; let i = index"
+                    class="border border-gray-200 rounded-xl p-4 shadow-sm hover:shadow-lg transition-all bg-gradient-to-br from-white via-blue-50 to-blue-100">
+                    <!-- Header -->
+                    <div class="flex justify-between items-center mb-3">
+                        <h4 class="text-lg font-semibold text-gray-800">
+                            {{ row.car_type }}
+                        </h4>
+                        <span class="px-2 py-1 text-xs rounded-full bg-blue-200 text-blue-800 font-medium">
+                            {{ row.rateType }}
+                        </span>
+                    </div>
+
+                    <!-- Details Grid -->
+                    <div class="grid grid-cols-2 gap-2 text-sm text-gray-700">
+                        <div><span class="font-medium">Hour Rate:</span> {{ row.Hours }}</div>
+                        <div><span class="font-medium">KM Rate:</span> {{ row.KM }}</div>
+                        <div><span class="font-medium">Min Hrs:</span> {{ row.MinHr }}</div>
+                        <div><span class="font-medium">Min KM:</span> {{ row.MinKm }}</div>
+                        <div><span class="font-medium">Include Tax:</span> {{ row.IncludeTax }}</div>
+                        <div><span class="font-medium">Effect Date:</span> {{ row.RtEfDate }}</div>
+                        <div><span class="font-medium">NH Time:</span> {{ row.NHTime }}</div>
+                        <div><span class="font-medium">NH Amount:</span> {{ row.NHAmount }}</div>
+                        <div><span class="font-medium">EH Time:</span> {{ row.EHTime }}</div>
+                        <div><span class="font-medium">EH Amount:</span> {{ row.EHAmount }}</div>
+                        <div><span class="font-medium">Amount:</span> {{ row.Amount }}</div>
+                        <div><span class="font-medium">Extra Hrs Rate:</span> {{ row.ExtHrrate }}</div>
+                        <div><span class="font-medium">Extra KM Rate:</span> {{ row.ExtKmrate }}</div>
+                        <div>
+                            <span class="font-medium">Higher Rate:</span>
+                            {{ row.HigherRate ? 'Yes' : 'No' }}
+                        </div>
+                        <div><span class="font-medium">Transfer Type:</span> {{ row.TransType }}</div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="flex justify-end gap-2 mt-4">
+                        <button pButton icon="pi pi-pencil" class="p-button-sm p-button-rounded p-button-warning"
+                            (click)="onEditRow(i)"></button>
+                        <button pButton icon="pi pi-trash" class="p-button-sm p-button-rounded p-button-danger"
+                            (click)="onDeleteRow(i)"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Footer with Submit Button -->
+        <div class="bg-sky-400 px-6 py-4 border-t border-gray-200 flex justify-end">
+            <button type="submit"
+                class="px-6 py-3 bg-sky-600 text-white font-medium rounded-lg shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
+                Save Party Information
+            </button>
+        </div>
+    </form>
+</div>
+
+
+
+
+<!--Show Options-->
+<p-dialog header="Select Rate Type" [(visible)]="showOption" [modal]="true" [style]="{ width: '1000px' }"
+    [closable]="true" [dismissableMask]="true" [breakpoints]="{ '960px': '100vw', '640px': '100vw' }"
+    styleClass="custom-dialog p-0 overflow-hidden rounded-xl shadow-lg bg-sky-600">
+
+
+    <form [formGroup]="form" (ngSubmit)="onFloatingFormSubmit()" class="px-2 space-y-4">
+
+        <!-- Rate Type -->
+        <div>
+            <div class="flex items-center space-x-2">
+                <i class="pi pi-users text-orange-600"></i>
+                <label class="text-sm font-medium text-slate-950">Rate Type</label>
+            </div>
+            <p-dropdown formControlName="rateType" [options]="rateTypes" optionLabel="label" optionValue="value"
+                placeholder="Select Rate Type" appendTo="body" class="w-full border border-gray-300 rounded-lg">
+            </p-dropdown>
+        </div>
+
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <!-- Car Type -->
+            <div>
+                <div class="flex items-center gap-2 mb-1 text-gray-700">
+                    <i class="pi pi-car text-indigo-600"></i>
+                    <label for="" class="text-sm font-medium">Car Type</label>
+                </div>
+                <p-dropdown [options]="carTypes" formControlName="car_type" optionLabel="label" optionValue="value"
+                    appendTo="body" placeholder="Select Car" class="w-full"></p-dropdown>
+            </div>
+
+            <!-- Include Tax -->
+            <div>
+                <div class="flex items-center gap-2 mb-1 text-gray-700">
+                    <i class="pi pi-check-circle text-indigo-600"></i>
+                    <label class="text-sm font-medium">Include Tax</label>
+                </div>
+                <p-dropdown [options]="includeTaxOptions" formControlName="IncludeTax" placeholder="Include Tax"
+                    class="w-full"></p-dropdown>
+            </div>
+
+            <!-- Effect Date -->
+            <div>
+                <div class="flex items-center gap-2 mb-1 text-gray-700">
+                    <i class="pi pi-calendar text-indigo-600"></i>
+                    <label for="" class="text-sm font-medium">Effect Date</label>
+                </div>
+                <p-calendar formControlName="RtEfDate" size="large" dateFormat="dd/mm/yy" placeholder="dd/mm/yyyy"
+                    appendTo="body" class="w-full"></p-calendar>
+            </div>
+        </div>
+
+
+
+        <!-- Normal Rate Type Fields -->
+        <ng-container *ngIf="form.get('rateType')?.value === 'Normal'">
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <!-- Hour Rate -->
+                <div>
+                    <div class="flex items-center gap-2 mb-1 text-gray-700">
+                        <i class="pi pi-clock text-indigo-600"></i>
+                        <label for="" class="text-sm font-medium">Hour Rate</label>
+                    </div>
+                    <input pInputText formControlName="Hours" placeholder="Hour Rate" />
+                </div>
+
+                <!-- KM Rate -->
+                <div>
+                    <div class="flex items-center gap-2 mb-1 text-gray-700">
+                        <i class="pi pi-arrow-up text-indigo-600"></i>
+                        <label class="text-sm font-medium">KM Rate</label>
+                    </div>
+                    <input pInputText formControlName="KM" placeholder="KM Rate" />
+                </div>
+
+                <!-- Min Hrs -->
+                <div>
+                    <div class="flex items-center gap-2 mb-1 text-gray-700">
+                        <i class="pi pi-clock text-indigo-600"></i>
+                        <label for="" class="text-sm font-medium">Min Hrs</label>
+                    </div>
+                    <input pInputText formControlName="MinHr" placeholder="Min Hrs" />
+                </div>
+
+                <!-- Min KM -->
+                <div>
+                    <div class="flex items-center gap-2 mb-1 text-gray-700">
+                        <i class="pi pi-map-marker text-indigo-600"></i>
+                        <label for="" class="text-sm font-medium">Min KM</label>
+                    </div>
+                    <input pInputText formControlName="MinKm" placeholder="Min KM" />
+                </div>
+            </div>
+
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <!-- Night Halt Time -->
+                <div>
+                    <div class="flex items-center gap-2 mb-1 text-gray-700">
+                        <i class="pi pi-moon text-indigo-600"></i>
+                        <label for="" class="text-sm font-medium">Night Halt Time</label>
+                    </div>
+                    <input pInputText formControlName="NHTime" placeholder="Night Halt Time" />
+                </div>
+
+                <!-- Night Halt Amount -->
+                <div>
+                    <div class="flex items-center gap-2 mb-1 text-gray-700">
+                        <i class="pi pi-dollar text-indigo-600"></i>
+                        <label class="text-sm font-medium">Night Halt Amount</label>
+                    </div>
+                    <input pInputText formControlName="NHAmount" placeholder="Night Halt Amount" />
+                </div>
+
+                <!-- Early Halt Time -->
+                <div>
+                    <div class="flex items-center gap-2 mb-1 text-gray-700">
+                        <i class="pi pi-history text-indigo-600"></i>
+                        <label for="" class="text-sm font-medium">Early Halt Time</label>
+                    </div>
+                    <input pInputText formControlName="EHTime" placeholder="Early Halt Time" />
+                </div>
+
+                <!-- Early Halt Amount -->
+                <div>
+                    <div class="flex items-center gap-2 mb-1 text-gray-700">
+                        <i class="pi pi-dollar text-indigo-600"></i>
+                        <label for="" class="text-sm font-medium">Early Halt Amount</label>
+                    </div>
+                    <input pInputText formControlName="EHAmount" placeholder="Early Halt Amount" />
+                </div>
+            </div>
+
+
+        </ng-container>
+
+        <!-- HRS/KM slab Fields -->
+        <ng-container *ngIf="form.get('rateType')?.value === 'HRS/KM slab'">
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <!-- Hours -->
+                <div>
+                    <div class="flex items-center gap-2 mb-1 text-gray-700">
+                        <i class="pi pi-clock text-indigo-600"></i>
+                        <label for="" class="text-sm font-medium">Hours</label>
+                    </div>
+                    <input pInputText formControlName="Hours" />
+                </div>
+
+                <!-- KM -->
+                <div>
+                    <div class="flex items-center gap-2 mb-1 text-gray-700">
+                        <i class="pi pi-arrow-up text-indigo-600"></i>
+                        <label class="text-sm font-medium">KM</label>
+                    </div>
+                    <input pInputText formControlName="KM" />
+                </div>
+
+                <!-- Amount -->
+                <div>
+                    <div class="flex items-center gap-2 mb-1 text-gray-700">
+                        <i class="pi pi-dollar text-indigo-600"></i>
+                        <label for="" class="text-sm font-medium">Amount</label>
+                    </div>
+                    <input pInputText formControlName="Amount" />
+                </div>
+
+                <!-- Extra Hours Rate -->
+                <div>
+                    <div class="flex items-center gap-2 mb-1 text-gray-700">
+                        <i class="pi pi-calendar text-indigo-600"></i>
+                        <label for="" class="text-sm font-medium">Extra Hours Rate</label>
+                    </div>
+                    <input pInputText formControlName="ExtHrrate" />
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <!-- Night Halt Time -->
+                <div>
+                    <div class="flex items-center gap-2 mb-1 text-gray-700">
+                        <i class="pi pi-moon text-indigo-600"></i>
+                        <label for="" class="text-sm font-medium">Night Halt Time</label>
+                    </div>
+                    <input pInputText formControlName="NHTime" placeholder="Night Halt Time" />
+                </div>
+
+                <!-- Night Halt Amount -->
+                <div>
+                    <div class="flex items-center gap-2 mb-1 text-gray-700">
+                        <i class="pi pi-dollar text-indigo-600"></i>
+                        <label class="text-sm font-medium">Night Halt Amount</label>
+                    </div>
+                    <input pInputText formControlName="NHAmount" placeholder="Night Halt Amount" />
+                </div>
+
+                <!-- Early Halt Time -->
+                <div>
+                    <div class="flex items-center gap-2 mb-1 text-gray-700">
+                        <i class="pi pi-history text-indigo-600"></i>
+                        <label for="" class="text-sm font-medium">Early Halt Time</label>
+                    </div>
+                    <input pInputText formControlName="EHTime" placeholder="Early Halt Time" />
+                </div>
+
+                <!-- Early Halt Amount -->
+                <div>
+                    <div class="flex items-center gap-2 mb-1 text-gray-700">
+                        <i class="pi pi-dollar text-indigo-600"></i>
+                        <label for="" class="text-sm font-medium">Early Halt Amount</label>
+                    </div>
+                    <input pInputText formControlName="EHAmount" placeholder="Early Halt Amount" />
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+
+                <!-- Extra KM Rate -->
+                <div>
+                    <div class="flex items-center gap-2 mb-1 text-gray-700">
+                        <i class="pi pi-map-marker text-indigo-600"></i>
+                        <label for="" class="text-sm font-medium">Extra KM Rate</label>
+                    </div>
+                    <input pInputText formControlName="ExtKmrate" />
+                </div>
+
+                <!-- Whichever Higher -->
+                <div>
+                    <div class="flex items-center gap-2 mb-1 text-gray-700">
+                        <i class="pi pi-chart-bar text-indigo-600"></i>
+                        <label for="" class="text-sm font-medium">Whichever Higher</label>
+                    </div>
+                    <p-checkbox formControlName="HigherRate" binary="true"></p-checkbox>
+                </div>
+            </div>
+        </ng-container>
+
+        <!-- Day/KM Fields -->
+        <ng-container *ngIf="form.get('rateType')?.value === 'Day/KM'">
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <!-- KM -->
+                <div>
+                    <div class="flex items-center gap-2 mb-1 text-gray-700">
+                        <i class="pi pi-arrow-up text-indigo-600"></i>
+                        <label class="text-sm font-medium">KM</label>
+                    </div>
+                    <input pInputText formControlName="KM" class="w-full " />
+                </div>
+
+                <!-- Amount -->
+                <div>
+                    <div class="flex items-center gap-2 mb-1 text-gray-700">
+                        <i class="pi pi-dollar text-indigo-600"></i>
+                        <label for="" class="text-sm font-medium">Amount</label>
+                    </div>
+                    <input pInputText formControlName="Amount" class="w-full " />
+                </div>
+
+                <!-- Extra KM Rate -->
+                <div>
+                    <div class="flex items-center gap-2 mb-1 text-gray-700">
+                        <i class="pi pi-calendar text-indigo-600"></i>
+                        <label for="" class="text-sm font-medium">Extra KM Rate</label>
+                    </div>
+                    <input pInputText formControlName="ExtKmrate" class="w-full " />
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <!-- Night Halt Time -->
+                <div>
+                    <div class="flex items-center gap-2 mb-1 text-gray-700">
+                        <i class="pi pi-moon text-indigo-600"></i>
+                        <label for="" class="text-sm font-medium">Night Halt Time</label>
+                    </div>
+                    <input pInputText formControlName="NHTime" placeholder="Night Halt Time" />
+                </div>
+
+                <!-- Night Halt Amount -->
+                <div>
+                    <div class="flex items-center gap-2 mb-1 text-gray-700">
+                        <i class="pi pi-dollar text-indigo-600"></i>
+                        <label class="text-sm font-medium">Night Halt Amount</label>
+                    </div>
+                    <input pInputText formControlName="NHAmount" placeholder="Night Halt Amount" />
+                </div>
+
+                <!-- Early Halt Time -->
+                <div>
+                    <div class="flex items-center gap-2 mb-1 text-gray-700">
+                        <i class="pi pi-history text-indigo-600"></i>
+                        <label for="" class="text-sm font-medium">Early Halt Time</label>
+                    </div>
+                    <input pInputText formControlName="EHTime" placeholder="Early Halt Time" />
+                </div>
+
+                <!-- Early Halt Amount -->
+                <div>
+                    <div class="flex items-center gap-2 mb-1 text-gray-700">
+                        <i class="pi pi-dollar text-indigo-600"></i>
+                        <label for="" class="text-sm font-medium">Early Halt Amount</label>
+                    </div>
+                    <input pInputText formControlName="EHAmount" placeholder="Early Halt Amount" />
+                </div>
+            </div>
+
+        </ng-container>
+
+        <!-- Transfer Fields -->
+        <ng-container *ngIf="form.get('rateType')?.value === 'Transfer'">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Night Halt Time -->
+                <div>
+                    <div class="flex items-center gap-2 mb-1 text-gray-700">
+                        <i class="pi pi-moon text-indigo-600"></i>
+                        <label for="" class="text-sm font-medium">Night Halt Time</label>
+                    </div>
+                    <p-dropdown formControlName="TransType" [options]="transferTypes" optionLabel="label"
+                        optionValue="value" placeholder="Select Transfer Type" appendTo="body"
+                        class="w-full"></p-dropdown>
+                </div>
+
+                <!-- Night Halt Amount -->
+                <div>
+                    <div class="flex items-center gap-2 mb-1 text-gray-700">
+                        <i class="pi pi-dollar text-indigo-600"></i>
+                        <label class="text-sm font-medium">Night Halt Amount</label>
+                    </div>
+                    <input pInputText formControlName="Amount" appendTo="body" class="w-full" />
+                </div>
+            </div>
+        </ng-container>
+
+
+        <!-- Buttons -->
+        <div class="flex justify-end gap-2 mt-4">
+            <button pButton type="button" label="Cancel" class="p-button-secondary"
+                (click)="showOption = false"></button>
+            <button pButton type="submit" label="Save"></button>
+        </div>
+
+    </form>
+
+</p-dialog>

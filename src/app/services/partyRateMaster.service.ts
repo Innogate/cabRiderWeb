@@ -11,13 +11,11 @@ export class partyRateMasterService extends BaseService {
   }
 
   getAllPartyRate(payload: any) {
-    this.call('master.gatAllPartyRate', payload);
+    this.call('master.getAllPartyRate', payload);
   }
 
-  createUpdatePartyRate(id: number, party_id: number, city_id: number, PartyAddr: string, PinCode: string,
-    GSTNo: string, ContactPersonName: string, ContactNo: string, EMailID: string, postJsonData: any
-  ) {
-    this.call('master.createUpdatePartyRate')
+  createUpdatePartyRate(payload: any) {
+    this.call('master.createUpdatePartyRateMaster', payload)
   }
 
 
