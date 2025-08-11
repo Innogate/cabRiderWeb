@@ -402,7 +402,9 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
   }
 
   getAllBranches() {
-    this._helperService.getBranchDropdown();
+    if (this.invoiceForm) {
+      this._helperService.getBranchDropdown(this.invoiceForm.value.company_id);
+    }
   }
 
   getAllParty() {
@@ -460,6 +462,7 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
   onCompanySelect(company: any) {
     if (this.invoiceForm) {
       this.invoiceForm.get('company_id')?.setValue(company.value.Id);
+      this.getAllBranches();
       this.checkAndLoadDutyTable();
     }
   }

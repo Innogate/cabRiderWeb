@@ -14,8 +14,10 @@ export class HelperService extends BaseService {
         this.call('helper.getPartyDropdown', {});
     }
 
-    getBranchDropdown() {
-        this.call('helper.getBranchDropdown', {});
+    getBranchDropdown(company_id: number) {
+        this.call('helper.getBranchDropdown', {
+            company_id: company_id
+        });
     }
 
     getCompanyDropdown() {
