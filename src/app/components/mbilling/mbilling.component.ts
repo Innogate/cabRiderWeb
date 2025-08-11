@@ -69,7 +69,10 @@ export class MbillingComponent {
     private _helperService: HelperService
   ) { }
 
-
+  charges = [
+    { name: 'Fuel Surcharge', amount: 200 },
+    { name: 'Driver Allowance', amount: 100 },
+  ];
   // added 
   totalKm: number = 0;
   totalHours: number = 0;
