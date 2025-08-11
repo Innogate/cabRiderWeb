@@ -1,20 +1,10 @@
 <div class="card">
-  <app-dynamic-table
-    [columns]="columns"
-    [loading]="isLoading"
-    [data]="users"
-    [headerTitle]="'CAR TYPE LIST'"
-    [rowActions]="actions"
-    (onAction)="handleAction($event)"
-  ></app-dynamic-table>
+  <app-dynamic-table [columns]="columns" [loading]="isLoading" [data]="users" [headerTitle]="'CAR TYPE LIST'"
+    [rowActions]="actions" (onAction)="handleAction($event)"></app-dynamic-table>
 </div>
 
-<p-sidebar
-  [(visible)]="showForm"
-  position="right"
-  [modal]="true"
-  styleClass="!w-full sm:!w-[500px] lg:!w-[700px] !max-w-[90vw]"
->
+<p-sidebar [(visible)]="showForm" position="right" [modal]="true"
+  styleClass="!w-full sm:!w-[500px] lg:!w-[700px] !max-w-[90vw]">
   <!-- Wrap content to stop mask click from closing -->
   <div (click)="$event.stopPropagation()" class="flex flex-col h-full bg-white">
 
@@ -27,82 +17,42 @@
     </div>
 
     <!-- Drawer Body -->
-    <form
-      [formGroup]="form"
-      (ngSubmit)="onSubmit()"
-      class="flex-1 px-4 py-4 space-y-4 overflow-y-auto"
-    >
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex-1 px-4 py-4 space-y-4 overflow-y-auto">
       <!-- Car Type -->
       <div>
-        <label
-          for="car_type"
-          class="flex items-center gap-2 mb-1 text-slate-950 text-sm font-medium"
-        >
+        <label for="car_type" class="flex items-center gap-2 mb-1 text-slate-950 text-sm font-medium">
           <i class="pi pi-car text-green-400"></i>
           Car Type
         </label>
-        <input
-          id="car_type"
-          pInputText
-          type="text"
-          formControlName="car_type"
-          class="w-full border border-indigo-200 rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-300 focus:ring-opacity-50"
-        />
+        <input id="car_type" pInputText type="text" formControlName="car_type"
+          class="w-full border border-indigo-200 rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-300 focus:ring-opacity-50" />
       </div>
 
       <!-- Index Order -->
       <div>
-        <label
-          for="index_order"
-          class="flex items-center gap-2 mb-1 text-slate-950 text-sm font-medium"
-        >
+        <label for="index_order" class="flex items-center gap-2 mb-1 text-slate-950 text-sm font-medium">
           <i class="pi pi-sort-numeric-up text-yellow-300"></i>
           Index Order
         </label>
-        <input
-          id="index_order"
-          pInputText
-          type="number"
-          formControlName="index_order"
-          class="w-full border border-indigo-200 rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-300 focus:ring-opacity-50"
-        />
+        <input id="index_order" pInputText type="number" formControlName="index_order"
+          class="w-full border border-indigo-200 rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-300 focus:ring-opacity-50" />
       </div>
 
       <!-- Sitting Capacity -->
       <div>
-        <label
-          for="sitting_capacity"
-          class="flex items-center gap-2 mb-1 text-slate-950 text-sm font-medium"
-        >
+        <label for="sitting_capacity" class="flex items-center gap-2 mb-1 text-slate-950 text-sm font-medium">
           <i class="pi pi-users text-rose-400"></i>
           Sitting Capacity
         </label>
-        <input
-          id="sitting_capacity"
-          pInputText
-          type="number"
-          formControlName="sitting_capacity"
-          class="w-full border border-indigo-200 rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-300 focus:ring-opacity-50"
-        />
+        <input id="sitting_capacity" pInputText type="number" formControlName="sitting_capacity"
+          class="w-full border border-indigo-200 rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-300 focus:ring-opacity-50" />
       </div>
     </form>
 
     <!-- Drawer Footer -->
     <div class="flex justify-end gap-2 p-4 border-t border-gray-200 sticky bottom-0 bg-white">
-      <button
-        pButton
-        type="button"
-        label="Cancel"
-        class="p-button-secondary"
-        (click)="showForm = false"
-      ></button>
-      <button
-        pButton
-        type="submit"
-        label="Save"
-        [disabled]="form.invalid"
-        (click)="onSubmit()"
-      ></button>
+      <button pButton type="button" label="Cancel" class="p-button-secondary" (click)="showForm = false"></button>
+      <button pButton type="submit" label="Save" [disabled]="form.invalid" (click)="onSubmit()"></button>
     </div>
   </div>
 </p-sidebar>

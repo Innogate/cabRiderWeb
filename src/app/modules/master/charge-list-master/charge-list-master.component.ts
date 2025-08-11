@@ -10,11 +10,12 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { chargesListMasterService } from '../../../services/chargesListMaster.service';
 import { DropdownModule } from 'primeng/dropdown';
+import { SidebarModule } from 'primeng/sidebar';
 
 
 @Component({
   selector: 'app-charge-list-master',
-  imports: [DynamicTableComponent, DialogModule, ReactiveFormsModule, InputTextModule, ButtonModule, DropdownModule],
+  imports: [DynamicTableComponent, DialogModule, ReactiveFormsModule, InputTextModule, ButtonModule, DropdownModule, SidebarModule],
   templateUrl: './charge-list-master.component.html',
   styleUrl: './charge-list-master.component.css'
 })
@@ -23,6 +24,7 @@ export class ChargeListMasterComponent implements OnInit, OnDestroy, AfterViewIn
   showForm: boolean = false;
   form!: FormGroup;
   header: string = ''
+  isLoading: boolean = true;
 
   taxableOptions = [
     { label: 'YES', value: 'Y' },
@@ -54,6 +56,7 @@ export class ChargeListMasterComponent implements OnInit, OnDestroy, AfterViewIn
       globalRequestHandler(msg, this.router, this.messageService);
       if (msg.for == 'gatAllCharges') {
         this.users = msg.data; // or however your API responds
+        this.isLoading = false;
       } else if (msg.for == 'chargesAddUpdate') {
         this.messageService.add({ severity: 'success', summary: 'Success', detail: msg.StatusMessage });
       } else if (msg.for == 'chargesDelete') {
@@ -81,9 +84,9 @@ export class ChargeListMasterComponent implements OnInit, OnDestroy, AfterViewIn
 
   columns = [
     { header: 'ID', field: 'id' },
-    { header: 'Charge Name', field: 'charge_name', icon: 'pi pi-slack' },
+    { header: 'Charge Name', field: 'charge_name', icon: 'pi pi-slack', styleClass: 'text-blue-600' },
     { header: 'Taxable', field: 'taxable', icon: 'pi pi-check-circle', styleClass: 'text-green-600' },
-    { header: 'Tally Name', field: 'TallyName', },
+    { header: 'Tally Name', field: 'TallyName', icon: 'pi pi-tag', styleClass: 'text-purple-600' },
   ];
 
 
@@ -149,7 +152,7 @@ export class ChargeListMasterComponent implements OnInit, OnDestroy, AfterViewIn
     const payload = {
       table_name: "charges_mast",
       column_name: "id",
-      column_value: ""+user.id,
+      column_value: "" + user.id,
     }
     this.chargesListMasterService.Delete(payload)
   }

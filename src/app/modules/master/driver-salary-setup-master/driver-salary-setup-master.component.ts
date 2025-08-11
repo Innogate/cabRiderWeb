@@ -64,7 +64,6 @@ export class DriverSalarySetupMasterComponent implements OnInit, OnDestroy, Afte
 
 
   constructor(
-    private driverMasterService: driverMasterService,
     private commonService: commonService,
     private driverSalaryService: driverSalarySetupMasterService,
     private messageService: MessageService,
@@ -74,28 +73,29 @@ export class DriverSalarySetupMasterComponent implements OnInit, OnDestroy, Afte
     this.form = this.fb.group({
       // create driver salary setup form
       id: [0],
-      DriverId: [null, Validators.required],
-      SetupDate: [null, Validators.required],
-      SalaryCalcOnDaysInMonth: [null, Validators.required],
-      SalaryCalcOnDays: [null, Validators.required],
-      SalaryType: [null, Validators.required],
-      SalaryPerDay: [null, Validators.required],
-      BasicSalary: [null, Validators.required],
-      SundayAmt: [null, Validators.required],
-      WashingAmt: [null, Validators.required],
-      MobileAmt: [null, Validators.required],
-      DayTotalWorkHours: [null, Validators.required],
-      WorkStartTime: [null, Validators.required],
-      WorkEndTime: [null, Validators.required],
-      OTRate: [null, Validators.required],
-      KMRun: [null, Validators.required],
-      KMRunAmt: [null, Validators.required],
-      KhurakiStartTime: [null, Validators.required],
-      KhurakiEndTime: [null, Validators.required],
-      KhurakiAmt: [null, Validators.required],
-      LocalNightAmt: [null, Validators.required],
-      OutStationNightAmt: [null, Validators.required],
-      OverTimeType: [null, Validators.required]
+      branch_id: [0],
+      DriverId: [null],
+      SetupDate: [null],
+      SalaryCalcOnDaysInMonth: [null],
+      SalaryCalcOnDays: [null],
+      SalaryType: [null],
+      SalaryPerDay: [null],
+      BasicSalary: [null],
+      SundayAmt: [null],
+      WashingAmt: [null],
+      MobileAmt: [null],
+      DayTotalWorkHours: [null],
+      WorkStartTime: [null],
+      WorkEndTime: [null],
+      OTRate: [null],
+      KMRun: [null],
+      KMRunAmt: [null],
+      KhurakiStartTime: [null],
+      KhurakiEndTime: [null],
+      KhurakiAmt: [null],
+      LocalNightAmt: [null],
+      OutStationNightAmt: [null],
+      OverTimeType: [null]
     });
   }
 
@@ -146,7 +146,7 @@ export class DriverSalarySetupMasterComponent implements OnInit, OnDestroy, Afte
       PageSize: 1000,
       Search: "",
     };
-    this.driverSalaryService.GatAllDriverSalary(payload);
+    this.driverSalaryService.getAllDriverSalary(payload);
     this.commonService.GatAllDriverDropDown({ vendor_id: 0})
   }
 
@@ -202,7 +202,8 @@ export class DriverSalarySetupMasterComponent implements OnInit, OnDestroy, Afte
   }
 
   onSubmit() {
-    if (this.form?.valid) {
+     console.log("Form Value", this.form.value);
+    if (this.form) {
       const value = {
         ...this.form.value,
         city_id: this.form.value.city_id?.Id || null,
@@ -214,8 +215,8 @@ export class DriverSalarySetupMasterComponent implements OnInit, OnDestroy, Afte
       };
       this.messageService.add({ severity: 'contrast', summary: 'Info', detail: 'Please wait processing...' });
       console.log("Value", value)
-      this.driverMasterService.CreateUpdateDriver(value);
-      this.form.reset();
+      this.driverSalaryService.createUpdateDriverSalary(value);
+      // this.form.reset();
     }
   }
 
