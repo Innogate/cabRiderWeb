@@ -92,9 +92,9 @@
             <i class="pi pi-percentage text-pink-500 mr-2"></i>Tax Type
           </label>
           <div class="flex gap-4 items-center">
-            <p-radioButton inputId="cgst" value="cgst" formControlName="taxtype"></p-radioButton>
+            <p-radioButton inputId="cgst" value="cgst" formControlName="taxtype" (ngModelChange)="onTaxTypeChange($event)"></p-radioButton>
             <label for="cgst" class="text-gray-600">CGST/SGST</label>
-            <p-radioButton inputId="igst" value="igst" formControlName="taxtype"></p-radioButton>
+            <p-radioButton inputId="igst" value="igst" formControlName="taxtype" (ngModelChange)="onTaxTypeChange($event)"></p-radioButton>
             <label for="igst" class="text-gray-600">IGST</label>
           </div>
         </div>
@@ -111,7 +111,7 @@
 
   <!-- Show only after duties are added -->
   <app-mbilling *ngIf="mainDutyList.length > 0" [invoiceForm]="invoiceForm" [selectedDuties]="selectedDuties"
-    [mainDutyList]="mainDutyList"></app-mbilling>
+    [mainDutyList]="mainDutyList" [sleetedBookingIds]="sleetedBookingIds" [taxType]="taxType" [partyInfo]="partyInfo"></app-mbilling>
 </div>
 
 
@@ -245,7 +245,7 @@
     </div>
     <div class="flex justify-end gap-3 mt-6">
       <button pButton type="button" (click)="saveSelectedDuties()" icon="pi pi-save" class="p-button-primary">
-        Calculate
+        Save
       </button>
 
       <!-- Creative Close Button -->

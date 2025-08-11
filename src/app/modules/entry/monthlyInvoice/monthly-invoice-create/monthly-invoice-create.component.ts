@@ -67,6 +67,8 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
     private _helperService: HelperService
   ) { }
 
+  sleetedBookingIds: any[] =[];
+  taxtype: any = 'cgst';
   ngOnInit(): void {
     this.commonApiService.registerPageHandler((msg) => {
       let rt = false;
@@ -97,6 +99,9 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
           rt = true;
         } else if (msg.for === 'minvoice.getMonthlySetupCode') {
           this.monthlySetupData = msg.data;
+          rt = true;
+        }else if (msg.for === 'getPartyById') {
+          this.partyInfo = msg.data;
           rt = true;
         }
       }
@@ -166,6 +171,8 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
   totalTimeText: string = '';
   extraHour: number = 0;
   totalExtraHour: number = 0;
+
+  partyInfo: any;
 
   invoices = [
     {
@@ -449,6 +456,7 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
       this.invoiceForm.get('party_id')?.setValue(party.value.id);
       this.checkAndLoadDutyTable();
     }
+    this._helperService.getPartyById(party.value.id);
   }
 
   selectedMontySetupCode: any;
@@ -504,6 +512,7 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
     const selected = this.dutyTableData.filter((item: any) => item.selected);
     this.mainDutyList = [...this.mainDutyList, ...selected.map(item => ({ ...item }))];
     this.displayDuty = false;
+    this.sleetedBookingIds = this.sleetedBookingIds.concat(selected.map((item: any) => item.id));
   }
 
   addDutySection(){
@@ -523,5 +532,10 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
       return;
     }
     this.displayDuty = true
+  }
+
+  onTaxTypeChange(event: any) {
+    this.taxType = event;
+    this.cdr.detectChanges();
   }
 }

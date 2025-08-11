@@ -24,6 +24,18 @@ export class HelperService extends BaseService {
         this.call('helper.getCompanyDropdown', {});
     }
 
+    getPartyById(party_id: number) {
+        this.call('helper.getPartyById', {
+            party_id: party_id
+        });
+    }
+
+    getOtherChargesForBookingList(booking_ids: any[]) {
+        this.call('helper.getOtherChargesForBookingList', {
+            booking_ids: booking_ids
+        });
+    }
+
 
 
     protected handleMessage(msg: any): boolean {

@@ -68,6 +68,7 @@ export class MbillingComponent {
     private _minvoice: MinvoiceService,
     private _helperService: HelperService
   ) { }
+  @Input() sleetedBookingIds?: any[];
 
   charges = [
     { name: 'Fuel Surcharge', amount: 200 },
@@ -79,14 +80,17 @@ export class MbillingComponent {
   showTotalHour: any = 0;
   showTotalKm: any = 0;
 
-  totalPaybleAmaunt: any =0;
+  totalPaybleAmaunt: any = 0;
   totalPaybleGSTAmount: any = 0;
 
   totalPaybleSGSTAmount: any = 0;
   totalPaybleCGSTAmount: any = 0;
   totalPaybleIGSTAmount: any = 0;
 
-  aboveAdvance: any =0;
+  aboveAdvance: any = 0;
+  otherCharges: { taxable: any[], nonTaxable: any[] } = { taxable: [], nonTaxable: [] };
+  taxableSumCharges: number = 0;
+  nonTaxableSumCharges: number = 0;
   ngOnInit(): void {
     this.carTypeMaster.registerPageHandler((msg) => {
       let rt = false;
@@ -129,24 +133,54 @@ export class MbillingComponent {
         } else if (msg.for === 'minvoice.getMonthlySetupCode') {
           this.monthlySetupData = msg.data;
         }
+        else if (msg.for === 'getOtherChargesForBookingList') {
+          this.otherCharges.taxable = msg.data.taxable;
+          // sum Amount of taxable charges
+          this.taxableSumCharges = this.otherCharges.taxable.reduce((total: number, charge: any) => total + charge.Amount, 0);
+          this.otherCharges.nonTaxable = msg.data.nonTaxable;
+          // sum Amount of non taxable charges
+          this.nonTaxableSumCharges = this.otherCharges.nonTaxable.reduce((total: number, charge: any) => total + charge.Amount, 0);
+          console.log(this.otherCharges)
+          rt = true
+        }
       }
       if (rt == false) {
         console.log(msg);
       }
       return rt;
     });
+    this.Cgst = this.partyInfo.CGST;
+    this.Sgst = this.partyInfo.SGST;
+    this.igst = this.partyInfo.IGST;
+    console.log(this.partyInfo);
     this.getAllMonthlySetupCode();
-
   }
 
   @Input() selectedDuties: any[] = [];
   @Input() mainDutyList: any[] = [];
   @Input() invoiceForm!: FormGroup;
+  @Input() taxType: any;
+  @Input() partyInfo:any;
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['mainDutyList']) {
     }
     if (changes['selectedDuties']) {
+    }
+    if (changes['sleetedBookingIds']) {
+      this.sleetedBookingIds = changes['sleetedBookingIds'].currentValue;
+      this.getOtherChargesById()
+
+    }
+    if (changes['taxType']) {
+      this.taxType = changes['taxType'].currentValue;
+    }
+    if (changes['partyInfo']) {
+      this.partyInfo = changes['partyInfo'].currentValue;
+      this.Sgst = this.partyInfo.SGST;
+      this.Cgst = this.partyInfo.CGST;
+      this.igst = this.partyInfo.IGST;
+      this.calNetAmount();
     }
   }
 
@@ -577,6 +611,7 @@ export class MbillingComponent {
     this.billTotal2 = this.extrakm * this.rate2;
 
     this.totalPaybleAmaunt = (this.Amount + this.extaHAmount + this.totalextraKmRate)
+    this.calNetAmount();
   }
 
   getBillingFormData() {
@@ -648,11 +683,10 @@ export class MbillingComponent {
     // Check if IGST percentage is provided
     if (igstPercentage > 0) {
       const igstAmount = (amount * igstPercentage) / 100;
-      this.totalPaybleIGSTAmount = igstAmount;
+      this.totalPaybleIGSTAmount = igstAmount.toFixed(2);
     } else {
       this.totalPaybleIGSTAmount = 0; // If no IGST percentage provided, return 0
     }
-    this.calGST();
   }
 
   calculateCGST() {
@@ -661,31 +695,87 @@ export class MbillingComponent {
     // Check if CGST percentage is provided
     if (cgstPercentage > 0) {
       const cgstAmount = (amount * cgstPercentage) / 100;
-      this.totalPaybleCGSTAmount = cgstAmount;
+      this.totalPaybleCGSTAmount = cgstAmount.toFixed(2);
     } else {
-      this.totalPaybleCGSTAmount =  0; // If no CGST percentage provided, return 0
+      this.totalPaybleCGSTAmount = 0; // If no CGST percentage provided, return 0
     }
-    this.calGST()
-}
-
-calculateSGST() {
-  let sgstPercentage = Number(this.Sgst);
-  let amount = this.totalPaybleAmaunt;
-  // Check if SGST percentage is provided
-  if (sgstPercentage > 0) {
-    const sgstAmount = (amount * sgstPercentage) / 100;
-    this.totalPaybleSGSTAmount = sgstAmount;
-  } else {
-    this.totalPaybleSGSTAmount =  0; // If no SGST percentage provided, return 0
   }
-  this.calGST()
+
+  calculateSGST() {
+    let sgstPercentage = Number(this.Sgst);
+    let amount = (this.totalPaybleAmaunt + this.taxableSumCharges);
+    // Check if SGST percentage is provided
+    if (sgstPercentage > 0) {
+      const sgstAmount = (amount * sgstPercentage) / 100;
+      this.totalPaybleSGSTAmount = sgstAmount.toFixed(2);
+    } else {
+      this.totalPaybleSGSTAmount = 0; // If no SGST percentage provided, return 0
+    }
+  }
+
+async calNetAmount() {
+  // Ensure all variables involved in calculation are numbers
+  this.calculateGST(); // Assuming this method ensures numbers are set
+
+  // Ensure all the values are numbers and not strings
+  const totalPaybleCGSTAmount = Number(this.totalPaybleCGSTAmount);
+  const totalPaybleSGSTAmount = Number(this.totalPaybleSGSTAmount);
+  const totalPaybleAmaunt = Number(this.totalPaybleAmaunt);
+  const nonTaxableSumCharges = Number(this.nonTaxableSumCharges);
+  const taxableSumCharges = Number(this.taxableSumCharges);
+  const totalPaybleIGSTAmount = Number(this.totalPaybleIGSTAmount);
+  const aboveAdvance = Number(this.aboveAdvance);
+
+  // Perform the calculation based on the taxType
+  if (this.taxType === 'cgst') {
+    // Calculate total for CGST
+    this.totalPaybleGSTAmount = totalPaybleCGSTAmount + totalPaybleSGSTAmount + totalPaybleAmaunt + nonTaxableSumCharges + taxableSumCharges;
+  } else {
+    // Calculate total for IGST
+    this.totalPaybleGSTAmount = totalPaybleIGSTAmount + totalPaybleAmaunt + nonTaxableSumCharges + taxableSumCharges;
+  }
+
+  console.log('Calculated Total Payable GST Amount:', this.totalPaybleGSTAmount);
+
+  // Round off the totalPaybleGSTAmount
+  this.roundOff = await this.roundOffValue(this.totalPaybleGSTAmount);
+  console.log('Rounded off value:', this.roundOff);
+
+  // Final net amount calculation after subtracting the advance amount
+  this.totalPaybleGSTAmount = this.roundOff - aboveAdvance;
+
+  console.log('Final Total Payable GST Amount:', this.totalPaybleGSTAmount);
 }
 
-calGST(){
-  this.totalPaybleGSTAmount = (this.totalPaybleCGSTAmount + this.totalPaybleIGSTAmount + this.totalPaybleSGSTAmount);
-}
 
+  getOtherChargesById() {
+    if (this.sleetedBookingIds && this.sleetedBookingIds.length > 0) {
+      this._helperService.getOtherChargesForBookingList(this.sleetedBookingIds)
+    }
+  }
 
+  getSlipNoByBookingId(bookingId: number): string {
+    const duty = this.mainDutyList.find(duty => duty.id === bookingId);
+    return duty ? duty.SlipNo : 'Not Available';  // Return 'Not Available' if not found
+  }
+
+  roundOffValue(value: number): number {
+    if (value % 1 < 0.5) {
+      return Math.floor(value);  // Round down if less than 0.5
+    } else {
+      return Math.ceil(value);   // Round up if greater or equal to 0.5
+    }
+  }
+
+  calculateGST(){
+    if (this.taxType == 'cgst') {
+      this.calculateCGST();
+      this.calculateSGST();
+    }
+    else{
+      this.calculateIGST();
+    }
+  }
 
 
 
