@@ -4,11 +4,11 @@ import { DynamicTableComponent } from '../../../components/dynamic-table/dynamic
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { globalRequestHandler } from '../../../utils/global';
-import { monthlyDutyMasterService } from '../../../services/monthlyDutyMaster';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { commonService } from '../../../services/comonApi.service';
+import { monthlyDutyMasterService } from '../../../services/monthlyDutyMaster.service';
 
 @Component({
   selector: 'app-monthly-duty-master',
