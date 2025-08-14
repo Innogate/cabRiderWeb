@@ -82,6 +82,7 @@ export class CompanyMasterComponent implements OnInit,OnDestroy,AfterViewInit {
       case 'edit':
         this.showForm = true;
         this.isEditMode = true;
+        this.heading = 'UPDATE COMPANY';
         console.log("edit");
         const  partyname = this.partyname.find(partyname =>partyname.Id == event.data.party_name);
         this.form.patchValue({
@@ -94,6 +95,7 @@ export class CompanyMasterComponent implements OnInit,OnDestroy,AfterViewInit {
         break;
       case 'add':
         this.showForm = true;
+        this.heading = 'ADD COMPANY';
         this.isEditMode = false;
         console.log("add");
         this.form.reset();
