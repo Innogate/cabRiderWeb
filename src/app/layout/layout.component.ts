@@ -108,6 +108,7 @@ export class LayoutComponent {
     { label: 'Profile', icon: 'pi pi-user', command: () => this.goToProfile() },
     { label: 'Settings', icon: 'pi pi-cog', command: () => this.goToSettings() },
     { label: 'Branch', icon: 'pi pi-sitemap',routerLink: 'master/branch-master', command: () => this.goToBranch() },
+    { label: 'Company', icon: 'pi pi-building',routerLink: 'master/company-master', command: () => this.goToCompany() },
     { separator: true },
     { label: 'Logout', icon: 'pi pi-sign-out', command: () => this.logout() }
   ];
@@ -131,6 +132,10 @@ export class LayoutComponent {
   goToBranch() {
      // Navigate to branch
     console.log("Go to Branch");
+  }
+
+  goToCompany() {
+    console.log("go to console");
   }
 
 }
