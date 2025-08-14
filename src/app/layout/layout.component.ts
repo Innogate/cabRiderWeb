@@ -107,6 +107,7 @@ export class LayoutComponent {
   userMenuItems = [
     { label: 'Profile', icon: 'pi pi-user', command: () => this.goToProfile() },
     { label: 'Settings', icon: 'pi pi-cog', command: () => this.goToSettings() },
+    { label: 'Company', icon: 'pi pi-building',routerLink: 'master/company-master', command: () => this.goToCompany() },
     { separator: true },
     { label: 'Logout', icon: 'pi pi-sign-out', command: () => this.logout() }
   ];
@@ -125,6 +126,10 @@ export class LayoutComponent {
   goToSettings() {
     // Navigate to settings
     console.log("Go to Settings");
+  }
+
+  goToCompany() {
+    console.log("go to console");
   }
 
 }
