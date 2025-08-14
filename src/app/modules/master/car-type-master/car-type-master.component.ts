@@ -9,11 +9,12 @@ import { globalRequestHandler } from '../../../utils/global';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { SidebarModule } from 'primeng/sidebar';
+import { CommonModule } from '@angular/common';
 
 
 @Component({
   selector: 'app-car-type-master',
-  imports: [DynamicTableComponent, DialogModule, ReactiveFormsModule, InputTextModule, ButtonModule, SidebarModule],
+  imports: [DynamicTableComponent, DialogModule, ReactiveFormsModule, InputTextModule, ButtonModule, SidebarModule, CommonModule],
   templateUrl: './car-type-master.component.html',
   styleUrls: ['./car-type-master.component.css']
 })
@@ -34,8 +35,8 @@ export class CarTypeMasterComponent implements OnInit, OnDestroy, AfterViewInit 
     this.form = this.fb.group({
       id: [],
       car_type: ['', Validators.required],
-      index_order: [0, [Validators.required]],
-      sitting_capacity: [0, Validators.required]
+      index_order: [0, [Validators.required, Validators.pattern(/^[0-9]+$/)]],
+      sitting_capacity: [0, [Validators.required, Validators.pattern(/^[0-9]+$/), Validators.min(3), Validators.max(100)]],
     });
   }
 
