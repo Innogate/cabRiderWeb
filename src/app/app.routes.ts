@@ -30,6 +30,8 @@ import { AddNewVendorInvoiceComponent } from './modules/entry/vendor-invoice-ent
 import { InvoiceEyesShowComponent } from './components/invoice-eyes-show/invoice-eyes-show.component';
 import { UserListMasterComponent } from './modules/master/user-list-master/user-list-master.component';
 import { MonthlyDutyMasterComponent } from './modules/master/monthly-duty-master/monthly-duty-master.component';
+import { branchMasterService } from './services/branchMasterService';
+import { BranchMasterComponent } from './modules/master/branch-master/branch-master.component';
 
 export const routes: Routes = [
     {
@@ -68,6 +70,7 @@ export const routes: Routes = [
             { path: 'master/user-master', component: UserListMasterComponent, canActivate: [AuthGuard] },
             { path: 'master/guest-list-master', component: GuestListMasterComponent, canActivate: [AuthGuard] },
             { path: 'master/monthly-duty', component: MonthlyDutyMasterComponent, canActivate: [AuthGuard] },
+            { path: 'master/branch-master', component: BranchMasterComponent, canActivate: [AuthGuard] },
         ],
         canActivate: [AuthGuard]
     },
