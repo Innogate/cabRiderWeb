@@ -9,21 +9,25 @@ import { globalRequestHandler } from '../../../utils/global';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { SidebarModule } from 'primeng/sidebar';
+import { CommonModule } from '@angular/common';
 
 
 @Component({
   selector: 'app-car-type-master',
-  imports: [DynamicTableComponent, DialogModule, ReactiveFormsModule, InputTextModule, ButtonModule, SidebarModule],
+  imports: [DynamicTableComponent, DialogModule, ReactiveFormsModule, InputTextModule, ButtonModule, SidebarModule, CommonModule],
   templateUrl: './car-type-master.component.html',
   styleUrls: ['./car-type-master.component.css']
 })
 export class CarTypeMasterComponent implements OnInit, OnDestroy, AfterViewInit {
 
 
-  users: any[] = [];
+  cartypelist: any[] = [];
   showForm: boolean = false;
   form!: FormGroup;
   isLoading: boolean = true;
+  heading: string = '';
+  tablevalue: any;
+
 
   constructor(
     private carTypeMasterService: carTypeMasterService,
@@ -34,8 +38,8 @@ export class CarTypeMasterComponent implements OnInit, OnDestroy, AfterViewInit 
     this.form = this.fb.group({
       id: [],
       car_type: ['', Validators.required],
-      index_order: [0, [Validators.required]],
-      sitting_capacity: [0, Validators.required]
+      index_order: [0, [Validators.required, Validators.pattern(/^[0-9]+$/)]],
+      sitting_capacity: [0, [Validators.required, Validators.pattern(/^[0-9]+$/), Validators.min(3), Validators.max(100)]],
     });
   }
 
@@ -43,16 +47,29 @@ export class CarTypeMasterComponent implements OnInit, OnDestroy, AfterViewInit 
   async ngOnInit(): Promise<void> {
 
     this.carTypeMasterService.registerPageHandler((msg) => {
-      console.log(msg);
       globalRequestHandler(msg, this.router, this.messageService);
       if (msg.for == 'CarTypeGate') {
-        this.users = msg.data; // or however your API responds
+        this.cartypelist = msg.data; // or however your API responds
         this.isLoading = false;
       } else if (msg.for == 'CarTypeAddUpdate') {
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: msg.StatusMessage });
-        this.showForm = false;
-      } else if(msg.for == 'CarTypeDel'){
-        this.messageService.add({severity: 'success', summary: 'Success', detail: msg.StatusMessage})
+        if (msg.StatusID === 1) {
+          const updated = msg.data[0]; 
+          this.showForm = false;
+          this.form.reset();
+          const index = this.cartypelist.findIndex((v: any) => v.id == updated.id);
+          if (index !== -1) {
+            this.cartypelist[index] = { ...updated };
+          } else {
+            this.cartypelist.push(updated)
+          }
+        } 
+      } else if (msg.for == 'CarTypeDel') {
+        if (msg.StatusID === 1) {
+          const index = this.cartypelist.findIndex((v: any) => v.id == this.tablevalue.id);
+          if (index !== -1) {
+            this.cartypelist.splice(index, 1);
+          }
+        } 
       }
       return true;
     });
@@ -82,20 +99,13 @@ export class CarTypeMasterComponent implements OnInit, OnDestroy, AfterViewInit 
   ];
 
 
-
-
-  // Action buttons configuration
   actions = [
-    // { icon: 'pi pi-eye', action: 'view', styleClass: 'p-button-info' },
     { icon: 'pi pi-pencil', action: 'edit', styleClass: 'p-button-warning' },
     { icon: 'pi pi-trash', action: 'delete', styleClass: 'p-button-danger' }
   ];
 
   // Handle search events
   handleSearch(searchTerm: string) {
-    console.log('Searching for:', searchTerm);
-    // Implement your search logic here
-    // Typically you would filter your data array
   }
 
   // Handle action events
@@ -105,13 +115,17 @@ export class CarTypeMasterComponent implements OnInit, OnDestroy, AfterViewInit 
         this.viewUser(event.data);
         break;
       case 'edit':
+        this.heading = 'UPDATE NEW CAR';
         this.editUser(event.data);
         break;
       case 'delete':
         this.deleteUser(event.data);
+        this.tablevalue = event.data
         break;
       case 'add':
+        this.heading = 'ADD NEW CAR';
         this.add(event.data);
+        this.form.reset();
         break
 
     }
@@ -119,7 +133,6 @@ export class CarTypeMasterComponent implements OnInit, OnDestroy, AfterViewInit 
 
   onSubmit() {
     if (this.form?.valid) {
-      console.log(this.form.value);
       this.messageService.add({ severity: 'contrast', summary: 'Info', detail: 'Please wait processing...' });
       this.carTypeMasterService.CreateUpdate(this.form.value);
       this.form.reset()
@@ -127,18 +140,16 @@ export class CarTypeMasterComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   private viewUser(user: any) {
-    console.log('Viewing user:', user);
-    // Implement view logic
   }
 
   private editUser(user: any) {
     if (user) {
       this.showForm = !this.showForm;
+      this.form.reset();
       this.form.patchValue({
         ...user
       })
     }
-    // Implement edit logic
   }
 
   private deleteUser(user: any) {
