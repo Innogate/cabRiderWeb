@@ -3,11 +3,9 @@ import {
   ChangeDetectorRef,
   Component,
   Input,
-  OnInit,
   SimpleChanges,
 } from '@angular/core';
 import {
-  FormBuilder,
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
@@ -29,8 +27,6 @@ import { carTypeMasterService } from '../../services/carTypeMaster.service';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { commonService } from '../../services/comonApi.service';
-import { AutoComplete } from 'primeng/autocomplete';
-import { InvoiceService } from '../../services/invoice.service';
 import { MinvoiceService } from '../../services/minvoice.service';
 import { HelperService } from '../../services/helper.service';
 
@@ -58,23 +54,58 @@ import { HelperService } from '../../services/helper.service';
 })
 export class MbillingComponent {
   constructor(
-    private fb: FormBuilder,
     private carTypeMaster: carTypeMasterService,
     private router: Router,
     private messageService: MessageService,
     private commonApiService: commonService,
     private cdr: ChangeDetectorRef,
-    private _invoice: InvoiceService,
     private _minvoice: MinvoiceService,
     private _helperService: HelperService
   ) { }
   @Input() sleetedBookingIds?: any[];
 
-  charges = [
-    { name: 'Fuel Surcharge', amount: 200 },
-    { name: 'Driver Allowance', amount: 100 },
-  ];
-  // added 
+  // Column 1
+  fixedAmount: any;
+  extraHours: any;
+  extrakm: any;
+  exceptDayHrs: any;
+  extraDaykm: any;
+  fuelAmount: any;
+  Sgst: any;
+
+  // Column 2
+  numDays: any;
+  rate1: any;
+  rate2: any;
+  rate3: any;
+  rate4: any;
+  mobileAmount: any;
+  Cgst: any;
+
+  // Column 3
+  Amount: any;
+  extaHAmount: any;
+  billTotal2: any;
+  amount3: any;
+  amount2: any;
+  desc2: string = '';
+  igst: any;
+  isParkingTaxApplied: boolean = false;
+
+  // Column 4
+  billTotal: any;
+  advance: any;
+  serviceTax: any;
+  eduCess: any;
+  sbCess: any;
+  roundOff: any;
+  amountPayable: any;
+
+  // Extra
+  desc: string = '';
+
+
+  // added
   totalKm: number = 0;
   totalHours: number = 0;
   showTotalHour: any = 0;
@@ -91,46 +122,13 @@ export class MbillingComponent {
   otherCharges: { taxable: any[], nonTaxable: any[] } = { taxable: [], nonTaxable: [] };
   taxableSumCharges: number = 0;
   nonTaxableSumCharges: number = 0;
+
   ngOnInit(): void {
     this.carTypeMaster.registerPageHandler((msg) => {
       let rt = false;
       rt = globalRequestHandler(msg, this.router, this.messageService);
       if (msg.for) {
-        if (msg.for === 'CarTypeGate') {
-          this.carTypes = msg.data;
-          this.mapCarAndDutyTypesToDutyData();
-          rt = true;
-        } else if (msg.for === 'getAllCityDropdown') {
-          this.cities = msg.data;
-          const city = this.cities.find((c: any) => c.Id == 1);
-          if (city) {
-          } else {
-          }
-          rt = true;
-        } else if (msg.for === 'branchDropdown') {
-          this.branches = msg.data;
-          rt = true;
-        } else if (msg.for === 'partyDropdown') {
-          this.PartyName = msg.data;
-          const party = this.PartyName.find((c: any) => c.id === 1398);
-          if (party) {
-          } else {
-          }
-          rt = true;
-        } else if (msg.for === 'companyDropdown') {
-          this.companies = msg.data;
-          const company = this.companies.find((c: any) => c.Id == 81);
-          if (company) {
-          }
-          rt = true;
-        } else if (msg.for === 'minvoice.getMonthlyBookingList') {
-          this.dutyTableData = msg.data || [];
-          this.totalRecords = msg.total || 0;
-          this.mapCarAndDutyTypesToDutyData();
-          this.tableLoading = false;
-          this.cdr.detectChanges();
-          rt = true;
-        } else if (msg.for === 'minvoice.getMonthlySetupCode') {
+        if (msg.for === 'minvoice.getMonthlySetupCode') {
           this.monthlySetupData = msg.data;
         }
         else if (msg.for === 'getOtherChargesForBookingList') {
@@ -184,28 +182,8 @@ export class MbillingComponent {
     }
   }
 
-  searchText: any;
-  selectedShow: any;
-  show = [10, 50, 100, 500, 1000, 2000];
-  displayDuty = false;
-
-  dutyTypes = [
-    { label: 'DISPOSAL', value: '1' },
-    { label: 'OUTSTATION', value: '2' },
-    { label: 'PICKUP', value: '3' },
-    { label: 'DROP', value: '4' },
-  ];
-
-  companies: any[] = [];
-  branches: any[] = [];
-  parties: any[] = [];
-  cities: any[] = [];
-  carTypes: any[] = [];
   monthlySetupData: any[] = [];
 
-  dutyTableData: any[] = [];
-  tableLoading = false;
-  totalRecords = 0;
   totalSelectedDays: number = 0;
   totalSelectedKm: number = 0;
   totalCalculatedAmount: number = 0;
@@ -219,97 +197,12 @@ export class MbillingComponent {
 
   // DODO
   selectedMonthlyDuty?: any;
- isCalculated: boolean = false;
-  private mapCarAndDutyTypesToDutyData() {
-    if (!this.dutyTableData?.length) return;
+  isCalculated: boolean = false;
 
-    this.dutyTableData.forEach((duty: any) => {
-      //  Car Type Mapping
-      const carType = this.carTypes.find((c: any) => c.id == duty.CarType);
-      duty.CarTypeName = carType ? carType.car_type : '';
-
-      //  Duty Type Mapping
-      const dutyType = this.dutyTypes.find(
-        (d: any) => d.value == duty.DutyType
-      );
-      duty.DutyTypeName = dutyType ? dutyType.label : '';
-
-      //  Date-Time Handling
-      if (duty.GarageOutDate) {
-        const out = new Date(duty.GarageOutDate);
-        duty.fromDate = out.toISOString().split('T')[0];
-        duty.fromTime = out.toTimeString().slice(0, 5);
-      }
-
-      if (duty.GarageInDate) {
-        const inDate = new Date(duty.GarageInDate);
-        duty.toDate = inDate.toISOString().split('T')[0];
-        duty.toTime = inDate.toTimeString().slice(0, 5);
-      }
-    });
-
-    this.cdr.detectChanges();
-  }
-
-  checkAndLoadDutyTable() {
-    const party_id = Number(this.invoiceForm.get('party_id')?.value);
-    const branch_id = Number(this.invoiceForm.get('branch_id')?.value);
-    const city_id = Number(this.invoiceForm.get('city_id')?.value);
-    const company_id = Number(this.invoiceForm.get('company_id')?.value);
-
-    // Call only when all values are valid numbers and not NaN
-    if (
-      !isNaN(party_id) &&
-      !isNaN(branch_id) &&
-      !isNaN(city_id) &&
-      !isNaN(company_id)
-    ) {
-      this.loadDutyTable(party_id, branch_id, city_id, company_id);
-    }
-  }
-
-  loadDutyTable(
-    partyId: number,
-    branchId: number,
-    cityId: number,
-    companyId: number
-  ) {
-    if (!partyId || !branchId || !cityId || !companyId) {
-      this.messageService.add({
-        severity: 'warn',
-        summary: 'Missing Selection',
-        detail: 'Please select Party, Branch, and City.',
-      });
-      return;
-    }
-
-    const payload = {
-      party_id: partyId,
-      branch_id: branchId,
-      from_city_id: cityId,
-      company_id: companyId,
-    };
-
-    this.tableLoading = true;
-    this._minvoice.getMonthlyBookingList(payload);
-  }
-
-  isEditMode: boolean = false;
-
-  selectedBranchModel: any = null;
-  selectedPartyModel: any = null;
-  selectedCityModel: any = null;
 
   // AutoComplete
-  PartyName: any[] = [];
-  filteredPartyName: any[] = [];
-  filteredCities: any[] = [];
-  companyList: any[] = [];
-  filteredCompanies: any[] = [];
-
   filteredCodes: any[] = [];
   selectedCode: any[] = [];
-  selectedCompany: any[] = [];
 
   filterCodes(event: any) {
     const query = event.query?.toLowerCase() || '';
@@ -327,50 +220,6 @@ export class MbillingComponent {
   getAllMonthlySetupCode() {
     this.commonApiService.getMonthlySetupCode({});
   }
-
-  //ADD DUTY
-
-  // AFTER ADD DUTY UI
-
-  // Column 1
-  fixedAmount: any;
-  extraHours: any;
-  extrakm: any;
-  exceptDayHrs: any;
-  extraDaykm: any;
-  fuelAmount: any;
-  Sgst: any;
-
-  // Column 2
-  numDays: any;
-  rate1: any;
-  rate2: any;
-  rate3: any;
-  rate4: any;
-  mobileAmount: any;
-  Cgst: any;
-
-  // Column 3
-  Amount: any;
-  extaHAmount: any;
-  billTotal2: any;
-  amount3: any;
-  amount2: any;
-  desc2: string = '';
-  igst: any;
-  isParkingTaxApplied: boolean = false;
-
-  // Column 4
-  billTotal: any;
-  advance: any;
-  serviceTax: any;
-  eduCess: any;
-  sbCess: any;
-  roundOff: any;
-  amountPayable: any;
-
-  // Extra
-  desc: string = '';
 
   calculateTotals(selected: any[]) {
     const setupCode = this.invoiceForm.get('SetupCode')?.value;
@@ -528,10 +377,10 @@ export class MbillingComponent {
     this.totalSelectedKm = totalKm; //  Store for use elsewhere
 
     console.log('Total selected kilometers:', totalKm);
-    console.log(' Total Time:', this.totalTimeText);
-    console.log(' Total Days:', totalDays);
-    console.log(' Total Amount:', totalAmount);
-    console.log(' Extra Hour:', this.extraHour);
+    console.log('Total Time:', this.totalTimeText);
+    console.log('Total Days:', totalDays);
+    console.log('Total Amount:', totalAmount);
+    console.log('Extra Hour:', this.extraHour);
   }
 
   calculateExtraHours(
@@ -589,7 +438,6 @@ export class MbillingComponent {
 
     return extraHours;
   }
-
 
 
 
@@ -780,7 +628,6 @@ async calNetAmount() {
       this.calculateIGST();
     }
   }
-
 
 
 }
