@@ -47,42 +47,29 @@ export class CarTypeMasterComponent implements OnInit, OnDestroy, AfterViewInit 
   async ngOnInit(): Promise<void> {
 
     this.carTypeMasterService.registerPageHandler((msg) => {
-      console.log(msg);
       globalRequestHandler(msg, this.router, this.messageService);
       if (msg.for == 'CarTypeGate') {
         this.cartypelist = msg.data; // or however your API responds
         this.isLoading = false;
       } else if (msg.for == 'CarTypeAddUpdate') {
         if (msg.StatusID === 1) {
-          // this.messageService.add({ severity: 'success', summary: 'Success', detail: msg.StatusMessage });
-          const updated = msg.data[0];  // access the first item in data array
-
-          
+          const updated = msg.data[0]; 
           this.showForm = false;
           this.form.reset();
-
           const index = this.cartypelist.findIndex((v: any) => v.id == updated.id);
           if (index !== -1) {
             this.cartypelist[index] = { ...updated };
           } else {
             this.cartypelist.push(updated)
           }
-        } else if(msg.StatusID === 2){
-          // this.messageService.add({ severity: 'error', summary: 'Error', detail: "Car Type Name Already Exist" });
-        } else {
-          // this.messageService.add({ severity: 'error', summary: 'Error', detail: msg.StatusMessage });
-        }
-
+        } 
       } else if (msg.for == 'CarTypeDel') {
         if (msg.StatusID === 1) {
           const index = this.cartypelist.findIndex((v: any) => v.id == this.tablevalue.id);
           if (index !== -1) {
             this.cartypelist.splice(index, 1);
           }
-          // this.messageService.add({ severity: 'success', summary: 'Success', detail: msg.StatusMessage })
-        } else {
-          // this.messageService.add({ severity: 'error', summary: 'Error', detail: "Cannot Delete data" })
-        }
+        } 
       }
       return true;
     });
@@ -112,20 +99,13 @@ export class CarTypeMasterComponent implements OnInit, OnDestroy, AfterViewInit 
   ];
 
 
-
-
-  // Action buttons configuration
   actions = [
-    // { icon: 'pi pi-eye', action: 'view', styleClass: 'p-button-info' },
     { icon: 'pi pi-pencil', action: 'edit', styleClass: 'p-button-warning' },
     { icon: 'pi pi-trash', action: 'delete', styleClass: 'p-button-danger' }
   ];
 
   // Handle search events
   handleSearch(searchTerm: string) {
-    console.log('Searching for:', searchTerm);
-    // Implement your search logic here
-    // Typically you would filter your data array
   }
 
   // Handle action events
@@ -153,7 +133,6 @@ export class CarTypeMasterComponent implements OnInit, OnDestroy, AfterViewInit 
 
   onSubmit() {
     if (this.form?.valid) {
-      console.log(this.form.value);
       this.messageService.add({ severity: 'contrast', summary: 'Info', detail: 'Please wait processing...' });
       this.carTypeMasterService.CreateUpdate(this.form.value);
       this.form.reset()
@@ -161,8 +140,6 @@ export class CarTypeMasterComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   private viewUser(user: any) {
-    console.log('Viewing user:', user);
-    // Implement view logic
   }
 
   private editUser(user: any) {
@@ -173,7 +150,6 @@ export class CarTypeMasterComponent implements OnInit, OnDestroy, AfterViewInit 
         ...user
       })
     }
-    // Implement edit logic
   }
 
   private deleteUser(user: any) {
