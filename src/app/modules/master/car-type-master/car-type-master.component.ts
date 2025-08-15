@@ -10,6 +10,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { SidebarModule } from 'primeng/sidebar';
 import { CommonModule } from '@angular/common';
+import { SweetAlertService } from '../../../services/sweet-alert.service';
 
 
 @Component({
@@ -33,7 +34,8 @@ export class CarTypeMasterComponent implements OnInit, OnDestroy, AfterViewInit 
     private carTypeMasterService: carTypeMasterService,
     private messageService: MessageService,
     private router: Router,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private swal: SweetAlertService
   ) {
     this.form = this.fb.group({
       id: [],
@@ -53,7 +55,7 @@ export class CarTypeMasterComponent implements OnInit, OnDestroy, AfterViewInit 
         this.isLoading = false;
       } else if (msg.for == 'CarTypeAddUpdate') {
         if (msg.StatusID === 1) {
-          const updated = msg.data[0]; 
+          const updated = msg.data[0];
           this.showForm = false;
           this.form.reset();
           const index = this.cartypelist.findIndex((v: any) => v.id == updated.id);
@@ -62,14 +64,14 @@ export class CarTypeMasterComponent implements OnInit, OnDestroy, AfterViewInit 
           } else {
             this.cartypelist.push(updated)
           }
-        } 
+        }
       } else if (msg.for == 'CarTypeDel') {
         if (msg.StatusID === 1) {
           const index = this.cartypelist.findIndex((v: any) => v.id == this.tablevalue.id);
           if (index !== -1) {
             this.cartypelist.splice(index, 1);
           }
-        } 
+        }
       }
       return true;
     });
@@ -109,7 +111,7 @@ export class CarTypeMasterComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   // Handle action events
-  handleAction(event: { action: string, data: any }) {
+  async handleAction(event: { action: string, data: any }) {
     switch (event.action) {
       case 'view':
         this.viewUser(event.data);
@@ -119,8 +121,13 @@ export class CarTypeMasterComponent implements OnInit, OnDestroy, AfterViewInit 
         this.editUser(event.data);
         break;
       case 'delete':
-        this.deleteUser(event.data);
-        this.tablevalue = event.data
+        const status = await this.swal.confirmDelete("You want to delete this !");
+        if (status) {
+                this.messageService.add({ severity: 'contrast', summary: 'Info', detail: 'Please wait processing...' });
+
+          this.deleteUser(event.data);
+          this.tablevalue = event.data
+        }
         break;
       case 'add':
         this.heading = 'ADD NEW CAR';

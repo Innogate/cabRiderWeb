@@ -19,7 +19,6 @@ export class carTypeMasterService extends BaseService {
   }
 
   DeleteCartype(payload: any){
-    console.log("payload", payload)
     this.call('master.deleteCartype', payload);
   }
 
