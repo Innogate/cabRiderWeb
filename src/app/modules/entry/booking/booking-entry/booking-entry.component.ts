@@ -68,6 +68,45 @@ export class BookingEntryComponent implements OnInit {
     private partyRateMasterService: partyRateMasterService,
     private fb: FormBuilder
   ) {}
+
+
+   ngOnInit(): void {
+    this.carTypeMaster.registerPageHandler((msg) => {
+      let rt = false;
+      rt = globalRequestHandler(msg, this.router, this.messageService);
+      if (msg.for) {
+        if (msg.for === 'CarTypeGate') {
+          this.carTypes = msg.data;
+          rt = true;
+        } else if (msg.for === 'getAllCityDropdown') {
+          this.cities = msg.data;
+          rt = true;
+        } else if (msg.for === 'getAllBranchDropdown') {
+          this.branches = msg.data;
+          rt = true;
+        } else if (msg.for === 'getAllPartyDropdown') {
+          this.PartyName = msg.data;
+          rt = true;
+        } else if (msg.for === 'getallpartyrate') {
+          this.selectRates = msg.data;
+          console.log(this.selectRates);
+          rt = true;
+        }
+      }
+      if (rt == false) {
+        console.log(msg);
+      }
+      return rt;
+    });
+
+    this.getCarTypeName();
+    this.getAllCity();
+    this.getAllBranches();
+    this.getAllParty();
+    this.init();
+  }
+
+
   totalHours = 0;
   totalKM = 0;
   availableRates: any[] | undefined;
@@ -268,41 +307,7 @@ guestList = [
     });
   }
 
-  ngOnInit(): void {
-    this.carTypeMaster.registerPageHandler((msg) => {
-      let rt = false;
-      rt = globalRequestHandler(msg, this.router, this.messageService);
-      if (msg.for) {
-        if (msg.for === 'CarTypeGate') {
-          this.carTypes = msg.data;
-          rt = true;
-        } else if (msg.for === 'getAllCityDropdown') {
-          this.cities = msg.data;
-          rt = true;
-        } else if (msg.for === 'getAllBranchDropdown') {
-          this.branches = msg.data;
-          rt = true;
-        } else if (msg.for === 'getAllPartyDropdown') {
-          this.PartyName = msg.data;
-          rt = true;
-        } else if (msg.for === 'getallpartyrate') {
-          this.selectRates = msg.data;
-          console.log(this.selectRates);
-          rt = true;
-        }
-      }
-      if (rt == false) {
-        console.log(msg);
-      }
-      return rt;
-    });
 
-    this.getCarTypeName();
-    this.getAllCity();
-    this.getAllBranches();
-    this.getAllParty();
-    this.init();
-  }
 
   addGuest() {
     this.postJsonData.push(this.createGuestFormGroup());
