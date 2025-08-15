@@ -136,10 +136,10 @@ export class MbillingComponent {
         else if (msg.for === 'getOtherChargesForBookingList') {
           this.otherCharges.taxable = msg.data.taxable;
           // sum Amount of taxable charges
-          this.taxableSumCharges = this.otherCharges.taxable.reduce((total: number, charge: any) => total + charge.Amount, 0);
+          this.taxableSumCharges = this.otherCharges.taxable.reduce((total: number, charge: any) => total + charge.total_amount, 0);
           this.otherCharges.nonTaxable = msg.data.nonTaxable;
           // sum Amount of non taxable charges
-          this.nonTaxableSumCharges = this.otherCharges.nonTaxable.reduce((total: number, charge: any) => total + charge.Amount, 0);
+          this.nonTaxableSumCharges = this.otherCharges.nonTaxable.reduce((total: number, charge: any) => total + charge.total_amount, 0);
           console.log(this.otherCharges)
           rt = true
         }
@@ -219,7 +219,7 @@ export class MbillingComponent {
 
   // DODO
   selectedMonthlyDuty?: any;
-
+ isCalculated: boolean = false;
   private mapCarAndDutyTypesToDutyData() {
     if (!this.dutyTableData?.length) return;
 
@@ -682,7 +682,7 @@ export class MbillingComponent {
     let amount = this.totalPaybleAmaunt;
     // Check if IGST percentage is provided
     if (igstPercentage > 0) {
-      const igstAmount = (amount * igstPercentage) / 100;
+      const igstAmount = (amount * (igstPercentage/100));
       this.totalPaybleIGSTAmount = igstAmount.toFixed(2);
     } else {
       this.totalPaybleIGSTAmount = 0; // If no IGST percentage provided, return 0
@@ -694,7 +694,7 @@ export class MbillingComponent {
     let amount = this.totalPaybleAmaunt;
     // Check if CGST percentage is provided
     if (cgstPercentage > 0) {
-      const cgstAmount = (amount * cgstPercentage) / 100;
+      const cgstAmount = (amount * (cgstPercentage/100));
       this.totalPaybleCGSTAmount = cgstAmount.toFixed(2);
     } else {
       this.totalPaybleCGSTAmount = 0; // If no CGST percentage provided, return 0
@@ -706,7 +706,7 @@ export class MbillingComponent {
     let amount = (this.totalPaybleAmaunt + this.taxableSumCharges);
     // Check if SGST percentage is provided
     if (sgstPercentage > 0) {
-      const sgstAmount = (amount * sgstPercentage) / 100;
+      const sgstAmount = (amount * (sgstPercentage/100));
       this.totalPaybleSGSTAmount = sgstAmount.toFixed(2);
     } else {
       this.totalPaybleSGSTAmount = 0; // If no SGST percentage provided, return 0
