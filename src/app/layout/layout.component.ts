@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+import { Router, RouterLink, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { AvatarModule } from 'primeng/avatar';
 import { MenubarModule } from 'primeng/menubar';
@@ -107,6 +107,7 @@ export class LayoutComponent {
   userMenuItems = [
     { label: 'Profile', icon: 'pi pi-user', command: () => this.goToProfile() },
     { label: 'Settings', icon: 'pi pi-cog', command: () => this.goToSettings() },
+    { label: 'Branch', icon: 'pi pi-sitemap',routerLink: 'master/branch-master', command: () => this.goToBranch() },
     { separator: true },
     { label: 'Logout', icon: 'pi pi-sign-out', command: () => this.logout() }
   ];
@@ -125,6 +126,11 @@ export class LayoutComponent {
   goToSettings() {
     // Navigate to settings
     console.log("Go to Settings");
+  }
+
+  goToBranch() {
+     // Navigate to branch
+    console.log("Go to Branch");
   }
 
 }
