@@ -21,10 +21,13 @@ import { CommonModule } from '@angular/common';
 export class CarTypeMasterComponent implements OnInit, OnDestroy, AfterViewInit {
 
 
-  users: any[] = [];
+  cartypelist: any[] = [];
   showForm: boolean = false;
   form!: FormGroup;
   isLoading: boolean = true;
+  heading: string = '';
+  tablevalue: any;
+
 
   constructor(
     private carTypeMasterService: carTypeMasterService,
@@ -47,13 +50,39 @@ export class CarTypeMasterComponent implements OnInit, OnDestroy, AfterViewInit 
       console.log(msg);
       globalRequestHandler(msg, this.router, this.messageService);
       if (msg.for == 'CarTypeGate') {
-        this.users = msg.data; // or however your API responds
+        this.cartypelist = msg.data; // or however your API responds
         this.isLoading = false;
       } else if (msg.for == 'CarTypeAddUpdate') {
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: msg.StatusMessage });
-        this.showForm = false;
-      } else if(msg.for == 'CarTypeDel'){
-        this.messageService.add({severity: 'success', summary: 'Success', detail: msg.StatusMessage})
+        if (msg.StatusID === 1) {
+          // this.messageService.add({ severity: 'success', summary: 'Success', detail: msg.StatusMessage });
+          const updated = msg.data[0];  // access the first item in data array
+
+          
+          this.showForm = false;
+          this.form.reset();
+
+          const index = this.cartypelist.findIndex((v: any) => v.id == updated.id);
+          if (index !== -1) {
+            this.cartypelist[index] = { ...updated };
+          } else {
+            this.cartypelist.push(updated)
+          }
+        } else if(msg.StatusID === 2){
+          // this.messageService.add({ severity: 'error', summary: 'Error', detail: "Car Type Name Already Exist" });
+        } else {
+          // this.messageService.add({ severity: 'error', summary: 'Error', detail: msg.StatusMessage });
+        }
+
+      } else if (msg.for == 'CarTypeDel') {
+        if (msg.StatusID === 1) {
+          const index = this.cartypelist.findIndex((v: any) => v.id == this.tablevalue.id);
+          if (index !== -1) {
+            this.cartypelist.splice(index, 1);
+          }
+          // this.messageService.add({ severity: 'success', summary: 'Success', detail: msg.StatusMessage })
+        } else {
+          // this.messageService.add({ severity: 'error', summary: 'Error', detail: "Cannot Delete data" })
+        }
       }
       return true;
     });
@@ -106,13 +135,17 @@ export class CarTypeMasterComponent implements OnInit, OnDestroy, AfterViewInit 
         this.viewUser(event.data);
         break;
       case 'edit':
+        this.heading = 'UPDATE NEW CAR';
         this.editUser(event.data);
         break;
       case 'delete':
         this.deleteUser(event.data);
+        this.tablevalue = event.data
         break;
       case 'add':
+        this.heading = 'ADD NEW CAR';
         this.add(event.data);
+        this.form.reset();
         break
 
     }
@@ -135,6 +168,7 @@ export class CarTypeMasterComponent implements OnInit, OnDestroy, AfterViewInit 
   private editUser(user: any) {
     if (user) {
       this.showForm = !this.showForm;
+      this.form.reset();
       this.form.patchValue({
         ...user
       })
