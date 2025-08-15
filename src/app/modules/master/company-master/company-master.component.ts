@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { guestMasterService } from '../../../services/guestMaster.service';
 import { commonService } from '../../../services/comonApi.service';
 import { globalRequestHandler } from '../../../utils/global';
+import { companyMasterService } from '../../../services/companyMaster.service';
 
 @Component({
   selector: 'app-company-master',
@@ -25,11 +26,11 @@ export class CompanyMasterComponent implements OnInit,OnDestroy,AfterViewInit {
   form!: FormGroup;
   partyname: any[] = [];
   tablevalue: any;
-   constructor(
-    private guestlistMasterService: guestMasterService, 
+
+  constructor(
+    private companyMasterService: companyMasterService, 
     private router: Router,
     private messageService: MessageService,
-    private comonApiService: commonService,
     private fb: FormBuilder
     
   ){
@@ -39,18 +40,47 @@ export class CompanyMasterComponent implements OnInit,OnDestroy,AfterViewInit {
     createForm(){
       this.form = this.fb.group({
          active: ['Y'],
+         Name: [''],
+         ShortName: [''],
+         Address: [''],
+         City: [''],
+         Phone: [''],
+         Email: [''],
+         Website: [''],
+         Tally_CGSTAcName: [''],
+         Tally_SGSTAcName: [''],
+         Tally_IGSTAcName: [''],
+         Tally_RndOffAcName: [''],
+         Tally_CarRentPurchaseAc: [''],
+         Tally_CarRentSaleAc: [''],
+         GSTNo: [''],
+         PANNo: [''],
+         CINNo: [''],
+         Udyam: [''],
+         HSNCode: [''],
+         CGST: [''],
+         SGST: [''],
+         IGST: [''],
+         Tally_PurVouchType: [''],
+         Tally_SaleVouchType: [''],
          id: [0],
       })
     }
 
   ngAfterViewInit(): void {
-    throw new Error('Method not implemented.');
+    const payload = {
+      id: 0,
+      PageNo: 1,
+      PageSize: 1000,
+      Search: "",
+    };
+    this.companyMasterService.getAllCompany(payload);
   }
   ngOnDestroy(): void {
     throw new Error('Method not implemented.');
   }
   ngOnInit(): void {
-    this.guestlistMasterService.registerPageHandler((msg) => {
+    this.companyMasterService.registerPageHandler((msg) => {
        console.log(msg);
         globalRequestHandler(msg, this.router, this.messageService);
         if (msg.for === "getAllCompany") {
@@ -64,13 +94,13 @@ export class CompanyMasterComponent implements OnInit,OnDestroy,AfterViewInit {
 
   columns = [
     { header: 'ID', field: 'id' },
-    { header: 'Company Name', field: 'party_name', icon: 'pi pi-building', styleClass: 'text-red-600' },
-    { header: 'Company Address', field: 'GuestName', icon: 'pi pi-map-marker', styleClass: 'text-green-600' },
-    { header: 'Contact No', field: 'ContactNo', icon: 'pi pi-phone' },
-    { header: 'Short Name', field: 'AddrType', icon: 'pi pi-tag', styleClass: 'text-lime-600' },
-    { header: 'Email', field: 'EmailID', icon: 'pi pi-envelope', styleClass: 'text-yellow-600' },
-    { header: 'Website', field: 'Address', icon: 'pi pi-globe', styleClass: 'text-green-600' },    
-    { header: 'City', field: 'AditionalContactNo', icon: 'pi pi-map', styleClass: 'text-indigo-700' },
+    { header: 'Company Name', field: 'Name', icon: 'pi pi-building', styleClass: 'text-red-600' },
+    { header: 'Company Address', field: 'Address', icon: 'pi pi-map-marker', styleClass: 'text-green-600' },
+    { header: 'Contact No', field: 'Phone', icon: 'pi pi-phone' },
+    { header: 'Short Name', field: 'ShortName', icon: 'pi pi-tag', styleClass: 'text-lime-600' },
+    { header: 'Email', field: 'Email', icon: 'pi pi-envelope', styleClass: 'text-yellow-600' },
+    { header: 'Website', field: 'Website', icon: 'pi pi-globe', styleClass: 'text-green-600' },    
+    { header: 'City', field: 'City', icon: 'pi pi-map', styleClass: 'text-indigo-700' },
   ];
 
   actions = [
