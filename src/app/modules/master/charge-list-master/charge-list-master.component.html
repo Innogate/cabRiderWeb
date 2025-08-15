@@ -13,7 +13,7 @@
         <!-- Header -->
         <div class="px-4 py-3 border-b border-gray-200 flex items-center justify-between sticky top-0 bg-white z-10">
             <h2 class="text-lg font-semibold text-gray-800 flex items-center gap-2">
-                <i class="pi pi-plus-circle text-indigo-600 text-xl"></i>
+                <i class="pi pi-plus-circle text-green-600 text-xl"></i>
                 {{ header }}
             </h2>
             <button pButton icon="pi pi-times" class="p-button-text p-button-rounded"
@@ -26,12 +26,12 @@
             <!-- Charge Name -->
             <div>
                 <label for="charge_name" class="flex items-center gap-2 mb-1 text-sm font-medium text-gray-700">
-                    <i class="pi pi-tag text-indigo-600"></i>
-                    Charge Name
+                    <i class="pi pi-tag text-violet-500"></i>
+                    Charge Name<span class="text-red-500">*</span>
                 </label>
                 <input id="charge_name" pInputText type="text" formControlName="charge_name"
                     placeholder="Enter charge name"
-                    class="w-full border border-indigo-200 rounded-md focus:border-indigo-500 focus:ring-indigo-500" />
+                    class="w-full border border-indigo-200 rounded-md focus:border-indigo-500 focus:ring-indigo-500 text-uppercase uppercase" />
             </div>
 
             <!-- Row: Tally Name & Taxable -->
@@ -39,22 +39,22 @@
                 <!-- Tally Name -->
                 <div class="flex-1">
                     <label for="TallyName" class="flex items-center gap-2 mb-1 text-sm font-medium text-gray-700">
-                        <i class="pi pi-file-edit text-indigo-600"></i>
-                        Tally Name
+                        <i class="pi pi-file-edit text-teal-500"></i>
+                        Tally Name<span class="text-red-500">*</span>
                     </label>
                     <input id="TallyName" pInputText type="text" formControlName="TallyName"
                         placeholder="Enter tally name"
-                        class="w-full border border-indigo-200 rounded-md focus:border-indigo-500 focus:ring-indigo-500" />
+                        class="w-full border border-indigo-200 rounded-md focus:border-indigo-500 focus:ring-indigo-500 text-uppercase uppercase" />
                 </div>
 
                 <!-- Taxable -->
                 <div class="flex-1">
                     <label for="taxable" class="flex items-center gap-2 mb-1 text-sm font-medium text-gray-700">
-                        <i class="pi pi-percentage text-indigo-600"></i>
-                        Taxable
+                        <i class="pi pi-percentage text-red-700"></i>
+                        Taxable<span class="text-red-500">*</span>
                     </label>
                     <p-dropdown inputId="taxable" [options]="taxableOptions" [appendTo]="'body'"
-                        formControlName="taxable" optionLabel="label" optionValue="value" placeholder="Select taxable"
+                        formControlName="taxable" optionLabel="label" optionValue="value" placeholder="SELECT TAXABLE"
                         class="w-full border border-indigo-200 rounded-md focus:border-indigo-500 focus:ring-indigo-500">
                     </p-dropdown>
                 </div>
