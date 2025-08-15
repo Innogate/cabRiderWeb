@@ -102,8 +102,8 @@
       </div>
 
       <!-- 📌 Calculate Button -->
-      <button *nfIf pButton label="Calculate Bill" icon="pi pi-calculator"
-        (click=!isCalculated)="calculateBillAndLog(); isCalculated = true;"
+      <button pButton label="Calculate Bill" icon="pi pi-calculator"
+        (click)="calculateBillAndLog();"
         class="p-button p-button-lg p-button-primary rounded-xl shadow-md hover:scale-105 transition-transform w-full sm:w-auto">
       </button>
     </div>

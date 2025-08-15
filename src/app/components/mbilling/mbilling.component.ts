@@ -595,6 +595,10 @@ export class MbillingComponent {
 
 
   calculateBillAndLog() {
+    if (this.isCalculated) {
+      return;
+    }
+    this.isCalculated = true;
     this.calculateTotals(this.mainDutyList);
 
     // Auto-fill some fields with example values (for demo/testing)
