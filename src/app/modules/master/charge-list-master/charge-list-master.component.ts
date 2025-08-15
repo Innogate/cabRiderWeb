@@ -79,7 +79,7 @@ export class ChargeListMasterComponent implements OnInit, OnDestroy, AfterViewIn
       SortColumn: "1",
       SortOrder: "ASC"
     };
-    this.chargesListMasterService.GatAllChargesList(payload);
+    this.chargesListMasterService.getAllChargesList(payload);
   }
 
   columns = [
@@ -129,7 +129,7 @@ export class ChargeListMasterComponent implements OnInit, OnDestroy, AfterViewIn
     if (this.form?.valid) {
       console.log(this.form.value);
       this.messageService.add({ severity: 'contrast', summary: 'Info', detail: 'Please wait processing...' });
-      this.chargesListMasterService.CreateUpdate(this.form.value);
+      this.chargesListMasterService.createUpdate(this.form.value);
       this.form.reset()
     }
   }

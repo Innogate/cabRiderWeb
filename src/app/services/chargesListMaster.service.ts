@@ -10,11 +10,11 @@ export class chargesListMasterService extends BaseService {
     super(ws);
   }
 
-  GatAllChargesList(payload: any) {
-    this.call('master.gatAllChargesList', payload);
+  getAllChargesList(payload: any) {
+    this.call('master.getAllChargesList', payload);
   }
 
-  CreateUpdate(payload: any){
+  createUpdate(payload: any){
     this.call('master.createUpdateChargesMaster', payload);
   }
 
