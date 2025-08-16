@@ -17,6 +17,7 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
 import { FileUploadModule } from 'primeng/fileupload';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
+import { SweetAlertService } from '../../../services/sweet-alert.service';
 
 @Component({
   selector: 'app-driver-master',
@@ -41,6 +42,7 @@ export class DriverMasterComponent implements OnInit, OnDestroy, AfterViewInit {
   header: string = ''
   isLoading = true;
   filteredCities: any[] = [];
+  tablevalue: any;
   
 
   cityList: any[] = [
@@ -61,7 +63,8 @@ export class DriverMasterComponent implements OnInit, OnDestroy, AfterViewInit {
     private commonService: commonService,
     private messageService: MessageService,
     private router: Router,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private swal: SweetAlertService
   ) {
     this.form = this.fb.group({
       id: [],
@@ -103,9 +106,28 @@ export class DriverMasterComponent implements OnInit, OnDestroy, AfterViewInit {
       } else if (msg.for == 'getAllCityDropdown') {
         this.cityList = msg.data;
       } else if (msg.for == 'CreateUpdateDriver') {
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: msg.StatusMessage })
+        if (msg.StatusID === 1) {
+          const updated = msg.data[0];  // access the first item in data array
+
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: msg.StatusMessage });
+          this.showForm = false;
+          this.form.reset();
+
+          const index = this.users.findIndex((v: any) => v.id == updated.id);
+          if (index !== -1) {
+            this.users[index] = { ...updated };
+          } else {
+            this.users.push(updated)
+          }
+        } else {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: msg.StatusMessage });
+        }
       } else if (msg.for === "deleteData") {
-        if (msg.StatusMessage === "success") {
+        if (msg.StatusID === 1) {
+          const index = this.users.findIndex((v: any) => v.id == this.tablevalue.id);
+          if (index !== -1) {
+            this.users.splice(index, 1);
+          } 
           this.messageService.add({ severity: 'success', summary: 'Success', detail: msg.StatusMessage })
         } else {
           this.messageService.add({ severity: 'error', summary: 'Error', detail: "Cannot Delete data" })
@@ -164,13 +186,19 @@ export class DriverMasterComponent implements OnInit, OnDestroy, AfterViewInit {
   ];
 
   // Handle action events
-  handleAction(event: { action: string, data: any }) {
+  async handleAction(event: { action: string, data: any }) {
     switch (event.action) {
       case 'edit':
         this.editUser(event.data);
         break;
       case 'delete':
-        this.deleteUser(event.data);
+        const status = await this.swal.confirmDelete("You want to delete this !");
+        if (status) {
+                this.messageService.add({ severity: 'contrast', summary: 'Info', detail: 'Please wait processing...' });
+
+          this.deleteUser(event.data);
+          this.tablevalue = event.data
+        }
         break;
       case 'add':
         this.add(event.data);
@@ -213,7 +241,7 @@ export class DriverMasterComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private deleteUser(user: any) {
-    this.messageService.add({ severity: 'contrast', summary: 'Info', detail: 'Please wait processing...' });
+    // this.messageService.add({ severity: 'contrast', summary: 'Info', detail: 'Please wait processing...' });
     const payload = {
       table_name: "driver_mast",
       column_name: "id",
