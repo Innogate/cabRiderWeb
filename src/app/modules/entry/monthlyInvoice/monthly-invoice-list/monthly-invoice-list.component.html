@@ -31,13 +31,14 @@
         >Company</label
       >
       <p-dropdown
-        inputId="company"
         [options]="companies"
         [(ngModel)]="selectedCompany"
+        optionLabel="Name"
+        optionValue="Id"
         placeholder="Select Company"
-        [showClear]="true"
-        class="w-full"
-      ></p-dropdown>
+        [style.width.%]="100"
+      >
+      </p-dropdown>
     </div>
 
     <!-- Show Filter -->
@@ -143,26 +144,25 @@
           <td>{{ invoice.City }}</td>
           <td>{{ invoice.GrossAmount }}</td>
           <td>
-          <div
-            class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-blue-100 text-blue-700 text-sm border border-blue-300 cursor-pointer hover:shadow-md"
-            (click)="openInvoiceDetails(invoice)"
-          >
-            <i class="pi pi-eye text-blue-700"></i>
-            <span>{{ invoice.OtherCharges ?? '0' }}</span>
-          </div>
+            <div
+              class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-blue-100 text-blue-700 text-sm border border-blue-300 cursor-pointer hover:shadow-md"
+              (click)="openInvoiceDetails(invoice)"
+            >
+              <i class="pi pi-eye text-blue-700"></i>
+              <span>{{ invoice.OtherCharges ?? "0" }}</span>
+            </div>
           </td>
           <td>{{ invoice.CGST }}</td>
           <td>{{ invoice.SGST }}</td>
           <td>{{ invoice.IGST }}</td>
           <td>
-          <div
-            class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-green-100 text-green-700 text-sm border border-green-300 cursor-pointer hover:shadow-md"
-            (click)="openInvoiceDetails(invoice)"
-          >
-            <i class="pi pi-eye text-green-700"></i>
-            <span>{{ invoice.OtherCharges2 ?? '0' }}</span>
-          </div>
-
+            <div
+              class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-green-100 text-green-700 text-sm border border-green-300 cursor-pointer hover:shadow-md"
+              (click)="openInvoiceDetails(invoice)"
+            >
+              <i class="pi pi-eye text-green-700"></i>
+              <span>{{ invoice.OtherCharges2 ?? "0" }}</span>
+            </div>
           </td>
           <td>{{ invoice.NetAmount }}</td>
           <td>
@@ -197,12 +197,9 @@
                 icon="pi pi-trash"
                 class="p-button-sm p-button-rounded p-button-danger"
               ></button>
-
             </div>
 
-
             <div class="flex justify-center gap-2 mt-3">
-
               <button
                 pButton
                 pTooltip="Payment Received"
@@ -223,7 +220,6 @@
                 class="p-button-sm p-button-rounded p-button-help"
               ></button>
             </div>
-
           </td>
         </tr>
       </ng-template>
@@ -231,7 +227,11 @@
   </div>
 </div>
 
-<app-invoice-eyes-show *ngIf="showInvoiceDetails" [invoice]="selectedInvoice" (close)="showInvoiceDetails = false"></app-invoice-eyes-show>
+<app-invoice-eyes-show
+  *ngIf="showInvoiceDetails"
+  [invoice]="selectedInvoice"
+  (close)="showInvoiceDetails = false"
+></app-invoice-eyes-show>
 
 <!-- payment-received.component.html -->
 <p-dialog
@@ -247,50 +247,53 @@
   <!-- Dialog Content -->
   <div class="p-4">
     <!-- Top Bar (Dropdown + Search) -->
-<div
-  class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 bg-blue-50 p-5 rounded-xl border border-blue-100 mb-6"
->
-  <!-- Show Filter (Left Side) -->
-  <div class="lg:col-span-1">
-    <label for="show" class="block text-sm font-medium text-gray-700 mb-1">Show</label>
-    <p-dropdown
-      inputId="show"
-      [options]="show"
-      [(ngModel)]="selectedShow"
-      placeholder="Filter"
-      [showClear]="true"
-      class="w-full"
-    ></p-dropdown>
-  </div>
-
-  <!-- Empty columns to push search to right -->
-  <div class="lg:col-span-2 hidden lg:block"></div>
-
-  <!-- Search (Right Side) -->
-  <div class="lg:col-span-1 flex flex-col justify-end">
-    <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Search</label>
-    <div class="flex items-center gap-2">
-      <span class="p-input-icon-left w-full">
-        <input
-          id="search"
-          pInputText
-          type="text"
-          [(ngModel)]="searchText"
-          placeholder="Search by Sno , Amount..."
+    <div
+      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 bg-blue-50 p-5 rounded-xl border border-blue-100 mb-6"
+    >
+      <!-- Show Filter (Left Side) -->
+      <div class="lg:col-span-1">
+        <label for="show" class="block text-sm font-medium text-gray-700 mb-1"
+          >Show</label
+        >
+        <p-dropdown
+          inputId="show"
+          [options]="show"
+          [(ngModel)]="selectedShow"
+          placeholder="Filter"
+          [showClear]="true"
           class="w-full"
-        />
-      </span>
-      <button
-        pButton
-        icon="pi pi-search"
-        class="p-button-sm p-button-info p-button-rounded"
-        (click)="searchInvoices()"
-        pTooltip="Search"
-      ></button>
-    </div>
-  </div>
-</div>
+        ></p-dropdown>
+      </div>
 
+      <!-- Empty columns to push search to right -->
+      <div class="lg:col-span-2 hidden lg:block"></div>
+
+      <!-- Search (Right Side) -->
+      <div class="lg:col-span-1 flex flex-col justify-end">
+        <label for="search" class="block text-sm font-medium text-gray-700 mb-1"
+          >Search</label
+        >
+        <div class="flex items-center gap-2">
+          <span class="p-input-icon-left w-full">
+            <input
+              id="search"
+              pInputText
+              type="text"
+              [(ngModel)]="searchText"
+              placeholder="Search by Sno , Amount..."
+              class="w-full"
+            />
+          </span>
+          <button
+            pButton
+            icon="pi pi-search"
+            class="p-button-sm p-button-info p-button-rounded"
+            (click)="searchInvoices()"
+            pTooltip="Search"
+          ></button>
+        </div>
+      </div>
+    </div>
 
     <!-- Scrollable Table -->
     <p-table
@@ -310,19 +313,28 @@
           <th><i class="pi pi-hashtag text-purple-400 mr-1"></i> SNo</th>
           <th><i class="pi pi-file text-pink-400 mr-1"></i> Voucher No</th>
           <th><i class="pi pi-dollar text-green-400 mr-1"></i> Amount</th>
-          <th><i class="pi pi-credit-card text-indigo-400 mr-1"></i> Payment Received</th>
-          <th><i class="pi pi-percentage text-lime-400 mr-1"></i> TDS Amount</th>
+          <th>
+            <i class="pi pi-credit-card text-indigo-400 mr-1"></i> Payment
+            Received
+          </th>
+          <th>
+            <i class="pi pi-percentage text-lime-400 mr-1"></i> TDS Amount
+          </th>
           <th><i class="pi pi-tags text-violet-400 mr-1"></i> Discount</th>
         </tr>
       </ng-template>
 
       <ng-template pTemplate="body" let-row let-i="rowIndex">
-        <tr class="text-center text-sm hover:bg-blue-100 transition duration-200">
+        <tr
+          class="text-center text-sm hover:bg-blue-100 transition duration-200"
+        >
           <td></td>
           <td class="font-semibold">{{ i + 1 }}</td>
           <td>{{ row.voucherNo }}</td>
           <td class="text-green-600 font-bold">₹ {{ row.amount }}</td>
-          <td class="text-blue-700 font-semibold">₹ {{ row.paymentReceived }}</td>
+          <td class="text-blue-700 font-semibold">
+            ₹ {{ row.paymentReceived }}
+          </td>
           <td class="text-yellow-600">₹ {{ row.tdsAmount }}</td>
           <td class="text-pink-600">₹ {{ row.discountAmount }}</td>
         </tr>
@@ -330,8 +342,3 @@
     </p-table>
   </div>
 </p-dialog>
-
-
-
-
-

@@ -37,6 +37,10 @@ export class HelperService extends BaseService {
     }
 
 
+     getMonthlyInvoiceList(payload:any){
+    this.call('minvoice.getMonthlyInvoiceList', payload);
+  }
+
 
     protected handleMessage(msg: any): boolean {
         return false;
