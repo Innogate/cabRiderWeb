@@ -47,15 +47,19 @@ export class commonService extends BaseService {
   }
 
   guestFilterBySearch(payload: { party_id: number; Search: string }): void {
-  this.call('common.guestFilterBySearch', payload);
-}
+    this.call('common.guestFilterBySearch', payload);
+  }
 
 
   carSearchByCarNo(payload: { cartype_id: number; Search: string }): void {
-  this.call('common.searchBycarNo', payload);
-}
-  getMonthlySetupCode(payload:any){
+    this.call('common.searchBycarNo', payload);
+  }
+  getMonthlySetupCode(payload: any) {
     this.call('minvoice.getMonthlySetupCode', payload);
+  }
+
+  getallCartype(){
+    this.call('common.getAllCartype');
   }
 
   protected handleMessage(msg: any): boolean {
