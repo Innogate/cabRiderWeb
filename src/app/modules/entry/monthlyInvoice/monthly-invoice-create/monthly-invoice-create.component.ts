@@ -508,12 +508,29 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
 
   mainDutyList: any[] = []; // this holds the final duty list shown in main UI
 
-  saveSelectedDuties() {
-    const selected = this.dutyTableData.filter((item: any) => item.selected);
-    this.mainDutyList = [...this.mainDutyList, ...selected.map(item => ({ ...item }))];
-    this.displayDuty = false;
-    this.sleetedBookingIds = this.sleetedBookingIds.concat(selected.map((item: any) => item.id));
-  }
+ saveSelectedDuties() {
+  const selected = this.dutyTableData.filter((item: any) => item.selected);
+
+  // Avoid duplicates in mainDutyList using ID check
+  selected.forEach(sel => {
+    const exists = this.mainDutyList.some((duty: any) => duty.id === sel.id);
+    if (!exists) {
+      this.mainDutyList.push({ ...sel });
+    }
+  });
+
+  // Mark them as disabled
+  this.dutyTableData = this.dutyTableData.map((item: any) => ({
+    ...item,
+    disabled: selected.some((sel: any) => sel.id === item.id),
+  }));
+  this.displayDuty = false;
+  this.sleetedBookingIds = Array.from(
+    new Set([...this.sleetedBookingIds, ...selected.map((item: any) => item.id)])
+  );
+}
+
+
 
   addDutySection(){
     // check all parameter are filled
@@ -538,4 +555,13 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
     this.taxType = event;
     this.cdr.detectChanges();
   }
+
+
+  onDutyUpdated(event: { dutyTableData: any[], mainDutyList: any[], sleetedBookingIds: any[] }) {
+  this.dutyTableData = event.dutyTableData;
+  this.mainDutyList = event.mainDutyList;
+  this.sleetedBookingIds = event.sleetedBookingIds;
+}
+
+
 }
