@@ -12,11 +12,12 @@ import { chargesListMasterService } from '../../../services/chargesListMaster.se
 import { DropdownModule } from 'primeng/dropdown';
 import { SidebarModule } from 'primeng/sidebar';
 import { SweetAlertService } from '../../../services/sweet-alert.service';
+import { CommonModule } from '@angular/common';
 
 
 @Component({
   selector: 'app-charge-list-master',
-  imports: [DynamicTableComponent, DialogModule, ReactiveFormsModule, InputTextModule, ButtonModule, DropdownModule, SidebarModule],
+  imports: [DynamicTableComponent, DialogModule, ReactiveFormsModule, InputTextModule, ButtonModule, DropdownModule, SidebarModule, CommonModule],
   templateUrl: './charge-list-master.component.html',
   styleUrl: './charge-list-master.component.css'
 })
@@ -63,7 +64,6 @@ export class ChargeListMasterComponent implements OnInit, OnDestroy, AfterViewIn
       } else if (msg.for == 'chargesAddUpdate') {
         if (msg.StatusID === 1) {
           const updated = msg.data[0];  // access the first item in data array
-          // this.messageService.add({ severity: 'success', summary: 'Success', detail: msg.StatusMessage });
           this.showForm = false;
           this.form.reset();
 
@@ -73,18 +73,16 @@ export class ChargeListMasterComponent implements OnInit, OnDestroy, AfterViewIn
           } else {
             this.users.push(updated)
           }
-        } else {
-          // this.messageService.add({ severity: 'error', summary: 'Error', detail: msg.StatusMessage });
-        }
+        } 
       } else if (msg.for == 'chargesDelete') {
         if (msg.StatusMessage === "success") {
           const index = this.users.findIndex((v: any) => v.id == this.tablevalue.id);
           if (index !== -1) {
             this.users.splice(index, 1);
           } 
-          // this.messageService.add({ severity: 'success', summary: 'Success', detail: msg.StatusMessage })
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: msg.StatusMessage })
         } else {
-          // this.messageService.add({ severity: 'error', summary: 'Error', detail: "Cannot Delete data" })
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: "Cannot Delete data" })
         }
       }
       return true;
@@ -127,8 +125,6 @@ export class ChargeListMasterComponent implements OnInit, OnDestroy, AfterViewIn
   // Handle search events
   handleSearch(searchTerm: string) {
     console.log('Searching for:', searchTerm);
-    // Implement your search logic here
-    // Typically you would filter your data array
   }
 
   // Handle action events
@@ -151,8 +147,6 @@ export class ChargeListMasterComponent implements OnInit, OnDestroy, AfterViewIn
         break;
       case 'add':
         this.add(event.data);
-        // this.showForm = !this.showForm;
-        // this.form.reset();
         break
 
     }
@@ -168,7 +162,6 @@ export class ChargeListMasterComponent implements OnInit, OnDestroy, AfterViewIn
   }
 
   private viewUser(user: any) {
-    console.log('Viewing user:', user);
   }
 
   private editUser(user: any) {

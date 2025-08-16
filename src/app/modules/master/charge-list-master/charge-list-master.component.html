@@ -30,6 +30,10 @@
                 <input id="charge_name" pInputText type="text" formControlName="charge_name"
                     placeholder="Enter charge name"
                     class="w-full border border-indigo-200 rounded-md focus:border-indigo-500 focus:ring-indigo-500 text-uppercase uppercase" />
+                <span *ngIf="form.get('charge_name')?.touched && form.get('charge_name')?.errors?.['required']"
+                    class="text-sm text-red-600">
+                    Charge Name is required.
+                </span>
             </div>
 
             <!-- Row: Tally Name & Taxable -->
@@ -43,6 +47,10 @@
                     <input id="TallyName" pInputText type="text" formControlName="TallyName"
                         placeholder="Enter tally name"
                         class="w-full border border-indigo-200 rounded-md focus:border-indigo-500 focus:ring-indigo-500 text-uppercase uppercase" />
+                    <span *ngIf="form.get('TallyName')?.touched && form.get('TallyName')?.errors?.['required']"
+                    class="text-sm text-red-600">
+                    Tally Name is required.
+                    </span>
                 </div>
 
                 <!-- Taxable -->
@@ -55,6 +63,10 @@
                         formControlName="taxable" optionLabel="label" optionValue="value" placeholder="SELECT TAXABLE"
                         class="w-full border border-indigo-200 rounded-md focus:border-indigo-500 focus:ring-indigo-500">
                     </p-dropdown>
+                    <span *ngIf="form.get('taxable')?.touched && form.get('taxable')?.errors?.['required']"
+                    class="text-sm text-red-600">
+                    Taxable is required.
+                    </span>
                 </div>
             </div>
 
