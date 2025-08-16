@@ -2,7 +2,9 @@ import { CommonModule } from '@angular/common';
 import {
   ChangeDetectorRef,
   Component,
+  EventEmitter,
   Input,
+  Output,
   SimpleChanges,
 } from '@angular/core';
 import {
@@ -85,7 +87,7 @@ export class MbillingComponent {
   // Column 3
   Amount: any;
   extaHAmount: any;
-  billTotal2: any;
+  totalKmAmount: any;
   amount3: any;
   amount2: any;
   desc2: string = '';
@@ -156,9 +158,16 @@ export class MbillingComponent {
 
   @Input() selectedDuties: any[] = [];
   @Input() mainDutyList: any[] = [];
+  @Input() dutyTableData: any[] = [];
   @Input() invoiceForm!: FormGroup;
   @Input() taxType: any;
   @Input() partyInfo:any;
+
+  @Output() dutyUpdated = new EventEmitter<{
+    dutyTableData: any[],
+    mainDutyList: any[],
+    sleetedBookingIds: any[]
+  }>();
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['mainDutyList']) {
@@ -200,6 +209,8 @@ export class MbillingComponent {
   isCalculated: boolean = false;
 
 
+
+
   // AutoComplete
   filteredCodes: any[] = [];
   selectedCode: any[] = [];
@@ -239,7 +250,10 @@ export class MbillingComponent {
     let groseAmount = 0;
     let extraHourRate = 0;
     let extraKmRate = 0;
+    this.totalExtraHour = 0;
     this.extraHour = 0;
+    this.showTotalHour = 0;
+    this.showTotalKm = 0;
     let totalKm = 0;
 
     const setup = this.monthlySetupData?.find((s: any) => s.id === setupCode);
@@ -443,10 +457,7 @@ export class MbillingComponent {
 
 
   calculateBillAndLog() {
-    if (this.isCalculated) {
-      return;
-    }
-    this.isCalculated = true;
+
     this.calculateTotals(this.mainDutyList);
 
     // Auto-fill some fields with example values (for demo/testing)
@@ -460,9 +471,9 @@ export class MbillingComponent {
     this.extaHAmount = this.totalextraHourRate * this.totalExtraHour;
 
     this.rate2 = this.totalextraKmRate;
-    this.billTotal2 = this.extrakm * this.rate2;
+    this.totalKmAmount = this.extrakm * this.rate2;
 
-    this.totalPaybleAmaunt = (this.Amount + this.extaHAmount + this.totalextraKmRate)
+    this.totalPaybleAmaunt = (this.Amount + this.extaHAmount + this.totalKmAmount);
     this.calNetAmount();
   }
 
@@ -487,7 +498,7 @@ export class MbillingComponent {
       // Column 3
       fixedAmount2: this.Amount,
       extaHAmount: this.extaHAmount,
-      billTotal2: this.billTotal2,
+      billTotal2: this.totalKmAmount,
       amount3: this.amount3,
       amount2: this.amount2,
       desc2: this.desc2,
@@ -620,6 +631,38 @@ async calNetAmount() {
       this.calculateIGST();
     }
   }
+
+removeDutyFromInvoice(duty: any) {
+  const index = this.mainDutyList.findIndex((d) => d.id === duty.id);
+
+  if (index !== -1) {
+    // Remove from mainDutyList
+    this.mainDutyList.splice(index, 1);
+
+    // Re-enable in popup
+    this.dutyTableData = this.dutyTableData.map((item: any) =>
+      item.id === duty.id ? { ...item, disabled: false, selected: false } : item
+    );
+
+    // Remove from selectedBookingIds
+    if (this.sleetedBookingIds) {
+      this.sleetedBookingIds = this.sleetedBookingIds.filter((id: any) => id !== duty.id);
+    }
+
+    this.cdr.detectChanges();
+    this.calNetAmount();
+
+    // 🔹 Emit updates back to MonthlyCreate
+    this.dutyUpdated.emit({
+      dutyTableData: this.dutyTableData,
+      mainDutyList: this.mainDutyList,
+      sleetedBookingIds: this.sleetedBookingIds ?? []
+    });
+  } else {
+    console.error('Duty not found in mainDutyList:', duty);
+  }
+}
+
 
 
 }

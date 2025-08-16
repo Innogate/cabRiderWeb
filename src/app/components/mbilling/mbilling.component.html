@@ -57,12 +57,15 @@
           <th class="py-3 px-4">
             <i class="pi pi-compass text-cyan-600 mr-1"></i> Total KM
           </th>
+          <th class="py-2 px-3">
+              <i class=" mr-1"></i> Action
+            </th>
         </tr>
       </ng-template>
 
-      <ng-template pTemplate="body" let-duty>
+      <ng-template pTemplate="body" let-duty let-i="rowIndex">
         <tr class="hover:bg-blue-50 transition-all text-sm">
-          <td class="py-2 px-3">{{ duty.BookingNo }}</td>
+          <td class="py-2 px-3">{{ i + 1 }}</td>
           <td class="py-2 px-3">{{ duty.SlipNo }}</td>
           <td class="py-2 px-3">{{ duty.DutyTypeName }}</td>
           <td class="py-2 px-3">{{ duty.CarNo }}</td>
@@ -77,6 +80,10 @@
           <td class="py-2 px-3">{{ duty.GarageInKm }}</td>
           <td class="py-2 px-3">{{ duty.TotalHour }}</td>
           <td class="py-2 px-3">{{ duty.TotalKm }}</td>
+           <td class="py-2 px-3">
+              <button pButton type="button" icon="pi pi-trash" class="p-button-danger p-button-rounded"
+                (click)="removeDutyFromInvoice(duty)"></button>
+            </td>
         </tr>
       </ng-template>
     </p-table>
@@ -117,43 +124,43 @@
         <div
           class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
           <label class="font-medium text-gray-700">💰 Fixed Amount:</label>
-          <input type="number" pInputText [(ngModel)]="fixedAmount"
+          <input readonly type="number" pInputText [(ngModel)]="fixedAmount"
             class="w-full sm:w-40 lg:w-44 text-right mt-1 sm:mt-0" />
         </div>
         <div
           class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
           <label class="font-medium text-gray-700">🕓 Extra Hours:</label>
-          <input type="number" pInputText [(ngModel)]="extraHours"
+          <input readonly type="number" pInputText [(ngModel)]="extraHours"
             class="w-full sm:w-40 lg:w-44 text-right mt-1 sm:mt-0" />
         </div>
         <div
           class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
           <label class="font-medium text-gray-700">🚗 Extra K.M:</label>
-          <input type="number" pInputText [(ngModel)]="extrakm"
+          <input readonly type="number" pInputText [(ngModel)]="extrakm"
             class="w-full sm:w-40 lg:w-44 text-right mt-1 sm:mt-0" />
         </div>
         <div
           class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
           <label class="font-medium text-gray-700">📉 Except Day Hrs:</label>
-          <input type="number" pInputText [(ngModel)]="exceptDayHrs"
+          <input readonly type="number" pInputText [(ngModel)]="exceptDayHrs"
             class="w-full sm:w-40 lg:w-44 text-right mt-1 sm:mt-0" />
         </div>
         <div
           class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
           <label class="font-medium text-gray-700">🚐 Extra Day K.M:</label>
-          <input type="number" pInputText [(ngModel)]="extraDaykm"
+          <input readonly type="number" pInputText [(ngModel)]="extraDaykm"
             class="w-full sm:w-40 lg:w-44 text-right mt-1 sm:mt-0" />
         </div>
         <div
           class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
           <label class="font-medium text-gray-700">⛽ Fuel Amount:</label>
-          <input type="number" pInputText [(ngModel)]="fuelAmount"
+          <input readonly type="number" pInputText [(ngModel)]="fuelAmount"
             class="w-full sm:w-40 lg:w-44 text-right mt-1 sm:mt-0" />
         </div>
         <!-- <div
           class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
           <label class="font-medium text-gray-700">Sgst:</label>
-          <input type="number" pInputText [(ngModel)]="Sgst"
+          <input readonly type="number" pInputText [(ngModel)]="Sgst"
             (ngModelChange)="calculateSGST()"
             class="w-full sm:w-40 lg:w-44 text-right mt-1 sm:mt-0" />
         </div> -->
@@ -164,43 +171,43 @@
         <div
           class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
           <label class="font-medium text-gray-700">📆 No. of Days:</label>
-          <input type="number" pInputText [(ngModel)]="numDays"
+          <input readonly type="number" pInputText [(ngModel)]="numDays"
             class="w-full sm:w-40 lg:w-44 text-right mt-1 sm:mt-0" readonly />
         </div>
         <div
           class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
           <label class="font-medium text-gray-700">💵 Rate:</label>
-          <input type="number" pInputText [(ngModel)]="rate1"
+          <input readonly type="number" pInputText [(ngModel)]="rate1"
             class="w-full sm:w-40 lg:w-44 text-right mt-1 sm:mt-0" />
         </div>
         <div
           class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
           <label class="font-medium text-gray-700">💴 Rate:</label>
-          <input type="number" pInputText [(ngModel)]="rate2"
+          <input readonly type="number" pInputText [(ngModel)]="rate2"
             class="w-full sm:w-40 lg:w-44 text-right mt-1 sm:mt-0" />
         </div>
         <div
           class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
           <label class="font-medium text-gray-700">💵 Rate:</label>
-          <input type="number" pInputText [(ngModel)]="rate3"
+          <input readonly type="number" pInputText [(ngModel)]="rate3"
             class="w-full sm:w-40 lg:w-44 text-right mt-1 sm:mt-0" />
         </div>
         <div
           class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
           <label class="font-medium text-gray-700">💵 Rate:</label>
-          <input type="number" pInputText [(ngModel)]="rate4"
+          <input readonly type="number" pInputText [(ngModel)]="rate4"
             class="w-full sm:w-40 lg:w-44 text-right mt-1 sm:mt-0" />
         </div>
         <div
           class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
           <label class="font-medium text-gray-700">📱 Mobile Amount:</label>
-          <input type="number" pInputText [(ngModel)]="mobileAmount"
+          <input readonly type="number" pInputText [(ngModel)]="mobileAmount"
             class="w-full sm:w-40 lg:w-44 text-right mt-1 sm:mt-0" />
         </div>
         <!-- <div
           class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
           <label class="font-medium text-gray-700">Cgst:</label>
-          <input type="number" pInputText [(ngModel)]="Cgst"
+          <input readonly type="number" pInputText [(ngModel)]="Cgst"
             (ngModelChange)="calculateCGST()"
             class="w-full sm:w-40 lg:w-44 text-right mt-1 sm:mt-0" />
         </div> -->
@@ -211,43 +218,43 @@
         <div
           class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
           <label class="font-medium text-gray-700">💳 Amount:</label>
-          <input type="number" pInputText [(ngModel)]="Amount"
+          <input readonly type="number" pInputText [(ngModel)]="Amount"
             class="w-full sm:w-40 lg:w-44 text-right mt-1 sm:mt-0" readonly />
         </div>
         <div
           class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
           <label class="font-medium text-gray-700">💳 Amount:</label>
-          <input type="number" pInputText [(ngModel)]="extaHAmount"
+          <input readonly type="number" pInputText [(ngModel)]="extaHAmount"
             class="w-full sm:w-40 lg:w-44 text-right mt-1 sm:mt-0" />
         </div>
         <div
           class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
           <label class="font-semibold text-green-600">💳 Amount:</label>
-          <input type="number" pInputText [(ngModel)]="billTotal2"
+          <input readonly type="number" pInputText [(ngModel)]="totalKmAmount"
             class="w-full sm:w-40 lg:w-44 text-right font-bold text-green-700 mt-1 sm:mt-0" />
         </div>
         <div
           class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
           <label class="font-medium text-gray-700">💳 Amount:</label>
-          <input type="number" pInputText [(ngModel)]="amount3"
+          <input readonly type="number" pInputText [(ngModel)]="amount3"
             class="w-full sm:w-40 lg:w-44 text-right mt-1 sm:mt-0" />
         </div>
         <div
           class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
           <label class="font-semibold text-gray-800">💳 Amount:</label>
-          <input type="number" pInputText [(ngModel)]="amount2"
+          <input readonly type="number" pInputText [(ngModel)]="amount2"
             class="w-full sm:w-40 lg:w-44 text-right font-bold mt-1 sm:mt-0" />
         </div>
         <div
           class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
           <label class="font-medium text-gray-700">📝 Description:</label>
-          <input type="text" pInputText [(ngModel)]="desc2"
+          <input readonly type="text" pInputText [(ngModel)]="desc2"
             class="w-full sm:w-40 lg:w-44 text-right font-bold mt-1 sm:mt-0" />
         </div>
         <!-- <div
           class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
           <label class="font-medium text-gray-700">Igst:</label>
-          <input type="number" pInputText [(ngModel)]="igst"
+          <input readonly type="number" pInputText [(ngModel)]="igst"
             (ngModelChange)="calculateIGST()"
             class="w-full sm:w-40 lg:w-44 text-right mt-1 sm:mt-0" />
         </div> -->
@@ -258,14 +265,14 @@
         <div
           class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
           <label class="font-semibold text-green-600">🧾 Bill Total:</label>
-          <input type="number" pInputText [(ngModel)]="totalPaybleAmaunt"
+          <input readonly type="number" pInputText [(ngModel)]="totalPaybleAmaunt"
             class="w-full sm:w-40 lg:w-44 text-right font-bold text-green-700 mt-1 sm:mt-0" />
         </div>
         <div
           class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
           <label class="font-medium text-gray-700">💸 Other
             Charges(Taxable):</label>
-          <input type="number" pInputText [(ngModel)]="taxableSumCharges"
+          <input readonly type="number" pInputText [(ngModel)]="taxableSumCharges"
             class="w-full sm:w-40 lg:w-44 text-right mt-1 sm:mt-0" />
         </div>
         <!-- SGST -->
@@ -273,11 +280,11 @@
           class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
           <label class="font-medium text-gray-700">SGST:</label>
           <div class="flex items-center gap-1 w-full sm:w-auto">
-            <input type="number" pInputText [(ngModel)]="Sgst"
+            <input readonly type="number" pInputText [(ngModel)]="Sgst"
               (ngModelChange)="calNetAmount()"
               class="w-full sm:w-20 lg:w-24 text-right border rounded px-2 py-1" />
             <span>%</span>
-            <input type="number" pInputText readonly [value]="totalPaybleSGSTAmount"
+            <input readonly type="number" pInputText readonly [value]="totalPaybleSGSTAmount"
               class="w-full sm:w-28 lg:w-32 text-right border rounded px-2 py-1" />
           </div>
         </div>
@@ -287,11 +294,11 @@
           class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
           <label class="font-medium text-gray-700">CGST:</label>
           <div class="flex items-center gap-1 w-full sm:w-auto">
-            <input type="number" pInputText [(ngModel)]="Cgst"
+            <input readonly type="number" pInputText [(ngModel)]="Cgst"
               (ngModelChange)="calNetAmount()"
               class="w-full sm:w-20 lg:w-24 text-right border rounded px-2 py-1" />
             <span>%</span>
-            <input type="number" pInputText  [value]="totalPaybleCGSTAmount"
+            <input readonly type="number" pInputText  [value]="totalPaybleCGSTAmount"
               class="w-full sm:w-28 lg:w-32 text-right border rounded px-2 py-1" />
           </div>
         </div>
@@ -301,11 +308,11 @@
           class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
           <label class="font-medium text-gray-700">IGST:</label>
           <div class="flex items-center gap-1 w-full sm:w-auto">
-            <input type="number" pInputText [(ngModel)]="igst"
+            <input readonly type="number" pInputText [(ngModel)]="igst"
               (ngModelChange)="calNetAmount()"
               class="w-full sm:w-20 lg:w-24 text-right border rounded px-2 py-1" />
             <span>%</span>
-            <input type="number" pInputText  [value]="totalPaybleIGSTAmount"
+            <input readonly type="number" pInputText  [value]="totalPaybleIGSTAmount"
               class="w-full sm:w-28 lg:w-32 text-right border rounded px-2 py-1" />
           </div>
         </div>
@@ -314,13 +321,13 @@
           class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
           <label class="font-bold text-gray-800">💸 Other Charges(Non
             Taxable)</label>
-          <input type="number" pInputText [(ngModel)]="nonTaxableSumCharges"
+          <input readonly type="number" pInputText [(ngModel)]="nonTaxableSumCharges"
             class="w-full sm:w-40 lg:w-44 text-right font-semibold mt-1 sm:mt-0" />
         </div>
         <div
           class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
           <label class="font-semibold text-green-600">🧾 Round Off:</label>
-          <input type="number" pInputText [value]="roundOff"
+          <input readonly type="number" pInputText [value]="roundOff"
             class="w-full sm:w-40 lg:w-44 text-right font-bold text-green-700 mt-1 sm:mt-0" />
         </div>
         <div
@@ -332,7 +339,7 @@
         <div
           class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
           <label class="font-bold text-gray-800">💳 Net Payable:</label>
-          <input type="number" pInputText [(ngModel)]="totalPaybleGSTAmount"
+          <input readonly type="number" pInputText [(ngModel)]="totalPaybleGSTAmount"
             class="w-full sm:w-40 lg:w-44 text-right font-semibold mt-1 sm:mt-0" />
         </div>
       </div>
