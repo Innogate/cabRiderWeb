@@ -128,7 +128,7 @@ export class DriverMasterComponent implements OnInit, OnDestroy, AfterViewInit {
           if (index !== -1) {
             this.users.splice(index, 1);
           } 
-          this.messageService.add({ severity: 'success', summary: 'Success', detail: msg.StatusMessage })
+          // this.messageService.add({ severity: 'success', summary: 'Success', detail: msg.StatusMessage })
         } else {
           this.messageService.add({ severity: 'error', summary: 'Error', detail: "Cannot Delete data" })
         }
