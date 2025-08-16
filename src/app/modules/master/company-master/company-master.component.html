@@ -194,15 +194,6 @@
                                 class="w-full border border-gray-300 rounded-lg p-3 text-uppercase"
                                 placeholder="Enter HSN Code">
                         </div>
-                        <!-- <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">
-                                <i class="pi pi-user mr-2 text-green-900"></i>Honorific
-                            </label>
-                            <p-dropdown [options]="taxTypes" (onChange)="changeTaxType($event)" optionValue="value"
-                                placeholder="Select Tax Type" [showClear]="true" formControlName="tax_type"
-                                class="w-full border border-gray-300 rounded-lg">
-                            </p-dropdown>
-                        </div> -->
                         <div class="grid grid-cols-3 gap-4">
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1 "><i
@@ -232,6 +223,31 @@
                     <div class="bg-sky-100 p-5 rounded-lg border border-sky-400 shadow-xl">
                         <h2 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b border-sky-400">
                             <i class="pi pi-file mr-2 text-blue-600"></i>Voucher Settings
+                        </h2>
+                        <div class="space-y-4">
+                            <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1 "><i
+                                    class="pi pi-file-import mr-2 text-yellow-500"></i>Purchase Voucher Type</label>
+                            <input type="text" pInputText
+                                class="w-full border border-gray-300 rounded-lg p-3 text-uppercase"
+                                placeholder="Enter Purchase Voucher Type">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1 "><i
+                                    class="pi pi-file-export mr-2 text-blue-500"></i>Sale Voucher Type</label>
+                            <input type="text" pInputText
+                                class="w-full border border-gray-300 rounded-lg p-3 text-uppercase"
+                                placeholder="Enter Sale Voucher Type">
+                        </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Right Column -->
+                <div class="space-y-6">
+                    <!-- Voucher Settings Card -->
+                    <div class="bg-sky-100 p-5 rounded-lg border border-sky-400 shadow-xl">
+                        <h2 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b border-sky-400">
+                            <i class="pi pi-file mr-2 text-blue-600"></i>Upload files 
                         </h2>
                         <div class="space-y-4">
                             <div>
