@@ -56,7 +56,6 @@ export class ChargeListMasterComponent implements OnInit, OnDestroy, AfterViewIn
   async ngOnInit(): Promise<void> {
 
     this.chargesListMasterService.registerPageHandler((msg) => {
-      console.log(msg);
       globalRequestHandler(msg, this.router, this.messageService);
       if (msg.for == 'gatAllCharges') {
         this.users = msg.data; // or however your API responds
@@ -124,7 +123,6 @@ export class ChargeListMasterComponent implements OnInit, OnDestroy, AfterViewIn
 
   // Handle search events
   handleSearch(searchTerm: string) {
-    console.log('Searching for:', searchTerm);
   }
 
   // Handle action events
@@ -154,7 +152,6 @@ export class ChargeListMasterComponent implements OnInit, OnDestroy, AfterViewIn
 
   onSubmit() {
     if (this.form?.valid) {
-      console.log(this.form.value);
       this.messageService.add({ severity: 'contrast', summary: 'Info', detail: 'Please wait processing...' });
       this.chargesListMasterService.createUpdate(this.form.value);
       this.form.reset()
