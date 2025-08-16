@@ -7,10 +7,13 @@ import { globalRequestHandler } from '../../../utils/global';
 import { CommonModule } from '@angular/common';
 import { InputTextModule } from 'primeng/inputtext';
 import { DynamicTableComponent } from '../../../components/dynamic-table/dynamic-table.component';
+import { Dropdown, DropdownModule } from 'primeng/dropdown';
+import { AutoComplete } from 'primeng/autocomplete';
+import { CheckboxModule } from 'primeng/checkbox';
 
 @Component({
   selector: 'app-branch-master',
-  imports: [CommonModule,ReactiveFormsModule,InputTextModule,DynamicTableComponent],
+  imports: [CommonModule,ReactiveFormsModule,InputTextModule,DynamicTableComponent,DropdownModule,AutoComplete,CheckboxModule],
   templateUrl: './branch-master.component.html',
   styleUrl: './branch-master.component.css'
 })
@@ -60,7 +63,7 @@ export class BranchMasterComponent implements OnInit,OnDestroy,AfterViewInit {
     this.BranchMasterService.registerPageHandler((msg) => {
        console.log(msg);
         globalRequestHandler(msg, this.router, this.messageService);
-        if (msg.for === "getAllbranch") {
+        if (msg.for === "getAllBranch") {
           this.isLoading = false
           this.data = msg.data
         } 
@@ -72,11 +75,11 @@ export class BranchMasterComponent implements OnInit,OnDestroy,AfterViewInit {
 
   columns = [
     { header: 'ID', field: 'id' },
-    { header: 'BRANCH NAME', field: 'branch_name', icon: 'pi pi-building', styleClass: 'text-red-600' },
-    { header: 'WALLET AMOUNT', field: 'Wallet', icon: 'pi pi-map-marker', styleClass: 'text-green-600' },
-    { header: 'CITY NAME', field: 'city', icon: 'pi pi-phone' },
-    { header: 'STATE NAME', field: 'state', icon: 'pi pi-tag', styleClass: 'text-lime-600' },
-    { header: 'STATE CODE', field: 'state', icon: 'pi pi-envelope', styleClass: 'text-yellow-600' },    
+    { header: 'BRANCH NAME', field: 'branch_name', icon: 'pi pi-building-columns', styleClass: 'text-red-900' },
+    { header: 'WALLET AMOUNT', field: 'Wallet', icon: 'pi pi-wallet', styleClass: 'text-red-800' },
+    { header: 'CITY NAME', field: 'city', icon: 'pi pi-map-marker', styleClass: 'text-red-800' },
+    { header: 'STATE NAME', field: 'state', icon: 'pi pi-map', styleClass: 'text-red-800' },
+    { header: 'STATE CODE', field: 'state', icon: 'pi pi-envelope', styleClass: 'text-red-800' },    
   ];
 
   actions = [
