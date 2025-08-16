@@ -63,10 +63,6 @@
                         formControlName="taxable" optionLabel="label" optionValue="value" placeholder="SELECT TAXABLE"
                         class="w-full border border-indigo-200 rounded-md focus:border-indigo-500 focus:ring-indigo-500">
                     </p-dropdown>
-                    <span *ngIf="form.get('taxable')?.touched && form.get('taxable')?.errors?.['required']"
-                    class="text-sm text-red-600">
-                    Taxable is required.
-                    </span>
                 </div>
             </div>
 
