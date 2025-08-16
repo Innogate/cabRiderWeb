@@ -63,9 +63,8 @@ export class ChargeListMasterComponent implements OnInit, OnDestroy, AfterViewIn
       } else if (msg.for == 'chargesAddUpdate') {
         if (msg.StatusID === 1) {
           const updated = msg.data[0];  // access the first item in data array
+          // this.messageService.add({ severity: 'success', summary: 'Success', detail: msg.StatusMessage });
           this.showForm = false;
-          this.messageService.add({ severity: 'success', summary: 'Success', detail: msg.StatusMessage });
-          
           this.form.reset();
 
           const index = this.users.findIndex((v: any) => v.id == updated.id);
@@ -75,7 +74,7 @@ export class ChargeListMasterComponent implements OnInit, OnDestroy, AfterViewIn
             this.users.push(updated)
           }
         } else {
-          this.messageService.add({ severity: 'error', summary: 'Error', detail: msg.StatusMessage });
+          // this.messageService.add({ severity: 'error', summary: 'Error', detail: msg.StatusMessage });
         }
       } else if (msg.for == 'chargesDelete') {
         if (msg.StatusMessage === "success") {
@@ -83,9 +82,9 @@ export class ChargeListMasterComponent implements OnInit, OnDestroy, AfterViewIn
           if (index !== -1) {
             this.users.splice(index, 1);
           } 
-          this.messageService.add({ severity: 'success', summary: 'Success', detail: msg.StatusMessage })
+          // this.messageService.add({ severity: 'success', summary: 'Success', detail: msg.StatusMessage })
         } else {
-          this.messageService.add({ severity: 'error', summary: 'Error', detail: "Cannot Delete data" })
+          // this.messageService.add({ severity: 'error', summary: 'Error', detail: "Cannot Delete data" })
         }
       }
       return true;
