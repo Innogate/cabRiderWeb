@@ -25,6 +25,8 @@ export class MonthlyDutyMasterComponent implements OnInit, OnDestroy, AfterViewI
   cities: any[] = [];
   filteredCities: any[] = [];
   cityList: any[] = [{ Id: 0, CityName: '' }];
+  branch : any[] = [];
+  filterbranch : any[] = [{ Id: 0, BranchName: '' }];
   days: any[] = [
     {name: 'Sunday'},
     {name: 'Monday'},
@@ -34,6 +36,15 @@ export class MonthlyDutyMasterComponent implements OnInit, OnDestroy, AfterViewI
     {name: 'Friday'},
     {name: 'Saturday'},
   ];
+
+   carTypes = [
+    { label: 'Sedan', value: 'Sedan' },
+    { label: 'SUV', value: 'SUV' },
+    { label: 'Hatchback', value: 'Hatchback' },
+    { label: 'Tempo Traveller', value: 'Tempo Traveller' },
+    { label: 'Bus', value: 'Bus' }
+  ];
+
  filteredDays: any[] = [];
   
 
@@ -50,7 +61,7 @@ export class MonthlyDutyMasterComponent implements OnInit, OnDestroy, AfterViewI
   createForm() {
     this.form = this.fb.group({
   id: 0,
-  branch_id: 1,
+  BranchID: [''],
   PartyID: 2,
   UsedBy: "Admin",
   CityID: [''],
@@ -103,6 +114,8 @@ export class MonthlyDutyMasterComponent implements OnInit, OnDestroy, AfterViewI
         this.isLoading=false;
        } else if (msg.for == 'getAllCityDropdown') {
         this.cityList = msg.data;
+       } else if (msg.for == 'GatAllBranchDropDown') {
+        this.filterbranch = msg.data;
        }
        return true;
      });
@@ -180,6 +193,13 @@ export class MonthlyDutyMasterComponent implements OnInit, OnDestroy, AfterViewI
     );
   }
 
+  filterbranchlist(event: any) {
+    const query = event.query.toLowerCase();
+    this.filterbranch = this.branch.filter(branch =>
+      branch.BrunchName.toLowerCase().includes(query)
+    );
+  }
+
   filterDay(event: any) {
     const query = event.query.toLowerCase();
     this.filteredDays = this.days.filter(day =>
@@ -198,6 +218,8 @@ export class MonthlyDutyMasterComponent implements OnInit, OnDestroy, AfterViewI
     {label:"Yes", value:"Yes"},
     {label:"No", value:"No"},
   ];
+
+
 
 }
 
