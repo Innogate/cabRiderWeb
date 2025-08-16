@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { DynamicTableComponent } from '../../../components/dynamic-table/dynamic-table.component';
 import { MessageService } from 'primeng/api';
@@ -16,56 +16,58 @@ import { companyMasterService } from '../../../services/companyMaster.service';
   templateUrl: './company-master.component.html',
   styleUrl: './company-master.component.css'
 })
-export class CompanyMasterComponent implements OnInit,OnDestroy,AfterViewInit {
-  
-  showForm: boolean= false;
-  isLoading: boolean= true;
+export class CompanyMasterComponent implements OnInit, OnDestroy, AfterViewInit {
+
+  showForm: boolean = false;
+  isLoading: boolean = true;
   isEditMode: boolean = false;
   data: any[] = [];
-  heading: string='';
+  heading: string = '';
   form!: FormGroup;
   partyname: any[] = [];
   tablevalue: any;
+  comonApiService: any;
 
   constructor(
-    private companyMasterService: companyMasterService, 
+    private companyMasterService: companyMasterService,
     private router: Router,
     private messageService: MessageService,
     private fb: FormBuilder
-    
-  ){
-      this.createForm();
-    }
 
-    createForm(){
-      this.form = this.fb.group({
-         active: ['Y'],
-         Name: [''],
-         ShortName: [''],
-         Address: [''],
-         City: [''],
-         Phone: [''],
-         Email: [''],
-         Website: [''],
-         Tally_CGSTAcName: [''],
-         Tally_SGSTAcName: [''],
-         Tally_IGSTAcName: [''],
-         Tally_RndOffAcName: [''],
-         Tally_CarRentPurchaseAc: [''],
-         Tally_CarRentSaleAc: [''],
-         GSTNo: [''],
-         PANNo: [''],
-         CINNo: [''],
-         Udyam: [''],
-         HSNCode: [''],
-         CGST: [''],
-         SGST: [''],
-         IGST: [''],
-         Tally_PurVouchType: [''],
-         Tally_SaleVouchType: [''],
-         id: [0],
-      })
-    }
+  ) {
+    this.createForm();
+  }
+
+  createForm() {
+    this.form = this.fb.group({
+      active: ['Y'],
+      Name: ['', [Validators.required,Validators.minLength(3),Validators.pattern('^[A-Za-z ]{3,}$')]],
+      ShortName: ['', Validators.required],
+      Address: [''],
+      City: [''],
+      Phone: [''],
+      Email: ['', [Validators.email]],
+      Website: [''],
+      Tally_CGSTAcName: [''],
+      Tally_SGSTAcName: [''],
+      Tally_IGSTAcName: [''],
+      Tally_RndOffAcName: [''],
+      Tally_CarRentPurchaseAc: [''],
+      Tally_CarRentSaleAc: [''],
+      GSTNo: [''],
+      PANNo: [''],
+      CINNo: [''],
+      Udyam: [''],
+      HSNCode: [''],
+      CGST: [''],
+      SGST: [''],
+      IGST: [''],
+      Tally_PurVouchType: [''],
+      Tally_SaleVouchType: [''],
+      id: [0],
+    });
+  }
+
 
   ngAfterViewInit(): void {
     const payload = {
@@ -77,20 +79,39 @@ export class CompanyMasterComponent implements OnInit,OnDestroy,AfterViewInit {
     this.companyMasterService.getAllCompany(payload);
   }
   ngOnDestroy(): void {
-    throw new Error('Method not implemented.');
+    this.companyMasterService.unregisterPageHandler();
+    this.comonApiService.unregisterPageHandler();
   }
   ngOnInit(): void {
     this.companyMasterService.registerPageHandler((msg) => {
-       console.log(msg);
-        globalRequestHandler(msg, this.router, this.messageService);
-        if (msg.for === "getAllCompany") {
-          this.isLoading = false
-          this.data = msg.data
-        } 
-        return true;
-      });
+      console.log(msg);
+      globalRequestHandler(msg, this.router, this.messageService);
+      if (msg.for === "getAllCompany") {
+        this.isLoading = false
+        this.data = msg.data
+      } else if (msg.for == 'createUpdateCompany') {
+        if (msg.StatusID === 1) {
+          const updated = msg.data[0];  // access the first item in data array
+
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: msg.StatusMessage });
+          this.showForm = false;
+          this.form.reset();
+
+          const index = this.data.findIndex((v: any) => v.id == updated.id);
+          if (index !== -1) {
+            this.data[index] = { ...updated };
+          } else {
+            this.data.push(updated)
+          }
+        } else {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: msg.StatusMessage });
+        }
+
+      }
+      return true;
+    });
   }
-        // Define the columns for the dynamic table
+  // Define the columns for the dynamic table
 
   columns = [
     { header: 'ID', field: 'id' },
@@ -99,7 +120,7 @@ export class CompanyMasterComponent implements OnInit,OnDestroy,AfterViewInit {
     { header: 'Contact No', field: 'Phone', icon: 'pi pi-phone' },
     { header: 'Short Name', field: 'ShortName', icon: 'pi pi-tag', styleClass: 'text-lime-600' },
     { header: 'Email', field: 'Email', icon: 'pi pi-envelope', styleClass: 'text-yellow-600' },
-    { header: 'Website', field: 'Website', icon: 'pi pi-globe', styleClass: 'text-green-600' },    
+    { header: 'Website', field: 'Website', icon: 'pi pi-globe', styleClass: 'text-green-600' },
     { header: 'City', field: 'City', icon: 'pi pi-map', styleClass: 'text-indigo-700' },
   ];
 
@@ -114,7 +135,7 @@ export class CompanyMasterComponent implements OnInit,OnDestroy,AfterViewInit {
         this.isEditMode = true;
         this.heading = 'UPDATE COMPANY';
         console.log("edit");
-        const  partyname = this.partyname.find(partyname =>partyname.Id == event.data.party_name);
+        const partyname = this.partyname.find(partyname => partyname.Id == event.data.party_name);
         this.form.patchValue({
           ...event.data,
           party_name: partyname
@@ -129,8 +150,22 @@ export class CompanyMasterComponent implements OnInit,OnDestroy,AfterViewInit {
         this.isEditMode = false;
         console.log("add");
         this.form.reset();
-      break;
+        break;
     }
+  }
+  saveCompany() {
+    console.log("form value", this.form.value)
+    if (this.form.invalid) {
+      this.form.touched
+      this.messageService.add({ severity: "warning", summary: "warning", detail: 'Invalid Form Data' });
+      return;
+    }
+    const payload = {
+      ...this.form.value,
+      
+    }
+    //  this.guestlistMasterService.createGuest(payload)
+   
   }
 
 }
