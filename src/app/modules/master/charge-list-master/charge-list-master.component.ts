@@ -11,6 +11,7 @@ import { ButtonModule } from 'primeng/button';
 import { chargesListMasterService } from '../../../services/chargesListMaster.service';
 import { DropdownModule } from 'primeng/dropdown';
 import { SidebarModule } from 'primeng/sidebar';
+import { SweetAlertService } from '../../../services/sweet-alert.service';
 
 
 @Component({
@@ -37,7 +38,8 @@ export class ChargeListMasterComponent implements OnInit, OnDestroy, AfterViewIn
     private chargesListMasterService: chargesListMasterService,
     private messageService: MessageService,
     private router: Router,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private swal: SweetAlertService
   ) {
     this.form = this.fb.group({
       id: [],
@@ -61,9 +63,9 @@ export class ChargeListMasterComponent implements OnInit, OnDestroy, AfterViewIn
       } else if (msg.for == 'chargesAddUpdate') {
         if (msg.StatusID === 1) {
           const updated = msg.data[0];  // access the first item in data array
-
-          this.messageService.add({ severity: 'success', summary: 'Success', detail: msg.StatusMessage });
           this.showForm = false;
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: msg.StatusMessage });
+          
           this.form.reset();
 
           const index = this.users.findIndex((v: any) => v.id == updated.id);
@@ -131,7 +133,7 @@ export class ChargeListMasterComponent implements OnInit, OnDestroy, AfterViewIn
   }
 
   // Handle action events
-  handleAction(event: { action: string, data: any }) {
+  async handleAction(event: { action: string, data: any }) {
     switch (event.action) {
       case 'view':
         this.viewUser(event.data);
@@ -140,11 +142,18 @@ export class ChargeListMasterComponent implements OnInit, OnDestroy, AfterViewIn
         this.editUser(event.data);
         break;
       case 'delete':
-        this.deleteUser(event.data);
-        this.tablevalue=event.data
+        const status = await this.swal.confirmDelete("You want to delete this !");
+        if (status) {
+                this.messageService.add({ severity: 'contrast', summary: 'Info', detail: 'Please wait processing...' });
+
+          this.deleteUser(event.data);
+          this.tablevalue = event.data
+        }
         break;
       case 'add':
         this.add(event.data);
+        // this.showForm = !this.showForm;
+        // this.form.reset();
         break
 
     }
