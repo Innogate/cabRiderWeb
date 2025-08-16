@@ -516,11 +516,6 @@ export class MbillingComponent {
     this._minvoice.createMonthlyBilling(payload);
   }
 
-  dateToTimeString(date: Date): string {
-    const hours = date.getHours().toString().padStart(2, "0");
-    const minutes = date.getMinutes().toString().padStart(2, "0");
-    return `${hours}:${minutes}`;
-  }
 
   getDbTimeString(dateValue: string | Date): string {
     const date = (typeof dateValue === "string") ? new Date(dateValue) : dateValue;
@@ -606,10 +601,7 @@ async calNetAmount() {
     }
   }
 
-  getSlipNoByBookingId(bookingId: number): string {
-    const duty = this.mainDutyList.find(duty => duty.id === bookingId);
-    return duty ? duty.SlipNo : 'Not Available';  // Return 'Not Available' if not found
-  }
+
 
   roundOffValue(value: number): number {
     if (value % 1 < 0.5) {
