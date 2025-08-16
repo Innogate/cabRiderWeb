@@ -57,21 +57,26 @@ export class PartyRateMasterComponent implements OnInit, AfterViewInit, OnDestro
   previewData: any[] = [];
   editIndex: number | null = null;
   tablevalue: any;
+  carTypes = [];
 
   rateTypes = [
     { label: 'Normal', value: 'Normal' },
-    { label: 'HRS/KM slab', value: 'HRS/KM slab' },
-    { label: 'Day/KM', value: 'Day/KM' },
-    { label: 'Transfer', value: 'Transfer' }
+    { label: 'HRS/KM slab', value: 'Hrs' },
+    { label: 'Day/KM', value: 'DayKM' },
+    { label: 'Transfer', value: 'Trn' }
   ];
 
-  carTypes = [
-    { label: 'Sedan', value: 'Sedan' },
-    { label: 'SUV', value: 'SUV' },
-    { label: 'Hatchback', value: 'Hatchback' },
-    { label: 'Tempo Traveller', value: 'Tempo Traveller' },
-    { label: 'Bus', value: 'Bus' }
-  ];
+  selectedRateType: string = this.rateTypes[0].value;
+
+  get filteredData() {
+    return this.previewData?.filter(row => row.TabVal === this.selectedRateType) || [];
+  }
+
+  onTabChange(event: any) {
+    this.selectedRateType = this.rateTypes[event.index].value;
+  }
+
+
 
   transferTypes = [
     { label: 'Local', value: 'Local' },
@@ -104,11 +109,12 @@ export class PartyRateMasterComponent implements OnInit, AfterViewInit, OnDestro
   ) {
     this.createForm();
   }
+
+
   ngOnInit(): void {
     this.partyRateMasterService.registerPageHandler((msg: any) => {
       console.log(msg)
       globalRequestHandler(msg, this.router, this.messageService);
-
       if (msg.for === 'getallpartyrate') {
         this.data = msg.data;
         this.isLoading = false;
@@ -134,6 +140,8 @@ export class PartyRateMasterComponent implements OnInit, AfterViewInit, OnDestro
           this.messageService.add({ severity: 'error', summary: 'Error', detail: msg.StatusMessage });
         }
 
+      } else if (msg.for === "getAllCartypeMasterDropdown") {
+        this.carTypes = msg.data;
       }
       return true;
     });
@@ -183,7 +191,6 @@ export class PartyRateMasterComponent implements OnInit, AfterViewInit, OnDestro
       TransType: [''],
       TabVal: [''],
       IncludeTax: [''],
-      rateType: [''],
     });
 
 
@@ -212,6 +219,7 @@ export class PartyRateMasterComponent implements OnInit, AfterViewInit, OnDestro
     switch (event.action) {
       case 'edit':
         this.editPartyRate(event.data);
+        this.comonApiService.getallCartype();
         this.loadPartyNameDropdown();
         break;
       case 'delete':
@@ -219,13 +227,14 @@ export class PartyRateMasterComponent implements OnInit, AfterViewInit, OnDestro
         this.tablevalue = event.data
         break;
       case 'add':
+        this.comonApiService.getallCartype();
         this.loadPartyNameDropdown()
         this.addNewPartyRate();
         break;
     }
   }
 
-  editPartyRate(data: any) {
+  async editPartyRate(data: any) {
     this.heading = 'UPDATE PARTY RATE';
     this.showForm = true;
     const city = this.CityName.find(c => c.Id == data.city_id);
@@ -241,10 +250,11 @@ export class PartyRateMasterComponent implements OnInit, AfterViewInit, OnDestro
 
     // Make sure it's an array before pushing
     if (Array.isArray(parsedData)) {
-      this.previewData.push(...parsedData); // Spread operator pushes all items
+      this.previewData = [...parsedData];
     } else {
-      this.previewData.push(parsedData); // If it's a single object
+      this.previewData = [parsedData];
     }
+
   }
 
   addNewPartyRate() {
@@ -280,7 +290,7 @@ export class PartyRateMasterComponent implements OnInit, AfterViewInit, OnDestro
   onFloatingFormSubmit() {
     if (this.form.valid) {
       const formValue = { ...this.form.value };
-
+      console.log("value", formValue)
       if (this.editIndex !== null) {
         this.previewData[this.editIndex] = formValue;
         this.editIndex = null;
@@ -321,13 +331,43 @@ export class PartyRateMasterComponent implements OnInit, AfterViewInit, OnDestro
     }
   }
 
-
-  onEditRow(index: number) {
+  onEditRow(row: any) {
     this.showForm = true;
-    this.form.patchValue(this.previewData[index]);
-    this.editIndex = index;
+    this.form.reset();
+
+    console.log("row", row)
+
+
+    // If your form control names differ from row keys, map them:
+    const patch = {
+      car_type: Number(row.car_type),
+      KM: row.KM ?? null,
+      Amount: row.Amount ?? null,
+      MinHr: row.MinHr ?? null,
+      MinKm: row.MinKm ?? null,
+      IncludeTax: row.IncludeTax ?? null,
+      RtEfDate: row.RtEfDate ? new Date(row.RtEfDate) : null,
+      NHTime: row.NHTime ?? null,
+      NHAmount: row.NHAmount ?? null,
+      EHTime: row.EHTime ?? null,
+      EHAmount: row.EHAmount ?? null,
+      ExtKmrate: row.ExtKmrate ?? null,
+      ExtHrrate: row.ExtHrrate ?? null,
+      TransType: row.TransType ?? null,
+      HigherRate: row.HigherRate ?? null,
+      TabVal: row.TabVal ?? null
+    };
+
+    this.form.patchValue(patch);
+
+    // if you still want to keep an edit index, compute it once from current list
+    this.editIndex = this.filteredData
+      ? this.filteredData.findIndex(r => r === row || r.id === row.id)
+      : -1;
+
     this.showOption = true;
   }
+
 
   onDeleteRow(index: number) {
     this.previewData.splice(index, 1); // Remove the row
@@ -340,6 +380,7 @@ export class PartyRateMasterComponent implements OnInit, AfterViewInit, OnDestro
 
 
   savePartyRate() {
+    console.log("save party ")
     if (this.form.invalid) {
       this.form.touched
       this.messageService.add({ severity: "warning", summary: "warning", detail: 'Invalid Form Data' })
@@ -355,7 +396,4 @@ export class PartyRateMasterComponent implements OnInit, AfterViewInit, OnDestro
     this.partyRateMasterService.createUpdatePartyRate(payload);
     console.log(payload);
   }
-
-
-
 }

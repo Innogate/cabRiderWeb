@@ -20,7 +20,7 @@
         </div>
 
         <!-- Main Form Content -->
-        <div class="p-6 grid grid-cols-1 lg:grid-cols-2 gap-8 bg-sky-200">
+        <div class="p-6 pb-0 grid grid-cols-1 lg:grid-cols-2 gap-8 bg-sky-200">
             <!-- Left Column -->
             <div class="space-y-6">
                 <!-- Party Information Card -->
@@ -90,8 +90,6 @@
 
             <!-- Right Column -->
             <div class="space-y-6">
-
-
                 <!-- Contact Information Card -->
                 <div class="bg-sky-100 p-5 rounded-lg border border-sky-400">
                     <h2 class="text-lg font-semibold text-slate-950 mb-4 pb-2 border-b border-sky-400">
@@ -128,129 +126,276 @@
         </div>
 
         <!--View Option Button-->
-        <div class="p-4 bg-gray-50 border-t border-gray-200 flex justify-between items-center">
-            <div>
-                <button pButton type="button" icon="pi pi-plus" label="Select Rate Type" class="p-button-success"
-                    (click)="viewOption()"></button>
+        <div class="p-4 flex flex-col gap-4 bg-sky-200">
+            <!-- Rate Type Selection Button -->
+            <div class="flex justify-end items-end">
+                <button pButton type="button" icon="pi pi-plus" label="Add Rate Type"
+                    class="p-button-success p-button-rounded shadow-md" (click)="viewOption()"></button>
             </div>
-        </div>
 
-
-        <!-- Preview Table for Entered Rate Details -->
-        <!-- <div class="bg-white p-4 m-3 rounded-xl border border-gray-200 shadow-lg">
-            <h3 class="text-2xl sm:text-3xl font-bold text-blue-900 flex items-center gap-2 pb-4">
-                Preview
-            </h3>
-            <p-table [value]="previewData ? [previewData] : []" *ngIf="previewData"
-                class="p-datatable-gridlines rounded-xl">
-                <ng-template pTemplate="header">
-                    <tr class="bg-blue-100 text-gray-800 text-xs font-semibold">
-                        <th class="py-2 px-3">Rate Type</th>
-                        <th class="py-2 px-3">Car Type</th>
-                        <th class="py-2 px-3">Hour Rate</th>
-                        <th class="py-2 px-3">KM Rate</th>
-                        <th class="py-2 px-3">Min Hrs</th>
-                        <th class="py-2 px-3">Min KM</th>
-                        <th class="py-2 px-3">Include Tax</th>
-                        <th class="py-2 px-3">Effect Date</th>
-                        <th class="py-2 px-3">NH Time</th>
-                        <th class="py-2 px-3">NH Amount</th>
-                        <th class="py-2 px-3">EH Time</th>
-                        <th class="py-2 px-3">EH Amount</th>
-                        <th class="py-2 px-3">Amount</th>
-                        <th class="py-2 px-3">Extra Hrs Rate</th>
-                        <th class="py-2 px-3">Extra KM Rate</th>
-                        <th class="py-2 px-3">Whichever Higher</th>
-                        <th class="py-2 px-3">Transfer Type</th>
-                        <th class="py-2 px-3">Actions</th>
-                    </tr>
-                </ng-template>
-                <ng-template pTemplate="body" let-row>
-                    <tr class="text-gray-800 hover:bg-blue-50 transition-all text-xs"
-                        *ngFor="let row of previewData; let i = index">
-                        <td class="py-2 px-3">{{ row.rateType }}</td>
-                        <td class="py-2 px-3">{{ row.car_type }}</td>
-                        <td class="py-2 px-3">{{ row.Hours }}</td>
-                        <td class="py-2 px-3">{{ row.KM }}</td>
-                        <td class="py-2 px-3">{{ row.MinHr }}</td>
-                        <td class="py-2 px-3">{{ row.MinKm }}</td>
-                        <td class="py-2 px-3">{{ row.IncludeTax }}</td>
-                        <td class="py-2 px-3">{{ row.RtEfDate }}</td>
-                        <td class="py-2 px-3">{{ row.NHTime }}</td>
-                        <td class="py-2 px-3">{{ row.NHAmount }}</td>
-                        <td class="py-2 px-3">{{ row.EHTime }}</td>
-                        <td class="py-2 px-3">{{ row.EHAmount }}</td>
-                        <td class="py-2 px-3">{{ row.Amount }}</td>
-                        <td class="py-2 px-3">{{ row.ExtHrrate }}</td>
-                        <td class="py-2 px-3">{{ row.ExtKmrate }}</td>
-                        <td class="py-2 px-3">{{ row.HigherRate ? 'Yes' : 'No' }}</td>
-                        <td class="py-2 px-3">{{ row.TransType }}</td>
-                        <td>
-                            <div class="flex justify-center gap-2">
-                                <button pButton icon="pi pi-pencil"
-                                    class="p-button-sm p-button-rounded p-button-warning"
-                                    (click)="onEditRow(i)"></button>
-                                <button pButton icon="pi pi-trash" class="p-button-sm p-button-rounded p-button-danger"
-                                    (click)="onDeleteRow(i)"></button>
-                            </div>
-                        </td>
-                    </tr>
-                </ng-template>
-            </p-table>
-        </div> -->
-
-        <div class="bg-white p-4 m-3 rounded-xl border border-gray-200 shadow-lg">
-            <h3
-                class="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-blue-600 via-indigo-500 to-purple-500 bg-clip-text text-transparent flex items-center gap-2 pb-4">
-                Preview
-            </h3>
-
-            <div *ngIf="previewData" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                <div *ngFor="let row of previewData; let i = index"
-                    class="border border-gray-200 rounded-xl p-4 shadow-sm hover:shadow-lg transition-all bg-gradient-to-br from-white via-blue-50 to-blue-100">
-                    <!-- Header -->
-                    <div class="flex justify-between items-center mb-3">
-                        <h4 class="text-lg font-semibold text-gray-800">
-                            {{ row.car_type }}
-                        </h4>
-                        <span class="px-2 py-1 text-xs rounded-full bg-blue-200 text-blue-800 font-medium">
-                            {{ row.rateType }}
-                        </span>
-                    </div>
-
-                    <!-- Details Grid -->
-                    <div class="grid grid-cols-2 gap-2 text-sm text-gray-700">
-                        <div><span class="font-medium">Hour Rate:</span> {{ row.Hours }}</div>
-                        <div><span class="font-medium">KM Rate:</span> {{ row.KM }}</div>
-                        <div><span class="font-medium">Min Hrs:</span> {{ row.MinHr }}</div>
-                        <div><span class="font-medium">Min KM:</span> {{ row.MinKm }}</div>
-                        <div><span class="font-medium">Include Tax:</span> {{ row.IncludeTax }}</div>
-                        <div><span class="font-medium">Effect Date:</span> {{ row.RtEfDate }}</div>
-                        <div><span class="font-medium">NH Time:</span> {{ row.NHTime }}</div>
-                        <div><span class="font-medium">NH Amount:</span> {{ row.NHAmount }}</div>
-                        <div><span class="font-medium">EH Time:</span> {{ row.EHTime }}</div>
-                        <div><span class="font-medium">EH Amount:</span> {{ row.EHAmount }}</div>
-                        <div><span class="font-medium">Amount:</span> {{ row.Amount }}</div>
-                        <div><span class="font-medium">Extra Hrs Rate:</span> {{ row.ExtHrrate }}</div>
-                        <div><span class="font-medium">Extra KM Rate:</span> {{ row.ExtKmrate }}</div>
-                        <div>
-                            <span class="font-medium">Higher Rate:</span>
-                            {{ row.HigherRate ? 'Yes' : 'No' }}
+            <!-- Tab View Container -->
+            <p-tabView (onChange)="onTabChange($event)" class="custom-tabview">
+                <p-tabPanel *ngFor="let rate of rateTypes" [header]="rate.label">
+                    <!-- Preview Card -->
+                    <div class="bg-white rounded-xl border border-gray-200 shadow-lg overflow-hidden">
+                        <!-- Preview Header -->
+                        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 border-b">
+                            <h3 class="text-xl sm:text-2xl font-bold text-gray-800 flex items-center gap-2">
+                                <i class="pi pi-eye"></i>
+                                {{ rate.label }} Rates Preview
+                            </h3>
                         </div>
-                        <div><span class="font-medium">Transfer Type:</span> {{ row.TransType }}</div>
-                    </div>
 
-                    <!-- Actions -->
-                    <div class="flex justify-end gap-2 mt-4">
-                        <button pButton icon="pi pi-pencil" class="p-button-sm p-button-rounded p-button-warning"
-                            (click)="onEditRow(i)"></button>
-                        <button pButton icon="pi pi-trash" class="p-button-sm p-button-rounded p-button-danger"
-                            (click)="onDeleteRow(i)"></button>
+                        <!-- Preview Content -->
+                        <div class="p-4">
+                            <!-- ✅ Normal Rate Table -->
+                            <p-table *ngIf="filteredData.length > 0 && selectedRateType === 'Normal'; else checkOther"
+                                [value]="filteredData" [paginator]="true" [rows]="5"
+                                class="p-datatable-striped p-datatable-sm shadow-sm rounded-lg">
+                                <ng-template pTemplate="header">
+                                    <tr class="bg-gray-100">
+                                        <th class="font-semibold">Car Type</th>
+                                        <th class="font-semibold">Hours Rate</th>
+                                        <th class="font-semibold">KM Rate</th>
+                                        <th class="font-semibold">Min HRS</th>
+                                        <th class="font-semibold">Min KM</th>
+                                        <th class="font-semibold">Include Tax</th>
+                                        <th class="font-semibold">Effect Date</th>
+                                        <th class="font-semibold">Night Halt</th>
+                                        <th class="font-semibold">Early Halt</th>
+                                        <th class="font-semibold">Actions</th>
+                                    </tr>
+                                </ng-template>
+
+                                <ng-template pTemplate="body" let-row let-i="rowIndex">
+                                    <tr class="hover:bg-blue-50 transition-colors">
+                                        <td class="font-medium">{{ row.car_type }}</td>
+                                        <td>{{ row.Hours | currency:'INR' }}</td>
+                                        <td>{{ row.KM | currency:'INR' }}</td>
+                                        <td>{{ row.MinHr || '-' }}</td>
+                                        <td>{{ row.MinKm || '-' }}</td>
+                                        <td>
+                                            <span [class]="row.IncludeTax === 'Y' ? 'badge-success' : 'badge-warning'">
+                                                {{ row.IncludeTax === 'Y' ? 'Yes' : 'No' }}
+                                            </span>
+                                        </td>
+                                        <td>{{ row.RtEfDate | date }}</td>
+                                        <td>
+                                            <span *ngIf="row.NHTime">{{ row.NHTime }} - {{ row.NHAmount | currency:'INR'
+                                                }}</span>
+                                            <span *ngIf="!row.NHTime">-</span>
+                                        </td>
+                                        <td>
+                                            <span *ngIf="row.EHTime">{{ row.EHTime }} - {{ row.EHAmount | currency:'INR'
+                                                }}</span>
+                                            <span *ngIf="!row.EHTime">-</span>
+                                        </td>
+                                        <td class="flex gap-1">
+                                            <button pButton type="button" icon="pi pi-pencil"
+                                                class="p-button-sm p-button-rounded p-button-outlined p-button-warning"
+                                                (click)="onEditRow(row)">
+                                            </button>
+
+                                            <button pButton type="button" icon="pi pi-trash"
+                                                class="p-button-sm p-button-rounded p-button-outlined p-button-danger"
+                                                (click)="onDeleteRow(row)">
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+
+                            <!-- ✅ Day/KM Table -->
+                            <ng-template #checkOther>
+                                <p-table
+                                    *ngIf="filteredData.length > 0 && selectedRateType === 'DayKM'; else checkHrsKm"
+                                    [value]="filteredData" [paginator]="true" [rows]="5"
+                                    class="p-datatable-striped p-datatable-sm shadow-sm rounded-lg">
+                                    <ng-template pTemplate="header">
+                                        <tr class="bg-gray-100">
+                                            <th class="font-semibold">Car Type</th>
+                                            <th class="font-semibold">KM</th>
+                                            <th class="font-semibold">Amount</th>
+                                            <th class="font-semibold">Extra KM Rate</th>
+                                            <th class="font-semibold">Effect Date</th>
+                                            <th class="font-semibold">Include Tax</th>
+                                            <th class="font-semibold">Night Halt</th>
+                                            <th class="font-semibold">Early Halt</th>
+                                            <th class="font-semibold">Actions</th>
+                                        </tr>
+                                    </ng-template>
+
+                                    <ng-template pTemplate="body" let-row let-i="rowIndex">
+                                        <tr class="hover:bg-blue-50 transition-colors">
+                                            <td class="font-medium">{{ row.car_type }}</td>
+                                            <td>{{ row.KM }}</td>
+                                            <td>{{ row.Amount | currency:'INR' }}</td>
+                                            <td>{{ row.ExtKmrate | currency:'INR' }}</td>
+                                            <td>{{ row.RtEfDate | date }}</td>
+                                            <td>
+                                                <span
+                                                    [class]="row.IncludeTax === 'Y' ? 'badge-success' : 'badge-warning'">
+                                                    {{ row.IncludeTax === 'Y' ? 'Yes' : 'No' }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span *ngIf="row.NHTime">{{ row.NHTime }} - {{ row.NHAmount |
+                                                    currency:'INR' }}</span>
+                                                <span *ngIf="!row.NHTime">-</span>
+                                            </td>
+                                            <td>
+                                                <span *ngIf="row.EHTime">{{ row.EHTime }} - {{ row.EHAmount |
+                                                    currency:'INR' }}</span>
+                                                <span *ngIf="!row.EHTime">-</span>
+                                            </td>
+                                            <td class="flex gap-1">
+                                                <button pButton type="button" icon="pi pi-pencil"
+                                                    class="p-button-sm p-button-rounded p-button-outlined p-button-warning"
+                                                    (click)="onEditRow(row)">
+                                                </button>
+
+                                                <button pButton type="button" icon="pi pi-trash"
+                                                    class="p-button-sm p-button-rounded p-button-outlined p-button-danger"
+                                                    (click)="onDeleteRow(row)">
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </ng-template>
+                                </p-table>
+                            </ng-template>
+
+                            <!-- ✅ HRS/KM Slab Table -->
+                            <ng-template #checkHrsKm>
+                                <p-table
+                                    *ngIf="filteredData.length > 0 && selectedRateType === 'Hrs'; else checkTransfer"
+                                    [value]="filteredData" [paginator]="true" [rows]="5"
+                                    class="p-datatable-striped p-datatable-sm shadow-sm rounded-lg">
+                                    <ng-template pTemplate="header">
+                                        <tr class="bg-gray-100">
+                                            <th class="font-semibold">Car Type</th>
+                                            <th class="font-semibold">Hours</th>
+                                            <th class="font-semibold">KM</th>
+                                            <th class="font-semibold">Amount</th>
+                                            <th class="font-semibold">Extra Rates</th>
+                                            <th class="font-semibold">Higher Rate</th>
+                                            <th class="font-semibold">Include Tax</th>
+                                            <th class="font-semibold">Effect Date</th>
+                                            <th class="font-semibold">Halt Details</th>
+                                            <th class="font-semibold">Actions</th>
+                                        </tr>
+                                    </ng-template>
+
+                                    <ng-template pTemplate="body" let-row let-i="rowIndex">
+                                        <tr class="hover:bg-blue-50 transition-colors">
+                                            <td class="font-medium">{{ row.car_type }}</td>
+                                            <td>{{ row.Hours }}</td>
+                                            <td>{{ row.KM }}</td>
+                                            <td>{{ row.Amount | currency:'INR' }}</td>
+                                            <td>
+                                                <div class="text-xs">
+                                                    <div>Hrs: {{ row.ExtHrrate | currency:'INR' }}</div>
+                                                    <div>KM: {{ row.ExtKmrate | currency:'INR' }}</div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span [class]="row.HigherRate ? 'badge-info' : 'badge-secondary'">
+                                                    {{ row.HigherRate ? 'Yes' : 'No' }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span
+                                                    [class]="row.IncludeTax === 'Y' ? 'badge-success' : 'badge-warning'">
+                                                    {{ row.IncludeTax === 'Y' ? 'Yes' : 'No' }}
+                                                </span>
+                                            </td>
+                                            <td>{{ row.RtEfDate | date }}</td>
+                                            <td>
+                                                <div class="text-xs">
+                                                    <div>Night: {{ row.NHTime || '-' }} - {{ row.NHAmount |
+                                                        currency:'INR' }}</div>
+                                                    <div>Early: {{ row.EHTime || '-' }} - {{ row.EHAmount |
+                                                        currency:'INR' }}</div>
+                                                </div>
+                                            </td>
+
+                                            <td class="flex gap-1">
+                                                <button pButton type="button" icon="pi pi-pencil"
+                                                    class="p-button-sm p-button-rounded p-button-outlined p-button-warning"
+                                                    (click)="onEditRow(row)">
+                                                </button>
+
+                                                <button pButton type="button" icon="pi pi-trash"
+                                                    class="p-button-sm p-button-rounded p-button-outlined p-button-danger"
+                                                    (click)="onDeleteRow(row)">
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </ng-template>
+                                </p-table>
+                            </ng-template>
+
+                            <!-- ✅ Transfer Table -->
+                            <ng-template #checkTransfer>
+                                <p-table *ngIf="filteredData.length > 0 && selectedRateType === 'Trn'; else noData"
+                                    [value]="filteredData" [paginator]="true" [rows]="5"
+                                    class="p-datatable-striped p-datatable-sm shadow-sm rounded-lg">
+                                    <ng-template pTemplate="header">
+                                        <tr class="bg-gray-100">
+                                            <th class="font-semibold">Car Type</th>
+                                            <th class="font-semibold">Transfer Type</th>
+                                            <th class="font-semibold">Amount</th>
+                                            <th class="font-semibold">Effect Date</th>
+                                            <th class="font-semibold">Include Tax</th>
+                                            <th class="font-semibold">Actions</th>
+                                        </tr>
+                                    </ng-template>
+
+                                    <ng-template pTemplate="body" let-row let-i="rowIndex">
+                                        <tr class="hover:bg-blue-50 transition-colors">
+                                            <td class="font-medium">{{ row.car_type }}</td>
+                                            <td>
+                                                <span>
+                                                    {{ row.TransType }}
+                                                </span>
+                                            </td>
+                                            <td>{{ row.Amount | currency:'INR' }}</td>
+                                            <td>{{ row.RtEfDate | date }}</td>
+                                            <td>
+                                                <span
+                                                    [class]="row.IncludeTax === 'Y' ? 'badge-success' : 'badge-warning'">
+                                                    {{ row.IncludeTax === 'Y' ? 'Yes' : 'No' }}
+                                                </span>
+                                            </td>
+                                            <td class="flex gap-1">
+                                                <button pButton type="button" icon="pi pi-pencil"
+                                                    class="p-button-sm p-button-rounded p-button-outlined p-button-warning"
+                                                    (click)="onEditRow(row)">
+                                                </button>
+
+                                                <button pButton type="button" icon="pi pi-trash"
+                                                    class="p-button-sm p-button-rounded p-button-outlined p-button-danger"
+                                                    (click)="onDeleteRow(row)">
+                                                </button>
+                                            </td>
+
+                                        </tr>
+                                    </ng-template>
+                                </p-table>
+                            </ng-template>
+
+                            <!-- No Data Template -->
+                            <ng-template #noData>
+                                <div class="flex flex-col items-center justify-center p-8 text-center text-gray-500">
+                                    <i class="pi pi-database text-4xl mb-4 text-gray-300"></i>
+                                    <p class="text-lg">No records found for {{ rate.label }} rates</p>
+                                    <p class="text-sm">Click the "Select Rate Type" button to add new rates</p>
+                                </div>
+                            </ng-template>
+                        </div>
                     </div>
-                </div>
-            </div>
+                </p-tabPanel>
+            </p-tabView>
         </div>
-
 
         <!-- Footer with Submit Button -->
         <div class="bg-sky-400 px-6 py-4 border-t border-gray-200 flex justify-end">
@@ -266,348 +411,158 @@
 
 
 <!--Show Options-->
-<p-dialog header="Select Rate Type" [(visible)]="showOption" [modal]="true" [style]="{ width: '1000px' }"
-    [closable]="true" [dismissableMask]="true" [breakpoints]="{ '960px': '100vw', '640px': '100vw' }"
-    styleClass="custom-dialog p-0 overflow-hidden rounded-xl shadow-lg bg-sky-600">
-
-
-    <form [formGroup]="form" (ngSubmit)="onFloatingFormSubmit()" class="px-2 space-y-4">
+<p-dialog header="Select Rate Type" [(visible)]="showOption" [modal]="true" [style]="{ width: '1200px' }"
+    [closable]="true" [dismissableMask]="false" [breakpoints]="{ '960px': '120vw', '640px': '100vw' }"
+    styleClass="custom-dialog p-0 overflow-hidden rounded-xl shadow-lg">
+    <form [formGroup]="form" (ngSubmit)="onFloatingFormSubmit()" class="p-4 space-y-6 bg-white">
 
         <!-- Rate Type -->
         <div>
-            <div class="flex items-center space-x-2">
-                <i class="pi pi-users text-orange-600"></i>
-                <label class="text-sm font-medium text-slate-950">Rate Type</label>
+            <div class="flex items-center space-x-2 mb-2">
+                <i class="pi pi-users text-sky-600"></i>
+                <label class="text-sm font-semibold text-gray-800">Rate Type</label>
             </div>
-            <p-dropdown formControlName="rateType" [options]="rateTypes" optionLabel="label" optionValue="value"
-                placeholder="Select Rate Type" appendTo="body" class="w-full border border-gray-300 rounded-lg">
-            </p-dropdown>
+            <p-dropdown formControlName="TabVal" [options]="rateTypes" optionLabel="label" optionValue="value"
+                placeholder="Select Rate Type" appendTo="body" class="w-full"></p-dropdown>
         </div>
 
-
+        <!-- Common Fields -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <!-- Car Type -->
             <div>
-                <div class="flex items-center gap-2 mb-1 text-gray-700">
-                    <i class="pi pi-car text-indigo-600"></i>
-                    <label for="" class="text-sm font-medium">Car Type</label>
-                </div>
-                <p-dropdown [options]="carTypes" formControlName="car_type" optionLabel="label" optionValue="value"
-                    appendTo="body" placeholder="Select Car" class="w-full"></p-dropdown>
+                <label class="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-1">
+                    <i class="pi pi-car text-sky-600"></i> Car Type
+                </label>
+                <p-dropdown [options]="carTypes" formControlName="car_type" optionLabel="car_type" optionValue="id"
+                    placeholder="Select Car" appendTo="body" class="w-full"></p-dropdown>
             </div>
 
             <!-- Include Tax -->
             <div>
-                <div class="flex items-center gap-2 mb-1 text-gray-700">
-                    <i class="pi pi-check-circle text-indigo-600"></i>
-                    <label class="text-sm font-medium">Include Tax</label>
-                </div>
+                <label class="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-1">
+                    <i class="pi pi-check-circle text-sky-600"></i> Include Tax
+                </label>
                 <p-dropdown [options]="includeTaxOptions" formControlName="IncludeTax" placeholder="Include Tax"
                     class="w-full"></p-dropdown>
             </div>
 
             <!-- Effect Date -->
             <div>
-                <div class="flex items-center gap-2 mb-1 text-gray-700">
-                    <i class="pi pi-calendar text-indigo-600"></i>
-                    <label for="" class="text-sm font-medium">Effect Date</label>
-                </div>
+                <label class="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-1">
+                    <i class="pi pi-calendar text-sky-600"></i> Effect Date
+                </label>
                 <p-calendar formControlName="RtEfDate" size="large" dateFormat="dd/mm/yy" placeholder="dd/mm/yyyy"
                     appendTo="body" class="w-full"></p-calendar>
             </div>
         </div>
 
-
-
         <!-- Normal Rate Type Fields -->
-        <ng-container *ngIf="form.get('rateType')?.value === 'Normal'">
-
+        <ng-container *ngIf="form.get('TabVal')?.value === 'Normal'">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <!-- Hour Rate -->
-                <div>
-                    <div class="flex items-center gap-2 mb-1 text-gray-700">
-                        <i class="pi pi-clock text-indigo-600"></i>
-                        <label for="" class="text-sm font-medium">Hour Rate</label>
-                    </div>
-                    <input pInputText formControlName="Hours" placeholder="Hour Rate" />
-                </div>
-
-                <!-- KM Rate -->
-                <div>
-                    <div class="flex items-center gap-2 mb-1 text-gray-700">
-                        <i class="pi pi-arrow-up text-indigo-600"></i>
-                        <label class="text-sm font-medium">KM Rate</label>
-                    </div>
-                    <input pInputText formControlName="KM" placeholder="KM Rate" />
-                </div>
-
-                <!-- Min Hrs -->
-                <div>
-                    <div class="flex items-center gap-2 mb-1 text-gray-700">
-                        <i class="pi pi-clock text-indigo-600"></i>
-                        <label for="" class="text-sm font-medium">Min Hrs</label>
-                    </div>
-                    <input pInputText formControlName="MinHr" placeholder="Min Hrs" />
-                </div>
-
-                <!-- Min KM -->
-                <div>
-                    <div class="flex items-center gap-2 mb-1 text-gray-700">
-                        <i class="pi pi-map-marker text-indigo-600"></i>
-                        <label for="" class="text-sm font-medium">Min KM</label>
-                    </div>
-                    <input pInputText formControlName="MinKm" placeholder="Min KM" />
+                <div *ngFor="let field of [
+          { icon: 'pi pi-clock', label: 'Hour Rate', control: 'Hours', placeholder: 'Hour Rate' },
+          { icon: 'pi pi-arrow-up', label: 'KM Rate', control: 'KM', placeholder: 'KM Rate' },
+          { icon: 'pi pi-clock', label: 'Min Hrs', control: 'MinHr', placeholder: 'Min Hrs' },
+          { icon: 'pi pi-map-marker', label: 'Min KM', control: 'MinKm', placeholder: 'Min KM' }
+        ]">
+                    <label class="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-1">
+                        <i class="{{field.icon}} text-sky-600"></i> {{field.label}}
+                    </label>
+                    <input pInputText [formControlName]="field.control" [placeholder]="field.placeholder"
+                        class="w-full" />
                 </div>
             </div>
 
-
+            <!-- Night/Early Halt -->
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <!-- Night Halt Time -->
-                <div>
-                    <div class="flex items-center gap-2 mb-1 text-gray-700">
-                        <i class="pi pi-moon text-indigo-600"></i>
-                        <label for="" class="text-sm font-medium">Night Halt Time</label>
-                    </div>
-                    <input pInputText formControlName="NHTime" placeholder="Night Halt Time" />
-                </div>
-
-                <!-- Night Halt Amount -->
-                <div>
-                    <div class="flex items-center gap-2 mb-1 text-gray-700">
-                        <i class="pi pi-dollar text-indigo-600"></i>
-                        <label class="text-sm font-medium">Night Halt Amount</label>
-                    </div>
-                    <input pInputText formControlName="NHAmount" placeholder="Night Halt Amount" />
-                </div>
-
-                <!-- Early Halt Time -->
-                <div>
-                    <div class="flex items-center gap-2 mb-1 text-gray-700">
-                        <i class="pi pi-history text-indigo-600"></i>
-                        <label for="" class="text-sm font-medium">Early Halt Time</label>
-                    </div>
-                    <input pInputText formControlName="EHTime" placeholder="Early Halt Time" />
-                </div>
-
-                <!-- Early Halt Amount -->
-                <div>
-                    <div class="flex items-center gap-2 mb-1 text-gray-700">
-                        <i class="pi pi-dollar text-indigo-600"></i>
-                        <label for="" class="text-sm font-medium">Early Halt Amount</label>
-                    </div>
-                    <input pInputText formControlName="EHAmount" placeholder="Early Halt Amount" />
+                <div *ngFor="let field of [
+          { icon: 'pi pi-moon', label: 'Night Halt Time', control: 'NHTime' },
+          { icon: 'pi pi-dollar', label: 'Night Halt Amount', control: 'NHAmount' },
+          { icon: 'pi pi-history', label: 'Early Halt Time', control: 'EHTime' },
+          { icon: 'pi pi-dollar', label: 'Early Halt Amount', control: 'EHAmount' }
+        ]">
+                    <label class="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-1">
+                        <i class="{{field.icon}} text-sky-600"></i> {{field.label}}
+                    </label>
+                    <input pInputText [formControlName]="field.control" [placeholder]="field.label" class="w-full" />
                 </div>
             </div>
-
-
         </ng-container>
 
-        <!-- HRS/KM slab Fields -->
-        <ng-container *ngIf="form.get('rateType')?.value === 'HRS/KM slab'">
-
+        <!-- HRS/KM Slab -->
+        <ng-container *ngIf="form.get('TabVal')?.value === 'Hrs'">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <!-- Hours -->
-                <div>
-                    <div class="flex items-center gap-2 mb-1 text-gray-700">
-                        <i class="pi pi-clock text-indigo-600"></i>
-                        <label for="" class="text-sm font-medium">Hours</label>
-                    </div>
-                    <input pInputText formControlName="Hours" />
-                </div>
-
-                <!-- KM -->
-                <div>
-                    <div class="flex items-center gap-2 mb-1 text-gray-700">
-                        <i class="pi pi-arrow-up text-indigo-600"></i>
-                        <label class="text-sm font-medium">KM</label>
-                    </div>
-                    <input pInputText formControlName="KM" />
-                </div>
-
-                <!-- Amount -->
-                <div>
-                    <div class="flex items-center gap-2 mb-1 text-gray-700">
-                        <i class="pi pi-dollar text-indigo-600"></i>
-                        <label for="" class="text-sm font-medium">Amount</label>
-                    </div>
-                    <input pInputText formControlName="Amount" />
-                </div>
-
-                <!-- Extra Hours Rate -->
-                <div>
-                    <div class="flex items-center gap-2 mb-1 text-gray-700">
-                        <i class="pi pi-calendar text-indigo-600"></i>
-                        <label for="" class="text-sm font-medium">Extra Hours Rate</label>
-                    </div>
-                    <input pInputText formControlName="ExtHrrate" />
+                <div *ngFor="let field of [
+          { icon: 'pi pi-clock', label: 'Hours', control: 'Hours' },
+          { icon: 'pi pi-arrow-up', label: 'KM', control: 'KM' },
+          { icon: 'pi pi-dollar', label: 'Amount', control: 'Amount' },
+          { icon: 'pi pi-calendar', label: 'Extra Hours Rate', control: 'ExtHrrate' }
+        ]">
+                    <label class="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-1">
+                        <i class="{{field.icon}} text-sky-600"></i> {{field.label}}
+                    </label>
+                    <input pInputText [formControlName]="field.control" class="w-full" />
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <!-- Night Halt Time -->
+            <!-- Extra KM + Whichever Higher -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                    <div class="flex items-center gap-2 mb-1 text-gray-700">
-                        <i class="pi pi-moon text-indigo-600"></i>
-                        <label for="" class="text-sm font-medium">Night Halt Time</label>
-                    </div>
-                    <input pInputText formControlName="NHTime" placeholder="Night Halt Time" />
+                    <label class="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-1">
+                        <i class="pi pi-map-marker text-sky-600"></i> Extra KM Rate
+                    </label>
+                    <input pInputText formControlName="ExtKmrate" class="w-full" />
                 </div>
-
-                <!-- Night Halt Amount -->
-                <div>
-                    <div class="flex items-center gap-2 mb-1 text-gray-700">
-                        <i class="pi pi-dollar text-indigo-600"></i>
-                        <label class="text-sm font-medium">Night Halt Amount</label>
-                    </div>
-                    <input pInputText formControlName="NHAmount" placeholder="Night Halt Amount" />
-                </div>
-
-                <!-- Early Halt Time -->
-                <div>
-                    <div class="flex items-center gap-2 mb-1 text-gray-700">
-                        <i class="pi pi-history text-indigo-600"></i>
-                        <label for="" class="text-sm font-medium">Early Halt Time</label>
-                    </div>
-                    <input pInputText formControlName="EHTime" placeholder="Early Halt Time" />
-                </div>
-
-                <!-- Early Halt Amount -->
-                <div>
-                    <div class="flex items-center gap-2 mb-1 text-gray-700">
-                        <i class="pi pi-dollar text-indigo-600"></i>
-                        <label for="" class="text-sm font-medium">Early Halt Amount</label>
-                    </div>
-                    <input pInputText formControlName="EHAmount" placeholder="Early Halt Amount" />
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-
-                <!-- Extra KM Rate -->
-                <div>
-                    <div class="flex items-center gap-2 mb-1 text-gray-700">
-                        <i class="pi pi-map-marker text-indigo-600"></i>
-                        <label for="" class="text-sm font-medium">Extra KM Rate</label>
-                    </div>
-                    <input pInputText formControlName="ExtKmrate" />
-                </div>
-
-                <!-- Whichever Higher -->
-                <div>
-                    <div class="flex items-center gap-2 mb-1 text-gray-700">
-                        <i class="pi pi-chart-bar text-indigo-600"></i>
-                        <label for="" class="text-sm font-medium">Whichever Higher</label>
-                    </div>
+                <div class="flex items-center gap-2 mt-6">
+                    <i class="pi pi-chart-bar text-sky-600"></i>
+                    <label class="text-sm font-semibold text-gray-700">Whichever Higher</label>
                     <p-checkbox formControlName="HigherRate" binary="true"></p-checkbox>
                 </div>
             </div>
         </ng-container>
 
-        <!-- Day/KM Fields -->
-        <ng-container *ngIf="form.get('rateType')?.value === 'Day/KM'">
-
+        <!-- Day/KM -->
+        <ng-container *ngIf="form.get('TabVal')?.value === 'DayKM'">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <!-- KM -->
-                <div>
-                    <div class="flex items-center gap-2 mb-1 text-gray-700">
-                        <i class="pi pi-arrow-up text-indigo-600"></i>
-                        <label class="text-sm font-medium">KM</label>
-                    </div>
-                    <input pInputText formControlName="KM" class="w-full " />
-                </div>
-
-                <!-- Amount -->
-                <div>
-                    <div class="flex items-center gap-2 mb-1 text-gray-700">
-                        <i class="pi pi-dollar text-indigo-600"></i>
-                        <label for="" class="text-sm font-medium">Amount</label>
-                    </div>
-                    <input pInputText formControlName="Amount" class="w-full " />
-                </div>
-
-                <!-- Extra KM Rate -->
-                <div>
-                    <div class="flex items-center gap-2 mb-1 text-gray-700">
-                        <i class="pi pi-calendar text-indigo-600"></i>
-                        <label for="" class="text-sm font-medium">Extra KM Rate</label>
-                    </div>
-                    <input pInputText formControlName="ExtKmrate" class="w-full " />
+                <div *ngFor="let field of [
+          { icon: 'pi pi-arrow-up', label: 'KM', control: 'KM' },
+          { icon: 'pi pi-dollar', label: 'Amount', control: 'Amount' },
+          { icon: 'pi pi-calendar', label: 'Extra KM Rate', control: 'ExtKmrate' }
+        ]">
+                    <label class="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-1">
+                        <i class="{{field.icon}} text-sky-600"></i> {{field.label}}
+                    </label>
+                    <input pInputText [formControlName]="field.control" class="w-full" />
                 </div>
             </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <!-- Night Halt Time -->
-                <div>
-                    <div class="flex items-center gap-2 mb-1 text-gray-700">
-                        <i class="pi pi-moon text-indigo-600"></i>
-                        <label for="" class="text-sm font-medium">Night Halt Time</label>
-                    </div>
-                    <input pInputText formControlName="NHTime" placeholder="Night Halt Time" />
-                </div>
-
-                <!-- Night Halt Amount -->
-                <div>
-                    <div class="flex items-center gap-2 mb-1 text-gray-700">
-                        <i class="pi pi-dollar text-indigo-600"></i>
-                        <label class="text-sm font-medium">Night Halt Amount</label>
-                    </div>
-                    <input pInputText formControlName="NHAmount" placeholder="Night Halt Amount" />
-                </div>
-
-                <!-- Early Halt Time -->
-                <div>
-                    <div class="flex items-center gap-2 mb-1 text-gray-700">
-                        <i class="pi pi-history text-indigo-600"></i>
-                        <label for="" class="text-sm font-medium">Early Halt Time</label>
-                    </div>
-                    <input pInputText formControlName="EHTime" placeholder="Early Halt Time" />
-                </div>
-
-                <!-- Early Halt Amount -->
-                <div>
-                    <div class="flex items-center gap-2 mb-1 text-gray-700">
-                        <i class="pi pi-dollar text-indigo-600"></i>
-                        <label for="" class="text-sm font-medium">Early Halt Amount</label>
-                    </div>
-                    <input pInputText formControlName="EHAmount" placeholder="Early Halt Amount" />
-                </div>
-            </div>
-
         </ng-container>
 
-        <!-- Transfer Fields -->
-        <ng-container *ngIf="form.get('rateType')?.value === 'Transfer'">
+        <!-- Transfer -->
+        <ng-container *ngIf="form.get('TabVal')?.value === 'Trn'">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <!-- Night Halt Time -->
                 <div>
-                    <div class="flex items-center gap-2 mb-1 text-gray-700">
-                        <i class="pi pi-moon text-indigo-600"></i>
-                        <label for="" class="text-sm font-medium">Night Halt Time</label>
-                    </div>
+                    <label class="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-1">
+                        <i class="pi pi-refresh text-sky-600"></i> Transfer Type
+                    </label>
                     <p-dropdown formControlName="TransType" [options]="transferTypes" optionLabel="label"
                         optionValue="value" placeholder="Select Transfer Type" appendTo="body"
                         class="w-full"></p-dropdown>
                 </div>
-
-                <!-- Night Halt Amount -->
                 <div>
-                    <div class="flex items-center gap-2 mb-1 text-gray-700">
-                        <i class="pi pi-dollar text-indigo-600"></i>
-                        <label class="text-sm font-medium">Night Halt Amount</label>
-                    </div>
-                    <input pInputText formControlName="Amount" appendTo="body" class="w-full" />
+                    <label class="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-1">
+                        <i class="pi pi-dollar text-sky-600"></i> Amount
+                    </label>
+                    <input pInputText formControlName="Amount" class="w-full" />
                 </div>
             </div>
         </ng-container>
 
-
-        <!-- Buttons -->
-        <div class="flex justify-end gap-2 mt-4">
-            <button pButton type="button" label="Cancel" class="p-button-secondary"
+        <!-- Footer Buttons -->
+        <div class="flex justify-end gap-3 pt-4 border-t border-gray-200">
+            <button pButton type="button" label="Cancel" class="p-button-secondary p-button-outlined"
                 (click)="showOption = false"></button>
-            <button pButton type="submit" label="Save"></button>
+            <button pButton type="submit" label="Save" class="p-button-success"></button>
         </div>
 
     </form>
-
 </p-dialog>
