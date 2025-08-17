@@ -118,6 +118,8 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
     this.getAllMonthlySetupCode();
     this.getAllCompany();
     this.init();
+    this.onPageChange({ first: 0, rows: 10 });
+
 
     // Check for edit data
     const editData = history.state?.editInvoice;
@@ -578,17 +580,19 @@ onPageChange(event: any) {
   this.checkIndividual();
 }
 
-toggleAll() {
-  this.currentPageRows.forEach(item => {
-    if (!item.disabled) {
-      item.selected = this.allSelected;
-    }
+// Select/unselect only current page rows
+toggleAll(event: any) {
+  const checked = event.target.checked;
+  this.allSelected = checked;
+
+  this.currentPageRows.forEach(row => {
+    row.selected = checked;
   });
 }
 
+// Update header checkbox when row selection changes
 checkIndividual() {
-  this.allSelected = this.currentPageRows
-    .filter(item => !item.disabled)
-    .every(item => item.selected);
+  this.allSelected = this.currentPageRows.length > 0 &&
+    this.currentPageRows.every(row => row.selected);
 }
 }
