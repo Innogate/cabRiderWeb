@@ -55,6 +55,7 @@ export class DriverMasterComponent implements OnInit, OnDestroy, AfterViewInit {
     { label: 'CURRENT', value: 'CURRENT' },
     { label: 'SALARY', value: 'SALARY' },
   ];
+  
 
 
 
@@ -211,12 +212,12 @@ export class DriverMasterComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.form?.valid) {
       const value = {
         ...this.form.value,
-        city_id: this.form.value.city_id?.Id,
+        city_id: this.form.value.city_id?.Id || null,
         active: this.form.value.active ?? '1',
         ref_by: this.form.value.ref_by ?? '0',
         whatsappno: String(this.form.value.whatsappno ?? ''),
         mobileno: String(this.form.value.mobileno ?? ''),
-        bank_actype: this.form.value.bank_actype?.value || null,
+        bank_actype: this.form.value.bank_actype,
 
       };
       this.messageService.add({ severity: 'contrast', summary: 'Info', detail: 'Please wait processing...' });
