@@ -126,16 +126,14 @@ export class MbillingComponent {
   nonTaxableSumCharges: number = 0;
 
   isCalculated: boolean = false;
+  selectedMontySetupCode: any;
 
   ngOnInit(): void {
     this.carTypeMaster.registerPageHandler((msg) => {
       let rt = false;
       rt = globalRequestHandler(msg, this.router, this.messageService);
       if (msg.for) {
-        if (msg.for === 'minvoice.getMonthlySetupCode') {
-          this.monthlySetupData = msg.data;
-        }
-        else if (msg.for === 'getOtherChargesForBookingList') {
+        if (msg.for === 'getOtherChargesForBookingList') {
           this.otherCharges.taxable = msg.data.taxable;
           // sum Amount of taxable charges
           this.taxableSumCharges = this.otherCharges.taxable.reduce((total: number, charge: any) => total + charge.total_amount, 0);
@@ -153,7 +151,6 @@ export class MbillingComponent {
     this.Cgst = this.partyInfo.CGST;
     this.Sgst = this.partyInfo.SGST;
     this.igst = this.partyInfo.IGST;
-    this.getAllMonthlySetupCode();
   }
 
   @Input() selectedDuties: any[] = [];
@@ -162,6 +159,7 @@ export class MbillingComponent {
   @Input() invoiceForm!: FormGroup;
   @Input() taxType: any;
   @Input() partyInfo: any;
+  @Input() setUpCode: any;
 
   @Output() dutyUpdated = new EventEmitter<{
     dutyTableData: any[],
@@ -188,6 +186,12 @@ export class MbillingComponent {
       this.Cgst = this.partyInfo.CGST;
       this.igst = this.partyInfo.IGST;
       this.calNetAmount();
+    }
+    if (changes['setUpCode']) {
+      this.selectedMontySetupCode = changes['setUpCode'].currentValue;
+      if (this.invoiceForm) {
+        this.invoiceForm.get('SetupCode')?.setValue(this.selectedMontySetupCode.id);
+      }
     }
   }
 
@@ -226,13 +230,8 @@ export class MbillingComponent {
   }
 
   // API CALLS
-
-  getAllMonthlySetupCode() {
-    this.commonApiService.getMonthlySetupCode({});
-  }
-
   async calculateTotals(selected: any[]) {
-    const setupCode = await this.invoiceForm.get('SetupCode')?.value;
+    const setupCode = this.selectedMontySetupCode;
 
     if (!setupCode) {
       this.messageService.add({
@@ -254,7 +253,7 @@ export class MbillingComponent {
     this.showTotalHour = 0;
     this.showTotalKm = 0;
 
-    const setup = await this.monthlySetupData?.find((s: any) => s.id === setupCode);
+    const setup = this.setUpCode;
     this.selectedMonthlyDuty = setup;
 
     if (!setup) {
