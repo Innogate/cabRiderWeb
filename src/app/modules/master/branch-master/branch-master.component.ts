@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { branchMasterService } from '../../../services/branchMasterService';
+import { branchMasterService } from '../../../services/branchMaster.Service';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { globalRequestHandler } from '../../../utils/global';
