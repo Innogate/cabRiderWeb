@@ -54,7 +54,6 @@ import { MbillingComponent } from '../../../../components/mbilling/mbilling.comp
   styleUrl: './monthly-invoice-create.component.css',
 })
 export class MonthlyInvoiceCreateComponent implements OnInit {
-
   constructor(
     private fb: FormBuilder,
     private carTypeMaster: carTypeMasterService,
@@ -65,9 +64,9 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
     private _invoice: InvoiceService,
     private _minvoice: MinvoiceService,
     private _helperService: HelperService
-  ) { }
+  ) {}
 
-  sleetedBookingIds: any[] =[];
+  sleetedBookingIds: any[] = [];
   taxtype: any = 'cgst';
   addDutyTableRowSize = 10;
   dutyTableDataView: any[] = [];
@@ -103,7 +102,7 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
         } else if (msg.for === 'minvoice.getMonthlySetupCode') {
           this.monthlySetupData = msg.data;
           rt = true;
-        }else if (msg.for === 'getPartyById') {
+        } else if (msg.for === 'getPartyById') {
           this.partyInfo = msg.data;
           rt = true;
         }
@@ -123,13 +122,19 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
     this.init();
     this.onPageChange({ first: 0, rows: 10 });
 
-
     // Check for edit data
     const editData = history.state?.editInvoice;
     if (editData) {
       this.isEditMode = true;
       this.patchInvoice(editData);
     }
+
+    const today = new Date();
+    const formattedDate = today.toISOString().split('T')[0]; // yyyy-MM-dd
+
+    this.invoiceForm.patchValue({
+      BillDate: formattedDate,
+    });
   }
 
   ngOnDestroy(): void {
@@ -138,9 +143,8 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
 
   taxType = 'cgst';
   rcm = 'no';
+  // Default bill date to today
   billDate = new Date();
-
-
   searchText: any;
   selectedShow: any;
   show = [10, 50, 100, 500, 1000, 2000];
@@ -496,17 +500,23 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
     if (this.searchText) {
       this.dutyTableData = this.dutyTableDataView.filter((invoice: any) => {
         return (
-          invoice.SlipNo.toLowerCase().includes(this.searchText.toLowerCase() || '') ||
-          invoice.DutyTypeName.toLowerCase().includes(this.searchText.toLowerCase() || '') ||
-          invoice.CarNo.toLowerCase().includes(this.searchText.toLowerCase() || '') || 
-          invoice.BookedBy.toLowerCase().includes(this.searchText.toLowerCase() || '')
+          invoice.SlipNo.toLowerCase().includes(
+            this.searchText.toLowerCase() || ''
+          ) ||
+          invoice.DutyTypeName.toLowerCase().includes(
+            this.searchText.toLowerCase() || ''
+          ) ||
+          invoice.CarNo.toLowerCase().includes(
+            this.searchText.toLowerCase() || ''
+          ) ||
+          invoice.BookedBy.toLowerCase().includes(
+            this.searchText.toLowerCase() || ''
+          )
         );
-      }
-      );
+      });
       this.totalRecords = this.dutyTableData.length;
       this.cdr.detectChanges();
-    }
-    else {
+    } else {
       this.dutyTableData = this.dutyTableDataView;
       this.totalRecords = this.dutyTableData.length;
       this.cdr.detectChanges();
@@ -535,39 +545,43 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
 
   mainDutyList: any[] = []; // this holds the final duty list shown in main UI
 
- saveSelectedDuties() {
-  const selected = this.dutyTableData.filter((item: any) => item.selected);
+  saveSelectedDuties() {
+    const selected = this.dutyTableData.filter((item: any) => item.selected);
 
-  // Avoid duplicates in mainDutyList using ID check
-  selected.forEach(sel => {
-    const exists = this.mainDutyList.some((duty: any) => duty.id === sel.id);
-    if (!exists) {
-      this.mainDutyList.push({ ...sel });
-    }
-  });
+    // Avoid duplicates in mainDutyList using ID check
+    selected.forEach((sel) => {
+      const exists = this.mainDutyList.some((duty: any) => duty.id === sel.id);
+      if (!exists) {
+        this.mainDutyList.push({ ...sel });
+      }
+    });
 
-  // Mark them as disabled
-  this.dutyTableData = this.dutyTableData.map((item: any) => ({
-    ...item,
-    disabled: selected.some((sel: any) => sel.id === item.id),
-  }));
-  this.displayDuty = false;
-  this.sleetedBookingIds = Array.from(
-    new Set([...this.sleetedBookingIds, ...selected.map((item: any) => item.id)])
-  );
-}
+    console.log('Selected Duties:', this.mainDutyList);
+    // Mark them as disabled
+    this.dutyTableData = this.dutyTableData.map((item: any) => ({
+      ...item,
+      disabled: selected.some((sel: any) => sel.id === item.id),
+    }));
+    this.displayDuty = false;
+    this.sleetedBookingIds = Array.from(
+      new Set([
+        ...this.sleetedBookingIds,
+        ...selected.map((item: any) => item.id),
+      ])
+    );
+  }
 
-
-
-  addDutySection(){
+  addDutySection() {
     // check all parameter are filled
-    if (!(
-      this.invoiceForm.get('branch_id')?.value &&
-      this.invoiceForm.get('city_id')?.value &&
-      this.invoiceForm.get('party_id')?.value &&
-      this.invoiceForm.get('SetupCode')?.value &&
-      this.invoiceForm.get('company_id')?.value
-    )) {
+    if (
+      !(
+        this.invoiceForm.get('branch_id')?.value &&
+        this.invoiceForm.get('city_id')?.value &&
+        this.invoiceForm.get('party_id')?.value &&
+        this.invoiceForm.get('SetupCode')?.value &&
+        this.invoiceForm.get('company_id')?.value
+      )
+    ) {
       this.messageService.add({
         severity: 'error',
         summary: 'Error',
@@ -575,7 +589,7 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
       });
       return;
     }
-    this.displayDuty = true
+    this.displayDuty = true;
   }
 
   onTaxTypeChange(event: any) {
@@ -583,41 +597,44 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
     this.cdr.detectChanges();
   }
 
+  onDutyUpdated(event: {
+    dutyTableData: any[];
+    mainDutyList: any[];
+    sleetedBookingIds: any[];
+  }) {
+    this.dutyTableData = event.dutyTableData;
+    this.mainDutyList = event.mainDutyList;
+    this.sleetedBookingIds = event.sleetedBookingIds;
+  }
 
-  onDutyUpdated(event: { dutyTableData: any[], mainDutyList: any[], sleetedBookingIds: any[] }) {
-  this.dutyTableData = event.dutyTableData;
-  this.mainDutyList = event.mainDutyList;
-  this.sleetedBookingIds = event.sleetedBookingIds;
-}
+  allSelected: boolean = false;
 
+  currentPageRows: any[] = []; // only rows in current page
 
-allSelected: boolean = false;
+  // PrimeNG onPage event handler
+  onPageChange(event: any) {
+    const start = event.first;
+    const end = start + event.rows;
+    this.currentPageRows = this.dutyTableData.slice(start, end);
 
-currentPageRows: any[] = []; // only rows in current page
+    // sync header checkbox for current page
+    this.checkIndividual();
+  }
 
-// PrimeNG onPage event handler
-onPageChange(event: any) {
-  const start = event.first;
-  const end = start + event.rows;
-  this.currentPageRows = this.dutyTableData.slice(start, end);
+  // Select/unselect only current page rows
+  toggleAll(event: any) {
+    const checked = event.target.checked;
+    this.allSelected = checked;
 
-  // sync header checkbox for current page
-  this.checkIndividual();
-}
+    this.currentPageRows.forEach((row) => {
+      row.selected = checked;
+    });
+  }
 
-// Select/unselect only current page rows
-toggleAll(event: any) {
-  const checked = event.target.checked;
-  this.allSelected = checked;
-
-  this.currentPageRows.forEach(row => {
-    row.selected = checked;
-  });
-}
-
-// Update header checkbox when row selection changes
-checkIndividual() {
-  this.allSelected = this.currentPageRows.length > 0 &&
-    this.currentPageRows.every(row => row.selected);
-}
+  // Update header checkbox when row selection changes
+  checkIndividual() {
+    this.allSelected =
+      this.currentPageRows.length > 0 &&
+      this.currentPageRows.every((row) => row.selected);
+  }
 }
