@@ -137,11 +137,11 @@
         <tr class="text-gray-800 hover:bg-blue-50 transition text-sm">
           <td>{{ (table.first || 0) + rowIndex + 1 }}</td>
           <!-- Replace static slNo with calculated serial number -->
-          <td>{{ invoice.branch }}</td>
+          <td>{{ invoice.BranchShortName }}</td>
           <td>{{ invoice.BillNo }}</td>
           <td>{{ invoice.BillDate }}</td>
-          <td>{{ invoice.party_name || invoice.Duty_Type }}</td>
-          <td>{{ invoice.City }}</td>
+          <td>{{ invoice.PartyName}}</td>
+          <td>{{ invoice.CityName }}</td>
           <td>{{ invoice.GrossAmount }}</td>
           <td>
             <div
