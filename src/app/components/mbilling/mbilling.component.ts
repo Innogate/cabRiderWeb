@@ -269,7 +269,7 @@ export class MbillingComponent {
     const seenDateRanges = new Set<string>(); // Track already processed date pairs
 
     // ** CALCULATE ALL Table Row
-    await selected.forEach((item: any) => {
+    await selected.forEach(async (item: any) => {
       const fromDate = new Date(item.fromDate);
       const toDate = new Date(item.toDate);
       //  Day calculation
@@ -297,7 +297,7 @@ export class MbillingComponent {
           const workEndTimeDate = this.getDbTimeString(setup.ToTime);
 
           if (item.GarageOutTime && item.GarageInDate) {
-            let diffTime = this.calculateExtraHours(
+            let diffTime = await this.calculateExtraHours(
               item.GarageOutDate,
               item.GarageInDate,
               workStartTimeDate,
@@ -313,7 +313,7 @@ export class MbillingComponent {
           const workEndTimeDate = this.getDbTimeString(setup.ToTime);
 
           if (item.GarageOutTime && item.GarageInDate) {
-            let diffTime = this.calculateExtraHours(
+            let diffTime = await this.calculateExtraHours(
               item.GarageOutDate,
               item.GarageInDate,
               workStartTimeDate,
@@ -332,16 +332,10 @@ export class MbillingComponent {
     extraKmRate = extraKMRate;
 
     // ** Final Calculation
-    console.log('\n\n\n\n\n Show Total KM: ', this.showTotalKm);
-    console.log(this.selectedMonthlyDuty)
-    console.log('Setup Total KM: ', this.selectedMonthlyDuty.TotalKM);
-
+    this.extrakm = 0;
     if (this.showTotalKm > this.selectedMonthlyDuty.TotalKM) {
       this.extrakm = this.showTotalKm - this.selectedMonthlyDuty.TotalKM;
       console.log('Extra KM: ', this.extrakm);
-    }
-    else {
-      this.showTotalKm = 0;
     }
 
     // 📊 Final calculations
@@ -438,6 +432,14 @@ export class MbillingComponent {
 
 
   async calculateBillAndLog() {
+    this.totalKmAmount = 0;
+    this.totalPaybleAmaunt = 0;
+    this.totalPaybleGSTAmount = 0;
+    this.totalPaybleCGSTAmount = 0;
+    this.totalPaybleSGSTAmount = 0;
+    this.totalPaybleIGSTAmount = 0;
+    this.roundOff = 0;
+
     this.isCalculated = false;
     await this.calculateTotals(this.mainDutyList);
 
@@ -445,7 +447,7 @@ export class MbillingComponent {
     this.fixedAmount = this.salary;
     this.extraHours = this.totalExtraHour;
     this.numDays = this.totalSelectedDays;
-    this.Amount = this.totalCalculatedAmount;
+    this.Amount = this.totalCalculatedAmount.toFixed(2);
 
     this.rate1 = this.totalextraHourRate;
     this.extaHAmount = this.totalextraHourRate * this.totalExtraHour;
@@ -453,7 +455,9 @@ export class MbillingComponent {
     this.rate2 = this.totalextraKmRate;
     this.totalKmAmount = this.extrakm * this.rate2;
 
-    this.totalPaybleAmaunt = (this.Amount + this.extaHAmount + this.totalKmAmount);
+    this.totalPaybleAmaunt = Number(this.Amount || 0) + Number(this.extaHAmount || 0) + Number(this.totalKmAmount || 0);
+    this.totalPaybleAmaunt = Number(this.totalPaybleAmaunt.toFixed(2));
+
     await this.calNetAmount();
     this.isCalculated = true;
   }
@@ -554,7 +558,7 @@ export class MbillingComponent {
 
   async calNetAmount() {
     // Ensure all variables involved in calculation are numbers
-    this.calculateGST(); // Assuming this method ensures numbers are set
+    await this.calculateGST(); // Assuming this method ensures numbers are set
 
     // Ensure all the values are numbers and not strings
     const totalPaybleCGSTAmount = Number(this.totalPaybleCGSTAmount);
@@ -598,10 +602,10 @@ export class MbillingComponent {
     }
   }
 
-  calculateGST() {
+  async calculateGST() {
     if (this.taxType == 'cgst') {
-      this.calculateCGST();
-      this.calculateSGST();
+      await this.calculateCGST();
+      await this.calculateSGST();
     }
     else {
       this.calculateIGST();
