@@ -69,6 +69,8 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
 
   sleetedBookingIds: any[] =[];
   taxtype: any = 'cgst';
+  addDutyTableRowSize = 10;
+  dutyTableDataView: any[] = [];
   ngOnInit(): void {
     this.commonApiService.registerPageHandler((msg) => {
       let rt = false;
@@ -91,7 +93,8 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
           this.companies = msg.data;
           rt = true;
         } else if (msg.for === 'minvoice.getMonthlyBookingList') {
-          this.dutyTableData = msg.data || [];
+          this.dutyTableDataView = msg.data || [];
+          this.dutyTableData = this.dutyTableDataView;
           this.totalRecords = msg.total || 0;
           this.mapCarAndDutyTypesToDutyData();
           this.tableLoading = false;
@@ -485,7 +488,25 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
   }
 
   searchInvoices() {
-    throw new Error('Method not implemented.');
+    console.log('Searching invoices with text:', this.searchText);
+    if (this.searchText) {
+      this.dutyTableData = this.dutyTableDataView.filter((invoice: any) => {
+        return (
+          invoice.SlipNo.toLowerCase().includes(this.searchText.toLowerCase() || '') ||
+          invoice.DutyTypeName.toLowerCase().includes(this.searchText.toLowerCase() || '') ||
+          invoice.CarNo.toLowerCase().includes(this.searchText.toLowerCase() || '') || 
+          invoice.BookedBy.toLowerCase().includes(this.searchText.toLowerCase() || '')
+        );
+      }
+      );
+      this.totalRecords = this.dutyTableData.length;
+      this.cdr.detectChanges();
+    }
+    else {
+      this.dutyTableData = this.dutyTableDataView;
+      this.totalRecords = this.dutyTableData.length;
+      this.cdr.detectChanges();
+    }
   }
 
   addVendorInvoice() {
