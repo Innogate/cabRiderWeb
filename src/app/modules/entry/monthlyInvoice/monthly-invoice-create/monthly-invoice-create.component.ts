@@ -564,4 +564,31 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
 }
 
 
+allSelected: boolean = false;
+
+currentPageRows: any[] = []; // only rows in current page
+
+// PrimeNG onPage event handler
+onPageChange(event: any) {
+  const start = event.first;
+  const end = start + event.rows;
+  this.currentPageRows = this.dutyTableData.slice(start, end);
+
+  // sync header checkbox for current page
+  this.checkIndividual();
+}
+
+toggleAll() {
+  this.currentPageRows.forEach(item => {
+    if (!item.disabled) {
+      item.selected = this.allSelected;
+    }
+  });
+}
+
+checkIndividual() {
+  this.allSelected = this.currentPageRows
+    .filter(item => !item.disabled)
+    .every(item => item.selected);
+}
 }

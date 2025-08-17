@@ -180,17 +180,17 @@
 
   <!-- Show only after duties are added -->
   <app-mbilling
-  *ngIf="mainDutyList.length > 0"
-  [invoiceForm]="invoiceForm"
-  [selectedDuties]="selectedDuties"
-  [mainDutyList]="mainDutyList"
-  [sleetedBookingIds]="sleetedBookingIds"
-  [dutyTableData]="dutyTableData"
-  [taxType]="taxType"
-  [partyInfo]="partyInfo"
-  (dutyUpdated)="onDutyUpdated($event)">
-</app-mbilling>
-
+    *ngIf="mainDutyList.length > 0"
+    [invoiceForm]="invoiceForm"
+    [selectedDuties]="selectedDuties"
+    [mainDutyList]="mainDutyList"
+    [sleetedBookingIds]="sleetedBookingIds"
+    [dutyTableData]="dutyTableData"
+    [taxType]="taxType"
+    [partyInfo]="partyInfo"
+    (dutyUpdated)="onDutyUpdated($event)"
+  >
+  </app-mbilling>
 </div>
 
 <!-- Add duty -->
@@ -267,6 +267,7 @@
           selectionMode="multiple"
           dataKey="BookingID"
           [paginator]="true"
+          (onPage)="onPageChange($event)"
           [rows]="10"
           [responsiveLayout]="'scroll'"
           class="p-datatable-gridlines"
@@ -275,8 +276,13 @@
           <ng-template pTemplate="header">
             <tr class="bg-blue-100 text-gray-800 text-sm font-semibold">
               <th class="py-2 px-3">
-                <i class="pi pi-check-square text-blue-500"></i>
+                <input
+                  type="checkbox"
+                  [(ngModel)]="allSelected"
+                  (change)="toggleAll()"
+                />
               </th>
+
               <th class="py-2 px-3">
                 <i class="pi pi-sort-numeric-up text-cyan-600 mr-1"></i> SI No.
               </th>
@@ -336,8 +342,10 @@
                   type="checkbox"
                   [(ngModel)]="dutyTableData.selected"
                   [disabled]="dutyTableData.disabled"
+                  (change)="checkIndividual()"
                 />
               </td>
+
               <td class="py-2 px-3">{{ i + 1 }}</td>
               <td class="py-2 px-3">{{ dutyTableData.SlipNo }}</td>
               <td class="py-2 px-3">{{ dutyTableData.DutyTypeName }}</td>
