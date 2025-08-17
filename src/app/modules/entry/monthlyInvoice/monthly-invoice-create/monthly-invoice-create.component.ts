@@ -462,10 +462,14 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
       this.checkAndLoadDutyTable();
     }
     this._helperService.getPartyById(party.value.id);
+    this._minvoice.getMonthlySetupCode({
+      party_id: party.value.id,
+    });
   }
 
   selectedMontySetupCode: any;
   onCodeSelect(codeObj: any) {
+    console.log(codeObj);
     this.selectedMontySetupCode = codeObj.value;
     if (this.invoiceForm) {
       this.invoiceForm.get('SetupCode')?.setValue(codeObj.value.id);
