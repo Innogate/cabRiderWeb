@@ -39,7 +39,7 @@ export class DriverMasterComponent implements OnInit, OnDestroy, AfterViewInit {
   users: any[] = [];
   showForm: boolean = false;
   form!: FormGroup;
-  header: string = ''
+  header: string = '';
   isLoading = true;
   filteredCities: any[] = [];
   tablevalue: any;
@@ -109,7 +109,7 @@ export class DriverMasterComponent implements OnInit, OnDestroy, AfterViewInit {
         if (msg.StatusID === 1) {
           const updated = msg.data[0];  // access the first item in data array
 
-          this.messageService.add({ severity: 'success', summary: 'Success', detail: msg.StatusMessage });
+          // this.messageService.add({ severity: 'success', summary: 'Success', detail: msg.StatusMessage });
           this.showForm = false;
           this.form.reset();
 
@@ -154,7 +154,7 @@ export class DriverMasterComponent implements OnInit, OnDestroy, AfterViewInit {
     const data = {
     }
     this.driverMasterService.GatAllDriver(payload);
-    this.commonService.GatAllCityDropDown(data);
+    this.commonService.GatAllCityDropDown({});
   }
 
   filterCity(event: any) {
@@ -211,7 +211,7 @@ export class DriverMasterComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.form?.valid) {
       const value = {
         ...this.form.value,
-        city_id: this.form.value.city_id?.Id || null,
+        city_id: this.form.value.city_id?.Id,
         active: this.form.value.active ?? '1',
         ref_by: this.form.value.ref_by ?? '0',
         whatsappno: String(this.form.value.whatsappno ?? ''),
