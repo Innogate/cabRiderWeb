@@ -523,15 +523,13 @@ export class MbillingComponent {
       InvcancelReason: null,
       GrossAmount: 0,
       Discount: 0,
-      user_id: 0,
       monthly_duty_id: 0,
       except_day_km: 0,
       parking_amount: 0,
       night_amount: 0,
       outstation_amount: 0,
       proportionate: 0,
-      amount_payable: 0,
-      parent_company_id: 0,
+      amount_payable: 0
     };
   }
 
