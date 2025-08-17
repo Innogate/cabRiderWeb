@@ -7,11 +7,7 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import {
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-} from '@angular/forms';
+import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BadgeModule } from 'primeng/badge';
 import { ButtonModule } from 'primeng/button';
 import { CalendarModule } from 'primeng/calendar';
@@ -63,7 +59,7 @@ export class MbillingComponent {
     private cdr: ChangeDetectorRef,
     private _minvoice: MinvoiceService,
     private _helperService: HelperService
-  ) { }
+  ) {}
   @Input() sleetedBookingIds?: any[];
 
   // Column 1
@@ -106,7 +102,6 @@ export class MbillingComponent {
   // Extra
   desc: string = '';
 
-
   // added
   totalKm: number = 0;
   totalHours: number = 0;
@@ -121,7 +116,10 @@ export class MbillingComponent {
   totalPaybleIGSTAmount: any = 0;
 
   aboveAdvance: any = 0;
-  otherCharges: { taxable: any[], nonTaxable: any[] } = { taxable: [], nonTaxable: [] };
+  otherCharges: { taxable: any[]; nonTaxable: any[] } = {
+    taxable: [],
+    nonTaxable: [],
+  };
   taxableSumCharges: number = 0;
   nonTaxableSumCharges: number = 0;
 
@@ -136,11 +134,17 @@ export class MbillingComponent {
         if (msg.for === 'getOtherChargesForBookingList') {
           this.otherCharges.taxable = msg.data.taxable;
           // sum Amount of taxable charges
-          this.taxableSumCharges = this.otherCharges.taxable.reduce((total: number, charge: any) => total + charge.total_amount, 0);
+          this.taxableSumCharges = this.otherCharges.taxable.reduce(
+            (total: number, charge: any) => total + charge.total_amount,
+            0
+          );
           this.otherCharges.nonTaxable = msg.data.nonTaxable;
           // sum Amount of non taxable charges
-          this.nonTaxableSumCharges = this.otherCharges.nonTaxable.reduce((total: number, charge: any) => total + charge.total_amount, 0);
-          rt = true
+          this.nonTaxableSumCharges = this.otherCharges.nonTaxable.reduce(
+            (total: number, charge: any) => total + charge.total_amount,
+            0
+          );
+          rt = true;
         }
       }
       if (rt == false) {
@@ -162,9 +166,9 @@ export class MbillingComponent {
   @Input() setUpCode: any;
 
   @Output() dutyUpdated = new EventEmitter<{
-    dutyTableData: any[],
-    mainDutyList: any[],
-    sleetedBookingIds: any[]
+    dutyTableData: any[];
+    mainDutyList: any[];
+    sleetedBookingIds: any[];
   }>();
 
   ngOnChanges(changes: SimpleChanges) {
@@ -174,8 +178,7 @@ export class MbillingComponent {
     }
     if (changes['sleetedBookingIds']) {
       this.sleetedBookingIds = changes['sleetedBookingIds'].currentValue;
-      this.getOtherChargesById()
-
+      this.getOtherChargesById();
     }
     if (changes['taxType']) {
       this.taxType = changes['taxType'].currentValue;
@@ -190,7 +193,9 @@ export class MbillingComponent {
     if (changes['setUpCode']) {
       this.selectedMontySetupCode = changes['setUpCode'].currentValue;
       if (this.invoiceForm) {
-        this.invoiceForm.get('SetupCode')?.setValue(this.selectedMontySetupCode.id);
+        this.invoiceForm
+          .get('SetupCode')
+          ?.setValue(this.selectedMontySetupCode.id);
       }
     }
   }
@@ -210,9 +215,6 @@ export class MbillingComponent {
 
   // DODO
   selectedMonthlyDuty?: any;
-
-
-
 
   // AutoComplete
   filteredCodes: any[] = [];
@@ -301,7 +303,7 @@ export class MbillingComponent {
               item.GarageInDate,
               workStartTimeDate,
               workEndTimeDate
-            )
+            );
             this.totalExtraHour += diffTime;
           }
 
@@ -317,7 +319,7 @@ export class MbillingComponent {
               item.GarageInDate,
               workStartTimeDate,
               workEndTimeDate
-            )
+            );
             this.totalExtraHour += diffTime;
           }
         }
@@ -376,7 +378,7 @@ export class MbillingComponent {
     this.totalSelectedDays = totalDays;
     this.totalCalculatedAmount = totalAmount;
     this.salary = groseAmount;
-    this.totalextraHourRate = extraHourRate
+    this.totalextraHourRate = extraHourRate;
     this.totalextraKmRate = extraKmRate;
     this.totalSelectedKm = this.showTotalKm;
   }
@@ -385,7 +387,7 @@ export class MbillingComponent {
     startDateInput: Date | string,
     endDateInput: Date | string,
     workStartTime: string, // "08:00"
-    workEndTime: string    // "20:00"
+    workEndTime: string // "20:00"
   ): number {
     // Convert to Date objects if strings are passed
     const startDate = new Date(startDateInput);
@@ -393,7 +395,7 @@ export class MbillingComponent {
 
     // Helper: set a time on the same date as a reference date
     const setTime = (baseDate: Date, timeStr: string): Date => {
-      const [h, m] = timeStr.split(":").map(Number);
+      const [h, m] = timeStr.split(':').map(Number);
       const d = new Date(baseDate);
       d.setHours(h, m, 0, 0);
       return d;
@@ -415,20 +417,19 @@ export class MbillingComponent {
     } else {
       // Before start time
       if (startDate < workStart) {
-        extraHours += (workStart.getTime() - startDate.getTime()) / (1000 * 60 * 60);
+        extraHours +=
+          (workStart.getTime() - startDate.getTime()) / (1000 * 60 * 60);
       }
       // After end time
       if (endDate > workEnd) {
-        extraHours += (endDate.getTime() - workEnd.getTime()) / (1000 * 60 * 60);
+        extraHours +=
+          (endDate.getTime() - workEnd.getTime()) / (1000 * 60 * 60);
       }
     }
 
     extraHours = parseFloat(extraHours.toFixed(2));
     return extraHours;
   }
-
-
-
 
   async calculateBillAndLog() {
     this.totalKmAmount = 0;
@@ -454,7 +455,10 @@ export class MbillingComponent {
     this.rate2 = this.totalextraKmRate;
     this.totalKmAmount = this.extrakm * this.rate2;
 
-    this.totalPaybleAmaunt = Number(this.Amount || 0) + Number(this.extaHAmount || 0) + Number(this.totalKmAmount || 0);
+    this.totalPaybleAmaunt =
+      Number(this.Amount || 0) +
+      Number(this.extaHAmount || 0) +
+      Number(this.totalKmAmount || 0);
     this.totalPaybleAmaunt = Number(this.totalPaybleAmaunt.toFixed(2));
 
     await this.calNetAmount();
@@ -463,68 +467,97 @@ export class MbillingComponent {
 
   getBillingFormData() {
     return {
+      BillDate: this.invoiceForm.get('BillDate')?.value ?? new Date(),
+      taxtype: this.invoiceForm.get('taxtype')?.value === 'cgst' ? 1 : 0,
+      company_id: this.invoiceForm.get('company_id')?.value ?? 0,
+      branch_id: this.invoiceForm.get('branch_id')?.value ?? 0,
+      city_id: this.invoiceForm.get('city_id')?.value ?? 0,
+      party_id: this.invoiceForm.get('party_id')?.value ?? 0,
+
       // Column 1
-      fixedAmount: this.fixedAmount,
-      extraHours: this.totalExtraHour,
-      extrakm: this.extrakm,
-      exceptDayHrs: this.exceptDayHrs,
-      extraDaykm: this.extraDaykm,
-      fuelAmount: this.fuelAmount,
+
+      fixed_amount: this.fixedAmount ?? 0,
+      extra_hours: this.totalExtraHour ?? 0,
+      extra_km: this.extrakm ?? 0,
+      except_day_hrs: this.exceptDayHrs ?? 0,
+      extra_day_km: this.extraDaykm ?? 0,
+      fuel_amount: this.fuelAmount ?? 0,
 
       // Column 2
-      numDays: this.numDays,
-      rate1: this.rate1,
-      rate2: this.rate2,
-      rate3: this.rate3,
-      rate4: this.rate4,
-      mobileAmount: this.mobileAmount,
+      no_of_days: this.numDays ?? 0,
+      extra_hours_rate: this.rate1 ?? 0,
+      extra_km_rate: this.rate2 ?? 0,
+      except_day_hrs_rate: this.rate3 ?? 0,
+      except_day_km_rate: this.rate4 ?? 0,
+      mobil_amount: this.mobileAmount ?? 0,
 
       // Column 3
-      fixedAmount2: this.Amount,
-      extaHAmount: this.extaHAmount,
-      billTotal2: this.totalKmAmount,
-      amount3: this.amount3,
-      amount2: this.amount2,
-      desc2: this.desc2,
-      isParkingTaxApplied: this.isParkingTaxApplied,
+      fixed_amount_total: this.Amount ?? 0,
+      extra_hours_amount: this.extaHAmount ?? 0,
+      extra_km_amount: this.totalKmAmount ?? 0,
+      except_day_hrs_amount: this.amount3 ?? 0,
+      except_day_km_amount: this.amount2 ?? 0,
+      remarks: this.desc2 ?? '',
+
 
       // Column 4
-      billTotal: this.billTotal,
-      advance: this.advance,
-      serviceTax: this.serviceTax,
-      eduCess: this.eduCess,
-      sbCess: this.sbCess,
-      roundOff: this.roundOff,
-      amountPayable: this.amountPayable,
+      bill_total: this.billTotal ?? 0,
+      Advance: this.advance ?? 0,
+      round_off: this.roundOff ?? 0,
+      NetAmount: this.amountPayable ?? 0,
+      OtherCharges: this.taxableSumCharges ?? 0,
+      SGST: this.totalPaybleSGSTAmount ?? 0,
+      CGST: this.totalPaybleCGSTAmount ?? 0,
+      IGST: this.totalPaybleIGSTAmount ?? 0,
+      OtherCharges2: this.nonTaxableSumCharges ?? 0,
 
-      // Extra
-      desc: this.desc,
+      IGSTPer: this.igst ?? 0,
+      CGSTPer: this.Cgst ?? 0,
+      SGSTPer: this.Sgst ?? 0,
+
+      // extra
+      rcm: 0,
+      Invcancel: null,
+      InvcancelOn: null,
+      Invcancelby: null,
+      InvcancelReason: null,
+      GrossAmount: 0,
+      Discount: 0,
+      user_id: 0,
+      monthly_duty_id: 0,
+      except_day_km: 0,
+      parking_amount: 0,
+      night_amount: 0,
+      outstation_amount: 0,
+      proportionate: 0,
+      amount_payable: 0,
+      parent_company_id: 0,
     };
   }
 
   logBillingFormValues() {
     const payload = {
       ...this.getBillingFormData(),
-      id: this.mainDutyList.map((d) => d.id),
+      duty_ids: this.mainDutyList.map((d) => d.id),
     };
 
     this._minvoice.createMonthlyBilling(payload);
   }
 
-
   getDbTimeString(dateValue: string | Date): string {
-    const date = (typeof dateValue === "string") ? new Date(dateValue) : dateValue;
-    const hours = date.getUTCHours().toString().padStart(2, "0");
-    const minutes = date.getUTCMinutes().toString().padStart(2, "0");
+    const date =
+      typeof dateValue === 'string' ? new Date(dateValue) : dateValue;
+    const hours = date.getUTCHours().toString().padStart(2, '0');
+    const minutes = date.getUTCMinutes().toString().padStart(2, '0');
     return `${hours}:${minutes}`;
   }
 
   calculateIGST() {
     let igstPercentage = Number(this.igst);
-    let amount = (this.totalPaybleAmaunt + this.taxableSumCharges);;
+    let amount = this.totalPaybleAmaunt + this.taxableSumCharges;
     // Check if IGST percentage is provided
     if (igstPercentage > 0) {
-      const igstAmount = (amount * (igstPercentage / 100));
+      const igstAmount = amount * (igstPercentage / 100);
       this.totalPaybleIGSTAmount = igstAmount.toFixed(2);
     } else {
       this.totalPaybleIGSTAmount = 0; // If no IGST percentage provided, return 0
@@ -533,10 +566,10 @@ export class MbillingComponent {
 
   calculateCGST() {
     let cgstPercentage = Number(this.Cgst);
-    let amount = (this.totalPaybleAmaunt + this.taxableSumCharges);;
+    let amount = this.totalPaybleAmaunt + this.taxableSumCharges;
     // Check if CGST percentage is provided
     if (cgstPercentage > 0) {
-      const cgstAmount = (amount * (cgstPercentage / 100));
+      const cgstAmount = amount * (cgstPercentage / 100);
       this.totalPaybleCGSTAmount = cgstAmount.toFixed(2);
     } else {
       this.totalPaybleCGSTAmount = 0; // If no CGST percentage provided, return 0
@@ -545,10 +578,10 @@ export class MbillingComponent {
 
   calculateSGST() {
     let sgstPercentage = Number(this.Sgst);
-    let amount = (this.totalPaybleAmaunt + this.taxableSumCharges);
+    let amount = this.totalPaybleAmaunt + this.taxableSumCharges;
     // Check if SGST percentage is provided
     if (sgstPercentage > 0) {
-      const sgstAmount = (amount * (sgstPercentage / 100));
+      const sgstAmount = amount * (sgstPercentage / 100);
       this.totalPaybleSGSTAmount = sgstAmount.toFixed(2);
     } else {
       this.totalPaybleSGSTAmount = 0; // If no SGST percentage provided, return 0
@@ -571,33 +604,42 @@ export class MbillingComponent {
     // Perform the calculation based on the taxType
     if (this.taxType === 'cgst') {
       // Calculate total for CGST
-      this.totalPaybleGSTAmount = totalPaybleCGSTAmount + totalPaybleSGSTAmount + totalPaybleAmaunt + nonTaxableSumCharges + taxableSumCharges;
+      this.totalPaybleGSTAmount =
+        totalPaybleCGSTAmount +
+        totalPaybleSGSTAmount +
+        totalPaybleAmaunt +
+        nonTaxableSumCharges +
+        taxableSumCharges;
     } else {
       // Calculate total for IGST
-      this.totalPaybleGSTAmount = totalPaybleIGSTAmount + totalPaybleAmaunt + nonTaxableSumCharges + taxableSumCharges;
+      this.totalPaybleGSTAmount =
+        totalPaybleIGSTAmount +
+        totalPaybleAmaunt +
+        nonTaxableSumCharges +
+        taxableSumCharges;
     }
 
     // Round off the totalPaybleGSTAmount
-    this.roundOff = await (Math.abs(Math.round(this.totalPaybleGSTAmount) - this.totalPaybleGSTAmount).toFixed(2));
+    this.roundOff = await Math.abs(
+      Math.round(this.totalPaybleGSTAmount) - this.totalPaybleGSTAmount
+    ).toFixed(2);
 
     // Final net amount calculation after subtracting the advance amount
-    this.totalPaybleGSTAmount = Math.round(this.totalPaybleGSTAmount) - aboveAdvance;
+    this.totalPaybleGSTAmount =
+      Math.round(this.totalPaybleGSTAmount) - aboveAdvance;
   }
-
 
   getOtherChargesById() {
     if (this.sleetedBookingIds && this.sleetedBookingIds.length > 0) {
-      this._helperService.getOtherChargesForBookingList(this.sleetedBookingIds)
+      this._helperService.getOtherChargesForBookingList(this.sleetedBookingIds);
     }
   }
 
-
-
   roundOffValue(value: number): number {
     if (value % 1 < 0.5) {
-      return Math.floor(value);  // Round down if less than 0.5
+      return Math.floor(value); // Round down if less than 0.5
     } else {
-      return Math.ceil(value);   // Round up if greater or equal to 0.5
+      return Math.ceil(value); // Round up if greater or equal to 0.5
     }
   }
 
@@ -605,8 +647,7 @@ export class MbillingComponent {
     if (this.taxType == 'cgst') {
       await this.calculateCGST();
       await this.calculateSGST();
-    }
-    else {
+    } else {
       this.calculateIGST();
     }
   }
@@ -620,12 +661,16 @@ export class MbillingComponent {
 
       // Re-enable in popup
       this.dutyTableData = this.dutyTableData.map((item: any) =>
-        item.id === duty.id ? { ...item, disabled: false, selected: false } : item
+        item.id === duty.id
+          ? { ...item, disabled: false, selected: false }
+          : item
       );
 
       // Remove from selectedBookingIds
       if (this.sleetedBookingIds) {
-        this.sleetedBookingIds = this.sleetedBookingIds.filter((id: any) => id !== duty.id);
+        this.sleetedBookingIds = this.sleetedBookingIds.filter(
+          (id: any) => id !== duty.id
+        );
       }
 
       this.cdr.detectChanges();
@@ -635,13 +680,10 @@ export class MbillingComponent {
       this.dutyUpdated.emit({
         dutyTableData: this.dutyTableData,
         mainDutyList: this.mainDutyList,
-        sleetedBookingIds: this.sleetedBookingIds ?? []
+        sleetedBookingIds: this.sleetedBookingIds ?? [],
       });
     } else {
       console.error('Duty not found in mainDutyList:', duty);
     }
   }
-
-
-
 }
