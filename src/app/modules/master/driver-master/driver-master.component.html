@@ -37,6 +37,18 @@
                             </div>
                             <input pInputText type="text" formControlName="drv_name" placeholder="Enter Driver Name"
                                 class="w-full border border-gray-300 rounded-lg p-3 text-uppercase uppercase">
+                            <span *ngIf="form.get('drv_name')?.touched && form.get('drv_name')?.errors?.['required']"
+                                class="text-sm text-red-600">
+                                Driver Name is required.
+                            </span>
+                            <span *ngIf="form.get('drv_name')?.touched && form.get('drv_name')?.errors?.['minlength']"
+                                class="text-sm text-red-600">
+                                Driver Name must be at least 3 characters.
+                            </span>
+                            <span *ngIf="form.get('drv_name')?.touched && form.get('drv_name')?.errors?.['pattern']"
+                                class="text-sm text-red-600">
+                                Only letters and spaces are allowed.
+                            </span>
                         </div>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
@@ -47,6 +59,9 @@
                             </div>
                             <input pInputText type="number" formControlName="whatsappno" placeholder="WhatsApp No"
                                 class="w-full border border-gray-300 rounded-lg p-3">
+                            <span *ngIf="form.get('mobileno')?.invalid && form.get('mobileno')?.touched && form.get('mobileno')?.errors?.['pattern']" class="text-red-500">
+                                What    No must be exactly 10 digits.
+                            </span>
                         </div>
                         <div>
                             <div class="flex items-center space-x-2">
