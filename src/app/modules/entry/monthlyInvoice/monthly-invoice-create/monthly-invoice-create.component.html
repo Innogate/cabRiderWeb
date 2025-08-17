@@ -266,8 +266,8 @@
           [(selection)]="selectedDuties"
           selectionMode="multiple"
           dataKey="BookingID"
-          [paginator]="true"
           (onPage)="onPageChange($event)"
+          [paginator]="true"
           [rows]="10"
           [responsiveLayout]="'scroll'"
           class="p-datatable-gridlines"
@@ -275,11 +275,11 @@
           <!-- Table Header -->
           <ng-template pTemplate="header">
             <tr class="bg-blue-100 text-gray-800 text-sm font-semibold">
-              <th class="py-2 px-3">
+              <th>
                 <input
                   type="checkbox"
-                  [(ngModel)]="allSelected"
-                  (change)="toggleAll()"
+                  [checked]="allSelected"
+                  (change)="toggleAll($event)"
                 />
               </th>
 
@@ -337,12 +337,13 @@
           <!-- Table Body -->
           <ng-template pTemplate="body" let-dutyTableData let-i="rowIndex">
             <tr class="hover:bg-blue-50 transition-all text-sm">
-              <td class="py-2 px-3">
+
+              <td>
                 <input
                   type="checkbox"
                   [(ngModel)]="dutyTableData.selected"
-                  [disabled]="dutyTableData.disabled"
                   (change)="checkIndividual()"
+                  [disabled]="dutyTableData.disabled"
                 />
               </td>
 
