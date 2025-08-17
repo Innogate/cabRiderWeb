@@ -125,6 +125,8 @@ export class MbillingComponent {
   taxableSumCharges: number = 0;
   nonTaxableSumCharges: number = 0;
 
+  isCalculated: boolean = false;
+
   ngOnInit(): void {
     this.carTypeMaster.registerPageHandler((msg) => {
       let rt = false;
@@ -140,7 +142,6 @@ export class MbillingComponent {
           this.otherCharges.nonTaxable = msg.data.nonTaxable;
           // sum Amount of non taxable charges
           this.nonTaxableSumCharges = this.otherCharges.nonTaxable.reduce((total: number, charge: any) => total + charge.total_amount, 0);
-          console.log(this.otherCharges)
           rt = true
         }
       }
@@ -152,7 +153,6 @@ export class MbillingComponent {
     this.Cgst = this.partyInfo.CGST;
     this.Sgst = this.partyInfo.SGST;
     this.igst = this.partyInfo.IGST;
-    console.log(this.partyInfo);
     this.getAllMonthlySetupCode();
   }
 
@@ -161,7 +161,7 @@ export class MbillingComponent {
   @Input() dutyTableData: any[] = [];
   @Input() invoiceForm!: FormGroup;
   @Input() taxType: any;
-  @Input() partyInfo:any;
+  @Input() partyInfo: any;
 
   @Output() dutyUpdated = new EventEmitter<{
     dutyTableData: any[],
@@ -206,7 +206,6 @@ export class MbillingComponent {
 
   // DODO
   selectedMonthlyDuty?: any;
-  isCalculated: boolean = false;
 
 
 
@@ -232,8 +231,8 @@ export class MbillingComponent {
     this.commonApiService.getMonthlySetupCode({});
   }
 
-  calculateTotals(selected: any[]) {
-    const setupCode = this.invoiceForm.get('SetupCode')?.value;
+  async calculateTotals(selected: any[]) {
+    const setupCode = await this.invoiceForm.get('SetupCode')?.value;
 
     if (!setupCode) {
       this.messageService.add({
@@ -254,9 +253,8 @@ export class MbillingComponent {
     this.extraHour = 0;
     this.showTotalHour = 0;
     this.showTotalKm = 0;
-    let totalKm = 0;
 
-    const setup = this.monthlySetupData?.find((s: any) => s.id === setupCode);
+    const setup = await this.monthlySetupData?.find((s: any) => s.id === setupCode);
     this.selectedMonthlyDuty = setup;
 
     if (!setup) {
@@ -271,7 +269,7 @@ export class MbillingComponent {
     const seenDateRanges = new Set<string>(); // Track already processed date pairs
 
     // ** CALCULATE ALL Table Row
-    selected.forEach((item: any) => {
+    await selected.forEach((item: any) => {
       const fromDate = new Date(item.fromDate);
       const toDate = new Date(item.toDate);
       //  Day calculation
@@ -293,11 +291,6 @@ export class MbillingComponent {
 
           const extraDayHrsRate = setup?.OTRate ?? 0;
           extraHourRate = extraDayHrsRate;
-
-
-
-          const km = Number(item.TotalKm) || 0;
-          totalKm += km;
 
           //! Time calculation
           const workStartTimeDate = this.getDbTimeString(setup.FromTime);
@@ -328,24 +321,28 @@ export class MbillingComponent {
             )
             this.totalExtraHour += diffTime;
           }
-          console.log(`Duplicate date found: ${dateKey}, skipping day count`);
         }
+
         this.showTotalHour += item.TotalHour;
         this.showTotalKm += item.TotalKm;
-
-      }
-
-      const extraKMRate = setup?.ExtraDayKMRate ?? 0;
-      extraKmRate = extraKMRate;
-
-      // ** Final Calculation
-      if (totalKm > setup.TotalKm) {
-        totalKm = totalKm - setup.TotalKm;
-      }
-      else {
-        totalKm = 0;
       }
     });
+
+    const extraKMRate = setup?.ExtraDayKMRate ?? 0;
+    extraKmRate = extraKMRate;
+
+    // ** Final Calculation
+    console.log('\n\n\n\n\n Show Total KM: ', this.showTotalKm);
+    console.log(this.selectedMonthlyDuty)
+    console.log('Setup Total KM: ', this.selectedMonthlyDuty.TotalKM);
+
+    if (this.showTotalKm > this.selectedMonthlyDuty.TotalKM) {
+      this.extrakm = this.showTotalKm - this.selectedMonthlyDuty.TotalKM;
+      console.log('Extra KM: ', this.extrakm);
+    }
+    else {
+      this.showTotalKm = 0;
+    }
 
     // 📊 Final calculations
     const totalHoursDecimal = totalMinutes / 60;
@@ -388,13 +385,7 @@ export class MbillingComponent {
     this.salary = groseAmount;
     this.totalextraHourRate = extraHourRate
     this.totalextraKmRate = extraKmRate;
-    this.totalSelectedKm = totalKm; //  Store for use elsewhere
-
-    console.log('Total selected kilometers:', totalKm);
-    console.log('Total Time:', this.totalTimeText);
-    console.log('Total Days:', totalDays);
-    console.log('Total Amount:', totalAmount);
-    console.log('Extra Hour:', this.extraHour);
+    this.totalSelectedKm = this.showTotalKm;
   }
 
   calculateExtraHours(
@@ -440,30 +431,19 @@ export class MbillingComponent {
     }
 
     extraHours = parseFloat(extraHours.toFixed(2));
-
-    // Logging
-    console.log(
-      `Start Date: ${startDate.toISOString()}\n` +
-      `End Date: ${endDate.toISOString()}\n` +
-      `Work Start Time: ${workStartTime}\n` +
-      `Work End Time: ${workEndTime}\n` +
-      `Total Extra Hours: ${extraHours}\n`
-    );
-
     return extraHours;
   }
 
 
 
 
-  calculateBillAndLog() {
-
-    this.calculateTotals(this.mainDutyList);
+  async calculateBillAndLog() {
+    this.isCalculated = false;
+    await this.calculateTotals(this.mainDutyList);
 
     // Auto-fill some fields with example values (for demo/testing)
     this.fixedAmount = this.salary;
     this.extraHours = this.totalExtraHour;
-    this.extrakm = this.totalSelectedKm;
     this.numDays = this.totalSelectedDays;
     this.Amount = this.totalCalculatedAmount;
 
@@ -474,7 +454,8 @@ export class MbillingComponent {
     this.totalKmAmount = this.extrakm * this.rate2;
 
     this.totalPaybleAmaunt = (this.Amount + this.extaHAmount + this.totalKmAmount);
-    this.calNetAmount();
+    await this.calNetAmount();
+    this.isCalculated = true;
   }
 
   getBillingFormData() {
@@ -537,10 +518,10 @@ export class MbillingComponent {
 
   calculateIGST() {
     let igstPercentage = Number(this.igst);
-    let amount = this.totalPaybleAmaunt;
+    let amount = (this.totalPaybleAmaunt + this.taxableSumCharges);;
     // Check if IGST percentage is provided
     if (igstPercentage > 0) {
-      const igstAmount = (amount * (igstPercentage/100));
+      const igstAmount = (amount * (igstPercentage / 100));
       this.totalPaybleIGSTAmount = igstAmount.toFixed(2);
     } else {
       this.totalPaybleIGSTAmount = 0; // If no IGST percentage provided, return 0
@@ -549,10 +530,10 @@ export class MbillingComponent {
 
   calculateCGST() {
     let cgstPercentage = Number(this.Cgst);
-    let amount = this.totalPaybleAmaunt;
+    let amount = (this.totalPaybleAmaunt + this.taxableSumCharges);;
     // Check if CGST percentage is provided
     if (cgstPercentage > 0) {
-      const cgstAmount = (amount * (cgstPercentage/100));
+      const cgstAmount = (amount * (cgstPercentage / 100));
       this.totalPaybleCGSTAmount = cgstAmount.toFixed(2);
     } else {
       this.totalPaybleCGSTAmount = 0; // If no CGST percentage provided, return 0
@@ -564,46 +545,41 @@ export class MbillingComponent {
     let amount = (this.totalPaybleAmaunt + this.taxableSumCharges);
     // Check if SGST percentage is provided
     if (sgstPercentage > 0) {
-      const sgstAmount = (amount * (sgstPercentage/100));
+      const sgstAmount = (amount * (sgstPercentage / 100));
       this.totalPaybleSGSTAmount = sgstAmount.toFixed(2);
     } else {
       this.totalPaybleSGSTAmount = 0; // If no SGST percentage provided, return 0
     }
   }
 
-async calNetAmount() {
-  // Ensure all variables involved in calculation are numbers
-  this.calculateGST(); // Assuming this method ensures numbers are set
+  async calNetAmount() {
+    // Ensure all variables involved in calculation are numbers
+    this.calculateGST(); // Assuming this method ensures numbers are set
 
-  // Ensure all the values are numbers and not strings
-  const totalPaybleCGSTAmount = Number(this.totalPaybleCGSTAmount);
-  const totalPaybleSGSTAmount = Number(this.totalPaybleSGSTAmount);
-  const totalPaybleAmaunt = Number(this.totalPaybleAmaunt);
-  const nonTaxableSumCharges = Number(this.nonTaxableSumCharges);
-  const taxableSumCharges = Number(this.taxableSumCharges);
-  const totalPaybleIGSTAmount = Number(this.totalPaybleIGSTAmount);
-  const aboveAdvance = Number(this.aboveAdvance);
+    // Ensure all the values are numbers and not strings
+    const totalPaybleCGSTAmount = Number(this.totalPaybleCGSTAmount);
+    const totalPaybleSGSTAmount = Number(this.totalPaybleSGSTAmount);
+    const totalPaybleAmaunt = Number(this.totalPaybleAmaunt);
+    const nonTaxableSumCharges = Number(this.nonTaxableSumCharges);
+    const taxableSumCharges = Number(this.taxableSumCharges);
+    const totalPaybleIGSTAmount = Number(this.totalPaybleIGSTAmount);
+    const aboveAdvance = Number(this.aboveAdvance);
 
-  // Perform the calculation based on the taxType
-  if (this.taxType === 'cgst') {
-    // Calculate total for CGST
-    this.totalPaybleGSTAmount = totalPaybleCGSTAmount + totalPaybleSGSTAmount + totalPaybleAmaunt + nonTaxableSumCharges + taxableSumCharges;
-  } else {
-    // Calculate total for IGST
-    this.totalPaybleGSTAmount = totalPaybleIGSTAmount + totalPaybleAmaunt + nonTaxableSumCharges + taxableSumCharges;
+    // Perform the calculation based on the taxType
+    if (this.taxType === 'cgst') {
+      // Calculate total for CGST
+      this.totalPaybleGSTAmount = totalPaybleCGSTAmount + totalPaybleSGSTAmount + totalPaybleAmaunt + nonTaxableSumCharges + taxableSumCharges;
+    } else {
+      // Calculate total for IGST
+      this.totalPaybleGSTAmount = totalPaybleIGSTAmount + totalPaybleAmaunt + nonTaxableSumCharges + taxableSumCharges;
+    }
+
+    // Round off the totalPaybleGSTAmount
+    this.roundOff = await (Math.abs(Math.round(this.totalPaybleGSTAmount) - this.totalPaybleGSTAmount).toFixed(2));
+
+    // Final net amount calculation after subtracting the advance amount
+    this.totalPaybleGSTAmount = Math.round(this.totalPaybleGSTAmount) - aboveAdvance;
   }
-
-  console.log('Calculated Total Payable GST Amount:', this.totalPaybleGSTAmount);
-
-  // Round off the totalPaybleGSTAmount
-  this.roundOff = await this.roundOffValue(this.totalPaybleGSTAmount);
-  console.log('Rounded off value:', this.roundOff);
-
-  // Final net amount calculation after subtracting the advance amount
-  this.totalPaybleGSTAmount = this.roundOff - aboveAdvance;
-
-  console.log('Final Total Payable GST Amount:', this.totalPaybleGSTAmount);
-}
 
 
   getOtherChargesById() {
@@ -622,46 +598,46 @@ async calNetAmount() {
     }
   }
 
-  calculateGST(){
+  calculateGST() {
     if (this.taxType == 'cgst') {
       this.calculateCGST();
       this.calculateSGST();
     }
-    else{
+    else {
       this.calculateIGST();
     }
   }
 
-removeDutyFromInvoice(duty: any) {
-  const index = this.mainDutyList.findIndex((d) => d.id === duty.id);
+  removeDutyFromInvoice(duty: any) {
+    const index = this.mainDutyList.findIndex((d) => d.id === duty.id);
 
-  if (index !== -1) {
-    // Remove from mainDutyList
-    this.mainDutyList.splice(index, 1);
+    if (index !== -1) {
+      // Remove from mainDutyList
+      this.mainDutyList.splice(index, 1);
 
-    // Re-enable in popup
-    this.dutyTableData = this.dutyTableData.map((item: any) =>
-      item.id === duty.id ? { ...item, disabled: false, selected: false } : item
-    );
+      // Re-enable in popup
+      this.dutyTableData = this.dutyTableData.map((item: any) =>
+        item.id === duty.id ? { ...item, disabled: false, selected: false } : item
+      );
 
-    // Remove from selectedBookingIds
-    if (this.sleetedBookingIds) {
-      this.sleetedBookingIds = this.sleetedBookingIds.filter((id: any) => id !== duty.id);
+      // Remove from selectedBookingIds
+      if (this.sleetedBookingIds) {
+        this.sleetedBookingIds = this.sleetedBookingIds.filter((id: any) => id !== duty.id);
+      }
+
+      this.cdr.detectChanges();
+      this.calNetAmount();
+
+      // 🔹 Emit updates back to MonthlyCreate
+      this.dutyUpdated.emit({
+        dutyTableData: this.dutyTableData,
+        mainDutyList: this.mainDutyList,
+        sleetedBookingIds: this.sleetedBookingIds ?? []
+      });
+    } else {
+      console.error('Duty not found in mainDutyList:', duty);
     }
-
-    this.cdr.detectChanges();
-    this.calNetAmount();
-
-    // 🔹 Emit updates back to MonthlyCreate
-    this.dutyUpdated.emit({
-      dutyTableData: this.dutyTableData,
-      mainDutyList: this.mainDutyList,
-      sleetedBookingIds: this.sleetedBookingIds ?? []
-    });
-  } else {
-    console.error('Duty not found in mainDutyList:', duty);
   }
-}
 
 
 

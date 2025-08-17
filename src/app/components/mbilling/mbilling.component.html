@@ -1,101 +1,121 @@
 <!-- Show only after duties are added -->
 <!-- *ngIf="mainDutyList.length > 0" -->
-<div
-  class="p-6 mt-8 bg-white border rounded-2xl space-y-8  mx-auto">
+<div class="p-6 mt-8 bg-white border rounded-2xl space-y-8  mx-auto">
   <!-- 🟡 Table Section -->
-  <div
-    class="p-4 rounded-xl bg-gradient-to-br from-sky-50 via-sky-50 to-blue-50 mt-6 border">
-    <p-table [value]="mainDutyList" [paginator]="true" [rows]="10"
-      [responsiveLayout]="'scroll'"
-      [resizableColumns]="true" [showCurrentPageReport]="true"
-      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-      class="p-datatable-gridlines rounded-xl">
-      <ng-template pTemplate="header">
-        <tr class="bg-blue-500 text-gray-800 text-sm font-semibold">
-          <th class="py-3 px-4">
-            <i class="pi pi-sort-numeric-up text-blue-500 mr-1"></i> SI No.
-          </th>
-          <th class="py-3 px-4">
-            <i class="pi pi-id-card text-green-600 mr-1"></i> Slip No.
-          </th>
-          <th class="py-3 px-4">
-            <i class="pi pi-briefcase text-purple-600 mr-1"></i> Duty Type
-          </th>
-          <th class="py-3 px-4">
-            <i class="pi pi-car text-orange-500 mr-1"></i> Car No.
-          </th>
-          <th class="py-3 px-4">
-            <i class="pi pi-cog text-gray-700 mr-1"></i> Car Type
-          </th>
-          <th class="py-3 px-4">
-            <i class="pi pi-building text-pink-600 mr-1"></i> Project
-          </th>
-          <th class="py-3 px-4">
-            <i class="pi pi-user text-indigo-600 mr-1"></i> Guest Name
-          </th>
-          <th class="py-3 px-4">
-            <i class="pi pi-calendar text-teal-600 mr-1"></i> From Date
-          </th>
-          <th class="py-3 px-4">
-            <i class="pi pi-calendar-times text-red-600 mr-1"></i> To Date
-          </th>
-          <th class="py-3 px-4">
-            <i class="pi pi-clock text-yellow-600 mr-1"></i> From Time
-          </th>
-          <th class="py-3 px-4">
-            <i class="pi pi-clock text-yellow-700 mr-1"></i> To Time
-          </th>
-          <th class="py-3 px-4">
-            <i class="pi pi-directions text-blue-700 mr-1"></i> From KM
-          </th>
-          <th class="py-3 px-4">
-            <i class="pi pi-directions-alt text-blue-800 mr-1"></i> To KM
-          </th>
-          <th class="py-3 px-4">
-            <i class="pi pi-stopwatch text-lime-600 mr-1"></i> Total Time
-          </th>
-          <th class="py-3 px-4">
-            <i class="pi pi-compass text-cyan-600 mr-1"></i> Total KM
-          </th>
-          <th class="py-2 px-3">
-              <i class=" mr-1"></i> Action
-            </th>
-        </tr>
-      </ng-template>
+  <div class="p-4 rounded-xl bg-gradient-to-br from-sky-50 via-sky-50 to-blue-50 mt-6 border">
+  <p-table 
+    [value]="mainDutyList" 
+    [paginator]="true" 
+    [rows]="10" 
+    responsiveLayout="scroll"
+    [scrollable]="true"
+    scrollHeight="400px"
+    [resizableColumns]="true"
+    [autoLayout]="true"
+    [showCurrentPageReport]="true"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+    class="p-datatable-gridlines rounded-xl">
+    
+    <ng-template pTemplate="header">
+      <tr class="bg-blue-100 text-gray-800 text-sm font-semibold">
+        <th class="py-3 px-4" style="min-width: 80px;">
+          <i class="pi pi-sort-numeric-up text-blue-500 mr-1"></i> SI No.
+        </th>
+        <th class="py-3 px-4" style="min-width: 120px;">
+          <i class="pi pi-id-card text-green-600 mr-1"></i> Slip No.
+        </th>
+        <th class="py-3 px-4" style="min-width: 120px;">
+          <i class="pi pi-briefcase text-purple-600 mr-1"></i> Duty Type
+        </th>
+        <th class="py-3 px-4" style="min-width: 100px;">
+          <i class="pi pi-car text-orange-500 mr-1"></i> Car No.
+        </th>
+        <th class="py-3 px-4" style="min-width: 100px;">
+          <i class="pi pi-cog text-gray-700 mr-1"></i> Car Type
+        </th>
+        <th class="py-3 px-4" style="min-width: 120px;">
+          <i class="pi pi-building text-pink-600 mr-1"></i> Project
+        </th>
+        <th class="py-3 px-4" style="min-width: 150px;">
+          <i class="pi pi-user text-indigo-600 mr-1"></i> Guest Name
+        </th>
+        <th class="py-3 px-4" style="min-width: 100px;">
+          <i class="pi pi-calendar text-teal-600 mr-1"></i> From Date
+        </th>
+        <th class="py-3 px-4" style="min-width: 100px;">
+          <i class="pi pi-calendar-times text-red-600 mr-1"></i> To Date
+        </th>
+        <th class="py-3 px-4" style="min-width: 100px;">
+          <i class="pi pi-clock text-yellow-600 mr-1"></i> From Time
+        </th>
+        <th class="py-3 px-4" style="min-width: 100px;">
+          <i class="pi pi-clock text-yellow-700 mr-1"></i> To Time
+        </th>
+        <th class="py-3 px-4" style="min-width: 100px;">
+          <i class="pi pi-directions text-blue-700 mr-1"></i> From KM
+        </th>
+        <th class="py-3 px-4" style="min-width: 100px;">
+          <i class="pi pi-directions-alt text-blue-800 mr-1"></i> To KM
+        </th>
+        <th class="py-3 px-4" style="min-width: 100px;">
+          <i class="pi pi-stopwatch text-lime-600 mr-1"></i> Total Time
+        </th>
+        <th class="py-3 px-4" style="min-width: 100px;">
+          <i class="pi pi-compass text-cyan-600 mr-1"></i> Total KM
+        </th>
+        <th class="py-2 px-3" style="min-width: 80px;">
+          Action
+        </th>
+      </tr>
+    </ng-template>
 
-      <ng-template pTemplate="body" let-duty let-i="rowIndex">
-        <tr class="hover:bg-blue-50 transition-all text-sm">
-          <td class="py-2 px-3">{{ i + 1 }}</td>
-          <td class="py-2 px-3">{{ duty.SlipNo }}</td>
-          <td class="py-2 px-3">{{ duty.DutyTypeName }}</td>
-          <td class="py-2 px-3">{{ duty.CarNo }}</td>
-          <td class="py-2 px-3">{{ duty.CarType }}</td>
-          <td class="py-2 px-3">{{ duty.Project }}</td>
-          <td class="py-2 px-3">{{ duty.BookedBy }}</td>
-          <td class="py-2 px-3">{{ duty.fromDate }}</td>
-          <td class="py-2 px-3">{{ duty.toDate }}</td>
-          <td class="py-2 px-3">{{ duty.GarageOutTime }}</td>
-          <td class="py-2 px-3">{{ duty.GarageInDate | date:'HH:mm' }}</td>
-          <td class="py-2 px-3">{{ duty.GarageOutKm }}</td>
-          <td class="py-2 px-3">{{ duty.GarageInKm }}</td>
-          <td class="py-2 px-3">{{ duty.TotalHour }}</td>
-          <td class="py-2 px-3">{{ duty.TotalKm }}</td>
-           <td class="py-2 px-3">
-              <button pButton type="button" icon="pi pi-trash" class="p-button-danger p-button-rounded"
-                (click)="removeDutyFromInvoice(duty)"></button>
-            </td>
-        </tr>
-      </ng-template>
-    </p-table>
-  </div>
+    <ng-template pTemplate="body" let-duty let-i="rowIndex">
+      <tr class="hover:bg-blue-50 transition-all text-sm">
+        <td class="py-2 px-3">{{ i + 1 }}</td>
+        <td class="py-2 px-3">{{ duty.SlipNo }}</td>
+        <td class="py-2 px-3">{{ duty.DutyTypeName }}</td>
+        <td class="py-2 px-3">{{ duty.CarNo }}</td>
+        <td class="py-2 px-3">{{ duty.CarType }}</td>
+        <td class="py-2 px-3">{{ duty.Project }}</td>
+        <td class="py-2 px-3">{{ duty.BookedBy }}</td>
+        <td class="py-2 px-3">{{ duty.fromDate }}</td>
+        <td class="py-2 px-3">{{ duty.toDate }}</td>
+        <td class="py-2 px-3">{{ duty.GarageOutTime }}</td>
+        <td class="py-2 px-3">{{ duty.GarageInDate | date:'HH:mm' }}</td>
+        <td class="py-2 px-3">{{ duty.GarageOutKm }}</td>
+        <td class="py-2 px-3">{{ duty.GarageInKm }}</td>
+        <td class="py-2 px-3">{{ duty.TotalHour }}</td>
+        <td class="py-2 px-3">{{ duty.TotalKm }}</td>
+        <td class="py-2 px-3">
+          <button 
+            pButton 
+            type="button" 
+            icon="pi pi-trash" 
+            class="p-button-danger p-button-rounded p-button-sm"
+            (click)="removeDutyFromInvoice(duty)">
+          </button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+   <div class="flex p-4 justify-end items-end w-full">
+        <button 
+          pButton 
+          label="Calculate Bill" 
+          icon="pi pi-calculator" 
+          (click)="calculateBillAndLog();"
+          class="p-button p-button-lg p-button-primary rounded-xl shadow-md hover:scale-105 transition-transform w-[200px] sm:w-auto h-[50px]">
+        </button>
+      </div>
+</div>
+
 
   <!-- 💠 Billing Section -->
-  <div
+  <div *ngIf="isCalculated"
     class="col-span-full w-full p-4 sm:p-6 lg:p-8 border rounded-3xl bg-gradient-to-br from-sky-50 via-sky-50 to-blue-50 space-y-6 sm:space-y-8 lg:space-y-10">
 
     <!-- 🔘 Top Action -->
-    <div
-      class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
 
       <!-- 📊 Totals -->
       <div
@@ -107,52 +127,39 @@
           Total Hours: <span class="text-gray-900">{{ showTotalHour }}</span>
         </span>
       </div>
-
-      <!-- 📌 Calculate Button -->
-      <button pButton label="Calculate Bill" icon="pi pi-calculator"
-        (click)="calculateBillAndLog();"
-        class="p-button p-button-lg p-button-primary rounded-xl shadow-md hover:scale-105 transition-transform w-full sm:w-auto">
-      </button>
     </div>
 
     <!-- 🧾 Billing Summary Grid -->
-    <div
-      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 p-2 sm:p-4">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 p-2 sm:p-4">
 
       <!-- Column 1 -->
       <div class="space-y-3 sm:space-y-4">
-        <div
-          class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
           <label class="font-medium text-gray-700">💰 Fixed Amount:</label>
           <input readonly type="number" pInputText [(ngModel)]="fixedAmount"
             class="w-full sm:w-40 lg:w-44 text-right mt-1 sm:mt-0" />
         </div>
-        <div
-          class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
           <label class="font-medium text-gray-700">🕓 Extra Hours:</label>
           <input readonly type="number" pInputText [(ngModel)]="extraHours"
             class="w-full sm:w-40 lg:w-44 text-right mt-1 sm:mt-0" />
         </div>
-        <div
-          class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
           <label class="font-medium text-gray-700">🚗 Extra K.M:</label>
           <input readonly type="number" pInputText [(ngModel)]="extrakm"
             class="w-full sm:w-40 lg:w-44 text-right mt-1 sm:mt-0" />
         </div>
-        <div
-          class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
           <label class="font-medium text-gray-700">📉 Except Day Hrs:</label>
           <input readonly type="number" pInputText [(ngModel)]="exceptDayHrs"
             class="w-full sm:w-40 lg:w-44 text-right mt-1 sm:mt-0" />
         </div>
-        <div
-          class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
           <label class="font-medium text-gray-700">🚐 Extra Day K.M:</label>
           <input readonly type="number" pInputText [(ngModel)]="extraDaykm"
             class="w-full sm:w-40 lg:w-44 text-right mt-1 sm:mt-0" />
         </div>
-        <div
-          class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
           <label class="font-medium text-gray-700">⛽ Fuel Amount:</label>
           <input readonly type="number" pInputText [(ngModel)]="fuelAmount"
             class="w-full sm:w-40 lg:w-44 text-right mt-1 sm:mt-0" />
@@ -168,38 +175,32 @@
 
       <!-- Column 2 -->
       <div class="space-y-3 sm:space-y-4">
-        <div
-          class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
           <label class="font-medium text-gray-700">📆 No. of Days:</label>
           <input readonly type="number" pInputText [(ngModel)]="numDays"
             class="w-full sm:w-40 lg:w-44 text-right mt-1 sm:mt-0" readonly />
         </div>
-        <div
-          class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
           <label class="font-medium text-gray-700">💵 Rate:</label>
           <input readonly type="number" pInputText [(ngModel)]="rate1"
             class="w-full sm:w-40 lg:w-44 text-right mt-1 sm:mt-0" />
         </div>
-        <div
-          class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
           <label class="font-medium text-gray-700">💴 Rate:</label>
           <input readonly type="number" pInputText [(ngModel)]="rate2"
             class="w-full sm:w-40 lg:w-44 text-right mt-1 sm:mt-0" />
         </div>
-        <div
-          class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
           <label class="font-medium text-gray-700">💵 Rate:</label>
           <input readonly type="number" pInputText [(ngModel)]="rate3"
             class="w-full sm:w-40 lg:w-44 text-right mt-1 sm:mt-0" />
         </div>
-        <div
-          class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
           <label class="font-medium text-gray-700">💵 Rate:</label>
           <input readonly type="number" pInputText [(ngModel)]="rate4"
             class="w-full sm:w-40 lg:w-44 text-right mt-1 sm:mt-0" />
         </div>
-        <div
-          class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
           <label class="font-medium text-gray-700">📱 Mobile Amount:</label>
           <input readonly type="number" pInputText [(ngModel)]="mobileAmount"
             class="w-full sm:w-40 lg:w-44 text-right mt-1 sm:mt-0" />
@@ -215,38 +216,32 @@
 
       <!-- Column 3 -->
       <div class="space-y-3 sm:space-y-4">
-        <div
-          class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
           <label class="font-medium text-gray-700">💳 Amount:</label>
           <input readonly type="number" pInputText [(ngModel)]="Amount"
             class="w-full sm:w-40 lg:w-44 text-right mt-1 sm:mt-0" readonly />
         </div>
-        <div
-          class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
           <label class="font-medium text-gray-700">💳 Amount:</label>
           <input readonly type="number" pInputText [(ngModel)]="extaHAmount"
             class="w-full sm:w-40 lg:w-44 text-right mt-1 sm:mt-0" />
         </div>
-        <div
-          class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
           <label class="font-semibold text-green-600">💳 Amount:</label>
           <input readonly type="number" pInputText [(ngModel)]="totalKmAmount"
             class="w-full sm:w-40 lg:w-44 text-right font-bold text-green-700 mt-1 sm:mt-0" />
         </div>
-        <div
-          class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
           <label class="font-medium text-gray-700">💳 Amount:</label>
           <input readonly type="number" pInputText [(ngModel)]="amount3"
             class="w-full sm:w-40 lg:w-44 text-right mt-1 sm:mt-0" />
         </div>
-        <div
-          class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
           <label class="font-semibold text-gray-800">💳 Amount:</label>
           <input readonly type="number" pInputText [(ngModel)]="amount2"
             class="w-full sm:w-40 lg:w-44 text-right font-bold mt-1 sm:mt-0" />
         </div>
-        <div
-          class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
           <label class="font-medium text-gray-700">📝 Description:</label>
           <input readonly type="text" pInputText [(ngModel)]="desc2"
             class="w-full sm:w-40 lg:w-44 text-right font-bold mt-1 sm:mt-0" />
@@ -262,26 +257,22 @@
 
       <!-- Column 4 -->
       <div class="space-y-3 sm:space-y-4">
-        <div
-          class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
           <label class="font-semibold text-green-600">🧾 Bill Total:</label>
           <input readonly type="number" pInputText [(ngModel)]="totalPaybleAmaunt"
             class="w-full sm:w-40 lg:w-44 text-right font-bold text-green-700 mt-1 sm:mt-0" />
         </div>
-        <div
-          class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
           <label class="font-medium text-gray-700">💸 Other
             Charges(Taxable):</label>
           <input readonly type="number" pInputText [(ngModel)]="taxableSumCharges"
             class="w-full sm:w-40 lg:w-44 text-right mt-1 sm:mt-0" />
         </div>
         <!-- SGST -->
-        <div *ngIf="taxType == 'cgst'"
-          class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
+        <div *ngIf="taxType == 'cgst'" class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
           <label class="font-medium text-gray-700">SGST:</label>
           <div class="flex items-center gap-1 w-full sm:w-auto">
-            <input readonly type="number" pInputText [(ngModel)]="Sgst"
-              (ngModelChange)="calNetAmount()"
+            <input readonly type="number" pInputText [(ngModel)]="Sgst" (ngModelChange)="calNetAmount()"
               class="w-full sm:w-20 lg:w-24 text-right border rounded px-2 py-1" />
             <span>%</span>
             <input readonly type="number" pInputText readonly [value]="totalPaybleSGSTAmount"
@@ -290,54 +281,46 @@
         </div>
 
         <!-- CGST -->
-        <div *ngIf="taxType == 'cgst'"
-          class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
+        <div *ngIf="taxType == 'cgst'" class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
           <label class="font-medium text-gray-700">CGST:</label>
           <div class="flex items-center gap-1 w-full sm:w-auto">
-            <input readonly type="number" pInputText [(ngModel)]="Cgst"
-              (ngModelChange)="calNetAmount()"
+            <input readonly type="number" pInputText [(ngModel)]="Cgst" (ngModelChange)="calNetAmount()"
               class="w-full sm:w-20 lg:w-24 text-right border rounded px-2 py-1" />
             <span>%</span>
-            <input readonly type="number" pInputText  [value]="totalPaybleCGSTAmount"
+            <input readonly type="number" pInputText [value]="totalPaybleCGSTAmount"
               class="w-full sm:w-28 lg:w-32 text-right border rounded px-2 py-1" />
           </div>
         </div>
 
         <!-- IGST -->
-        <div *ngIf="taxType != 'cgst'"
-          class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
+        <div *ngIf="taxType != 'cgst'" class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
           <label class="font-medium text-gray-700">IGST:</label>
           <div class="flex items-center gap-1 w-full sm:w-auto">
-            <input readonly type="number" pInputText [(ngModel)]="igst"
-              (ngModelChange)="calNetAmount()"
+            <input readonly type="number" pInputText [(ngModel)]="igst" (ngModelChange)="calNetAmount()"
               class="w-full sm:w-20 lg:w-24 text-right border rounded px-2 py-1" />
             <span>%</span>
-            <input readonly type="number" pInputText  [value]="totalPaybleIGSTAmount"
+            <input readonly type="number" pInputText [value]="totalPaybleIGSTAmount"
               class="w-full sm:w-28 lg:w-32 text-right border rounded px-2 py-1" />
           </div>
         </div>
 
-        <div
-          class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
           <label class="font-bold text-gray-800">💸 Other Charges(Non
             Taxable)</label>
           <input readonly type="number" pInputText [(ngModel)]="nonTaxableSumCharges"
             class="w-full sm:w-40 lg:w-44 text-right font-semibold mt-1 sm:mt-0" />
         </div>
-        <div
-          class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
           <label class="font-semibold text-green-600">🧾 Round Off:</label>
           <input readonly type="number" pInputText [value]="roundOff"
             class="w-full sm:w-40 lg:w-44 text-right font-bold text-green-700 mt-1 sm:mt-0" />
         </div>
-        <div
-          class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
           <label class="font-semibold text-green-600">🧾 Advance(less):</label>
           <input type="number" pInputText [(ngModel)]="aboveAdvance" (ngModelChange)="calNetAmount()"
             class="w-full sm:w-40 lg:w-44 text-right font-bold text-green-700 mt-1 sm:mt-0" />
         </div>
-        <div
-          class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
           <label class="font-bold text-gray-800">💳 Net Payable:</label>
           <input readonly type="number" pInputText [(ngModel)]="totalPaybleGSTAmount"
             class="w-full sm:w-40 lg:w-44 text-right font-semibold mt-1 sm:mt-0" />
@@ -350,16 +333,12 @@
   <div
     class="col-span-full w-full p-8 border rounded-3xl bg-gradient-to-br from-sky-50 via-sky-50 to-blue-50 space-y-10">
     <div class=" bg-white rounded-2xl border border-blue-300 p-4">
-      <h3
-        class="text-lg font-bold text-blue-700 mb-4 flex items-center gap-2">
+      <h3 class="text-lg font-bold text-blue-700 mb-4 flex items-center gap-2">
         <i class="pi pi-dollar text-yellow-500"></i>
         Other Charges (None-Taxable)
       </h3>
 
-      <p-table
-        [value]="otherCharges.nonTaxable"
-        [responsiveLayout]="'scroll'"
-        class="p-datatable-sm rounded-lg">
+      <p-table [value]="otherCharges.nonTaxable" [responsiveLayout]="'scroll'" class="p-datatable-sm rounded-lg">
         <ng-template pTemplate="header">
           <tr class="bg-blue-100 text-blue-800 text-lg">
             <th>SINo </th>
@@ -378,16 +357,12 @@
     </div>
 
     <div class="bg-white rounded-2xl border border-blue-300 p-4" *ngIf="otherCharges.taxable">
-      <h3
-        class="text-lg font-bold text-blue-700 mb-4 flex items-center gap-2">
+      <h3 class="text-lg font-bold text-blue-700 mb-4 flex items-center gap-2">
         <i class="pi pi-dollar text-yellow-500"></i>
         Taxable Other Charges
       </h3>
 
-      <p-table
-        [value]="otherCharges.taxable"
-        [responsiveLayout]="'scroll'"
-        class="p-datatable-sm rounded-lg">
+      <p-table [value]="otherCharges.taxable" [responsiveLayout]="'scroll'" class="p-datatable-sm rounded-lg">
         <ng-template pTemplate="header">
           <tr class="bg-blue-100 text-blue-800 text-lg">
             <th>SINo </th>
