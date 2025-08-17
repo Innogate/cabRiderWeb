@@ -230,7 +230,7 @@
           >
           <p-dropdown
             [options]="show"
-            [(ngModel)]="selectedShow"
+            [(ngModel)]="addDutyTableRowSize"
             placeholder="Show"
             [showClear]="true"
             class="w-full min-w-[200px]"
@@ -268,7 +268,7 @@
           dataKey="BookingID"
           (onPage)="onPageChange($event)"
           [paginator]="true"
-          [rows]="10"
+          [rows]="addDutyTableRowSize"
           [responsiveLayout]="'scroll'"
           class="p-datatable-gridlines"
         >
