@@ -146,6 +146,10 @@ export class MbillingComponent {
           );
           rt = true;
         }
+        if (msg.for === 'createMonthlyBilling') {
+          this.router.navigate(['/monthly-invoice']);
+          rt = true;
+        }
       }
       if (rt == false) {
         console.log(msg);
@@ -285,12 +289,12 @@ export class MbillingComponent {
 
           totalDays += days;
 
-          const dutyAmt = setup?.DutyAmt ?? 0;
+          const dutyAmt = setup?.DutyAmt;
           const amount = Number(((dutyAmt / 30) * days).toFixed(2));
           totalAmount += amount;
           groseAmount = dutyAmt;
 
-          const extraDayHrsRate = setup?.OTRate ?? 0;
+          const extraDayHrsRate = setup?.OTRate;
           extraHourRate = extraDayHrsRate;
 
           //! Time calculation
@@ -329,7 +333,7 @@ export class MbillingComponent {
       }
     });
 
-    const extraKMRate = setup?.ExtraDayKMRate ?? 0;
+    const extraKMRate = setup?.ExtraDayKMRate;
     extraKmRate = extraKMRate;
 
     // ** Final Calculation
@@ -469,51 +473,51 @@ export class MbillingComponent {
     return {
       BillDate: this.invoiceForm.get('BillDate')?.value ?? new Date(),
       taxtype: this.invoiceForm.get('taxtype')?.value === 'cgst' ? 1 : 0,
-      company_id: this.invoiceForm.get('company_id')?.value ?? 0,
-      branch_id: this.invoiceForm.get('branch_id')?.value ?? 0,
-      city_id: this.invoiceForm.get('city_id')?.value ?? 0,
-      party_id: this.invoiceForm.get('party_id')?.value ?? 0,
+      company_id: this.invoiceForm.get('company_id')?.value,
+      branch_id: this.invoiceForm.get('branch_id')?.value,
+      city_id: this.invoiceForm.get('city_id')?.value,
+      party_id: this.invoiceForm.get('party_id')?.value,
 
       // Column 1
 
-      fixed_amount: this.fixedAmount ?? 0,
-      extra_hours: this.totalExtraHour ?? 0,
-      extra_km: this.extrakm ?? 0,
-      except_day_hrs: this.exceptDayHrs ?? 0,
-      extra_day_km: this.extraDaykm ?? 0,
-      fuel_amount: this.fuelAmount ?? 0,
+      fixed_amount: this.fixedAmount,
+      extra_hours: this.totalExtraHour,
+      extra_km: this.extrakm,
+      except_day_hrs: this.exceptDayHrs,
+      extra_day_km: this.extraDaykm,
+      fuel_amount: this.fuelAmount,
 
       // Column 2
-      no_of_days: this.numDays ?? 0,
-      extra_hours_rate: this.rate1 ?? 0,
-      extra_km_rate: this.rate2 ?? 0,
-      except_day_hrs_rate: this.rate3 ?? 0,
-      except_day_km_rate: this.rate4 ?? 0,
-      mobil_amount: this.mobileAmount ?? 0,
+      no_of_days: this.numDays,
+      extra_hours_rate: this.rate1,
+      extra_km_rate: this.rate2,
+      except_day_hrs_rate: this.rate3,
+      except_day_km_rate: this.rate4,
+      mobil_amount: this.mobileAmount,
 
       // Column 3
-      fixed_amount_total: this.Amount ?? 0,
-      extra_hours_amount: this.extaHAmount ?? 0,
-      extra_km_amount: this.totalKmAmount ?? 0,
-      except_day_hrs_amount: this.amount3 ?? 0,
-      except_day_km_amount: this.amount2 ?? 0,
-      remarks: this.desc2 ?? '',
+      fixed_amount_total: this.Amount,
+      extra_hours_amount: this.extaHAmount,
+      extra_km_amount: this.totalKmAmount,
+      except_day_hrs_amount: this.amount3,
+      except_day_km_amount: this.amount2,
+      remarks: this.desc2,
 
 
       // Column 4
-      bill_total: this.billTotal ?? 0,
-      Advance: this.advance ?? 0,
-      round_off: this.roundOff ?? 0,
-      NetAmount: this.amountPayable ?? 0,
-      OtherCharges: this.taxableSumCharges ?? 0,
-      SGST: this.totalPaybleSGSTAmount ?? 0,
-      CGST: this.totalPaybleCGSTAmount ?? 0,
-      IGST: this.totalPaybleIGSTAmount ?? 0,
-      OtherCharges2: this.nonTaxableSumCharges ?? 0,
+      bill_total: this.billTotal,
+      Advance: this.aboveAdvance,
+      round_off: this.roundOff,
+      NetAmount: this.totalPaybleGSTAmount,
+      OtherCharges: this.taxableSumCharges,
+      SGST: this.totalPaybleSGSTAmount,
+      CGST: this.totalPaybleCGSTAmount,
+      IGST: this.totalPaybleIGSTAmount,
+      OtherCharges2: this.nonTaxableSumCharges,
 
-      IGSTPer: this.igst ?? 0,
-      CGSTPer: this.Cgst ?? 0,
-      SGSTPer: this.Sgst ?? 0,
+      IGSTPer: this.igst,
+      CGSTPer: this.Cgst,
+      SGSTPer: this.Sgst,
 
       // extra
       rcm: 0,
@@ -521,9 +525,9 @@ export class MbillingComponent {
       InvcancelOn: null,
       Invcancelby: null,
       InvcancelReason: null,
-      GrossAmount: 0,
+      GrossAmount: this.totalPaybleAmaunt,
       Discount: 0,
-      monthly_duty_id: 0,
+      monthly_duty_id: this.selectedMonthlyDuty.id,
       except_day_km: 0,
       parking_amount: 0,
       night_amount: 0,
