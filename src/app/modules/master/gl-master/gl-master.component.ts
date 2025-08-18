@@ -1,6 +1,12 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { DynamicTableComponent } from '../../../components/dynamic-table/dynamic-table.component';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
+import { FormBuilder } from '@angular/forms';
+import { glMasterService } from '../../../services/glMaster.service';
+import { commonService } from '../../../services/comonApi.service';
+import { globalRequestHandler } from '../../../utils/global';
 
 @Component({
   selector: 'app-gl-master',
@@ -13,6 +19,11 @@ isLoading = true;
 data: any[]=[];
 showForm: boolean = false;
   constructor(
+    private glMasterService: glMasterService,
+        private router: Router,
+        private messageService: MessageService,
+        private fb: FormBuilder,
+        private commonService: commonService,
     
   ){}
 
@@ -20,7 +31,16 @@ showForm: boolean = false;
 
 
   async ngOnInit(): Promise<void> {
-  }
+    this.glMasterService.registerPageHandler((msg) => {
+          console.log(msg);
+          globalRequestHandler(msg, this.router, this.messageService);
+          if (msg.for === "getAllGlMaster") {
+            this.data = msg.data
+            this.isLoading = false
+          }
+          return true;
+  });
+}
 
   ngOnDestroy(): void {
   }
