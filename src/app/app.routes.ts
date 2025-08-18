@@ -38,6 +38,7 @@ import { CompanyMasterComponent } from './modules/master/company-master/company-
 import { JournalEntryComponent } from './modules/entry/journal-entry/journal-entry.component';
 import { GlMasterComponent } from './modules/master/gl-master/gl-master.component';
 import { GeneralSaleComponent } from './modules/entry/general-sale/general-sale.component';
+import { CarSaleEntryComponent } from './modules/entry/car-sale-entry/car-sale-entry.component';
 
 export const routes: Routes = [
     {
@@ -49,6 +50,7 @@ export const routes: Routes = [
             { path: 'full-booking', component: BookingComponent, data: { isFullBooking: true }, canActivate: [AuthGuard] },
             { path: 'add-booking', component: BookingEntryComponent, data: { isFullBooking: true }, canActivate: [AuthGuard] },
             { path: 'invoice-entry', component: InvoiceEntryComponent, canActivate: [AuthGuard] },
+            { path: 'car-sale-entry', component: CarSaleEntryComponent, canActivate: [AuthGuard] },
             { path: 'vendor-invoice-entry', component: VendorInvoiceEntryComponent, canActivate: [AuthGuard] },
            //added
             {path: 'add-new-vendor-invoice', component: AddNewVendorInvoiceComponent,canActivate: [AuthGuard]},
