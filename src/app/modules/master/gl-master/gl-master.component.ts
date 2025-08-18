@@ -11,26 +11,26 @@ import { SidebarModule } from 'primeng/sidebar';
 
 @Component({
   selector: 'app-gl-master',
-  imports: [DynamicTableComponent,CommonModule, SidebarModule],
+  imports: [DynamicTableComponent, CommonModule, SidebarModule],
   templateUrl: './gl-master.component.html',
   styleUrl: './gl-master.component.css'
 })
 export class GlMasterComponent implements OnInit, OnDestroy, AfterViewInit {
-isLoading = true;
-data: any[]=[];
-showForm: boolean = false;
-form!: FormGroup;
+  isLoading = true;
+  data: any[] = [];
+  showForm: boolean = false;
+  form!: FormGroup;
   constructor(
     private glMasterService: glMasterService,
-        private router: Router,
-        private messageService: MessageService,
-        private fb: FormBuilder,
-        private commonService: commonService,
-    
-  ){
+    private router: Router,
+    private messageService: MessageService,
+    private fb: FormBuilder,
+    private commonService: commonService,
+
+  ) {
     this.form = this.fb.group({
       id: [],
-      
+
     });
   }
 
@@ -39,15 +39,15 @@ form!: FormGroup;
 
   async ngOnInit(): Promise<void> {
     this.glMasterService.registerPageHandler((msg) => {
-          console.log(msg);
-          globalRequestHandler(msg, this.router, this.messageService);
-          if (msg.for === "getAllGlMaster") {
-            this.data = msg.data
-            this.isLoading = false
-          }
-          return true;
-  });
-}
+      console.log(msg);
+      globalRequestHandler(msg, this.router, this.messageService);
+      if (msg.for === "getAllGlList") {
+        this.data = msg.data
+        this.isLoading = false
+      }
+      return true;
+    });
+  }
 
   ngOnDestroy(): void {
     this.glMasterService.unregisterPageHandler();
@@ -55,11 +55,9 @@ form!: FormGroup;
   }
 
   async ngAfterViewInit(): Promise<void> {
-     const payload = {
-      id: 0,
-      PageNo: 1,
-      PageSize: 1000,
-      Search: "",
+    const payload = {
+      page: 1,
+      pageSize: 15
     };
     this.glMasterService.getAllGlMaster(payload);
   }
@@ -67,16 +65,8 @@ form!: FormGroup;
 
   columns = [
     { header: 'ID', field: 'id', icon: 'pi pi-hashtag', styleClass: 'text-gray-600' },
-    // { header: 'Driver Name', field: 'drv_name', icon: 'pi pi-user', styleClass: 'text-blue-600' },
-    // { header: 'Address', field: 'address', icon: 'pi pi-home', styleClass: 'text-green-600' },
-    // { header: 'City', field: 'CityName', icon: 'pi pi-map-marker', styleClass: 'text-orange-500' },
-    // { header: 'Pin Code', field: 'pin_code', icon: 'pi pi-envelope', styleClass: 'text-purple-500' },
-    // { header: 'Mobile No', field: 'mobileno', icon: 'pi pi-phone', styleClass: 'text-teal-500' },
-    // { header: 'Driver Licenseno', field: 'drv_licenseno', icon: 'pi pi-id-card', styleClass: 'text-indigo-500' },
-    // { header: 'Bank Name', field: 'bank_name', icon: 'pi pi-building', styleClass: 'text-pink-500' },
-    // { header: 'Bank Branch', field: 'bank_branch', icon: 'pi pi-briefcase', styleClass: 'text-yellow-600' },
-    // { header: 'Bank Account No', field: 'bank_acno', icon: 'pi pi-credit-card', styleClass: 'text-red-500' },
-    // { header: 'Bank Account Type', field: 'bank_actype', icon: 'pi pi-wallet', styleClass: 'text-emerald-500' },
+    { header: 'Gl Name', field: 'GLName', icon: 'pi pi-user', styleClass: 'text-blue-600' },
+    { header: 'Gl Type', field: 'GLType', icon: 'pi pi-home', styleClass: 'text-green-600' }
   ];
 
   // Action buttons configuration
