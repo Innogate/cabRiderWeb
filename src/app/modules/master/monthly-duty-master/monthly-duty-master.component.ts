@@ -25,8 +25,12 @@ export class MonthlyDutyMasterComponent implements OnInit, OnDestroy, AfterViewI
   cities: any[] = [];
   filteredCities: any[] = [];
   cityList: any[] = [{ Id: 0, CityName: '' }];
-  branch : any[] = [];
-  filterbranch : any[] = [{ Id: 0, BranchName: '' }];
+  branch: any[] = [];
+  filteredBranch: any[] = [];
+  branchList: any[] = [{ Id: 0, BranchName: '' }];
+  party: any[] = [];
+  filteredParty: any[] = [];
+  partyList: any[] = [{ Id: 0, party_name: '' }];
   days: any[] = [
     {name: 'Sunday'},
     {name: 'Monday'},
@@ -62,7 +66,7 @@ export class MonthlyDutyMasterComponent implements OnInit, OnDestroy, AfterViewI
     this.form = this.fb.group({
   id: 0,
   BranchID: [''],
-  PartyID: 2,
+  PartyID: [''],
   UsedBy: "Admin",
   CityID: [''],
   CarTypeID: 5,
@@ -114,8 +118,11 @@ export class MonthlyDutyMasterComponent implements OnInit, OnDestroy, AfterViewI
         this.isLoading=false;
        } else if (msg.for == 'getAllCityDropdown') {
         this.cityList = msg.data;
-       } else if (msg.for == 'GatAllBranchDropDown') {
-        this.filterbranch = msg.data;
+       } else if (msg.for == 'gatAllBranchDropDown') {
+        // this.filteredBranch = msg.data;
+        this.branchList= msg.data;
+       } else if (msg.for == 'gateAllPartyNameDropdown') {
+        this.partyList = msg.data;
        }
        return true;
      });
@@ -123,7 +130,8 @@ export class MonthlyDutyMasterComponent implements OnInit, OnDestroy, AfterViewI
  
  
    ngOnDestroy(): void {
-     
+     this.monthlyDutyMasterService.unregisterPageHandler();
+    this.commonService.unregisterPageHandler();
    }
  
    ngAfterViewInit(): void {
@@ -135,16 +143,14 @@ export class MonthlyDutyMasterComponent implements OnInit, OnDestroy, AfterViewI
      };
      this.monthlyDutyMasterService.getAllMonthlyDuty(payload);
      this.commonService.GatAllCityDropDown({});
-     this.loadBranchDropdown();
+    this.commonService.GatAllBranchDropDown(payload);
+    this.commonService.gateAllPartyNameDropdown()
    }
 
    
 
 
-   loadBranchDropdown() {
-    // this.commonService.GatAllBranchDropDown();
-   }
-     
+  
     // Define the columns for the dynamic table
   columns = [
     { header: 'ID', field: 'id' },
@@ -193,10 +199,17 @@ export class MonthlyDutyMasterComponent implements OnInit, OnDestroy, AfterViewI
     );
   }
 
+  filteredPartylist(event: any) {
+    const query = event.query.toLowerCase();
+    this.filteredParty = this.partyList.filter(party =>
+    party.party_name.toLowerCase().includes(query)
+    );
+  }
+
   filterbranchlist(event: any) {
     const query = event.query.toLowerCase();
-    this.filterbranch = this.branch.filter(branch =>
-      branch.BrunchName.toLowerCase().includes(query)
+    this.filteredBranch = this.branchList.filter(branch =>
+      branch.BranchName.toLowerCase().includes(query)
     );
   }
 

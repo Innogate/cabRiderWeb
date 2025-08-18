@@ -37,8 +37,8 @@
 
                                 <!-- <span class="text-red-600">*</span> -->
                             </div>
-                           <p-autoComplete field="CityName" [dropdown]="true" placeholder="Select Branch" (completeMethod)="filterbranchlist($event)"
-                                class="w-full border border-indigo-200 rounded-md" formControlName="BranchID" [suggestions]="filterbranch">
+                            <p-autoComplete field="branch_name" [dropdown]="true" placeholder="Select Branch" (completeMethod)="filterbranchlist($event)"
+                                class="w-full border border-indigo-200 rounded-md" formControlName="BranchID" [suggestions]="filteredBranch">
                             </p-autoComplete>
                         </div>
 
@@ -47,8 +47,8 @@
                                 <i class="pi pi-address-book text-blue-700"></i>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Party</label>
                             </div>
-                            <p-autoComplete field="BranchID" [dropdown]="true" placeholder="Select Option"
-                                class="w-full border border-indigo-200 rounded-md" formControlName="PartyID">
+                            <p-autoComplete field="party_name" [dropdown]="true" placeholder="Select Party" (completeMethod)="filteredPartylist($event)"
+                                class="w-full border border-indigo-200 rounded-md" formControlName="PartyID" [suggestions]="filteredParty">
                             </p-autoComplete>
                             <!-- <span *ngIf="form.get('pin_code')?.invalid && form.get('pin_code')?.touched && form.get('pin_code')?.errors?.['pattern']" class="text-red-500">
                                     Pin Code must be 6 digits.
