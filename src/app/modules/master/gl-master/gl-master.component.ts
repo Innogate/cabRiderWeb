@@ -3,14 +3,15 @@ import { DynamicTableComponent } from '../../../components/dynamic-table/dynamic
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { glMasterService } from '../../../services/glMaster.service';
 import { commonService } from '../../../services/comonApi.service';
 import { globalRequestHandler } from '../../../utils/global';
+import { SidebarModule } from 'primeng/sidebar';
 
 @Component({
   selector: 'app-gl-master',
-  imports: [DynamicTableComponent,CommonModule],
+  imports: [DynamicTableComponent,CommonModule, SidebarModule],
   templateUrl: './gl-master.component.html',
   styleUrl: './gl-master.component.css'
 })
@@ -18,6 +19,7 @@ export class GlMasterComponent implements OnInit, OnDestroy, AfterViewInit {
 isLoading = true;
 data: any[]=[];
 showForm: boolean = false;
+form!: FormGroup;
   constructor(
     private glMasterService: glMasterService,
         private router: Router,
@@ -25,7 +27,12 @@ showForm: boolean = false;
         private fb: FormBuilder,
         private commonService: commonService,
     
-  ){}
+  ){
+    this.form = this.fb.group({
+      id: [],
+      
+    });
+  }
 
 
 
@@ -43,9 +50,18 @@ showForm: boolean = false;
 }
 
   ngOnDestroy(): void {
+    this.glMasterService.unregisterPageHandler();
+    this.commonService.unregisterPageHandler();
   }
 
   async ngAfterViewInit(): Promise<void> {
+     const payload = {
+      id: 0,
+      PageNo: 1,
+      PageSize: 1000,
+      Search: "",
+    };
+    this.glMasterService.getAllGlMaster(payload);
   }
 
 
