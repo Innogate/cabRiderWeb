@@ -1,1 +1,5 @@
-<p>journal-entry works!</p>
+<div class="card" *ngIf="!showForm">
+    <app-dynamic-table [columns]="columns" [loading]="isLoading" [data]="data" [headerTitle]="'JOURNAL ENTRY'"
+        [rowActions]="actions" (onAction)="handleAction($event)">
+    </app-dynamic-table>
+</div>
