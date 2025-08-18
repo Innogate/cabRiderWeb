@@ -21,7 +21,7 @@ export class glMasterService extends BaseService {
   }
 
   createGlMaster(payload: any){
-    this.call('master.createGlMaster');
+    this.call('master.createGlMaster', payload);
 
     //  "GLName": "dgdgg",
     //     "GLType": "dgdfgfd"
