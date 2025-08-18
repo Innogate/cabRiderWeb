@@ -16,6 +16,10 @@ export class glMasterService extends BaseService {
   //  "page": 1,
   //     "pageSize": 10
 
+  getAllGlTypes() {
+    this.call('master.getAllGlTypeDropdown', {});
+  }
+
   protected handleMessage(msg: any): boolean {
     return false;
   }
