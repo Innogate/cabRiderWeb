@@ -37,8 +37,11 @@
 
                                 <!-- <span class="text-red-600">*</span> -->
                             </div>
-                            <p-autoComplete field="branch_name" [dropdown]="true" placeholder="Select Branch" (completeMethod)="filterbranchlist($event)"
-                                class="w-full border border-indigo-200 rounded-md" formControlName="BranchID" [suggestions]="filteredBranch">
+
+                            <p-autoComplete field="branch_name" [dropdown]="true" placeholder="Select Branch"
+                                (completeMethod)="filterbranchlist($event)"
+                                class="w-full border border-indigo-200 rounded-md" formControlName="BranchID"
+                                [suggestions]="filteredBranch">
                             </p-autoComplete>
                         </div>
 
@@ -47,8 +50,10 @@
                                 <i class="pi pi-address-book text-blue-700"></i>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Party</label>
                             </div>
-                            <p-autoComplete field="party_name" [dropdown]="true" placeholder="Select Party" (completeMethod)="filteredPartylist($event)"
-                                class="w-full border border-indigo-200 rounded-md" formControlName="PartyID" [suggestions]="filteredParty">
+                            <p-autoComplete field="party_name" [dropdown]="true" placeholder="Select Party"
+                                (completeMethod)="filteredPartylist($event)"
+                                class="w-full border border-indigo-200 rounded-md" formControlName="PartyID"
+                                [suggestions]="filteredParty">
                             </p-autoComplete>
                             <!-- <span *ngIf="form.get('pin_code')?.invalid && form.get('pin_code')?.touched && form.get('pin_code')?.errors?.['pattern']" class="text-red-500">
                                     Pin Code must be 6 digits.
@@ -62,8 +67,9 @@
                                 <label class="block text-sm font-medium text-gray-700 mb-1">To City</label>
                                 <span class="text-red-600">*</span>
                             </div>
-                            <p-autoComplete field="CityName" [dropdown]="true" placeholder="Select City" (completeMethod)="filterCity($event)"
-                                class="w-full border border-indigo-200 rounded-md" formControlName="CityID" [suggestions]="filteredCities">
+                            <p-autoComplete field="CityName" [dropdown]="true" placeholder="Select City"
+                                (completeMethod)="filterCity($event)" class="w-full border border-indigo-200 rounded-md"
+                                formControlName="CityID" [suggestions]="filteredCities">
                             </p-autoComplete>
                         </div>
 
@@ -72,8 +78,8 @@
                                 <i class="pi pi-wrench text-red-400"></i>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Setup Type</label>
                             </div>
-                            <p-dropdown placeholder="Select Option"
-                                class="w-full border border-indigo-200 rounded-md" [options]="setuptypeOptions" formControlName="SetupType">
+                            <p-dropdown placeholder="Select Option" class="w-full border border-indigo-200 rounded-md"
+                                [options]="setuptypeOptions" formControlName="SetupType">
                             </p-dropdown>
                         </div>
                         <div>
@@ -102,8 +108,11 @@
                                 <i class="pi pi-truck text-blue-700"></i>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Car Type</label>
                             </div>
-                            <p-dropdown [options]="carTypes" formControlName="CarTypeID" optionLabel="label" optionValue="value"
-                    appendTo="body" placeholder="Select Car" class="w-full"></p-dropdown>
+                            <p-autoComplete field="car_type" [dropdown]="true" placeholder="Select Car Type"
+                                (completeMethod)="filterCarTypelist($event)"
+                                class="w-full border border-indigo-200 rounded-md" formControlName="CarTypeID"
+                                [suggestions]="filteredCartype">
+                            </p-autoComplete>
                         </div>
                     </div>
 
@@ -114,7 +123,8 @@
                             <label class="block text-sm font-medium text-gray-700 mb-1"> Used By</label>
 
                         </div>
-                        <input type="text" pInputText class="w-full mb-2 border border-gray-300 rounded-lg p-3" formControlName="UsedBy">
+                        <input type="text" pInputText class="w-full mb-2 border border-gray-300 rounded-lg p-3"
+                            formControlName="UsedBy">
                     </div>
                     <div class="grid grid-cols-3 gap-4">
 
@@ -124,7 +134,8 @@
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Except Day</label>
                             </div>
                             <p-autoComplete field="name" [dropdown]="true" placeholder="Monday"
-                                class="w-full border border-indigo-200 rounded-md" [suggestions]="filteredDays" (completeMethod)="filterDay($event)" formControlName="ExceptDay">
+                                class="w-full border border-indigo-200 rounded-md" [suggestions]="filteredDays"
+                                (completeMethod)="filterDay($event)" formControlName="ExceptDay">
                             </p-autoComplete>
 
                         </div>
@@ -164,14 +175,16 @@
                                     <i class="pi pi-stopwatch text-orange-500"></i>
                                     <label class="block text-sm font-medium text-gray-700 mb-1">From Time</label>
                                 </div>
-                                <input type="time" pInputText class="w-full border border-gray-300 rounded-lg p-3" formControlName="FromTime">
+                                <input type="time" pInputText class="w-full border border-gray-300 rounded-lg p-3"
+                                    formControlName="FromTime">
                             </div>
                             <div>
                                 <div class="flex items-center space-x-2">
                                     <i class="pi pi-stopwatch text-orange-500"></i>
                                     <label class="block text-sm font-medium text-gray-700 mb-1">To Time</label>
                                 </div>
-                                <input type="time" pInputText class="w-full border border-gray-300 rounded-lg p-3" formControlName="ToTime">
+                                <input type="time" pInputText class="w-full border border-gray-300 rounded-lg p-3"
+                                    formControlName="ToTime">
                                 <!-- <span
                                     *ngIf="form.get('bank_branch')?.touched && form.get('bank_branch')?.errors?.['pattern']"
                                     class="text-sm text-red-600">
@@ -209,7 +222,8 @@
                                     <i class="pi pi-clock text-red-600"></i>
                                     <label class="block text-sm font-medium text-gray-700 mb-1">N Halt Time</label>
                                 </div>
-                                <input type="time" pInputText class="w-full border border-gray-300 rounded-lg p-3" formControlName="NHaltTime">
+                                <input type="time" pInputText class="w-full border border-gray-300 rounded-lg p-3"
+                                    formControlName="NHaltTime">
                             </div>
                             <div>
                                 <div class="flex items-center space-x-2">
@@ -223,7 +237,8 @@
                             <div class="flex items-center space-x-2">
                                 <i class="pi pi-chart-scatter text-blue-500"></i>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Compare KM Time</label>
-                                <input type="checkbox" pInputText class="w-full border border-gray-300 rounded-lg p-3" formControlName="CompareKMTime">
+                                <input type="checkbox" pInputText class="w-full border border-gray-300 rounded-lg p-3"
+                                    formControlName="CompareKMTime">
                             </div>
 
 
@@ -231,7 +246,8 @@
                             <div class="flex items-center space-x-2">
                                 <i class="pi pi-calculator text-teal-600"></i>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Calc On Rpt Time</label>
-                                <input type="checkbox" pInputText class="w-full border border-gray-300 rounded-lg p-3" formControlName="CalcOnRptTime">
+                                <input type="checkbox" pInputText class="w-full border border-gray-300 rounded-lg p-3"
+                                    formControlName="CalcOnRptTime">
                             </div>
                         </div>
                     </div>
@@ -400,7 +416,8 @@
                                     <i class="pi pi-receipt text-yellow-500"></i>
                                     <label class="block text-sm font-medium text-gray-700 mb-1">Extra Desc</label>
                                 </div>
-                                <input type="text" pInputText class="w-full border border-gray-300 rounded-lg p-3" formControlName="ExtraDesc">
+                                <input type="text" pInputText class="w-full border border-gray-300 rounded-lg p-3"
+                                    formControlName="ExtraDesc">
 
                             </div>
                         </div>

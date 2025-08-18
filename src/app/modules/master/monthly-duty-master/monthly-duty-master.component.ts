@@ -16,142 +16,139 @@ import { monthlyDutyMasterService } from '../../../services/monthlyDutyMaster.se
   templateUrl: './monthly-duty-master.component.html',
   styleUrl: './monthly-duty-master.component.css'
 })
-export class MonthlyDutyMasterComponent implements OnInit, OnDestroy, AfterViewInit{
+export class MonthlyDutyMasterComponent implements OnInit, OnDestroy, AfterViewInit {
   data: any[] = [];
   isLoading: boolean = true;
   showForm: boolean = false;
   form!: FormGroup;
-  heading: string='';
+  heading: string = '';
   cities: any[] = [];
   filteredCities: any[] = [];
   cityList: any[] = [{ Id: 0, CityName: '' }];
   branch: any[] = [];
   filteredBranch: any[] = [];
-  branchList: any[] = [{ Id: 0, BranchName: '' }];
+  branchList: any[] = [];
   party: any[] = [];
   filteredParty: any[] = [];
   partyList: any[] = [{ Id: 0, party_name: '' }];
+  carTypeList: any[] = [];
+  filteredCartype: any[] = [];
   days: any[] = [
-    {name: 'Sunday'},
-    {name: 'Monday'},
-    {name: 'Tuesday'},
-    {name: 'Wednesday'},
-    {name: 'Thursday'},
-    {name: 'Friday'},
-    {name: 'Saturday'},
+    { name: 'Sunday' },
+    { name: 'Monday' },
+    { name: 'Tuesday' },
+    { name: 'Wednesday' },
+    { name: 'Thursday' },
+    { name: 'Friday' },
+    { name: 'Saturday' },
   ];
 
-   carTypes = [
-    { label: 'Sedan', value: 'Sedan' },
-    { label: 'SUV', value: 'SUV' },
-    { label: 'Hatchback', value: 'Hatchback' },
-    { label: 'Tempo Traveller', value: 'Tempo Traveller' },
-    { label: 'Bus', value: 'Bus' }
-  ];
-
- filteredDays: any[] = [];
-  
+  filteredDays: any[] = [];
 
 
- constructor(
-  private monthlyDutyMasterService:monthlyDutyMasterService,
-  private router:Router,
-  private messageService:MessageService,
-  private fb: FormBuilder,
-  private commonService: commonService,
 
- ){this.createForm()}
+  constructor(
+    private monthlyDutyMasterService: monthlyDutyMasterService,
+    private router: Router,
+    private messageService: MessageService,
+    private fb: FormBuilder,
+    private commonService: commonService,
+
+  ) { this.createForm() }
 
   createForm() {
     this.form = this.fb.group({
-  id: 0,
-  BranchID: [''],
-  PartyID: [''],
-  UsedBy: "Admin",
-  CityID: [''],
-  CarTypeID: 5,
-  CarNo: ['', [Validators.pattern(/^[A-Z]{2}-\d{2}-[A-Z]{1,2}-\d{4}$/)]],
-  SetupType: "Monthly",
-  DutyAmt: 1000.0,
-  NoofDays: 25,
-  ExceptDay: "Sunday",
-  OutStationDuty: "Y",
-  ExtraDayHrRate: 50,
-  ExtraDayKMRate: 10,
-  ExtraDayMinHr: 4,
-  CompareKMTime: "false",
-  FromTime: "08:00:00",
-  ToTime: "20:00:00",
-  TotHrs: 12,
-  ExtraMonthHrsRate: 200,
-  TotalKM: 3000,
-  KMRate: 5,
-  OTRate: 100,
-  NightAmt: 150,
-  OutNightRt: 200,
-  FuelRt: 90,
-  MobilRt: 20,
-  FuelAvrg: 12,
-  MobilAvrg: 15,
-  NHaltTime: "02:00:00",
-  GrgOutTime: "07:30:00",
-  GrgInTime: "21:00:00",
-  GrgOutKM: 10,
-  GrgInKM: 20,
-  CalcOnRptTime: "false",
-  OutStationAmt: 500,
-  ExtraDesc: "Festival Duty",
-  ExtraAmt: 100,
-  PerDayAmt: 400,
+      id: 0,
+      BranchID: [''],
+      PartyID: [''],
+      UsedBy: "Admin",
+      CityID: [''],
+      CarTypeID: [],
+      CarNo: ['', [Validators.pattern(/^[A-Z]{2}-\d{2}-[A-Z]{1,2}-\d{4}$/)]],
+      SetupType: "Monthly",
+      DutyAmt: 1000.0,
+      NoofDays: 25,
+      ExceptDay: "Sunday",
+      OutStationDuty: "Y",
+      ExtraDayHrRate: 50,
+      ExtraDayKMRate: 10,
+      ExtraDayMinHr: 4,
+      CompareKMTime: "false",
+      FromTime: "08:00:00",
+      ToTime: "20:00:00",
+      TotHrs: 12,
+      ExtraMonthHrsRate: 200,
+      TotalKM: 3000,
+      KMRate: 5,
+      OTRate: 100,
+      NightAmt: 150,
+      OutNightRt: 200,
+      FuelRt: 90,
+      MobilRt: 20,
+      FuelAvrg: 12,
+      MobilAvrg: 15,
+      NHaltTime: "02:00:00",
+      GrgOutTime: "07:30:00",
+      GrgInTime: "21:00:00",
+      GrgOutKM: 10,
+      GrgInKM: 20,
+      CalcOnRptTime: "false",
+      OutStationAmt: 500,
+      ExtraDesc: "Festival Duty",
+      ExtraAmt: 100,
+      PerDayAmt: 400,
 
     });
   }
 
 
 
- ngOnInit(): void {
-     this.monthlyDutyMasterService.registerPageHandler((msg) => {
-       console.log(msg);
-       globalRequestHandler(msg, this.router, this.messageService);
-       if (msg.for === "getAllMonthlyDutyList"){
-        this.data=msg.data;
-        this.isLoading=false;
-       } else if (msg.for == 'getAllCityDropdown') {
+  ngOnInit(): void {
+    this.monthlyDutyMasterService.registerPageHandler((msg) => {
+      console.log(msg);
+      globalRequestHandler(msg, this.router, this.messageService);
+      if (msg.for === "getAllMonthlyDutyList") {
+        this.data = msg.data;
+        this.isLoading = false;
+      } else if (msg.for == 'getAllCityDropdown') {
         this.cityList = msg.data;
-       } else if (msg.for == 'gatAllBranchDropDown') {
+      } else if (msg.for == 'getAllBranchDropdown') {
         // this.filteredBranch = msg.data;
-        this.branchList= msg.data;
-       } else if (msg.for == 'gateAllPartyNameDropdown') {
+        this.branchList = msg.data;
+      } else if (msg.for == 'getAllPartyDropdown') {
         this.partyList = msg.data;
-       }
-       return true;
-     });
-   }
- 
- 
-   ngOnDestroy(): void {
-     this.monthlyDutyMasterService.unregisterPageHandler();
+      } else if(msg.for === 'getAllCartypeMasterDropdown'){
+        this.carTypeList = msg.data;
+      }
+      return true;
+    });
+  }
+
+
+  ngOnDestroy(): void {
+    this.monthlyDutyMasterService.unregisterPageHandler();
     this.commonService.unregisterPageHandler();
-   }
- 
-   ngAfterViewInit(): void {
-     const payload = {
-       id: 0,
-       PageNo: 1,
-       PageSize: 1000,
-       Search: "",
-     };
-     this.monthlyDutyMasterService.getAllMonthlyDuty(payload);
-     this.commonService.GatAllCityDropDown({});
+  }
+
+  ngAfterViewInit(): void {
+    const payload = {
+      id: 0,
+      PageNo: 1,
+      PageSize: 1000,
+      Search: "",
+    };
+    this.monthlyDutyMasterService.getAllMonthlyDuty(payload);
+    this.commonService.GatAllCityDropDown({});
     this.commonService.GatAllBranchDropDown(payload);
-    this.commonService.gateAllPartyNameDropdown()
-   }
+    this.commonService.gateAllPartyNameDropdown();
+    this.commonService.getallCartype();
+  }
 
-   
 
 
-  
-    // Define the columns for the dynamic table
+
+
+  // Define the columns for the dynamic table
   columns = [
     { header: 'ID', field: 'id' },
     { header: 'Duty NO', field: 'DutyNo', icon: 'pi pi-list', styleClass: 'text-green-600' },
@@ -176,21 +173,21 @@ export class MonthlyDutyMasterComponent implements OnInit, OnDestroy, AfterViewI
   handleAction(event: { action: string, data: any }) {
     switch (event.action) {
       case 'edit':
-        this.showForm=true;
-         this.heading='EDIT CAR TYPE'
+        this.showForm = true;
+        this.heading = 'EDIT CAR TYPE'
         break;
       case 'delete':
         break;
       case 'add':
-         this.showForm=true;
-         this.heading='ADD CAR TYPE'
+        this.showForm = true;
+        this.heading = 'ADD CAR TYPE'
         break
     }
   }
 
 
 
-  
+
 
   filterCity(event: any) {
     const query = event.query.toLowerCase();
@@ -202,16 +199,17 @@ export class MonthlyDutyMasterComponent implements OnInit, OnDestroy, AfterViewI
   filteredPartylist(event: any) {
     const query = event.query.toLowerCase();
     this.filteredParty = this.partyList.filter(party =>
-    party.party_name.toLowerCase().includes(query)
+      party.party_name.toLowerCase().includes(query)
     );
   }
 
   filterbranchlist(event: any) {
     const query = event.query.toLowerCase();
     this.filteredBranch = this.branchList.filter(branch =>
-      branch.BranchName.toLowerCase().includes(query)
+      branch.branch_name?.toLowerCase().includes(query)
     );
   }
+
 
   filterDay(event: any) {
     const query = event.query.toLowerCase();
@@ -219,17 +217,23 @@ export class MonthlyDutyMasterComponent implements OnInit, OnDestroy, AfterViewI
       day.name.toLowerCase().includes(query)
     );
   }
+  filterCarTypelist(event: any) {
+    const query = event.query.toLowerCase();
+    this.filteredCartype = this.carTypeList.filter(cartype =>
+      cartype.car_type?.toLowerCase().includes(query)
+    );
+  }
 
 
-  setuptypeOptions=[
-    {label:"Day Basis", value:"Day Basis"},
-    {label:"Monthly Basis", value:"Monthly Basis"},
-    {label:"Per Day Basis", value:"Per Day Basis"},
+  setuptypeOptions = [
+    { label: "Day Basis", value: "Day Basis" },
+    { label: "Monthly Basis", value: "Monthly Basis" },
+    { label: "Per Day Basis", value: "Per Day Basis" },
   ];
 
-  outStationdutyOptions=[
-    {label:"Yes", value:"Yes"},
-    {label:"No", value:"No"},
+  outStationdutyOptions = [
+    { label: "Yes", value: "Yes" },
+    { label: "No", value: "No" },
   ];
 
 
