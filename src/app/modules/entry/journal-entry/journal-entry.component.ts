@@ -3,10 +3,12 @@ import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DynamicTableComponent } from '../../../components/dynamic-table/dynamic-table.component';
+import { InputTextModule } from 'primeng/inputtext';
+import { DropdownModule } from 'primeng/dropdown';
 
 @Component({
   selector: 'app-journal-entry',
-  imports: [CommonModule,DynamicTableComponent,ReactiveFormsModule],
+  imports: [CommonModule,DynamicTableComponent,ReactiveFormsModule,InputTextModule,DropdownModule],
   templateUrl: './journal-entry.component.html',
   styleUrl: './journal-entry.component.css'
 })
@@ -78,7 +80,9 @@ export class JournalEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         console.log("delete")
         break;
       case 'add':
-        console.log("add");
+        this.heading = 'ADD JOURNAL';
+        this.showForm = !this.showForm;
+        //this.form.reset();
         break;
     }
   }
