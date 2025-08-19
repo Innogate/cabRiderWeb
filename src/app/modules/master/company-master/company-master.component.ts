@@ -5,8 +5,6 @@ import { InputTextModule } from 'primeng/inputtext';
 import { DynamicTableComponent } from '../../../components/dynamic-table/dynamic-table.component';
 import { MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
-import { guestMasterService } from '../../../services/guestMaster.service';
-import { commonService } from '../../../services/comonApi.service';
 import { globalRequestHandler } from '../../../utils/global';
 import { companyMasterService } from '../../../services/companyMaster.service';
 
