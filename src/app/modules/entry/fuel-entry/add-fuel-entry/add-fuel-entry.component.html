@@ -1,0 +1,239 @@
+<div
+  class="p-5 m-4 md:m-6 rounded-xl shadow-md border border-blue-300 bg-gradient-to-r from-white to-blue-50">
+
+  <!-- Heading -->
+  <div class="border-b border-blue-200 pb-3 mb-5">
+    <h2
+      class="text-2xl md:text-3xl font-bold text-blue-700 flex items-center gap-3 flex-wrap">
+      <span
+        class="bg-blue-100 text-blue-700 w-11 h-11 rounded-full flex items-center justify-center shadow">
+        <i class="pi pi-car text-xl"></i>
+      </span>
+      <span class="leading-tight">
+        Add <span class="text-blue-900">Fuel Entry</span>
+      </span>
+    </h2>
+  </div>
+
+  <!-- Container -->
+  <div
+    class="mx-auto bg-white border border-blue-200 p-5 flex flex-col gap-5 bg-gradient-to-r from-white to-blue-50 rounded-xl shadow-inner">
+
+    <!-- Form -->
+    <form [formGroup]="fuelForm" (ngSubmit)="onSave()" class="grid grid-cols-12 gap-5">
+
+      <!-- Branch -->
+      <div class="col-span-12 md:col-span-3">
+        <label class="flex items-center gap-2 text-sm font-semibold text-gray-700">
+          <i class="pi pi-building text-blue-500"></i> Branch
+        </label>
+        <p-dropdown
+          [options]="branches"
+          formControlName="Branch"
+          placeholder="Select option"
+          optionLabel="label"
+          class="w-full mt-1"
+          [filter]="true"
+          [showClear]="true">
+        </p-dropdown>
+      </div>
+
+      <!-- Date -->
+      <div class="col-span-12 sm:col-span-6 md:col-span-2">
+        <label class="flex items-center gap-2 text-sm font-semibold text-gray-700">
+          <i class="pi pi-calendar text-orange-500"></i> Date <span class="text-red-500">*</span>
+        </label>
+        <input type="date" formControlName="Date"
+          class="w-full mt-1 p-2.5 rounded-md border border-gray-300 hover:border-blue-400 focus:ring-2 focus:ring-blue-500 transition" />
+      </div>
+
+      <!-- Kilometer -->
+      <div class="col-span-12 sm:col-span-6 md:col-span-1">
+        <label class="flex items-center gap-2 text-sm font-semibold text-gray-700">
+          <i class="pi pi-map-marker text-green-500"></i> Kilometer <span class="text-red-500">*</span>
+        </label>
+        <input type="number" formControlName="Kilometer"
+          class="w-full mt-1 p-2.5 rounded-md border border-gray-300 hover:border-blue-400 focus:ring-2 focus:ring-blue-500 transition" />
+      </div>
+
+      <!-- Fuel Type -->
+      <div class="col-span-12 sm:col-span-6 md:col-span-2">
+        <label class="flex items-center gap-2 text-sm font-semibold text-gray-700">
+          <i class="pi pi-sliders-h text-purple-500"></i> Fuel Type
+        </label>
+        <p-dropdown
+          [options]="fuelTypeOptions"
+          formControlName="FuelType"
+          placeholder="Select option"
+          optionLabel="label"
+          class="w-full mt-1"
+          [filter]="true"
+          [showClear]="true">
+        </p-dropdown>
+      </div>
+
+      <!-- Fuel -->
+      <div class="col-span-12 sm:col-span-6 md:col-span-2">
+        <label class="flex items-center gap-2 text-sm font-semibold text-gray-700">
+          <i class="pi pi-filter-fill text-green-500"></i> Fuel <span class="text-red-500">*</span>
+        </label>
+        <input type="number" formControlName="Fuel"
+          class="w-full mt-1 p-2.5 rounded-md border border-gray-300 hover:border-blue-400 focus:ring-2 focus:ring-blue-500 transition" />
+      </div>
+
+      <!-- Rate -->
+      <div class="col-span-12 sm:col-span-6 md:col-span-2">
+        <label class="flex items-center gap-2 text-sm font-semibold text-gray-700">
+          <i class="pi pi-percentage text-blue-500"></i> Rate <span class="text-red-500">*</span>
+        </label>
+        <input type="number" formControlName="Rate"
+          class="w-full mt-1 p-2.5 rounded-md border border-gray-300 hover:border-blue-400 focus:ring-2 focus:ring-blue-500 transition" />
+      </div>
+
+      <!-- Amount -->
+      <div class="col-span-12 sm:col-span-6 md:col-span-2">
+        <label class="flex items-center gap-2 text-sm font-semibold text-gray-700">
+          <i class="pi pi-wallet text-amber-700"></i> Amount <span class="text-red-500">*</span>
+        </label>
+        <input type="number" formControlName="Amount"
+          class="w-full mt-1 p-2.5 rounded-md border border-gray-300 hover:border-blue-400 focus:ring-2 focus:ring-blue-500 transition" />
+      </div>
+
+      <!-- Advance Amount -->
+      <div class="col-span-12 sm:col-span-6 md:col-span-2">
+        <label class="flex items-center gap-2 text-sm font-semibold text-gray-700">
+          <i class="pi pi-money-bill text-blue-500"></i> Advance Amount <span class="text-red-500">*</span>
+        </label>
+        <input type="number" formControlName="Advance"
+          class="w-full mt-1 p-2.5 rounded-md border border-gray-300 hover:border-blue-400 focus:ring-2 focus:ring-blue-500 transition" />
+      </div>
+
+      <!-- Purchase From -->
+      <div class="col-span-12 sm:col-span-6 md:col-span-3">
+        <label class="flex items-center gap-2 text-sm font-semibold text-gray-700">
+          <i class="pi pi-store text-blue-500"></i> Purchase From
+        </label>
+        <p-dropdown
+          [options]="purchaseFromOptions"
+          formControlName="PurchaseFrom"
+          placeholder="Select option"
+          optionLabel="label"
+          class="w-full mt-1"
+          [filter]="true"
+          [showClear]="true">
+        </p-dropdown>
+      </div>
+
+      <!-- Driver -->
+      <div class="col-span-12 sm:col-span-6 md:col-span-3">
+        <label class="flex items-center gap-2 text-sm font-semibold text-gray-700">
+          <i class="pi pi-user text-blue-500"></i> Driver <span class="text-red-500">*</span>
+        </label>
+        <p-dropdown
+          [options]="drivers"
+          formControlName="Driver"
+          placeholder="Select option"
+          optionLabel="label"
+          class="w-full mt-1"
+          [filter]="true"
+          [showClear]="true">
+        </p-dropdown>
+      </div>
+
+      <!-- Remarks -->
+      <div class="col-span-12 md:col-span-4">
+        <label class="flex items-center gap-2 text-sm font-semibold text-gray-700">
+          <i class="pi pi-comment text-violet-500"></i> Remarks <span class="text-red-500">*</span>
+        </label>
+        <textarea rows="2" formControlName="Remarks"
+          class="w-full mt-1 p-2.5 rounded-md border border-gray-300 hover:border-blue-400 focus:ring-2 focus:ring-blue-500 transition"></textarea>
+      </div>
+
+      <!-- Reference No -->
+      <div class="col-span-12 sm:col-span-6 md:col-span-3">
+        <label class="flex items-center gap-2 text-sm font-semibold text-gray-700">
+          <i class="pi pi-hashtag text-blue-500"></i> Reference No <span class="text-red-500">*</span>
+        </label>
+        <input type="text" formControlName="ReferenceNo" placeholder="REFERENCE NO"
+          class="w-full mt-1 p-2.5 rounded-md border border-gray-300 hover:border-blue-400 focus:ring-2 focus:ring-blue-500 transition" />
+      </div>
+
+      <!-- City -->
+      <div class="col-span-12 sm:col-span-6 md:col-span-2">
+        <label class="flex items-center gap-2 text-sm font-semibold text-gray-700">
+          <i class="pi pi-globe text-blue-500"></i> City <span class="text-red-500">*</span>
+        </label>
+        <input type="text" formControlName="City" placeholder="CITY"
+          class="w-full mt-1 p-2.5 rounded-md border border-gray-300 hover:border-blue-400 focus:ring-2 focus:ring-blue-500 transition" />
+      </div>
+
+      <!-- Paid By -->
+      <div class="col-span-12 sm:col-span-6 md:col-span-3">
+        <label class="flex items-center gap-2 text-sm font-semibold text-gray-700">
+          <i class="pi pi-credit-card text-amber-700"></i> Paid By
+          <span class="text-red-500">*</span>
+        </label>
+        <p-dropdown
+          [options]="paidByOptions"
+          formControlName="PaidBy"
+          placeholder="Select option"
+          optionLabel="label"
+          class="w-full mt-1"
+          [filter]="true"
+          [showClear]="true">
+        </p-dropdown>
+      </div>
+
+      <!-- Full Tank -->
+      <div class="col-span-12 sm:col-span-6 md:col-span-2">
+        <label class="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-2">
+          <i class="pi pi-check-circle text-blue-500"></i> Full Tank <span class="text-red-500">*</span>
+        </label>
+        <div class="flex items-center gap-3">
+          <p-inputswitch formControlName="FullTank"></p-inputswitch>
+          <span class="text-sm font-medium text-gray-700">
+            {{ fuelForm.get('FullTank')?.value ? 'Yes' : 'No' }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Pay Mode -->
+      <div class="col-span-12 sm:col-span-6 md:col-span-2">
+        <label class="flex items-center gap-2 text-sm font-semibold text-gray-700">
+          <i class="pi pi-wallet text-amber-700"></i> Pay Mode <span class="text-red-500">*</span>
+        </label>
+        <p-dropdown
+          [options]="payModeOptions"
+          formControlName="PayMode"
+          placeholder="Select option"
+          optionLabel="label"
+          class="w-full mt-1"
+          [filter]="true"
+          [showClear]="true">
+        </p-dropdown>
+      </div>
+
+      <!-- File Upload -->
+      <div class="col-span-12 md:col-span-4">
+        <label class="flex items-center gap-2 text-sm font-semibold text-gray-700">
+          <i class="pi pi-paperclip text-blue-500"></i> Attach <span class="text-red-500">*</span>
+        </label>
+        <input type="file" (change)="onFileSelect($event)"
+          class="w-full mt-1 p-2.5 rounded-md border border-gray-300 bg-gray-50 hover:border-blue-400 focus:ring-2 focus:ring-blue-500 transition" />
+        <p class="text-xs text-red-500 mt-1">Max Width/Height: 1000px × 1000px | Size: 1MB</p>
+      </div>
+    </form>
+
+    <!-- Buttons -->
+    <div class="flex flex-col sm:flex-row justify-end items-stretch sm:items-center gap-3 mt-6">
+      <button type="submit" (click)="onSave()"
+        class="px-5 py-2.5 rounded-md bg-purple-600 text-white font-semibold hover:bg-purple-700 transition w-full sm:w-auto">
+        <i class="pi pi-save p-1"></i> Save
+      </button>
+      <button type="button" (click)="onSaveAndAddAnother()"
+        class="px-5 py-2.5 rounded-md bg-gray-600 text-white font-semibold hover:bg-gray-700 transition w-full sm:w-auto">
+        <i class="pi pi-plus-circle p-1"></i> Save & Add Another
+      </button>
+    </div>
+  </div>
+</div>

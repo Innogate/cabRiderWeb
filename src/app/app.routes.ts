@@ -33,6 +33,7 @@ import { MonthlyDutyMasterComponent } from './modules/master/monthly-duty-master
 import { MonthlyInvoiceListComponent } from './modules/entry/monthlyInvoice/monthly-invoice-list/monthly-invoice-list.component';
 import { MonthlyInvoiceCreateComponent } from './modules/entry/monthlyInvoice/monthly-invoice-create/monthly-invoice-create.component';
 import { MbillingComponent } from './components/mbilling/mbilling.component';
+import { AddFuelEntryComponent } from './modules/entry/fuel-entry/add-fuel-entry/add-fuel-entry.component';
 
 export const routes: Routes = [
     {
@@ -55,6 +56,7 @@ export const routes: Routes = [
             { path: 'master/party', component: PartyMasterComponent, canActivate: [AuthGuard] },
             { path: 'voucher-entry', component: VoucherEntryComponent, canActivate: [AuthGuard] },
             { path: 'fuel-entry', component: FuelEntryComponent, canActivate: [AuthGuard] },
+            { path: 'add-fuel-entry', component: AddFuelEntryComponent, canActivate: [AuthGuard] },
             { path: 'add-booking', component: BookingEntryComponent, canActivate: [AuthGuard] },
             { path: 'add-full-booking', component: FullBookingEntryComponent, canActivate: [AuthGuard] },
             { path: 'driver-attendance', component: DriverAttendanceComponent, canActivate: [AuthGuard] },

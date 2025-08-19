@@ -5,18 +5,22 @@ import { ButtonModule } from 'primeng/button';
 import { NgModel } from '@angular/forms';
 import { Dropdown, DropdownModule } from 'primeng/dropdown';
 import { TableModule } from 'primeng/table';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-fuel-entry',
-  imports: [CommonModule,ButtonModule,TableModule,DropdownModule,FormsModule],
+  imports: [CommonModule, ButtonModule, TableModule, DropdownModule, FormsModule],
   templateUrl: './fuel-entry.component.html',
   styleUrl: './fuel-entry.component.css'
 })
 export class FuelEntryComponent {
-searchInvoices() {
-throw new Error('Method not implemented.');
-}
-vendors = [
+  
+
+  constructor(private router: Router) { }
+  searchInvoices() {
+    throw new Error('Method not implemented.');
+  }
+  vendors = [
     { label: 'ALAM', value: 'ALAM' },
     { label: 'BARUN SARDAR', value: 'BARUN SARDAR' },
     { label: 'CAB RYDER(Network)', value: 'CAB RYDER(Network)' },
@@ -36,4 +40,11 @@ vendors = [
   selectedVendor: any;
   selectedCar: any;
   searchText: string = '';
-}
+
+
+  goToAdd() {
+    this.router.navigate(['/add-fuel-entry']);
+  }
+};
+
+

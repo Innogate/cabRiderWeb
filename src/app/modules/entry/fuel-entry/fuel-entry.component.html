@@ -1,32 +1,40 @@
-<div class="card rounded-2xl shadow-lg border border-blue-300 p-6 m-6 bg-gradient-to-r from-blue-50 via-white to-gray-100">
+<div
+  class="card rounded-2xl shadow-lg border border-blue-300 p-6 m-6 bg-gradient-to-r from-blue-50 via-white to-gray-100">
 
   <!-- Header with Icon -->
   <div class="flex items-center gap-4 mb-6">
     <i class="pi pi-car text-blue-600 text-4xl drop-shadow-md"></i>
-    <h2 class="text-3xl font-extrabold text-blue-500 tracking-wide m-0">Fuel Entry</h2>
+    <h2 class="text-3xl font-extrabold text-blue-500 tracking-wide m-0">Fuel
+      Entry</h2>
+
   </div>
 
   <!-- Form Section -->
-  <div class="flex flex-wrap items-center justify-between bg-gradient-to-r from-white to-blue-50 p-6 rounded-2xl shadow-inner gap-6">
+  <div
+    class="flex flex-wrap items-center justify-between bg-gradient-to-r from-white to-blue-50 p-6 rounded-2xl shadow-inner gap-6">
 
     <!-- Vendor Dropdown -->
     <div class="flex items-center gap-3">
-      <label for="vendor" class="font-semibold text-gray-700 text-base">Vendor:</label>
+      <label for="vendor"
+        class="font-semibold text-gray-700 text-base">Vendor:</label>
       <p-dropdown
         [options]="vendors"
         [(ngModel)]="selectedVendor"
         placeholder="Select Vendor"
+        [showClear]="true"
         class="w-44 shadow-sm text-sm">
       </p-dropdown>
     </div>
 
     <!-- Car Dropdown & Submit Button -->
     <div class="flex items-center gap-3">
-      <label for="car" class="font-semibold text-gray-700 text-base">Car:</label>
+      <label for="car"
+        class="font-semibold text-gray-700 text-base">Car:</label>
       <p-dropdown
         [options]="cars"
         [(ngModel)]="selectedCar"
         placeholder="Select Car"
+        [showClear]="true"
         class="w-44 shadow-sm text-sm">
       </p-dropdown>
 
@@ -37,8 +45,7 @@
         type="button"
         label="Submit"
         icon="pi pi-check"
-        class="p-button-info p-button-rounded px-5 py-3 text-sm hover:scale-110 hover:bg-gradient-to-r hover:from-blue-400 hover:to-blue-600 transition-all shadow-lg"
-      ></button>
+        class="p-button-info p-button-rounded px-5 py-3 text-sm hover:scale-110 hover:bg-gradient-to-r hover:from-blue-400 hover:to-blue-600 transition-all shadow-lg"></button>
     </div>
 
     <!-- Search Bar -->
@@ -48,9 +55,8 @@
           pInputText
           type="text"
           placeholder="Search Invoices..."
-          class="w-full h-12 rounded-xl transition-all focus:ring-2 focus:ring-blue-500 border border-blue-300 text-sm shadow-inner"
-          [(ngModel)]="searchText"
-        />
+          class="w-full h-12 rounded-xl transition-all px-3 focus:ring-2 focus:ring-blue-500 border border-blue-300 text-sm shadow-inner"
+          [(ngModel)]="searchText" />
       </span>
 
       <!-- Search Button -->
@@ -58,20 +64,95 @@
         pButton
         type="button"
         icon="pi pi-search"
-        class="p-button-help p-button-rounded px-3 py-3 text-sm hover:scale-110 hover:bg-gradient-to-r hover:from-purple-400 hover:to-purple-600 transition-all shadow-lg"
-        (click)="searchInvoices()"
-      ></button>
+        class="p-button-sm p-button-search p-button-rounded hover:scale-110 hover:bg-gradient-to-r hover:from-green-300 hover:to-green-600 transition-all shadow-lg"
+        (click)="searchInvoices()"></button>
     </div>
 
     <!-- Add Fuel Entry Button -->
+
     <button
       pButton
-      pRipple
-      type="button"
-      label="Add Invoice"
+      label="Add Fuel Entry"
       icon="pi pi-plus"
-      class="p-button-success p-button-rounded px-5 py-3 text-sm hover:scale-110 hover:bg-gradient-to-r hover:from-green-400 hover:to-green-600 transition-all shadow-lg"
-    ></button>
-
+      class="p-button-success p-button-rounded shadow-sm hover:scale-[1.03] transition"
+      (click)="goToAdd()"></button>
   </div>
-</div>
+
+  <div class="card p-4 rounded-xl bg-white mt-6 border ">
+    <p-table
+      [paginator]="true"
+      [rows]="10"
+      [responsiveLayout]="'scroll'"
+      [resizableColumns]="true"
+      [showCurrentPageReport]="true"
+      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+      class="p-datatable-gridlines overflow-hidden shadow-lg rounded-2xl">
+
+      <ng-template pTemplate="header">
+        <tr class="bg-blue-50 text-gray-700">
+          <th class="py-3 px-4">SL. No.</th>
+          <th class="py-3 px-4">Branch</th>
+          <th class="py-3 px-4">Date</th>
+          <th class="py-3 px-4">Reference No./th>
+            <th class="py-3 px-4">City</th>
+            <th class="py-3 px-4">Kilometer</th>
+            <th class="py-3 px-4">Fuel Type</th>
+            <th class="py-3 px-4">Quantity(ltr)</th>
+            <th class="py-3 px-4">Rate</th>
+            <th class="py-3 px-4">Amount</th>
+            <th class="py-3 px-4">Advance</th>
+            <th class="py-3 px-4">Paid By</th>
+            <th class="py-3 px-4">Pay Mode</th>
+            <th class="py-3 px-4">Driver</th>
+            <th class="py-3 px-4">Vendor</th>
+            <th class="py-3 px-4">Action</th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-invoice let-i="rowIndex">
+          <tr class="hover:bg-gray-50 transition-all">
+            <td class="py-3 px-4">{{ i + 1 }}</td>
+            <td class="py-3 px-4">{{ invoice.branch }}</td>
+            <td class="py-3 px-4">{{ invoice.invoiceNo }}</td>
+            <td class="py-3 px-4">{{ invoice.invoiceDate }}</td>
+            <td class="py-3 px-4">{{ invoice.party }}</td>
+            <td class="py-3 px-4">{{ invoice.city }}</td>
+            <td class="py-3 px-4">{{ invoice.grossAmount }}</td>
+            <td class="py-3 px-4">
+
+            </td>
+            <td class="py-3 px-4">{{ invoice.cgst }}</td>
+            <td class="py-3 px-4">{{ invoice.sgst }}</td>
+            <td class="py-3 px-4">{{ invoice.igst }}</td>
+            <td class="py-3 px-4">
+
+            </td>
+            <td class="py-3 px-4 font-semibold text-green-700">{{
+              invoice.netAmount }}</td>
+            <td class="py-3 px-4">{{ invoice.lessFuelAdvance }}</td>
+            <td class="py-3 px-4 font-semibold text-blue-700">{{
+              invoice.dueBalance }}</td>
+            <td>
+              <div class="flex flex-wrap gap-2 justify-center">
+                <!-- Row 1 -->
+                <div class="flex gap-2 mb-1">
+                  <button
+                    pButton
+                    icon="pi pi-pencil"
+                    pTooltip="Update"
+                    tooltipStyleClass="text-[10px] !important "
+                    class="p-button-sm p-button-rounded p-button-warning p-2 text-xs hover:scale-105 transition-transform shadow"></button>
+                  <button
+                    pButton
+                    pTooltip="Delete"
+                    tooltipStyleClass="text-[10px] !important "
+                    icon="pi pi-trash"
+                    class="p-button-sm p-button-rounded p-button-danger p-2 text-xs hover:scale-105 transition-transform shadow"></button>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
