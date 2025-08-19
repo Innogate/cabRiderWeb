@@ -24,6 +24,10 @@ export class MinvoiceService extends BaseService {
 
   }
 
+  getMonthlyInvoiceListByMID(payload:any){
+    this.call('minvoice.getBookingsListByMID', payload);
+  }
+
 
   protected handleMessage(msg: any): boolean {
     return false;

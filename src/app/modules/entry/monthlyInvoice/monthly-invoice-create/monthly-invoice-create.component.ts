@@ -20,7 +20,7 @@ import { TagModule } from 'primeng/tag';
 import { TooltipModule } from 'primeng/tooltip';
 import { globalRequestHandler } from '../../../../utils/global';
 import { carTypeMasterService } from './../../../../services/carTypeMaster.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { commonService } from '../../../../services/comonApi.service';
 import { AutoComplete } from 'primeng/autocomplete';
@@ -54,7 +54,6 @@ import { MbillingComponent } from '../../../../components/mbilling/mbilling.comp
   styleUrl: './monthly-invoice-create.component.css',
 })
 export class MonthlyInvoiceCreateComponent implements OnInit {
-
   constructor(
     private fb: FormBuilder,
     private carTypeMaster: carTypeMasterService,
@@ -64,12 +63,17 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private _invoice: InvoiceService,
     private _minvoice: MinvoiceService,
-    private _helperService: HelperService
+    private _helperService: HelperService,
+    private _activatedRoute: ActivatedRoute
   ) { }
 
-  sleetedBookingIds: any[] =[];
+  sleetedBookingIds: any[] = [];
   taxtype: any = 'cgst';
-  ngOnInit(): void {
+  addDutyTableRowSize = 10;
+  dutyTableDataView: any[] = [];
+  invoiceData: any = {};
+ async ngOnInit() {
+
     this.commonApiService.registerPageHandler((msg) => {
       let rt = false;
       rt = globalRequestHandler(msg, this.router, this.messageService);
@@ -91,7 +95,8 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
           this.companies = msg.data;
           rt = true;
         } else if (msg.for === 'minvoice.getMonthlyBookingList') {
-          this.dutyTableData = msg.data || [];
+          this.dutyTableDataView = msg.data || [];
+          this.dutyTableData = this.dutyTableDataView;
           this.totalRecords = msg.total || 0;
           this.mapCarAndDutyTypesToDutyData();
           this.tableLoading = false;
@@ -100,31 +105,58 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
         } else if (msg.for === 'minvoice.getMonthlySetupCode') {
           this.monthlySetupData = msg.data;
           rt = true;
-        }else if (msg.for === 'getPartyById') {
+        } else if (msg.for === 'getPartyById') {
           this.partyInfo = msg.data;
           rt = true;
+        } else if(msg.for === 'minvoice.getBookingsListByMID'){
+          rt = true;
+          this.dutyTableData = msg.data;
+
+          this.mainDutyList = msg.data;
+          this.totalRecords = msg.total || 0;
+          this.tableLoading = false;
+          this.cdr.detectChanges();
         }
       }
       if (rt == false) {
         console.log(msg);
       }
       return rt;
+    })
+
+    this.getAllCompany();
+    this.getAllCity();
+
+
+
+    this._activatedRoute.queryParams.subscribe((params) => {
+      if (params['editInvoice']) {
+        this.isEditMode = true;
+        try {
+          const invoiceData = JSON.parse(params['editInvoice']);
+          this.invoiceData = invoiceData;
+          this.updatePathch(invoiceData);
+        } catch (error) {
+          console.error('Error parsing editInvoice data:', error);
+        }
+      }
     });
 
-    this.getAllCity();
+
     this.getAllBranches();
     this.getAllParty();
     this.getCarTypeName();
     this.getAllMonthlySetupCode();
-    this.getAllCompany();
-    this.init();
 
-    // Check for edit data
-    const editData = history.state?.editInvoice;
-    if (editData) {
-      this.isEditMode = true;
-      this.patchInvoice(editData);
-    }
+    this.init();
+    this.onPageChange({ first: 0, rows: 10 });
+
+
+    const today = new Date();
+    const formattedDate = today.toISOString().split('T')[0]; // yyyy-MM-dd
+    this.invoiceForm.patchValue({
+      BillDate: formattedDate,
+    });
   }
 
   ngOnDestroy(): void {
@@ -133,9 +165,8 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
 
   taxType = 'cgst';
   rcm = 'no';
+  // Default bill date to today
   billDate = new Date();
-
-
   searchText: any;
   selectedShow: any;
   show = [10, 50, 100, 500, 1000, 2000];
@@ -197,6 +228,7 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
   ];
 
   init() {
+    if (this.isEditMode) return;
     this.invoiceForm = this.fb.group({
       id: [''],
       City: [''],
@@ -457,10 +489,14 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
       this.checkAndLoadDutyTable();
     }
     this._helperService.getPartyById(party.value.id);
+    this._minvoice.getMonthlySetupCode({
+      party_id: party.value.id,
+    });
   }
 
   selectedMontySetupCode: any;
   onCodeSelect(codeObj: any) {
+    console.log(codeObj);
     this.selectedMontySetupCode = codeObj.value;
     if (this.invoiceForm) {
       this.invoiceForm.get('SetupCode')?.setValue(codeObj.value.id);
@@ -483,7 +519,31 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
   }
 
   searchInvoices() {
-    throw new Error('Method not implemented.');
+    console.log('Searching invoices with text:', this.searchText);
+    if (this.searchText) {
+      this.dutyTableData = this.dutyTableDataView.filter((invoice: any) => {
+        return (
+          invoice.SlipNo.toLowerCase().includes(
+            this.searchText.toLowerCase() || ''
+          ) ||
+          invoice.DutyTypeName.toLowerCase().includes(
+            this.searchText.toLowerCase() || ''
+          ) ||
+          invoice.CarNo.toLowerCase().includes(
+            this.searchText.toLowerCase() || ''
+          ) ||
+          invoice.BookedBy.toLowerCase().includes(
+            this.searchText.toLowerCase() || ''
+          )
+        );
+      });
+      this.totalRecords = this.dutyTableData.length;
+      this.cdr.detectChanges();
+    } else {
+      this.dutyTableData = this.dutyTableDataView;
+      this.totalRecords = this.dutyTableData.length;
+      this.cdr.detectChanges();
+    }
   }
 
   addVendorInvoice() {
@@ -510,20 +570,41 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
 
   saveSelectedDuties() {
     const selected = this.dutyTableData.filter((item: any) => item.selected);
-    this.mainDutyList = [...this.mainDutyList, ...selected.map(item => ({ ...item }))];
+
+    // Avoid duplicates in mainDutyList using ID check
+    selected.forEach((sel) => {
+      const exists = this.mainDutyList.some((duty: any) => duty.id === sel.id);
+      if (!exists) {
+        this.mainDutyList.push({ ...sel });
+      }
+    });
+
+    console.log('Selected Duties:', this.mainDutyList);
+    // Mark them as disabled
+    this.dutyTableData = this.dutyTableData.map((item: any) => ({
+      ...item,
+      disabled: selected.some((sel: any) => sel.id === item.id),
+    }));
     this.displayDuty = false;
-    this.sleetedBookingIds = this.sleetedBookingIds.concat(selected.map((item: any) => item.id));
+    this.sleetedBookingIds = Array.from(
+      new Set([
+        ...this.sleetedBookingIds,
+        ...selected.map((item: any) => item.id),
+      ])
+    );
   }
 
-  addDutySection(){
+  addDutySection() {
     // check all parameter are filled
-    if (!(
-      this.invoiceForm.get('branch_id')?.value &&
-      this.invoiceForm.get('city_id')?.value &&
-      this.invoiceForm.get('party_id')?.value &&
-      this.invoiceForm.get('SetupCode')?.value &&
-      this.invoiceForm.get('company_id')?.value
-    )) {
+    if (
+      !(
+        this.invoiceForm.get('branch_id')?.value &&
+        this.invoiceForm.get('city_id')?.value &&
+        this.invoiceForm.get('party_id')?.value &&
+        this.invoiceForm.get('SetupCode')?.value &&
+        this.invoiceForm.get('company_id')?.value
+      )
+    ) {
       this.messageService.add({
         severity: 'error',
         summary: 'Error',
@@ -531,11 +612,151 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
       });
       return;
     }
-    this.displayDuty = true
+    this.displayDuty = true;
   }
 
   onTaxTypeChange(event: any) {
     this.taxType = event;
     this.cdr.detectChanges();
   }
+
+  onDutyUpdated(event: {
+    dutyTableData: any[];
+    mainDutyList: any[];
+    sleetedBookingIds: any[];
+  }) {
+    this.dutyTableData = event.dutyTableData;
+    this.mainDutyList = event.mainDutyList;
+    this.sleetedBookingIds = event.sleetedBookingIds;
+  }
+
+  allSelected: boolean = false;
+
+  currentPageRows: any[] = []; // only rows in current page
+
+  // PrimeNG onPage event handler
+  onPageChange(event: any) {
+    const start = event.first;
+    const end = start + event.rows;
+    this.currentPageRows = this.dutyTableData.slice(start, end);
+
+    // sync header checkbox for current page
+    this.checkIndividual();
+  }
+
+  // Select/unselect only current page rows
+  toggleAll(event: any) {
+    const checked = event.target.checked;
+    this.allSelected = checked;
+
+    this.currentPageRows.forEach((row) => {
+      row.selected = checked;
+    });
+  }
+
+  // Update header checkbox when row selection changes
+  checkIndividual() {
+    this.allSelected =
+      this.currentPageRows.length > 0 &&
+      this.currentPageRows.every((row) => row.selected);
+  }
+
+  async updatePathch(invoice: any) {
+    console.log('Updating invoice with data:', invoice);
+    this.invoiceForm = this.fb.group({
+      id: [invoice.id || ''],
+      City: [invoice.CityName || ''],
+      duty_type: [invoice.duty_type || ''],
+      branch_id: [invoice.branch_id || ''],
+      company_id: [invoice.company_id || ''],
+      branch: [invoice.branch_id || ''],
+      party_id: [invoice.party_id || ''],
+      city_id: [invoice.city_id || ''],
+      BillNo: [invoice.BillNo || 'Bill NO not found'],
+      BillDate: [new Date(invoice.BillDate).toDateString()],
+      taxtype: [invoice.taxtype == 1 ? 'cgst' : 'igst'],
+      rcm: [invoice.rcm || 0],
+      GrossAmount: [invoice.GrossAmount || '0'],
+      OtherCharges: [invoice.OtherCharges || '0'],
+      Discount: [invoice.Discount || ''],
+      CGSTPer: [invoice.CGSTPer || ''],
+      CGST: [invoice.CGST || '0'],
+      SGSTPer: [invoice.SGSTPer || ''],
+      SGST: [invoice.SGST || '0'],
+      OtherCharges2: [invoice.OtherCharges2 || '0'],
+      RoundOff: [invoice.RoundOff || '0'],
+      NetAmount: [invoice.NetAmount || '0'],
+      Advance: [invoice.Advance || ''],
+      SetupCode: [invoice.SetupCode || ''],
+    });
+
+    await this.waitForFetch(() => this.companies);
+    this.selectedCompany = this.companies.find(
+      (company) => {
+        return company.Id == invoice.company_id;
+      }
+    ).Name;
+    this.getAllBranches();
+    await this.waitForFetch(() => this.branches);
+    this.selectedBranchModel = this.branches.find(
+      (branch) => {
+        return branch.id == invoice.branch_id;
+      }
+    )
+
+    this.getAllParty();
+    await this.waitForFetch(() => this.PartyName);
+    this.selectedPartyModel = this.PartyName.find(
+      (party) => {
+        return party.id == invoice.party_id;
+      }
+    )
+
+    this._helperService.getPartyById(invoice.party_id);
+    this._minvoice.getMonthlySetupCode({
+      party_id: invoice.party_id,
+    });
+
+    await this.waitForFetch(() => this.cities);
+    this.selectedCityModel = this.cities.find(
+      (city) => {
+        return city.Id == invoice.city_id;
+      }
+    )
+
+    await this.waitForFetch(() => this.monthlySetupData);
+    this.selectedCode = this.monthlySetupData.find(
+      (code) => {
+        return code.id == invoice.monthly_duty_id;
+      }
+    )
+    
+    // NOW TIME TO PATCH THE BOOKING DATA
+    console.log("calling booking api");
+    this._minvoice.getMonthlyInvoiceListByMID({
+      booking_entry_id: invoice.id
+    })
+
+    this.cdr.detectChanges();
+  }
+
+  waitForFetch<T>(getter: () => T, interval = 50): Promise<T> {
+    return new Promise((resolve) => {
+      const timer = setInterval(() => {
+        const value = getter();
+
+        // Check if value is not undefined, null, empty string, or empty array
+        if (
+          value !== undefined &&
+          value !== null &&
+          !(typeof value === 'string' && value.trim() === '') &&
+          !(Array.isArray(value) && value.length === 0)
+        ) {
+          clearInterval(timer);
+          resolve(value);
+        }
+      }, interval);
+    });
+  }
 }
+

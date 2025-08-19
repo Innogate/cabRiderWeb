@@ -1,31 +1,47 @@
-<div class="p-6 m-6 rounded-2xl border border-blue-300 shadow-lg bg-gradient-to-r from-white to-blue-50">
+<div
+  class="p-6 m-6 rounded-2xl border border-blue-300 shadow-lg bg-gradient-to-r from-white to-blue-50"
+>
   <div class="w-full h-full">
     <!-- 📄 Header -->
     <div class="flex flex-wrap items-center gap-4 mb-6">
-      <div class="w-14 h-14 rounded-full bg-blue-100 flex items-center justify-center shadow-lg">
+      <div
+        class="w-14 h-14 rounded-full bg-blue-100 flex items-center justify-center shadow-lg"
+      >
         <i class="pi pi-calendar-plus text-2xl text-blue-700"></i>
       </div>
       <div class="relative">
-        <h1 class="text-2xl sm:text-3xl font-bold text-blue-900 flex items-center gap-2">
+        <h1
+          class="text-2xl sm:text-3xl font-bold text-blue-900 flex items-center gap-2"
+        >
           <i class="pi pi-file-invoice text-blue-600 text-3xl sm:text-2xl"></i>
           Create Monthly Invoice
         </h1>
-        <div class="absolute -bottom-1 left-0 w-56 h-1 bg-gradient-to-r from-blue-500 to-blue-400 rounded-full"></div>
+        <div
+          class="absolute -bottom-1 left-0 w-56 h-1 bg-gradient-to-r from-blue-500 to-blue-400 rounded-full"
+        ></div>
       </div>
     </div>
 
     <!-- 🧾 Form -->
     <form [formGroup]="invoiceForm" class="p-6 bg-white rounded-2xl border">
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-        
+      <div
+        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4"
+      >
         <!-- Company -->
         <div>
           <label class="block text-gray-700 font-semibold mb-1">
             <i class="pi pi-building text-blue-500 mr-2"></i>Select Company
           </label>
-          <p-autoComplete [suggestions]="filteredCompanies" (completeMethod)="filterCompany($event)"
-            (onSelect)="onCompanySelect($event)" field="Name" [(ngModel)]="selectedCompany"
-            [ngModelOptions]="{ standalone: true }" [dropdown]="true" [forceSelection]="true"></p-autoComplete>
+          <p-autoComplete
+            [suggestions]="filteredCompanies"
+            (completeMethod)="filterCompany($event)"
+            (onSelect)="onCompanySelect($event)"
+            field="Name"
+            [(ngModel)]="selectedCompany"
+            [ngModelOptions]="{ standalone: true }"
+            [dropdown]="true"
+            [forceSelection]="true"
+          ></p-autoComplete>
         </div>
 
         <!-- Branch -->
@@ -33,9 +49,16 @@
           <label class="block text-gray-700 font-semibold mb-1">
             <i class="pi pi-sitemap text-purple-500 mr-2"></i>Select Branch
           </label>
-          <p-autoComplete [suggestions]="filteredBranches" (completeMethod)="filterBranches($event)"
-            (onSelect)="onBranchSelect($event)" field="branch_name" [(ngModel)]="selectedBranchModel"
-            [ngModelOptions]="{ standalone: true }" [dropdown]="true" [forceSelection]="true"></p-autoComplete>
+          <p-autoComplete
+            [suggestions]="filteredBranches"
+            (completeMethod)="filterBranches($event)"
+            (onSelect)="onBranchSelect($event)"
+            field="branch_name"
+            [(ngModel)]="selectedBranchModel"
+            [ngModelOptions]="{ standalone: true }"
+            [dropdown]="true"
+            [forceSelection]="true"
+          ></p-autoComplete>
         </div>
 
         <!-- Party -->
@@ -43,10 +66,16 @@
           <label class="block text-gray-700 font-semibold mb-1">
             <i class="pi pi-users text-green-500 mr-2"></i>Select Party
           </label>
-          <p-autoComplete [suggestions]="filteredPartyName" (completeMethod)="filterPartyName($event)"
-            (onSelect)="onPartyNameSelect($event)" [(ngModel)]="selectedPartyModel"
-            [ngModelOptions]="{ standalone: true }" field="party_name" [dropdown]="true"
-            placeholder="Party *"></p-autoComplete>
+          <p-autoComplete
+            [suggestions]="filteredPartyName"
+            (completeMethod)="filterPartyName($event)"
+            (onSelect)="onPartyNameSelect($event)"
+            [(ngModel)]="selectedPartyModel"
+            [ngModelOptions]="{ standalone: true }"
+            field="party_name"
+            [dropdown]="true"
+            placeholder="Party *"
+          ></p-autoComplete>
         </div>
 
         <!-- City -->
@@ -54,9 +83,16 @@
           <label class="block text-gray-700 font-semibold mb-1">
             <i class="pi pi-map-marker text-red-500 mr-2"></i>Select City
           </label>
-          <p-autoComplete [suggestions]="filteredCities" (completeMethod)="filterCities($event)"
-            (onSelect)="onCitySelect($event)" field="CityName" [(ngModel)]="selectedCityModel"
-            [ngModelOptions]="{ standalone: true }" [dropdown]="true" [forceSelection]="true"></p-autoComplete>
+          <p-autoComplete
+            [suggestions]="filteredCities"
+            (completeMethod)="filterCities($event)"
+            (onSelect)="onCitySelect($event)"
+            field="CityName"
+            [(ngModel)]="selectedCityModel"
+            [ngModelOptions]="{ standalone: true }"
+            [dropdown]="true"
+            [forceSelection]="true"
+          ></p-autoComplete>
         </div>
 
         <!-- Duty Code -->
@@ -64,9 +100,17 @@
           <label class="block text-gray-700 font-semibold mb-1">
             <i class="pi pi-code text-purple-500 mr-2"></i>Duty Setup Code
           </label>
-          <p-autoComplete [(ngModel)]="selectedCode" [ngModelOptions]="{ standalone: true }"
-            [suggestions]="filteredCodes" (completeMethod)="filterCodes($event)" (onSelect)="onCodeSelect($event)"
-            field="DutyNo" [dropdown]="true" [forceSelection]="true" placeholder="Select Duty Code"></p-autoComplete>
+          <p-autoComplete
+            [(ngModel)]="selectedCode"
+            [ngModelOptions]="{ standalone: true }"
+            [suggestions]="filteredCodes"
+            (completeMethod)="filterCodes($event)"
+            (onSelect)="onCodeSelect($event)"
+            field="DutyNo"
+            [dropdown]="true"
+            [forceSelection]="true"
+            placeholder="Select Duty Code"
+          ></p-autoComplete>
         </div>
 
         <!-- Bill No -->
@@ -74,7 +118,13 @@
           <label class="block text-gray-700 font-semibold mb-1">
             <i class="pi pi-tag text-yellow-500 mr-2"></i>Bill No
           </label>
-          <input type="text" pInputText formControlName="BillNo" class="w-full !bg-gray-200" readonly />
+          <input
+            type="text"
+            pInputText
+            formControlName="BillNo"
+            class="w-full !bg-gray-200"
+            readonly
+          />
         </div>
 
         <!-- Bill Date -->
@@ -82,8 +132,12 @@
           <label class="block text-gray-700 font-semibold mb-1">
             <i class="pi pi-calendar text-indigo-500 mr-2"></i>Bill Date
           </label>
-          <input type="date" formControlName="BillDate" dateFormat="dd/mm/yy"
-            class="w-full border border-gray-300 p-2 rounded text-gray-800" />
+          <input
+            type="date"
+            formControlName="BillDate"
+            dateFormat="dd/mm/yy"
+            class="w-full border border-gray-300 p-2 rounded text-gray-800"
+          />
         </div>
 
         <!-- Tax Type -->
@@ -92,167 +146,256 @@
             <i class="pi pi-percentage text-pink-500 mr-2"></i>Tax Type
           </label>
           <div class="flex gap-4 items-center">
-            <p-radioButton inputId="cgst" value="cgst" formControlName="taxtype" (ngModelChange)="onTaxTypeChange($event)"></p-radioButton>
+            <p-radioButton
+              inputId="cgst"
+              value="cgst"
+              formControlName="taxtype"
+              (ngModelChange)="onTaxTypeChange($event)"
+            ></p-radioButton>
             <label for="cgst" class="text-gray-600">CGST/SGST</label>
-            <p-radioButton inputId="igst" value="igst" formControlName="taxtype" (ngModelChange)="onTaxTypeChange($event)"></p-radioButton>
+            <p-radioButton
+              inputId="igst"
+              value="igst"
+              formControlName="taxtype"
+              (ngModelChange)="onTaxTypeChange($event)"
+            ></p-radioButton>
             <label for="igst" class="text-gray-600">IGST</label>
           </div>
         </div>
 
         <!-- Add Duty -->
         <div class="flex items-end">
-          <button pButton type="button" icon="pi pi-plus-circle" label="Add Duty"
+          <button
+            pButton
+            type="button"
+            icon="pi pi-plus-circle"
+            label="Add Duty"
             class="p-button-success px-4 py-2 text-base shadow-md hover:scale-105 transition-transform"
-            (click)="addDutySection()"></button>
+            (click)="addDutySection()"
+          ></button>
         </div>
       </div>
     </form>
   </div>
 
   <!-- Show only after duties are added -->
-  <app-mbilling *ngIf="mainDutyList.length > 0" [invoiceForm]="invoiceForm" [selectedDuties]="selectedDuties"
-    [mainDutyList]="mainDutyList" [sleetedBookingIds]="sleetedBookingIds" [taxType]="taxType" [partyInfo]="partyInfo"></app-mbilling>
-</div>
+  <app-mbilling
+    *ngIf="mainDutyList.length > 0"
+    [invoiceForm]="invoiceForm"
+    [selectedDuties]="selectedDuties"
+    [mainDutyList]="mainDutyList"
+    [sleetedBookingIds]="sleetedBookingIds"
+    [dutyTableData]="dutyTableData"
+    [taxType]="taxType"
+    [partyInfo]="partyInfo"
+    [setUpCode]="selectedMontySetupCode"
+    [isCalculated]="isEditMode"
+    [calCulateData]="invoiceData"
+    (dutyUpdated)="onDutyUpdated($event)"
 
+  >
+  </app-mbilling>
+</div>
 
 <!-- Add duty -->
 <div class="w-full h-full">
-  <p-dialog [(visible)]="displayDuty" [modal]="true" [style]="{ width: '90vw' }"
-  [breakpoints]="{ '960px': '95vw', '640px': '100vw' }" [closable]="true" [dismissableMask]="true"
-  [contentStyle]="{ padding: '0' }">
-  <ng-template pTemplate="header">
-    <div class="flex items-center gap-3 text-blue-700 font-extrabold text-xl">
-      <span class="w-10 h-10 bg-blue-200 rounded-full flex items-center justify-center shadow-sm">
-        <i class="pi pi-calendar-plus text-lg"></i>
-      </span>
-      <span>Add Duty</span>
-    </div>
-  </ng-template>
-
-  <div class="p-4 bg-gradient-to-br from-white via-sky-50 to-blue-50 rounded-xl">
-    <!-- 🔍 Filter Section -->
-    <div class="bg-white p-4 rounded-xl border flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-5">
-      <!-- Show Dropdown -->
-      <div class="flex items-center gap-3 w-full md:w-auto">
-        <i class="pi pi-eye text-blue-600 text-lg"></i>
-        <label class="font-semibold text-gray-700 whitespace-nowrap">Show:</label>
-        <p-dropdown [options]="show" [(ngModel)]="selectedShow" placeholder="Show" [showClear]="true"
-          class="w-full min-w-[200px]"></p-dropdown>
-      </div>
-
-      <!-- Search Field + Button -->
-      <div class="flex items-center gap-3 w-full md:w-auto max-w-md">
-        <i class="pi pi-search text-blue-600 text-lg"></i>
-        <span class="p-input-icon-left w-full">
-          <input pInputText type="text" placeholder="Search Invoices..."
-            class="w-full border border-blue-200 focus:ring-2 focus:ring-blue-400 rounded-lg"
-            [(ngModel)]="searchText" />
+  <p-dialog
+    [(visible)]="displayDuty"
+    [modal]="true"
+    [style]="{ width: '90vw' }"
+    [breakpoints]="{ '960px': '95vw', '640px': '100vw' }"
+    [closable]="true"
+    [dismissableMask]="true"
+    [contentStyle]="{ padding: '0' }"
+  >
+    <ng-template pTemplate="header">
+      <div class="flex items-center gap-3 text-blue-700 font-extrabold text-xl">
+        <span
+          class="w-10 h-10 bg-blue-200 rounded-full flex items-center justify-center shadow-sm"
+        >
+          <i class="pi pi-calendar-plus text-lg"></i>
         </span>
-        <button pButton type="button" icon="pi pi-search"
-          class="p-button-info p-button-rounded px-4 py-3 text-base hover:scale-105 transition-transform shadow-md"
-          (click)="searchInvoices()"></button>
+        <span>Add Duty</span>
+      </div>
+    </ng-template>
+
+    <div
+      class="p-4 bg-gradient-to-br from-white via-sky-50 to-blue-50 rounded-xl"
+    >
+      <!-- 🔍 Filter Section -->
+      <div
+        class="bg-white p-4 rounded-xl border flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-5"
+      >
+        <!-- Show Dropdown -->
+        <div class="flex items-center gap-3 w-full md:w-auto">
+          <i class="pi pi-eye text-blue-600 text-lg"></i>
+          <label class="font-semibold text-gray-700 whitespace-nowrap"
+            >Show:</label
+          >
+          <p-dropdown
+            [options]="show"
+            [(ngModel)]="addDutyTableRowSize"
+            placeholder="Show"
+            [showClear]="true"
+            class="w-full min-w-[200px]"
+          ></p-dropdown>
+        </div>
+
+        <!-- Search Field + Button -->
+        <div class="flex items-center gap-3 w-full md:w-auto max-w-md">
+          <i class="pi pi-search text-blue-600 text-lg"></i>
+          <span class="p-input-icon-left w-full">
+            <input
+              pInputText
+              type="text"
+              placeholder="Search Invoices..."
+              class="w-full border border-blue-200 focus:ring-2 focus:ring-blue-400 rounded-lg"
+              [(ngModel)]="searchText"
+            />
+          </span>
+          <button
+            pButton
+            type="button"
+            icon="pi pi-search"
+            class="p-button-info p-button-rounded px-4 py-3 text-base hover:scale-105 transition-transform shadow-md"
+            (click)="searchInvoices()"
+          ></button>
+        </div>
+      </div>
+
+      <!-- 📋 Table Section -->
+      <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-lg">
+        <p-table
+          [value]="dutyTableData"
+          [(selection)]="selectedDuties"
+          selectionMode="multiple"
+          dataKey="BookingID"
+          (onPage)="onPageChange($event)"
+          [paginator]="true"
+          [rows]="addDutyTableRowSize"
+          [responsiveLayout]="'scroll'"
+          class="p-datatable-gridlines"
+        >
+          <!-- Table Header -->
+          <ng-template pTemplate="header">
+            <tr class="bg-blue-100 text-gray-800 text-sm font-semibold">
+              <th>
+                <input
+                  type="checkbox"
+                  [checked]="allSelected"
+                  (change)="toggleAll($event)"
+                />
+              </th>
+
+              <th class="py-2 px-3">
+                <i class="pi pi-sort-numeric-up text-cyan-600 mr-1"></i> SI No.
+              </th>
+              <th class="py-2 px-3">
+                <i class="pi pi-id-card text-green-600 mr-1"></i> Slip No.
+              </th>
+              <th class="py-2 px-3">
+                <i class="pi pi-briefcase text-indigo-600 mr-1"></i> Duty Type
+              </th>
+              <th class="py-2 px-3">
+                <i class="pi pi-car text-orange-500 mr-1"></i> Car No.
+              </th>
+              <th class="py-2 px-3">
+                <i class="pi pi-cog text-gray-700 mr-1"></i> Car Type
+              </th>
+              <th class="py-2 px-3">
+                <i class="pi pi-building text-pink-600 mr-1"></i> Project
+              </th>
+              <th class="py-2 px-3">
+                <i class="pi pi-user text-purple-600 mr-1"></i> Guest Name
+              </th>
+              <th class="py-2 px-3">
+                <i class="pi pi-calendar text-teal-600 mr-1"></i> From Date
+              </th>
+              <th class="py-2 px-3">
+                <i class="pi pi-calendar text-red-600 mr-1"></i> To Date
+              </th>
+              <th class="py-2 px-3">
+                <i class="pi pi-clock text-yellow-600 mr-1"></i> From Time
+              </th>
+              <th class="py-2 px-3">
+                <i class="pi pi-clock text-yellow-600 mr-1"></i> To Time
+              </th>
+              <th class="py-2 px-3">
+                <i class="pi pi-directions text-gray-600 mr-1"></i> From KM
+              </th>
+              <th class="py-2 px-3">
+                <i class="pi pi-directions-alt text-gray-600 mr-1"></i> To KM
+              </th>
+              <th class="py-2 px-3">
+                <i class="pi pi-stopwatch text-lime-600 mr-1"></i> Total Time
+              </th>
+              <th class="py-2 px-3">
+                <i class="pi pi-compass text-lime-600 mr-1"></i> Total KM
+              </th>
+              <th class="py-2 px-3">
+                <i class="pi pi-wallet text-emerald-600 mr-1"></i> Net Amount
+              </th>
+            </tr>
+          </ng-template>
+
+          <!-- Table Body -->
+          <ng-template pTemplate="body" let-dutyTableData let-i="rowIndex">
+            <tr class="hover:bg-blue-50 transition-all text-sm">
+
+              <td>
+                <input
+                  type="checkbox"
+                  [(ngModel)]="dutyTableData.selected"
+                  (change)="checkIndividual()"
+                  [disabled]="dutyTableData.disabled"
+                />
+              </td>
+
+              <td class="py-2 px-3">{{ i + 1 }}</td>
+              <td class="py-2 px-3">{{ dutyTableData.SlipNo }}</td>
+              <td class="py-2 px-3">{{ dutyTableData.DutyTypeName }}</td>
+              <td class="py-2 px-3">{{ dutyTableData.CarNo }}</td>
+              <td class="py-2 px-3">{{ dutyTableData.CarTypeName }}</td>
+              <td class="py-2 px-3">{{ dutyTableData.Project }}</td>
+              <td class="py-2 px-3">{{ dutyTableData.BookedBy }}</td>
+              <td class="py-2 px-3">{{ dutyTableData.fromDate }}</td>
+              <td class="py-2 px-3">{{ dutyTableData.toDate }}</td>
+              <td class="py-2 px-3">{{ dutyTableData.GarageOutTime }}</td>
+              <td class="py-2 px-3">
+                {{ dutyTableData.GarageInDate | date : "HH:mm" }}
+              </td>
+              <td class="py-2 px-3">{{ dutyTableData.GarageOutKm }}</td>
+              <td class="py-2 px-3">{{ dutyTableData.GarageInKm }}</td>
+              <td class="py-2 px-3">{{ dutyTableData.TotalHour }}</td>
+              <td class="py-2 px-3">{{ dutyTableData.TotalKm }}</td>
+              <td class="py-2 px-3 font-semibold text-right text-green-600">
+                ₹{{ dutyTableData.NetAmt | number : "1.2-2" }}
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+      <div class="flex justify-end gap-3 mt-6">
+        <button
+          pButton
+          type="button"
+          (click)="saveSelectedDuties()"
+          icon="pi pi-save"
+          class="p-button-primary"
+        >
+          Save
+        </button>
+
+        <!-- Creative Close Button -->
+        <button
+          pButton
+          type="button"
+          icon="pi pi-times"
+          label="Close"
+          class="p-button-danger"
+          (click)="displayDuty = false"
+        ></button>
       </div>
     </div>
-
-    <!-- 📋 Table Section -->
-    <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-lg">
-      <p-table [value]="dutyTableData" [(selection)]="selectedDuties" selectionMode="multiple" dataKey="BookingID"
-        [paginator]="true" [rows]="10" [responsiveLayout]="'scroll'" class="p-datatable-gridlines">
-        <!-- Table Header -->
-        <ng-template pTemplate="header">
-          <tr class="bg-blue-100 text-gray-800 text-sm font-semibold">
-            <th class="py-2 px-3">
-              <i class="pi pi-check-square text-blue-500"></i>
-            </th>
-            <th class="py-2 px-3">
-              <i class="pi pi-sort-numeric-up text-cyan-600 mr-1"></i> SI No.
-            </th>
-            <th class="py-2 px-3">
-              <i class="pi pi-id-card text-green-600 mr-1"></i> Slip No.
-            </th>
-            <th class="py-2 px-3">
-              <i class="pi pi-briefcase text-indigo-600 mr-1"></i> Duty Type
-            </th>
-            <th class="py-2 px-3">
-              <i class="pi pi-car text-orange-500 mr-1"></i> Car No.
-            </th>
-            <th class="py-2 px-3">
-              <i class="pi pi-cog text-gray-700 mr-1"></i> Car Type
-            </th>
-            <th class="py-2 px-3">
-              <i class="pi pi-building text-pink-600 mr-1"></i> Project
-            </th>
-            <th class="py-2 px-3">
-              <i class="pi pi-user text-purple-600 mr-1"></i> Guest Name
-            </th>
-            <th class="py-2 px-3">
-              <i class="pi pi-calendar text-teal-600 mr-1"></i> From Date
-            </th>
-            <th class="py-2 px-3">
-              <i class="pi pi-calendar text-red-600 mr-1"></i> To Date
-            </th>
-            <th class="py-2 px-3">
-              <i class="pi pi-clock text-yellow-600 mr-1"></i> From Time
-            </th>
-            <th class="py-2 px-3">
-              <i class="pi pi-clock text-yellow-600 mr-1"></i> To Time
-            </th>
-            <th class="py-2 px-3">
-              <i class="pi pi-directions text-gray-600 mr-1"></i> From KM
-            </th>
-            <th class="py-2 px-3">
-              <i class="pi pi-directions-alt text-gray-600 mr-1"></i> To KM
-            </th>
-            <th class="py-2 px-3">
-              <i class="pi pi-stopwatch text-lime-600 mr-1"></i> Total Time
-            </th>
-            <th class="py-2 px-3">
-              <i class="pi pi-compass text-lime-600 mr-1"></i> Total KM
-            </th>
-            <th class="py-2 px-3">
-              <i class="pi pi-wallet text-emerald-600 mr-1"></i> Net Amount
-            </th>
-          </tr>
-        </ng-template>
-
-        <!-- Table Body -->
-        <ng-template pTemplate="body" let-dutyTableData>
-          <tr class="hover:bg-blue-50 transition-all text-sm">
-            <td class="py-2 px-3">
-              <input type="checkbox" [(ngModel)]="dutyTableData.selected" />
-            </td>
-            <td class="py-2 px-3">{{ dutyTableData.BookingNo }}</td>
-            <td class="py-2 px-3">{{ dutyTableData.SlipNo }}</td>
-            <td class="py-2 px-3">{{ dutyTableData.DutyTypeName }}</td>
-            <td class="py-2 px-3">{{ dutyTableData.CarNo }}</td>
-            <td class="py-2 px-3">{{ dutyTableData.CarTypeName }}</td>
-            <td class="py-2 px-3">{{ dutyTableData.Project }}</td>
-            <td class="py-2 px-3">{{ dutyTableData.BookedBy }}</td>
-            <td class="py-2 px-3">{{ dutyTableData.fromDate }}</td>
-            <td class="py-2 px-3">{{ dutyTableData.toDate }}</td>
-            <td class="py-2 px-3">{{ dutyTableData.GarageOutTime }}</td>
-            <td class="py-2 px-3">{{ dutyTableData.GarageInDate | date:'HH:mm' }}</td>
-            <td class="py-2 px-3">{{ dutyTableData.GarageOutKm }}</td>
-            <td class="py-2 px-3">{{ dutyTableData.GarageInKm }}</td>
-            <td class="py-2 px-3">{{ dutyTableData.TotalHour }}</td>
-            <td class="py-2 px-3">{{ dutyTableData.TotalKm }}</td>
-            <td class="py-2 px-3 font-semibold text-right text-green-600">
-              ₹{{ dutyTableData.NetAmt | number : "1.2-2" }}
-            </td>
-          </tr>
-        </ng-template>
-      </p-table>
-    </div>
-    <div class="flex justify-end gap-3 mt-6">
-      <button pButton type="button" (click)="saveSelectedDuties()" icon="pi pi-save" class="p-button-primary">
-        Save
-      </button>
-
-      <!-- Creative Close Button -->
-      <button pButton type="button" icon="pi pi-times" label="Close" class="p-button-danger"
-        (click)="displayDuty = false"></button>
-    </div>
-  </div>
-</p-dialog>
+  </p-dialog>
 </div>
-
