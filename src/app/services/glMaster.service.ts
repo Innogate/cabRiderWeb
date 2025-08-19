@@ -20,11 +20,15 @@ export class glMasterService extends BaseService {
     this.call('master.getAllGlTypeDropdown', {});
   }
 
-  createGlMaster(payload: any){
+  createGlMaster(payload: any) {
     this.call('master.createGlMaster', payload);
 
     //  "GLName": "dgdgg",
     //     "GLType": "dgdfgfd"
+  }
+
+  updateGlmaster(payload: any) {
+    this.call('master.updateGlMaster', payload);
   }
 
   protected handleMessage(msg: any): boolean {
