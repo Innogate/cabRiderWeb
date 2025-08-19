@@ -54,7 +54,7 @@ export class GlMasterComponent implements OnInit, OnDestroy, AfterViewInit {
       if (msg.for === "getAllGlList") {
         this.data = msg.data
         this.isLoading = false
-      }else if (msg.for == 'getAllGlTypeDropdown') {
+      }else if (msg.for == 'getAllGlTypes') {
         this.glList = msg.data;
       }
       return true;
@@ -72,6 +72,7 @@ export class GlMasterComponent implements OnInit, OnDestroy, AfterViewInit {
       pageSize: 15
     };
     this.glMasterService.getAllGlMaster(payload);
+    this.glMasterService.getAllGlTypes();
   }
 
 
