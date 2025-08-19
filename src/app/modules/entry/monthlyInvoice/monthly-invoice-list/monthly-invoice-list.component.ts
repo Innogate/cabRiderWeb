@@ -46,28 +46,28 @@ import { AutoComplete } from 'primeng/autocomplete';
 })
 export class MonthlyInvoiceListComponent implements OnInit {
   invoices: any[] = [];
+  invoices_count: number = 0;
+  invoices_table_row_count: number | null = 10;
+  invoices_table_count_list = [10, 25, 50, 100, 200, 400, 500, 1000, 2000];
+  is_lazy_load: boolean = false;
+  page_no: number = 1;
+
   companies: any[] = [];
-  filteredCompanies: any[] = [];
-  selectedCompany: any = null;
-  searchText: string = '';
-  selectedShow: number | null = 10;
-  show = [10, 25, 50, 100, 200, 400, 500, 1000, 2000];
+  selected_company: any = null;
+  search_text: string = '';
+  selected_invoice: any = null;
+  
 
-  dataCount: number = 10;
-  tableLading: boolean = true;
-  totalRecords: number = 0;
-  isLazyLoad: boolean = false;
-  pageNo: number = 1;
+  data_count: number = 10;
+  table_loading: boolean = true;
 
-  branches = ['Branch X', 'Branch Y'];
-  parties = ['Party 1', 'Party 2'];
-  cities = ['City A', 'City B'];
 
-  taxType = 'cgst';
-  rcm = 'no';
-  billDate = new Date();
+  branches = ['Lodging...'];
+  parties = ['Lodging...'];
+  cities = ['Lodging...'];
 
-  displayDialog = false;
+  display_dialog = false;
+  show_other_charges = false;
 
   constructor(
     private _invoice: InvoiceService,
@@ -87,16 +87,16 @@ export class MonthlyInvoiceListComponent implements OnInit {
           : msg.data?.data || [];
         console.log('Invoices loaded:', this.invoices);
 
-        this.totalRecords = msg.total ?? this.invoices.length;
-        this.isLazyLoad = true;
-        this.tableLading = false;
+        this.invoices_count = msg.total ?? this.invoices.length;
+        this.is_lazy_load = true;
+        this.table_loading = false;
         this.cdr.detectChanges();
       } else if (msg.for === 'companyDropdown') {
         this.companies = msg.data;
         rt = true;
       }
 
-      this.tableLading = false;
+      this.table_loading = false;
       return rt;
     });
 
@@ -105,49 +105,46 @@ export class MonthlyInvoiceListComponent implements OnInit {
   }
 
   loadData($event: any) {
-    if (!this.isLazyLoad) return;
+    if (!this.is_lazy_load) return;
     if ($event.first !== undefined) {
-      this.pageNo = $event.first / $event.rows + 1;
-      this.dataCount = $event.rows; // ✅ keep rows in sync
+      this.page_no = $event.first / $event.rows + 1;
+      this.data_count = $event.rows;
     }
     this.getInvoices();
   }
 
   getInvoices() {
-    this.tableLading = true;
+    this.table_loading = true;
     const payload = {
-      for_company_id: this.selectedCompany ?? 0,
-      search: this.searchText || '',
-      current_page: this.pageNo,
-      page_size: this.dataCount,
+      for_company_id: this.selected_company ?? 0,
+      search: this.search_text || '',
+      current_page: this.page_no,
+      page_size: this.data_count,
     };
 
     this.HelperService.getMonthlyInvoiceList(payload);
   }
 
   searchInvoices() {
-    this.pageNo = 1;
+    this.page_no = 1;
     this.getInvoices();
   }
 
   resetFilters() {
-    this.searchText = '';
-    this.selectedCompany = [];
-    this.pageNo = 1;
-    this.dataCount = 10;
+    this.search_text = '';
+    this.selected_company = [];
+    this.page_no = 1;
+    this.data_count = 10;
     this.getInvoices();
   }
 
-  goToAdd() {
+  openCreateUI() {
     this.router.navigate(['/monthly-invoice-create']);
   }
 
-  showInvoiceDetails = false;
-  selectedInvoice: any = null;
-
-  openInvoiceDetails(invoice: any) {
-    this.selectedInvoice = { ...invoice }; // ensure new reference
-    this.showInvoiceDetails = true;
+  openOtherCharges(invoice: any) {
+    this.selected_invoice = { ...invoice };
+    this.show_other_charges = true;
   }
 
   editInvoice(invoice: any) {
@@ -160,16 +157,8 @@ export class MonthlyInvoiceListComponent implements OnInit {
     this.HelperService.getCompanyDropdown();
   }
 
-  filterCompany(event: any) {
-    if (!this.companies) return;
-    const query = event.query.toLowerCase();
-    this.filteredCompanies = this.companies.filter((company) =>
-      company.Name.toLowerCase().includes(query)
-    );
-  }
-
-  // payment recived
-  showDialog = false;
+  // ! payment recived
+  show_dialog = false;
 
   rows = 10;
   globalFilter = '';
@@ -190,6 +179,6 @@ export class MonthlyInvoiceListComponent implements OnInit {
   ];
 
   openDialog() {
-    this.showDialog = true;
+    this.show_dialog = true;
   }
 }
