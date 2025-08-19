@@ -59,7 +59,7 @@ export class MbillingComponent {
     private cdr: ChangeDetectorRef,
     private _minvoice: MinvoiceService,
     private _helperService: HelperService
-  ) {}
+  ) { }
   @Input() sleetedBookingIds?: any[];
 
   // Column 1
@@ -123,7 +123,6 @@ export class MbillingComponent {
   taxableSumCharges: number = 0;
   nonTaxableSumCharges: number = 0;
 
-  isCalculated: boolean = false;
   selectedMontySetupCode: any;
 
   ngOnInit(): void {
@@ -156,6 +155,9 @@ export class MbillingComponent {
       }
       return rt;
     });
+    if (this.isCalculated) {
+      this.setInvoiceData(this.calCulateData)
+    }
     this.Cgst = this.partyInfo.CGST;
     this.Sgst = this.partyInfo.SGST;
     this.igst = this.partyInfo.IGST;
@@ -168,6 +170,8 @@ export class MbillingComponent {
   @Input() taxType: any;
   @Input() partyInfo: any;
   @Input() setUpCode: any;
+  @Input() isCalculated: any;
+  @Input() calCulateData: any;
 
   @Output() dutyUpdated = new EventEmitter<{
     dutyTableData: any[];
@@ -201,6 +205,12 @@ export class MbillingComponent {
           .get('SetupCode')
           ?.setValue(this.selectedMontySetupCode.id);
       }
+    }
+    if (changes['isCalculated']) {
+      this.isCalculated = changes['isCalculated'].currentValue;
+    }
+    if (changes['calCulateData']) {
+      this.calCulateData = changes['calCulateData'].currentValue;
     }
   }
 
@@ -687,5 +697,61 @@ export class MbillingComponent {
     } else {
       console.error('Duty not found in mainDutyList:', duty);
     }
+  }
+
+  setInvoiceData(data: any) {
+    // --- Patch form values ---
+    this.invoiceForm.get('BillDate')?.setValue(data.BillDate ?? new Date());
+    this.invoiceForm.get('taxtype')?.setValue(data.taxtype === 1 ? 'cgst' : 'igst');
+    this.invoiceForm.get('company_id')?.setValue(data.company_id);
+    this.invoiceForm.get('branch_id')?.setValue(data.branch_id);
+    this.invoiceForm.get('city_id')?.setValue(data.city_id);
+    this.invoiceForm.get('party_id')?.setValue(data.party_id);
+
+    // --- Assign component variables ---
+    this.fixedAmount = data.fixed_amount;
+    this.totalExtraHour = data.extra_hours;
+    this.extrakm = data.extra_km;
+    this.exceptDayHrs = data.except_day_hrs;
+    this.extraDaykm = data.extra_day_km;
+    this.fuelAmount = data.fuel_amount;
+
+    this.numDays = data.no_of_days;
+    this.rate1 = data.extra_hours_rate;
+    this.rate2 = data.extra_km_rate;
+    this.rate3 = data.except_day_hrs_rate;
+    this.rate4 = data.except_day_km_rate;
+    this.mobileAmount = data.mobil_amount;
+
+    this.Amount = data.fixed_amount_total;
+    this.extaHAmount = data.extra_hours_amount;
+    this.totalKmAmount = data.extra_km_amount;
+    this.amount3 = data.except_day_hrs_amount;
+    this.amount2 = data.except_day_km_amount;
+    this.desc2 = data.remarks;
+
+    this.billTotal = data.bill_total;
+    this.aboveAdvance = data.Advance;
+    this.roundOff = data.round_off;
+    this.totalPaybleGSTAmount = data.NetAmount;
+    this.taxableSumCharges = data.OtherCharges;
+    this.totalPaybleSGSTAmount = data.SGST;
+    this.totalPaybleCGSTAmount = data.CGST;
+    this.totalPaybleIGSTAmount = data.IGST;
+    this.nonTaxableSumCharges = data.OtherCharges2;
+
+    this.igst = data.IGSTPer;
+    this.Cgst = data.CGSTPer;
+    this.Sgst = data.SGSTPer;
+
+    this.totalPaybleAmaunt = data.GrossAmount;
+    this.selectedMonthlyDuty = { id: data.monthly_duty_id };
+
+    // // extras
+    // this.parking_amount = data.parking_amount ?? 0;
+    // this.night_amount = data.night_amount ?? 0;
+    // this.outstation_amount = data.outstation_amount ?? 0;
+    // this.proportionate = data.proportionate ?? 0;
+    // this.amount_payable = data.amount_payable ?? 0;
   }
 }

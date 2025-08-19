@@ -151,8 +151,8 @@ export class MonthlyInvoiceListComponent implements OnInit {
   }
 
   editInvoice(invoice: any) {
-    this.router.navigate(['/invoice-add'], {
-      state: { editInvoice: invoice },
+    this.router.navigate(['/monthly-invoice-create'], {
+      queryParams: { editInvoice:  JSON.stringify(invoice) },
     });
   }
 
