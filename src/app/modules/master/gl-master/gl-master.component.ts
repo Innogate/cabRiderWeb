@@ -3,23 +3,30 @@ import { DynamicTableComponent } from '../../../components/dynamic-table/dynamic
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { glMasterService } from '../../../services/glMaster.service';
 import { commonService } from '../../../services/comonApi.service';
 import { globalRequestHandler } from '../../../utils/global';
 import { SidebarModule } from 'primeng/sidebar';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputText, InputTextModule } from 'primeng/inputtext';
+import { AutoComplete } from 'primeng/autocomplete';
 
 @Component({
   selector: 'app-gl-master',
-  imports: [DynamicTableComponent, CommonModule, SidebarModule],
+  imports: [DynamicTableComponent, CommonModule, SidebarModule, ReactiveFormsModule, DropdownModule, InputTextModule, AutoComplete],
   templateUrl: './gl-master.component.html',
   styleUrl: './gl-master.component.css'
 })
 export class GlMasterComponent implements OnInit, OnDestroy, AfterViewInit {
   isLoading = true;
   data: any[] = [];
-  showForm: boolean = false;
+  showForm = false;
+  header: string = "";
   form!: FormGroup;
+  Gl: any[] = [];
+  filteredGl: any[] = [];
+  glList: any[] = [{ Id: 0, GLType: '' }];
   constructor(
     private glMasterService: glMasterService,
     private router: Router,
@@ -30,6 +37,9 @@ export class GlMasterComponent implements OnInit, OnDestroy, AfterViewInit {
   ) {
     this.form = this.fb.group({
       id: [],
+      GLName: [''],
+      GLType: [''],
+  
 
     });
   }
@@ -44,6 +54,8 @@ export class GlMasterComponent implements OnInit, OnDestroy, AfterViewInit {
       if (msg.for === "getAllGlList") {
         this.data = msg.data
         this.isLoading = false
+      }else if (msg.for == 'getAllGlTypeDropdown') {
+        this.glList = msg.data;
       }
       return true;
     });
@@ -80,12 +92,22 @@ export class GlMasterComponent implements OnInit, OnDestroy, AfterViewInit {
   async handleAction(event: { action: string, data: any }) {
     switch (event.action) {
       case 'edit':
+        this.showForm = true;
+        this.header = "UPDATE GL";
         break;
       case 'delete':
         break;
       case 'add':
+        this.showForm = true;
+        this.header = "ADD GL";
         break
 
     }
+  }
+  filterGl(event: any) {
+    const query = event.query.toLowerCase();
+    this.filteredGl = this.glList.filter(gl =>
+      gl.GLType.toLowerCase().includes(query)
+    );
   }
 }
