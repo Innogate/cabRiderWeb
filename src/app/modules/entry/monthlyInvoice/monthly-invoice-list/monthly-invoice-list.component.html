@@ -229,7 +229,8 @@
 
 <app-invoice-eyes-show
   *ngIf="showInvoiceDetails"
-  [invoice]="selectedInvoice"
+  [selectedInvoice]="selectedInvoice"
+  [id]="invoices"
   (close)="showInvoiceDetails = false"
 ></app-invoice-eyes-show>
 
