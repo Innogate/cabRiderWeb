@@ -20,7 +20,7 @@
     class="mx-auto bg-white border border-blue-200 p-5 flex flex-col gap-5 bg-gradient-to-r from-white to-blue-50 rounded-xl shadow-inner">
 
     <!-- Form -->
-    <form [formGroup]="fuelForm" (ngSubmit)="onSave()"
+    <form [formGroup]="fuelForm"
       class="grid grid-cols-12 gap-5">
 
       <!-- Branch -->
@@ -51,14 +51,26 @@
           class="w-full mt-1 p-2.5 rounded-md border border-gray-300 hover:border-blue-400 focus:ring-2 focus:ring-blue-500 transition" />
       </div>
 
-      <!-- Kilometer -->
-      <div class="col-span-12 sm:col-span-6 md:col-span-1">
+      <!-- Reference No -->
+      <div class="col-span-12 sm:col-span-6 md:col-span-3">
         <label
           class="flex items-center gap-2 text-sm font-semibold text-gray-700">
-          <i class="pi pi-map-marker text-green-500"></i> Kilometer <span
+          <i class="pi pi-hashtag text-blue-500"></i> Reference No <span
             class="text-red-500">*</span>
         </label>
-        <input type="number" formControlName="Kilometer"
+        <input type="text" formControlName="ReferenceNo"
+          placeholder="REFERENCE NO"
+          class="w-full mt-1 p-2.5 rounded-md border border-gray-300 hover:border-blue-400 focus:ring-2 focus:ring-blue-500 transition" />
+      </div>
+
+      <!-- City -->
+      <div class="col-span-12 sm:col-span-6 md:col-span-3">
+        <label
+          class="flex items-center gap-2 text-sm font-semibold text-gray-700">
+          <i class="pi pi-globe text-blue-500"></i> City <span
+            class="text-red-500">*</span>
+        </label>
+        <input type="text" formControlName="City" placeholder="CITY"
           class="w-full mt-1 p-2.5 rounded-md border border-gray-300 hover:border-blue-400 focus:ring-2 focus:ring-blue-500 transition" />
       </div>
 
@@ -112,6 +124,17 @@
           class="w-full mt-1 p-2.5 rounded-md border border-gray-300 hover:border-blue-400 focus:ring-2 focus:ring-blue-500 transition" />
       </div>
 
+      <!-- Kilometer -->
+      <div class="col-span-12 sm:col-span-6 md:col-span-2">
+        <label
+          class="flex items-center gap-2 text-sm font-semibold text-gray-700">
+          <i class="pi pi-map-marker text-green-500"></i> Kilometer <span
+            class="text-red-500">*</span>
+        </label>
+        <input type="number" formControlName="Kilometer"
+          class="w-full mt-1 p-2.5 rounded-md border border-gray-300 hover:border-blue-400 focus:ring-2 focus:ring-blue-500 transition" />
+      </div>
+
       <!-- Advance Amount -->
       <div class="col-span-12 sm:col-span-6 md:col-span-2">
         <label
@@ -121,23 +144,6 @@
         </label>
         <input type="number" formControlName="Advance"
           class="w-full mt-1 p-2.5 rounded-md border border-gray-300 hover:border-blue-400 focus:ring-2 focus:ring-blue-500 transition" />
-      </div>
-
-      <!-- Purchase From -->
-      <div class="col-span-12 sm:col-span-6 md:col-span-3">
-        <label
-          class="flex items-center gap-2 text-sm font-semibold text-gray-700">
-          <i class="pi pi-store text-blue-500"></i> Purchase From
-        </label>
-        <p-dropdown
-          [options]="purchaseFromOptions"
-          formControlName="PurchaseFrom"
-          placeholder="Select option"
-          optionLabel="label"
-          class="w-full mt-1"
-          [filter]="true"
-          [showClear]="true">
-        </p-dropdown>
       </div>
 
       <!-- Driver -->
@@ -158,50 +164,15 @@
         </p-dropdown>
       </div>
 
-      <!-- Remarks -->
-      <div class="col-span-12 md:col-span-4">
-        <label
-          class="flex items-center gap-2 text-sm font-semibold text-gray-700">
-          <i class="pi pi-comment text-violet-500"></i> Remarks <span
-            class="text-red-500">*</span>
-        </label>
-        <textarea rows="2" formControlName="Remarks"
-          class="w-full mt-1 p-2.5 rounded-md border border-gray-300 hover:border-blue-400 focus:ring-2 focus:ring-blue-500 transition"></textarea>
-      </div>
-
-      <!-- Reference No -->
+      <!-- Purchase From -->
       <div class="col-span-12 sm:col-span-6 md:col-span-3">
         <label
           class="flex items-center gap-2 text-sm font-semibold text-gray-700">
-          <i class="pi pi-hashtag text-blue-500"></i> Reference No <span
-            class="text-red-500">*</span>
-        </label>
-        <input type="text" formControlName="ReferenceNo"
-          placeholder="REFERENCE NO"
-          class="w-full mt-1 p-2.5 rounded-md border border-gray-300 hover:border-blue-400 focus:ring-2 focus:ring-blue-500 transition" />
-      </div>
-
-      <!-- City -->
-      <div class="col-span-12 sm:col-span-6 md:col-span-2">
-        <label
-          class="flex items-center gap-2 text-sm font-semibold text-gray-700">
-          <i class="pi pi-globe text-blue-500"></i> City <span
-            class="text-red-500">*</span>
-        </label>
-        <input type="text" formControlName="City" placeholder="CITY"
-          class="w-full mt-1 p-2.5 rounded-md border border-gray-300 hover:border-blue-400 focus:ring-2 focus:ring-blue-500 transition" />
-      </div>
-
-      <!-- Paid By -->
-      <div class="col-span-12 sm:col-span-6 md:col-span-3">
-        <label
-          class="flex items-center gap-2 text-sm font-semibold text-gray-700">
-          <i class="pi pi-credit-card text-amber-700"></i> Paid By
-          <span class="text-red-500">*</span>
+          <i class="pi pi-store text-blue-500"></i> Purchase From
         </label>
         <p-dropdown
-          [options]="paidByOptions"
-          formControlName="PaidBy"
+          [options]="purchaseFromOptions"
+          formControlName="PurchaseFrom"
           placeholder="Select option"
           optionLabel="label"
           class="w-full mt-1"
@@ -218,19 +189,15 @@
             class="text-red-500">*</span>
         </label>
 
-        <div class="flex items-center gap-3">
-          <p-inputswitch formControlName="FullTank"></p-inputswitch>
-
-          <!-- Text with color change -->
-          <span
-            class="text-sm font-bold"
-            [ngClass]="{
-        'text-green-600': fuelForm.get('FullTank')?.value === true,
-        'text-red-400': fuelForm.get('FullTank')?.value === false
-      }">
-            {{ fuelForm.get('FullTank')?.value ? 'Yes' : 'No' }}
-          </span>
-        </div>
+        <p-dropdown
+          [options]="fullTankOptions"
+          formControlName="FullTank"
+          placeholder="Select option"
+          optionLabel="label"
+          class="w-full mt-1"
+          [filter]="true"
+          [showClear]="true">
+        </p-dropdown>
       </div>
 
       <!-- Pay Mode -->
@@ -251,6 +218,35 @@
         </p-dropdown>
       </div>
 
+      <!-- Paid By -->
+      <div class="col-span-12 sm:col-span-6 md:col-span-3">
+        <label
+          class="flex items-center gap-2 text-sm font-semibold text-gray-700">
+          <i class="pi pi-credit-card text-amber-700"></i> Paid By
+          <span class="text-red-500">*</span>
+        </label>
+        <p-dropdown
+          [options]="paidByOptions"
+          formControlName="PaidBy"
+          placeholder="Select option"
+          optionLabel="label"
+          class="w-full mt-1"
+          [filter]="true"
+          [showClear]="true">
+        </p-dropdown>
+      </div>
+
+      <!-- Remarks -->
+      <div class="col-span-12 md:col-span-4">
+        <label
+          class="flex items-center gap-2 text-sm font-semibold text-gray-700">
+          <i class="pi pi-comment text-violet-500"></i> Remarks <span
+            class="text-red-500">*</span>
+        </label>
+        <textarea rows="2" formControlName="Remarks"
+          class="w-full mt-1 p-2.5 rounded-md border border-gray-300 hover:border-blue-400 focus:ring-2 focus:ring-blue-500 transition"></textarea>
+      </div>
+
       <!-- File Upload -->
       <div class="col-span-12 md:col-span-4">
         <label
@@ -264,7 +260,6 @@
           Size: 1MB</p>
       </div>
     </form>
-
     <!-- Buttons -->
     <div
       class="flex flex-col sm:flex-row justify-end items-stretch sm:items-center gap-3 mt-6">
@@ -273,10 +268,9 @@
       <button
         type="submit"
         (click)="onSave()"
-        [disabled]="fuelForm.invalid"
         class="px-5 py-2.5 rounded-md font-semibold w-full sm:w-auto
            bg-purple-600 text-white hover:bg-purple-700 
-           disabled:bg-gray-400 disabled:text-gray-200 disabled:cursor-not-allowed transition">
+          ">
         <i class="pi pi-save p-1"></i> Save
       </button>
 
@@ -284,14 +278,13 @@
       <button
         type="button"
         (click)="onSaveAndAddAnother()"
-        [disabled]="fuelForm.invalid"
         class="px-5 py-2.5 rounded-md font-semibold w-full sm:w-auto
            bg-gray-600 text-white hover:bg-gray-700 
-           disabled:bg-gray-400 disabled:text-gray-200 disabled:cursor-not-allowed transition">
+           ">
         <i class="pi pi-plus-circle p-1"></i> Save & Add Another
       </button>
 
     </div>
-
   </div>
+
 </div>

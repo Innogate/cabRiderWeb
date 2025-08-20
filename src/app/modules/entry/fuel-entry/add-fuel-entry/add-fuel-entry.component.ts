@@ -75,6 +75,11 @@ export class AddFuelEntryComponent {
     { label: 'Mumbai - Andheri West', value: 'Mumbai - Andheri West' },
   ];
 
+  fullTankOptions = [
+    { label: 'Yes', value: true },
+    { label: 'No', value: false }
+  ];
+
   // File Upload Handler
   onFileSelect(event: any) {
     const file = event.target.files[0];
