@@ -64,7 +64,6 @@ export class InvoiceEyesShowComponent implements OnInit {
       ) {
         this.taxableCharges = (msg.data?.taxable || []).map((c: any, idx: number) => ({
           ...c,
-          bookingNo: this.selectedInvoice?.BillNo || '-',
           date: this.selectedInvoice?.BillDate || '-',
           sno: idx + 1
         }));
@@ -84,7 +83,6 @@ export class InvoiceEyesShowComponent implements OnInit {
       ) {
         this.nonTaxableCharges = (msg.data?.nonTaxable || []).map((c: any, idx: number) => ({
           ...c,
-          bookingNo: this.selectedInvoice?.BillNo || '-',
           date: this.selectedInvoice?.BillDate || '-',
           sno: idx + 1
         }));
