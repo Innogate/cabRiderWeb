@@ -18,6 +18,7 @@ import { FileUploadModule } from 'primeng/fileupload';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { SweetAlertService } from '../../../services/sweet-alert.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-driver-master',
@@ -32,6 +33,7 @@ import { SweetAlertService } from '../../../services/sweet-alert.service';
     FileUploadModule,
     CommonModule,
     HttpClientModule],
+  providers: [DatePipe],
   templateUrl: './driver-master.component.html',
   styleUrl: './driver-master.component.css'
 })
@@ -65,7 +67,8 @@ export class DriverMasterComponent implements OnInit, OnDestroy, AfterViewInit {
     private messageService: MessageService,
     private router: Router,
     private fb: FormBuilder,
-    private swal: SweetAlertService
+    private swal: SweetAlertService,
+    private Datepipe: DatePipe
   ) {
     this.form = this.fb.group({
       id: [],
@@ -136,6 +139,14 @@ export class DriverMasterComponent implements OnInit, OnDestroy, AfterViewInit {
       }
       return true;
     });
+    this.form.get('enable_login')?.valueChanges.subscribe(checked => {
+    if (!checked) {
+      this.form.patchValue({
+        username: '',
+        password: ''
+      });
+    }
+  });
   }
 
 
@@ -218,8 +229,12 @@ export class DriverMasterComponent implements OnInit, OnDestroy, AfterViewInit {
         whatsappno: String(this.form.value.whatsappno ?? ''),
         mobileno: String(this.form.value.mobileno ?? ''),
         bank_actype: this.form.value.bank_actype,
-
+        enable_login: this.form.value.enable_login ? 1 : 0
       };
+      if (!this.form.value.enable_login) {
+      value.username = '';
+      value.password = '';
+    }
       this.messageService.add({ severity: 'contrast', summary: 'Info', detail: 'Please wait processing...' });
       console.log("Value", value)
       this.driverMasterService.CreateUpdateDriver(value);
@@ -231,15 +246,22 @@ export class DriverMasterComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private editUser(user: any) {
     if (user) {
+      console.log(user)
       this.header = 'Update Driver'
       this.showForm = !this.showForm;
       const city = this.cityList.find(c => c.Id === user.city_id);
       this.form.patchValue({
         ...user,
-        city_id: city
-      })
+        city_id: city,
+        drv_license_expdate: this.Datepipe.transform(user.drv_license_expdate, 'dd-MM-yyyy'),
+        enable_login: user.enable_login === 1 || user.enable_login === true || user.enable_login === 'true',
+        username: user.username,
+        password: user.password
+      }) 
     }
   }
+
+  
 
   private deleteUser(user: any) {
     // this.messageService.add({ severity: 'contrast', summary: 'Info', detail: 'Please wait processing...' });
