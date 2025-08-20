@@ -13,7 +13,7 @@
 
   <!-- Filters Section -->
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 bg-blue-50 p-5 rounded-xl border border-blue-100 mb-6">
-    
+
     <!-- Company Filter -->
     <div>
       <label for="company" class="block text-sm font-medium text-gray-700 mb-1">Company</label>
@@ -49,19 +49,19 @@
 
   <!-- Invoice Table -->
   <div class="overflow-x-auto">
-    <p-table #table 
-    [value]="invoices" 
-    [loading]="table_loading" 
-    [paginator]="true" 
+    <p-table #table
+    [value]="invoices"
+    [loading]="table_loading"
+    [paginator]="true"
     [rows]="data_count"
-    [responsiveLayout]="'scroll'" 
-    [showGridlines]="true" 
-    [stripedRows]="true" 
-    [scrollable]="true" 
+    [responsiveLayout]="'scroll'"
+    [showGridlines]="true"
+    [stripedRows]="true"
+    [scrollable]="true"
     scrollHeight="flex"
-    scrollDirection="both" 
-    [totalRecords]="invoices_count" 
-    (onLazyLoad)="loadData($event)" 
+    scrollDirection="both"
+    [totalRecords]="invoices_count"
+    (onLazyLoad)="loadData($event)"
     [lazy]="is_lazy_load"
     class="p-datatable-sm text-sm font-sans"
     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries">
@@ -100,7 +100,7 @@
           <td>
             <div
               class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-blue-100 text-blue-700 text-sm border border-blue-300 cursor-pointer hover:shadow-md"
-              (click)="openOtherCharges(invoice)">
+              (click)="openOtherCharges(invoice, 'taxable')">
               <i class="pi pi-eye text-blue-700"></i>
               <span>{{ invoice.OtherCharges ?? "0" }}</span>
             </div>
@@ -111,7 +111,7 @@
           <td>
             <div
               class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-green-100 text-green-700 text-sm border border-green-300 cursor-pointer hover:shadow-md"
-              (click)="openOtherCharges(invoice)">
+              (click)="openOtherCharges(invoice, 'nonTaxable')">
               <i class="pi pi-eye text-green-700"></i>
               <span>{{ invoice.OtherCharges2 ?? "0" }}</span>
             </div>
@@ -158,7 +158,7 @@
 </div>
 
 <app-invoice-eyes-show *ngIf="show_other_charges" [selectedInvoice]="selected_invoice" [id]="invoices"
-  (close)="show_other_charges = false"></app-invoice-eyes-show>
+  (close)="show_other_charges = false" [chargeType]="selectedChargeType"></app-invoice-eyes-show>
 
 <!-- payment-received.component.html -->
 <p-dialog header="Payment Received" [(visible)]="show_dialog" [modal]="true" [closable]="true"
@@ -194,15 +194,15 @@
     </div>
 
     <!-- Scrollable Table -->
-    <p-table 
-    [value]="payments" 
-    scrollable 
-    scrollHeight="250px" 
+    <p-table
+    [value]="payments"
+    scrollable
+    scrollHeight="250px"
     class="p-datatable-sm rounded-xl overflow-hidden shadow"
-    [style]="{ minWidth: '100%' }" 
-    [rows]="rows" 
+    [style]="{ minWidth: '100%' }"
+    [rows]="rows"
     [globalFilterFields]="['voucherNo', 'amount']"
-    [responsiveLayout]="'scroll'" 
+    [responsiveLayout]="'scroll'"
     emptyMessage="No data available">
       <ng-template pTemplate="header">
         <tr class="bg-blue-700 text-white text-center text-sm">

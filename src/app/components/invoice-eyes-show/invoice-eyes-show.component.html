@@ -2,7 +2,7 @@
   [(visible)]="display"
   [modal]="true"
   [closable]="true"
-  header="Other Charges"
+  [header]="chargeType == 'taxable' ? 'Taxable Other Charges' : 'Non-Taxable Other Charges'"
   [style]="{ width: '65vw', marginTop: '0px' }"
   [contentStyle]="{ padding: '0', margin: '0' }"
   [baseZIndex]="10000"
@@ -30,7 +30,7 @@
       <ng-template pTemplate="body" let-charge let-i="rowIndex">
         <tr class="text-center hover:bg-blue-100 transition duration-200">
           <td class="py-2 font-semibold">{{ i + 1 }}</td>
-          <td>{{ charge.bookingNo }}</td>
+          <td>{{ charge.SlipNo }}</td>
           <td>{{ charge.date }}</td>
           <td>{{ charge.charge_name }}</td>
           <td class="text-green-600 font-bold">₹ {{ charge.total_amount }}</td>

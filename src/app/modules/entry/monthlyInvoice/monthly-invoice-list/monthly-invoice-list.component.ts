@@ -56,7 +56,7 @@ export class MonthlyInvoiceListComponent implements OnInit {
   selected_company: any = null;
   search_text: string = '';
   selected_invoice: any = null;
-  
+
 
   data_count: number = 10;
   table_loading: boolean = true;
@@ -68,6 +68,7 @@ export class MonthlyInvoiceListComponent implements OnInit {
 
   display_dialog = false;
   show_other_charges = false;
+  selectedChargeType: 'taxable' | 'nonTaxable' = 'taxable';
 
   constructor(
     private _invoice: InvoiceService,
@@ -142,10 +143,13 @@ export class MonthlyInvoiceListComponent implements OnInit {
     this.router.navigate(['/monthly-invoice-create']);
   }
 
-  openOtherCharges(invoice: any) {
+
+  openOtherCharges(invoice: any, type: 'taxable' | 'nonTaxable') {
     this.selected_invoice = { ...invoice };
+    this.selectedChargeType = type;
     this.show_other_charges = true;
   }
+
 
   editInvoice(invoice: any) {
     this.router.navigate(['/monthly-invoice-create'], {
