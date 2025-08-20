@@ -7,6 +7,7 @@ import { MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
 import { globalRequestHandler } from '../../../utils/global';
 import { companyMasterService } from '../../../services/companyMaster.service';
+import { SweetAlertService } from '../../../services/sweet-alert.service';
 
 @Component({
   selector: 'app-company-master',
@@ -25,13 +26,14 @@ export class CompanyMasterComponent implements OnInit, OnDestroy, AfterViewInit 
   partyname: any[] = [];
   tablevalue: any;
   comonApiService: any;
+  companylist: any[] = [];
 
   constructor(
     private companyMasterService: companyMasterService,
     private router: Router,
     private messageService: MessageService,
-    private fb: FormBuilder
-
+    private fb: FormBuilder,
+    private swal: SweetAlertService
   ) {
     this.createForm();
   }
@@ -39,11 +41,11 @@ export class CompanyMasterComponent implements OnInit, OnDestroy, AfterViewInit 
   createForm() {
     this.form = this.fb.group({
       active: ['Y'],
-      companyName: ['', [Validators.required,Validators.minLength(3),Validators.pattern('^[A-Za-z ]{3,}$')]],
-      ShortName: ['', Validators.required],
+      companyName: ['', [Validators.minLength(3),Validators.pattern('^[A-Za-z ]{3,}$')]],
+      ShortName: ['',],
       companyAddress: [''],
       companyCity: [''],
-      companyPhone: [''],
+      companyPhone: ['', [Validators.pattern('^[6-9][0-9]{9}$')]],
       companyEmail: ['', [Validators.email]],
       companyWebsite: [''],
       Tally_CGSTAcName: [''],
@@ -52,21 +54,21 @@ export class CompanyMasterComponent implements OnInit, OnDestroy, AfterViewInit 
       Tally_RndOffAcName: [''],
       Tally_CarRentPurchaseAc: [''],
       Tally_CarRentSaleAc: [''],
-      companyGSTNo: [''],
-      companyPANNo: [''],
-      companyCINNo: [''],
+      companyGSTNo: ['', [Validators.pattern('^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$')]],
+      companyPANNo: ['', [Validators.pattern('^[A-Z]{5}[0-9]{4}[A-Z]{1}$')]],
+      companyCINNo: ['', [Validators.pattern('^[LU][0-9]{5}[A-Z]{2}[0-9]{4}[A-Z]{3}[0-9]{6}$')]],
       Udyam: [''],
-      HSNCode: [''],
+      HSNCode: ['', [Validators.pattern('^[0-9]{4,8}$')]],
       companyCGST: [''],
       companySGST: [''],
       companyIGST: [''],
       Tally_PurVouchType: [''],
       Tally_SaleVouchType: [''],
-      companyBenificaryName: [''],
-      companyBankAccountNo: [''],
+      companyBenificaryName: ['', [Validators.minLength(3),Validators.pattern('^[A-Za-z ]{3,}$')]],
+      companyBankAccountNo: ['', [Validators.pattern('^[0-9]{9,18}$')]],
       companyBankAddress: [''],
       companyBankName: [''],
-      companyBankIFSC: [''],
+      companyBankIFSC: ['', [Validators.pattern('^[A-Z]{4}0[A-Z0-9]{6}$')]],
       id: [0],
     });
   }
@@ -85,7 +87,7 @@ export class CompanyMasterComponent implements OnInit, OnDestroy, AfterViewInit 
     this.companyMasterService.unregisterPageHandler();
     this.comonApiService.unregisterPageHandler();
   }
-  ngOnInit(): void {
+ngOnInit(): void {
     this.companyMasterService.registerPageHandler((msg) => {
       console.log(msg);
       globalRequestHandler(msg, this.router, this.messageService);
@@ -110,6 +112,13 @@ export class CompanyMasterComponent implements OnInit, OnDestroy, AfterViewInit 
           this.messageService.add({ severity: 'error', summary: 'Error', detail: msg.StatusMessage });
         }
 
+      }else if (msg.for == 'deleteData') {
+        if (msg.StatusID === 1) {
+          const index = this.companylist.findIndex((v: any) => v.id == this.tablevalue.id);
+          if (index !== -1) {
+            this.companylist.splice(index, 1);
+          }
+        }
       }
       return true;
     });
@@ -131,26 +140,26 @@ export class CompanyMasterComponent implements OnInit, OnDestroy, AfterViewInit 
     { icon: 'pi pi-pencil', action: 'edit', styleClass: 'p-button-warning' },
     { icon: 'pi pi-trash', action: 'delete', styleClass: 'p-button-danger' }
   ];
-  handleAction(event: { action: string, data: any }) {
+  async handleAction(event: { action: string, data: any }) {
     switch (event.action) {
       case 'edit':
         this.showForm = true;
         this.isEditMode = true;
         this.heading = 'UPDATE COMPANY';
-        console.log("edit");
-        const partyname = this.partyname.find(partyname => partyname.Id == event.data.party_name);
-        this.form.patchValue({
-          ...event.data,
-          party_name: partyname
-        })
+        this.editcompany(event.data);
         break;
       case 'delete':
-        console.log("delete")
+        const status = await this.swal.confirmDelete("You want to delete this !");
+        if (status) {
+                this.messageService.add({ severity: 'contrast', summary: 'Info', detail: 'Please wait processing...' });
+
+          this.deleteUser(event.data);
+          this.tablevalue = event.data
+        }
         break;
       case 'add':
         this.showForm = true;
         this.heading = 'ADD COMPANY';
-        this.isEditMode = false;
         console.log("add");
         this.form.reset();
         break;
@@ -170,5 +179,41 @@ export class CompanyMasterComponent implements OnInit, OnDestroy, AfterViewInit 
      this.companyMasterService.createUpdateCompany(payload)
    
   }
+   private editcompany(data: any) {
+    if (data) {
+      this.form.reset();
+      this.form.patchValue({
+        companyName: data.Name,
+        companyAddress: data.Address,
+        companyCity: data.City,
+        companyPhone: data.Phone,
+        companyEmail: data.Email,
+        companyWebsite: data.Website,
+        companyBenificaryName: data.companyBenificaryName,
+        companyBankAccountNo: data.companyBankAccountNo,
+        companyBankAddress: data.companyBankAddress,
+        companyBankName: data.companyBankName,
+        companyBankIFSC: data.companyBankIFSC,
+        companyGSTNo: data.companyGSTNo,
+        companyPANNo: data.companyPANNo,
+        companyCINNo: data.companyCINNo,
+        
+        ...data
+      })
+    }
+  }
 
+   private deleteCompany(user: any) {
+    this.messageService.add({ severity: 'contrast', summary: 'Info', detail: 'Please wait processing...' });
+    const payload = {
+      id: user.id
+    }
+    this.comonApiService.deleteData(payload)
+  }
+  private deleteUser(user: any) {
+    const payload = {
+      id: user.id
+    }
+    this.comonApiService.deleteData(payload)
+  }
 }
