@@ -93,66 +93,66 @@
           <th class="py-3 px-4">SL. No.</th>
           <th class="py-3 px-4">Branch</th>
           <th class="py-3 px-4">Date</th>
-          <th class="py-3 px-4">Reference No./th>
-            <th class="py-3 px-4">City</th>
-            <th class="py-3 px-4">Kilometer</th>
-            <th class="py-3 px-4">Fuel Type</th>
-            <th class="py-3 px-4">Quantity(ltr)</th>
-            <th class="py-3 px-4">Rate</th>
-            <th class="py-3 px-4">Amount</th>
-            <th class="py-3 px-4">Advance</th>
-            <th class="py-3 px-4">Paid By</th>
-            <th class="py-3 px-4">Pay Mode</th>
-            <th class="py-3 px-4">Driver</th>
-            <th class="py-3 px-4">Vendor</th>
-            <th class="py-3 px-4">Action</th>
-          </tr>
-        </ng-template>
+          <th class="py-3 px-4">Reference No.</th>
+          <th class="py-3 px-4">City</th>
+          <th class="py-3 px-4">Kilometer</th>
+          <th class="py-3 px-4">Fuel Type</th>
+          <th class="py-3 px-4">Quantity(ltr)</th>
+          <th class="py-3 px-4">Rate</th>
+          <th class="py-3 px-4">Amount</th>
+          <th class="py-3 px-4">Advance</th>
+          <th class="py-3 px-4">Paid By</th>
+          <th class="py-3 px-4">Pay Mode</th>
+          <th class="py-3 px-4">Driver</th>
+          <th class="py-3 px-4">Vendor</th>
+          <th class="py-3 px-4">Action</th>
+        </tr>
+      </ng-template>
 
-        <ng-template pTemplate="body" let-invoice let-i="rowIndex">
-          <tr class="hover:bg-gray-50 transition-all">
-            <td class="py-3 px-4">{{ i + 1 }}</td>
-            <td class="py-3 px-4">{{ invoice.branch }}</td>
-            <td class="py-3 px-4">{{ invoice.invoiceNo }}</td>
-            <td class="py-3 px-4">{{ invoice.invoiceDate }}</td>
-            <td class="py-3 px-4">{{ invoice.party }}</td>
-            <td class="py-3 px-4">{{ invoice.city }}</td>
-            <td class="py-3 px-4">{{ invoice.grossAmount }}</td>
-            <td class="py-3 px-4">
+      <ng-template pTemplate="body" let-invoice let-i="rowIndex">
+        <tr class="hover:bg-gray-50 transition-all">
+          <td class="py-3 px-4">{{ i + 1 }}</td>
+          <td class="py-3 px-4">{{ invoice.branch }}</td>
+          <td class="py-3 px-4">{{ invoice.invoiceNo }}</td>
+          <td class="py-3 px-4">{{ invoice.invoiceDate }}</td>
+          <td class="py-3 px-4">{{ invoice.party }}</td>
+          <td class="py-3 px-4">{{ invoice.city }}</td>
+          <td class="py-3 px-4">{{ invoice.grossAmount }}</td>
+          <td class="py-3 px-4">
 
-            </td>
-            <td class="py-3 px-4">{{ invoice.cgst }}</td>
-            <td class="py-3 px-4">{{ invoice.sgst }}</td>
-            <td class="py-3 px-4">{{ invoice.igst }}</td>
-            <td class="py-3 px-4">
+          </td>
+          <td class="py-3 px-4">{{ invoice.cgst }}</td>
+          <td class="py-3 px-4">{{ invoice.sgst }}</td>
+          <td class="py-3 px-4">{{ invoice.igst }}</td>
+          <td class="py-3 px-4">
 
-            </td>
-            <td class="py-3 px-4 font-semibold text-green-700">{{
-              invoice.netAmount }}</td>
-            <td class="py-3 px-4">{{ invoice.lessFuelAdvance }}</td>
-            <td class="py-3 px-4 font-semibold text-blue-700">{{
-              invoice.dueBalance }}</td>
-            <td>
-              <div class="flex flex-wrap gap-2 justify-center">
-                <!-- Row 1 -->
-                <div class="flex gap-2 mb-1">
-                  <button
-                    pButton
-                    icon="pi pi-pencil"
-                    pTooltip="Update"
-                    tooltipStyleClass="text-[10px] !important "
-                    class="p-button-sm p-button-rounded p-button-warning p-2 text-xs hover:scale-105 transition-transform shadow"></button>
-                  <button
-                    pButton
-                    pTooltip="Delete"
-                    tooltipStyleClass="text-[10px] !important "
-                    icon="pi pi-trash"
-                    class="p-button-sm p-button-rounded p-button-danger p-2 text-xs hover:scale-105 transition-transform shadow"></button>
-                </div>
+          </td>
+          <td class="py-3 px-4 font-semibold text-green-700">{{
+            invoice.netAmount }}</td>
+          <td class="py-3 px-4">{{ invoice.lessFuelAdvance }}</td>
+          <td class="py-3 px-4 font-semibold text-blue-700">{{
+            invoice.dueBalance }}</td>
+          <td>
+            <div class="flex flex-wrap gap-2 justify-center">
+              <!-- Row 1 -->
+              <div class="flex gap-2 mb-1">
+                <button
+                  pButton
+                  icon="pi pi-pencil"
+                  pTooltip="Update"
+                  tooltipStyleClass="text-[10px] !important "
+                  class="p-button-sm p-button-rounded p-button-warning p-2 text-xs hover:scale-105 transition-transform shadow"></button>
+                <button
+                  pButton
+                  pTooltip="Delete"
+                  tooltipStyleClass="text-[10px] !important "
+                  icon="pi pi-trash"
+                  class="p-button-sm p-button-rounded p-button-danger p-2 text-xs hover:scale-105 transition-transform shadow"></button>
               </div>
-            </td>
-          </tr>
-        </ng-template>
-      </p-table>
-    </div>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
   </div>
+</div>

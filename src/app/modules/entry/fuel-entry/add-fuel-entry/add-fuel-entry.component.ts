@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { Router } from '@angular/router';
@@ -17,22 +17,22 @@ export class AddFuelEntryComponent {
 
   constructor(private fb: FormBuilder, private router: Router) {
     this.fuelForm = this.fb.group({
-      Branch: [''],
-      Date: [''],
-      Kilometer: [''],
-      FuelType: [''],
-      Fuel: [''],
-      Rate: [''],
-      Amount: [''],
-      Advance: [''],
-      PurchaseFrom: [''],
-      Driver: [''],
+      Branch: ['', Validators.required],
+      Date: ['', Validators.required],
+      Kilometer: ['', [Validators.required, Validators.min(1)]],
+      FuelType: ['', Validators.required],
+      Fuel: ['', [Validators.required, Validators.min(1)]],
+      Rate: ['', [Validators.required, Validators.min(0.1)]],
+      Amount: ['', [Validators.required, Validators.min(1)]],
+      Advance: ['', [Validators.min(0)]],
+      PurchaseFrom: ['', Validators.required],
+      Driver: ['', Validators.required],
       Remarks: [''],
       ReferenceNo: [''],
-      City: [''],
-      PaidBy: [''],
+      City: ['', Validators.required],
+      PaidBy: ['', Validators.required],
       FullTank: [false],
-      PayMode: [''],
+      PayMode: ['', Validators.required],
       AttFile: [null],
     });
   }
@@ -84,12 +84,20 @@ export class AddFuelEntryComponent {
 
   // Save Button
   onSave() {
+    if (this.fuelForm.invalid) {
+      this.fuelForm.markAllAsTouched(); // show validation errors
+      return;
+    }
     console.log('Fuel Form Values:', this.fuelForm.value);
     this.fuelForm.reset();
   }
 
   // Save & Add Another
   onSaveAndAddAnother() {
+    if (this.fuelForm.invalid) {
+      this.fuelForm.markAllAsTouched();
+      return;
+    }
     console.log('Fuel Form Values (Save & Add Another):', this.fuelForm.value);
     this.fuelForm.reset({
       FullTank: false,
