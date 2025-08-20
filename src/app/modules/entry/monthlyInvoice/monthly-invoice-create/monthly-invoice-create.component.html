@@ -1,6 +1,6 @@
 <div class="p-6 m-6 rounded-2xl border border-blue-300 shadow-lg bg-gradient-to-r from-white to-blue-50">
   <div class="w-full h-full">
-    
+
     <!-- 📄 Header -->
     <div class="flex flex-wrap items-center gap-4 mb-6">
       <div class="w-14 h-14 rounded-full bg-blue-100 flex items-center justify-center shadow-lg">
@@ -18,21 +18,21 @@
     <!-- 🧾 Form -->
     <form [formGroup]="invoiceForm" class="p-6 bg-white rounded-2xl border">
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-        
-        
+
+
         <!-- Company select -->
         <div>
           <label class="block text-gray-700 font-semibold mb-1">
             <i class="pi pi-building text-blue-500 mr-2"></i>Select Company
           </label>
-          <p-autoComplete 
-            [suggestions]="filtered_companies" 
+          <p-autoComplete
+            [suggestions]="filtered_companies"
             (completeMethod)="filterCompany($event)"
-            (onSelect)="onCompanySelect($event)" 
-            field="Name" 
+            (onSelect)="onCompanySelect($event)"
+            field="Name"
             [(ngModel)]="selected_company"
-            [ngModelOptions]="{ standalone: true }" 
-            [dropdown]="true" 
+            [ngModelOptions]="{ standalone: true }"
+            [dropdown]="true"
             [forceSelection]="true">
           </p-autoComplete>
         </div>
@@ -43,14 +43,14 @@
           <label class="block text-gray-700 font-semibold mb-1">
             <i class="pi pi-sitemap text-purple-500 mr-2"></i>Select Branch
           </label>
-          <p-autoComplete 
-            [suggestions]="brunch_suggestions" 
+          <p-autoComplete
+            [suggestions]="brunch_suggestions"
             (completeMethod)="filterBranches($event)"
-            (onSelect)="onBranchSelect($event)" 
-            field="branch_name" 
+            (onSelect)="onBranchSelect($event)"
+            field="branch_name"
             [(ngModel)]="selected_branch"
-            [ngModelOptions]="{ standalone: true }" 
-            [dropdown]="true" 
+            [ngModelOptions]="{ standalone: true }"
+            [dropdown]="true"
             [forceSelection]="true">
           </p-autoComplete>
         </div>
@@ -62,13 +62,13 @@
           <label class="block text-gray-700 font-semibold mb-1">
             <i class="pi pi-users text-green-500 mr-2"></i>Select Party
           </label>
-          <p-autoComplete 
-            [suggestions]="party_suggestions" 
+          <p-autoComplete
+            [suggestions]="party_suggestions"
             (completeMethod)="filterPartyName($event)"
-            (onSelect)="onPartyNameSelect($event)" 
+            (onSelect)="onPartyNameSelect($event)"
             [(ngModel)]="selected_party"
-            [ngModelOptions]="{ standalone: true }" 
-            field="party_name" 
+            [ngModelOptions]="{ standalone: true }"
+            field="party_name"
             [dropdown]="true"
             placeholder="Party *">
           </p-autoComplete>
@@ -80,14 +80,14 @@
           <label class="block text-gray-700 font-semibold mb-1">
             <i class="pi pi-map-marker text-red-500 mr-2"></i>Select City
           </label>
-          <p-autoComplete 
-            [suggestions]="city_suggestions" 
+          <p-autoComplete
+            [suggestions]="city_suggestions"
             (completeMethod)="filterCities($event)"
-            (onSelect)="onCitySelect($event)" 
-            field="CityName" 
+            (onSelect)="onCitySelect($event)"
+            field="CityName"
             [(ngModel)]="selected_city"
-            [ngModelOptions]="{ standalone: true }" 
-            [dropdown]="true" 
+            [ngModelOptions]="{ standalone: true }"
+            [dropdown]="true"
             [forceSelection]="true">
           </p-autoComplete>
         </div>
@@ -100,12 +100,12 @@
           <p-autoComplete
             [(ngModel)]="selected_monthly_setup_code"
             [ngModelOptions]="{ standalone: true }"
-            [suggestions]="filteredCodes"
-            (completeMethod)="filterCodes($event)"
+            [suggestions]="setup_code_suggestions"
+            (completeMethod)="filterDutySetupCodes($event)"
             (onSelect)="onCodeSelect($event)"
-            field="DutyNo" 
-            [dropdown]="true" 
-            [forceSelection]="true" 
+            field="DutyNo"
+            [dropdown]="true"
+            [forceSelection]="true"
             placeholder="Select Duty Code">
           </p-autoComplete>
         </div>

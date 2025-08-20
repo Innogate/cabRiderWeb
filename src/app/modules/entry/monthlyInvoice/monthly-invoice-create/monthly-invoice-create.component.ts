@@ -68,6 +68,24 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
     private _activatedRoute: ActivatedRoute
   ) { }
 
+  //Miscellaneous Variables
+  selectedShow: any;
+  show = [10, 50, 100, 500, 1000, 2000];
+  addDutyTableRowSize = 10;
+
+  dutyTypes = [
+    { label: 'DISPOSAL', value: '1' },
+    { label: 'OUTSTATION', value: '2' },
+    { label: 'PICKUP', value: '3' },
+    { label: 'DROP', value: '4' },
+  ];
+
+  charges = [
+    { name: 'Fuel Surcharge', amount: 200 },
+    { name: 'Driver Allowance', amount: 100 },
+  ];
+
+
   // Company Drop Down Needed
   companies: any[] = [];
   selected_company: any[] = [];
@@ -127,10 +145,10 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
   filterDutySetupCodes(event: any) {
     const query = event.query?.toLowerCase() || '';
     if (!this.monthly_duty_setup_codes || !Array.isArray(this.monthly_duty_setup_codes)) {
-      this.city_suggestions = [];
+      this.setup_code_suggestions = [];
       return;
     }
-    this.city_suggestions = this.monthly_duty_setup_codes.filter((codeObj) =>
+    this.setup_code_suggestions = this.monthly_duty_setup_codes.filter((codeObj) =>
       codeObj.DutyNo?.toLowerCase().includes(query)
     );
   }
@@ -148,15 +166,16 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
   });
 
 
-
-
-  sleetedBookingIds: any[] = [];
-  taxtype: any = 'cgst';
-  addDutyTableRowSize = 10;
   dutyTableDataView: any[] = [];
+  dutyTableData: any[] = [];
+  totalRecords = 0;
+  tableLoading = false;
+  partyInfo: any;
+  carTypes: any[] = [];
   invoiceData: any = {};
- async ngOnInit() {
+  isEditMode: boolean = false;
 
+ async ngOnInit() {
     this.commonApiService.registerPageHandler((msg) => {
       let rt = false;
       rt = globalRequestHandler(msg, this.router, this.messageService);
@@ -194,7 +213,6 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
         } else if(msg.for === 'minvoice.getBookingsListByMID'){
           rt = true;
           this.dutyTableData = msg.data;
-
           this.mainDutyList = msg.data;
           this.totalRecords = msg.total || 0;
           this.tableLoading = false;
@@ -206,10 +224,6 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
       }
       return rt;
     })
-
-    this.getAllCompany();
-    this.getAllCity();
-
 
 
     this._activatedRoute.queryParams.subscribe((params) => {
@@ -230,6 +244,8 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
     this.getAllParty();
     this.getCarTypeName();
     this.getAllMonthlySetupCode();
+    this.getAllCompany();
+    this.getAllCity();
 
     this.init();
     this.onPageChange({ first: 0, rows: 10 });
@@ -246,66 +262,7 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
     this._invoice.unregisterPageHandler();
   }
 
-  taxType = 'cgst';
-  rcm = 'no';
-  // Default bill date to today
-  billDate = new Date();
-  searchText: any;
-  selectedShow: any;
-  show = [10, 50, 100, 500, 1000, 2000];
-  displayDuty = false;
-
-  dutyTypes = [
-    { label: 'DISPOSAL', value: '1' },
-    { label: 'OUTSTATION', value: '2' },
-    { label: 'PICKUP', value: '3' },
-    { label: 'DROP', value: '4' },
-  ];
-
-
-  charges = [
-    { name: 'Fuel Surcharge', amount: 200 },
-    { name: 'Driver Allowance', amount: 100 },
-  ];
-
-  
-  // parties: any[] = [];
-  
-  carTypes: any[] = [];
-
-  dutyTableData: any[] = [];
-  tableLoading = false;
-  totalRecords = 0;
-  totalSelectedDays: number = 0;
-  totalSelectedKm: number = 0;
-  totalCalculatedAmount: number = 0;
-  totalTimeText: string = '';
-  extraHour: number = 0;
-  totalExtraHour: number = 0;
-
-  partyInfo: any;
-
-  invoices = [
-    {
-      selected: false,
-      siNo: 'DguGFIJKK',
-      slipNo: 'SLP001',
-      dutyType: 'Local',
-      carNo: 'KA-01-AB-1234',
-      carType: 'Sedan',
-      project: 'ABC Corp Project',
-      guestName: 'John Doe',
-      fromDate: '2025-07-10',
-      toDate: '2025-07-10',
-      fromTime: '09:00',
-      toTime: '18:00',
-      fromKm: 12000,
-      toKm: 12200,
-      totalTime: '9h',
-      totalKm: 200,
-      netAmount: 1500,
-    },
-  ];
+  invoices: any[] = [];
 
   init() {}
 
@@ -382,44 +339,6 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
     this._minvoice.getMonthlyBookingList(payload);
   }
 
-  isEditMode: boolean = false;
-
-
-  patchInvoice(invoice: any) {
-    const foundBranch = this.branches.find(
-      (branch) => branch.branch_name == invoice.branch
-    );
-    const foundParty = this.parties.find(
-      (p) => p.value === invoice.party_name
-    );
-    const foundCity = this.cities.find((c) => c.value === invoice.City);
-
-    this.selected_branch = foundBranch || null;
-    this.selected_party = foundParty || null;
-    this.selected_city = foundCity || null;
-
-    this.invoiceForm.patchValue({
-      id: invoice.id || '',
-      branch_id: foundBranch?.Id || null, // Use Id from matched branch
-      party_id: foundParty?.value || null,
-      city_id: foundCity?.value || null,
-      City: invoice.City || '',
-      duty_type: invoice.duty_type || '',
-      company_id: invoice.company_id || '',
-      branch: invoice.branch || '',
-      BillNo: invoice.BillNo || 'NEW',
-      BillDate: invoice.BillDate
-        ? new Date(invoice.BillDate.replace(/-/g, '/'))
-        : new Date(),
-      taxtype: invoice.taxtype ?? 'cgst',
-    });
-  }
-
-  // AutoComplete
-  
-  companyList: any[] = [];
-
-  
 
   // API CALLS
 
@@ -446,7 +365,6 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
   }
 
   carTypeSearch = '';
-
   getCarTypeName() {
     this.carTypeMaster.GateAllCarType({
       PageNo: 1,
@@ -498,13 +416,16 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
     }
   }
 
-  save() {
-    const formData = {
-      ...this.invoiceForm.value,
-      duties: this.invoices,
-    };
-  }
+  // save() {
+  //   const formData = {
+  //     ...this.invoiceForm.value,
+  //     duties: this.invoices,
+  //   };
+  // }
 
+
+  // Search Functionality
+   searchText: any;
   searchInvoices() {
     console.log('Searching invoices with text:', this.searchText);
     if (this.searchText) {
@@ -533,28 +454,13 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
     }
   }
 
-  addVendorInvoice() {
-    // Logic to add invoice
-  }
-
-  viewInvoice(invoice: any) {
-    // Logic to view invoice
-  }
-
-  editInvoice(invoice: any) {
-    // Logic to edit invoice
-  }
-
-  deleteInvoice(invoice: any) {
-    // Logic to delete invoice
-  }
 
   //ADD DUTY
 
   selectedDuties: any[] = []; // to store selected rows
-
   mainDutyList: any[] = []; // this holds the final duty list shown in main UI
-
+  sleetedBookingIds: any[] = [];
+  displayDuty = false;
   saveSelectedDuties() {
     const selected = this.dutyTableData.filter((item: any) => item.selected);
 
@@ -602,6 +508,7 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
     this.displayDuty = true;
   }
 
+  taxType = 'cgst';
   onTaxTypeChange(event: any) {
     this.taxType = event;
     this.cdr.detectChanges();
@@ -617,25 +524,22 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
     this.sleetedBookingIds = event.sleetedBookingIds;
   }
 
-  allSelected: boolean = false;
 
+   // PrimeNG onPage event handler
   currentPageRows: any[] = []; // only rows in current page
-
-  // PrimeNG onPage event handler
   onPageChange(event: any) {
     const start = event.first;
     const end = start + event.rows;
     this.currentPageRows = this.dutyTableData.slice(start, end);
-
     // sync header checkbox for current page
     this.checkIndividual();
   }
 
   // Select/unselect only current page rows
+  allSelected: boolean = false;
   toggleAll(event: any) {
     const checked = event.target.checked;
     this.allSelected = checked;
-
     this.currentPageRows.forEach((row) => {
       row.selected = checked;
     });
@@ -648,6 +552,7 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
       this.currentPageRows.every((row) => row.selected);
   }
 
+  // Patch the invoice data to the form
   async updatePathch(invoice: any) {
     console.log('Updating invoice with data:', invoice);
     this.invoiceForm = this.fb.group({
@@ -717,7 +622,7 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
         return code.id == invoice.monthly_duty_id;
       }
     )
-    
+
     // NOW TIME TO PATCH THE BOOKING DATA
     console.log("calling booking api");
     this._minvoice.getMonthlyInvoiceListByMID({
