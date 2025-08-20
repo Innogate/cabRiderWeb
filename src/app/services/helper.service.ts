@@ -46,6 +46,14 @@ export class HelperService extends BaseService {
     }
 
 
+  getTaxableOtherChargesForMonthlyInvoice(payload: any) {
+        this.call('helper.getTaxableOtherChargesForMonthlyInvoice', payload);
+    }
+
+    getNonTaxableOtherChargesForMonthlyInvoice(payload: any) {
+        this.call('helper.getNonTaxableOtherChargesForMonthlyInvoice', payload);
+    }
+
     protected handleMessage(msg: any): boolean {
         return false;
     }

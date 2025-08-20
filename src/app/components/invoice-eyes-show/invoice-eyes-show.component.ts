@@ -38,53 +38,93 @@ export class InvoiceEyesShowComponent implements OnInit {
   @Input() id: any[] = [];
   @Input() selectedInvoice: any;
   @Input() sleetedBookingIds?: any[];
+  @Input() chargeType: 'taxable' | 'nonTaxable' = 'taxable';
   @Output() close = new EventEmitter<void>();
 
   display = true;
   charges: any[] = [];
+  taxableCharges: any[] = [];
+  nonTaxableCharges: any[] = [];
 
   closeDialog() {
     this.display = false;
     this.close.emit();
   }
 
-  ngOnInit(): void {
-
-    this._helper.registerPageHandler((msg) => {
+ ngOnInit(): void {
+  this._helper.registerPageHandler((msg) => {
     let rt = false;
 
-    if (msg.for === 'getOtherChargesForMonthlyInvoice') {
-      const taxable = msg.data?.taxable || [];
-      const nonTaxable = msg.data?.nonTaxable || [];
+    if (msg.for) {
+      //  Handle both "old" and "new" taxable keys
+      if (
+        (msg.for === 'getTaxableOtherChargesForMonthlyInvoice' ||
+         msg.for === 'getOtherTaxableChargesUsingId') &&
+        this.chargeType === 'taxable'
+      ) {
+        this.taxableCharges = (msg.data?.taxable || []).map((c: any, idx: number) => ({
+          ...c,
+          bookingNo: this.selectedInvoice?.BillNo || '-',
+          date: this.selectedInvoice?.BillDate || '-',
+          sno: idx + 1
+        }));
+        console.log('Taxable Charges:', this.taxableCharges);
+         //  Push into common array
+        this.charges = [...this.taxableCharges];
+        console.log('Charges (Taxable):', this.charges);
+        rt = true;
 
-      // Merge and enrich data for table
-      this.charges = [...taxable, ...nonTaxable].map((c, idx) => ({
-        ...c,
-        bookingNo: this.selectedInvoice?.BillNo || '-',
-        date: this.selectedInvoice?.BillDate || '-',
-        sno: idx + 1
-      }));
+      }
 
-      console.log('Charges (final):', this.charges);
-
-      rt = true; // <-- Important, tells service “I handled this msg”
+      //  Handle both "old" and "new" non-taxable keys
+      else if (
+        (msg.for === 'getNonTaxableOtherChargesForMonthlyInvoice' ||
+         msg.for === 'getOtherNonTaxableChargesUsingId') &&
+        this.chargeType === 'nonTaxable'
+      ) {
+        this.nonTaxableCharges = (msg.data?.nonTaxable || []).map((c: any, idx: number) => ({
+          ...c,
+          bookingNo: this.selectedInvoice?.BillNo || '-',
+          date: this.selectedInvoice?.BillDate || '-',
+          sno: idx + 1
+        }));
+        console.log('Non-Taxable Charges:', this.nonTaxableCharges);
+        // Push into common array
+        this.charges = [...this.nonTaxableCharges];
+        console.log('Charges (Non-Taxable):', this.charges);
+        rt = true;
+      }
     }
 
     return rt;
   });
 
-    this.getcharges();
+  // Trigger first load
+  if (this.chargeType === 'taxable') {
+    this.getTaxableCharges();
+  } else {
+    this.getNonTaxableCharges();
   }
+}
 
- getcharges() {
+
+ getTaxableCharges() {
   // this._helper.getOtherChargesForMonthlyInvoice({ booking_entry_id })
   if (this.selectedInvoice?.id) {
     console.log('Fetching charges for invoice:', this.selectedInvoice.id);
-    this._helper.getOtherChargesForMonthlyInvoice({ booking_entry_id: this.selectedInvoice.id });
+    this._helper.getTaxableOtherChargesForMonthlyInvoice({ booking_entry_id: this.selectedInvoice.id });
   } else {
     console.error("No selected invoice to fetch charges for.");
   }
 }
 
+getNonTaxableCharges() {
+  if (this.selectedInvoice?.id) {
+    console.log('Fetching non-taxable charges for invoice:', this.selectedInvoice.id);
+    this._helper.getNonTaxableOtherChargesForMonthlyInvoice({ booking_entry_id: this.selectedInvoice.id });
+  } else {
+    console.error("No selected invoice to fetch non-taxable charges for.");
+  }
+}
 
 }

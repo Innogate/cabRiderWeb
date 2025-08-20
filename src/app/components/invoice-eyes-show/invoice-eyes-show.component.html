@@ -2,7 +2,7 @@
   [(visible)]="display"
   [modal]="true"
   [closable]="true"
-  header="Other Charges"
+  [header]="chargeType == 'taxable' ? 'Taxable Other Charges' : 'Non-Taxable Other Charges'"
   [style]="{ width: '65vw', marginTop: '0px' }"
   [contentStyle]="{ padding: '0', margin: '0' }"
   [baseZIndex]="10000"
