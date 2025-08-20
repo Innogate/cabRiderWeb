@@ -1,5 +1,5 @@
-import { AfterViewInit, Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { branchMasterService } from '../../../services/branchMaster.Service';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
@@ -7,13 +7,20 @@ import { globalRequestHandler } from '../../../utils/global';
 import { CommonModule } from '@angular/common';
 import { InputTextModule } from 'primeng/inputtext';
 import { DynamicTableComponent } from '../../../components/dynamic-table/dynamic-table.component';
-import { Dropdown, DropdownModule } from 'primeng/dropdown';
-import { AutoComplete } from 'primeng/autocomplete';
+import { DropdownModule } from 'primeng/dropdown';
+import { AutoCompleteModule } from 'primeng/autocomplete';
 import { CheckboxModule } from 'primeng/checkbox';
+import { commonService } from '../../../services/comonApi.service';
 
 @Component({
   selector: 'app-branch-master',
-  imports: [CommonModule,ReactiveFormsModule,InputTextModule,DynamicTableComponent,DropdownModule,AutoComplete,CheckboxModule],
+  imports: [CommonModule,
+    ReactiveFormsModule,
+    InputTextModule,
+    DynamicTableComponent,
+    DropdownModule,
+    AutoCompleteModule,
+    CheckboxModule],
   templateUrl: './branch-master.component.html',
   styleUrl: './branch-master.component.css'
 })
@@ -27,13 +34,18 @@ export class BranchMasterComponent implements OnInit,OnDestroy,AfterViewInit {
   heading: string='';
   form!: FormGroup;
   partyname: any[] = [];
+  cities: any[] = [];
+  filteredCities: any[] = [];
+  cityList: any[] = [{ Id: 0, CityName: '' }];
   tablevalue: any;
 
   constructor(
     private BranchMasterService: branchMasterService, 
     private router: Router,
     private messageService: MessageService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private commonService: commonService,
+
     
   ){
       this.createForm();
@@ -41,9 +53,29 @@ export class BranchMasterComponent implements OnInit,OnDestroy,AfterViewInit {
 
     createForm(){
       this.form = this.fb.group({
-         active: ['Y'],
-       
-         id: [0],
+      active: ['Y'],
+      branch_name: ['', [Validators.required, Validators.minLength(3), Validators.pattern(/^[a-zA-Z0-9 ]+$/)]],
+      address: [''],
+      city: [''],
+      state: [''],
+      pin_code: [''],
+      gst: [''],
+      pan: [''],
+      phone: [''],
+      email: [''],
+      short_name: [''],
+      smtp_host: [''],
+      smtp_username: [''],
+      smtp_password: [''],
+      smtp_email: ['', [ Validators.email]],
+      smtp_port: [''],
+      smtp_ssl: [true],
+      wp_token: [''],
+      sms_username: [''],
+      sms_password: [''], 
+      sms_sender: [''], 
+      footer: [''], 
+      id: [0],
       })
     }
 
@@ -55,6 +87,7 @@ export class BranchMasterComponent implements OnInit,OnDestroy,AfterViewInit {
       Search: "",
     };
     this.BranchMasterService.getAllbranch(payload);
+    this.commonService.GatAllCityDropDown({});
   }
   ngOnDestroy(): void {
     throw new Error('Method not implemented.');
@@ -66,8 +99,39 @@ export class BranchMasterComponent implements OnInit,OnDestroy,AfterViewInit {
         if (msg.for === "getAllBranch") {
           this.isLoading = false
           this.data = msg.data
-        } 
-        return true;
+        }  else if (msg.for == 'getAllCityDropdown') {
+        this.cityList = msg.data;
+       }else if (msg.for == 'createUpdateBranch') {
+        if (msg.StatusID === 1) {
+          const updated = msg.data[0];  // access the first item in data array
+
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: msg.StatusMessage });
+          this.showForm = false;
+          this.form.reset();
+
+          const index = this.data.findIndex((v: any) => v.id == updated.id);
+          if (index !== -1) {
+            this.data[index] = { ...updated };
+          } else {
+            this.data.push(updated)
+          }
+        } else {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: msg.StatusMessage });
+        }
+
+      }
+      else if (msg.for === "deleteData") {
+        if (msg.StatusMessage === "success") {
+          const index = this.data.findIndex((v: any) => v.id == this.tablevalue.id);
+          if (index !== -1) {
+            this.data.splice(index, 1);
+          } 
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: msg.StatusMessage })
+        } else {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: "Cannot Delete data" })
+        }
+      }
+      return true;
       });
   }
         // Define the columns for the dynamic table
@@ -111,6 +175,25 @@ export class BranchMasterComponent implements OnInit,OnDestroy,AfterViewInit {
       break;
     }
   }
+  filterCity(event: any) {
+    const query = event.query.toLowerCase();
+    this.filteredCities = this.cityList.filter(city =>
+      city.CityName.toLowerCase().includes(query)
+    );
+  }
 
+    saveBranch() {
+    if (this.form.invalid) {
+      this.form.touched
+      this.messageService.add({ severity: "warning", summary: "warning", detail: 'Invalid Form Data' })
+      return;
+    }
+    const payload = {
+      ...this.form.value,
+    }
+    console.log("form value", this.form.value);
+  }
 }
+
+
 

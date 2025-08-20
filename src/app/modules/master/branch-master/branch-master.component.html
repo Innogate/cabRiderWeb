@@ -4,7 +4,8 @@
     </app-dynamic-table>
 </div>
 <div class="min-h-screen  p-4" *ngIf="showForm">
-    <form [formGroup]="form" class="max-w-7xl mx-auto bg-white rounded-xl shadow-md overflow-hidden">
+    <form [formGroup]="form" class="max-w-7xl mx-auto bg-white rounded-xl shadow-md overflow-hidden"
+        (ngSubmit)="saveBranch()">
         <!-- Header -->
         <div class="bg-sky-700 px-6 py-4 rounded-t-lg flex justify-between items-center">
             <h1 class="text-2xl font-semibold text-white">
@@ -38,7 +39,12 @@
                                     <label class="block text-sm font-medium text-gray-700 mb-1">BRANCH NAME</label>
                                 </div>
                                 <input type="text" pInputText class="w-full border border-gray-300 rounded-lg p-3"
-                                    placeholder="Branch Name">
+                                    placeholder="Branch Name" formControlName="branch_name">
+                                <span
+                                    *ngIf="form.get('branch_name')?.touched && form.get('branch_name')?.errors?.['required']"
+                                    class="text-sm text-red-600">
+                                    Branch Name is required.
+                                </span>
                             </div>
 
                             <div>
@@ -47,7 +53,20 @@
                                     <label class="block text-sm font-medium text-gray-700 mb-1">SHORT NAME</label>
                                 </div>
                                 <input type="text" pInputText class="w-full border border-gray-300 rounded-lg p-3"
-                                    placeholder="Short Name">
+                                    placeholder="Short Name" formControlName="short_name">
+                                <span
+                                    *ngIf="form.get('short_name')?.touched && form.get('short_name')?.errors?.['required']"
+                                    class="text-sm text-red-600">Short Name is required.</span>
+                                <span
+                                    *ngIf="form.get('short_name')?.touched && form.get('short_name')?.errors?.['minlength']"
+                                    class="text-sm text-red-600">Minimum 2 characters required.</span>
+                                <span
+                                    *ngIf="form.get('short_name')?.touched && form.get('short_name')?.errors?.['maxlength']"
+                                    class="text-sm text-red-600">Maximum 10 characters allowed.</span>
+                                <span
+                                    *ngIf="form.get('short_name')?.touched && form.get('short_name')?.errors?.['pattern']"
+                                    class="text-sm text-red-600">Only letters and numbers allowed.</span>
+
                             </div>
                         </div>
                         <div class="w-full">
@@ -57,7 +76,7 @@
                             </div>
                             <textarea pInputTextarea
                                 class="w-full border border-gray-300 rounded-lg p-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                                placeholder="Enter Address" rows="3"></textarea>
+                                placeholder="Enter Address" rows="3" formControlName="address"></textarea>
                         </div>
 
                         <div>
@@ -67,18 +86,21 @@
                                         <i class="pi pi-map-marker text-green-600"></i>
                                         <label class="block text-sm font-medium text-gray-700 mb-1">CITY</label>
                                     </div>
-                                    <p-autoComplete field="SetupType" [dropdown]="true" placeholder="Select City"
-                                        class="w-full border border-indigo-200 rounded-md">
+                                    <p-autoComplete field="CityName" [dropdown]="true" placeholder="Select City"
+                                        (completeMethod)="filterCity($event)"
+                                        class="w-full border border-indigo-200 rounded-md"
+                                        [suggestions]="filteredCities" formControlName="city">
                                     </p-autoComplete>
                                 </div>
 
                                 <div>
                                     <div class="flex items-center space-x-2">
                                         <i class="pi pi-map text-green-700"></i>
-                                        <label class="block text-sm font-medium text-gray-700 mb-1">STATE NAME</label>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">STATE
+                                            NAME</label>
                                     </div>
                                     <input type="text" pInputText class="w-full border border-gray-300 rounded-lg p-3"
-                                        placeholder="State Name">
+                                        placeholder="State Name" formControlName="state">
                                 </div>
                             </div>
                         </div>
@@ -89,7 +111,7 @@
                                 <label class="block text-sm font-medium text-gray-700 mb-1">PIN CODE</label>
                             </div>
                             <input type="number" pInputText class="w-full border border-gray-300 rounded-lg p-3"
-                                placeholder="Pin Code">
+                                placeholder="Pin Code" formControlName="pin_code">
                         </div>
                     </div>
                 </div>
@@ -108,7 +130,12 @@
                                     <label class="block text-sm font-medium text-gray-700 mb-1">PHONE</label>
                                 </div>
                                 <input type="number" pInputText class="w-full border border-gray-300 rounded-lg p-3"
-                                    placeholder="Phone Number">
+                                    placeholder="Phone Number" formControlName="phone">
+                                <span *ngIf="form.get('phone')?.touched && form.get('phone')?.errors?.['pattern']"
+                                    class="text-sm text-red-600">
+                                    Enter a valid phone number (10 digits, optional +).
+                                </span>
+
                             </div>
                             <div>
                                 <div class="flex items-center space-x-2">
@@ -116,7 +143,22 @@
                                     <label class="block text-sm font-medium text-gray-700 mb-1">EMAIL</label>
                                 </div>
                                 <input type="text" pInputText class="w-full border border-gray-300 rounded-lg p-3"
-                                    placeholder="Email">
+                                    placeholder="Email" formControlName="email">
+                                <span *ngIf="form.get('email')?.touched && form.get('email')?.errors?.['required']"
+                                    class="text-sm text-red-600">
+                                    Email is required.
+                                </span>
+                                <span *ngIf="form.get('email')?.touched && form.get('email')?.errors?.['email']"
+                                    class="text-sm text-red-600">
+                                    Enter a valid email address.
+                                </span>
+
+
+                                <!-- Invalid Email -->
+                                <span *ngIf="form.get('email')?.touched && form.get('email')?.errors?.['email']"
+                                    class="text-sm text-red-600">
+                                    Please enter a valid email address.
+                                </span>
                             </div>
                         </div>
                         <div class="w-full">
@@ -126,7 +168,7 @@
                             </div>
                             <textarea pInputTextarea
                                 class="w-full border border-gray-300 rounded-lg p-5 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                                placeholder="Enter Footer" rows="3"></textarea>
+                                placeholder="Enter Footer" rows="3" formControlName="footer"></textarea>
                         </div>
                     </div>
                 </div>
@@ -142,22 +184,34 @@
                         <i class="pi pi-briefcase mr-2 text-red-900"></i>BUSINESS INFORMATION
                     </h2>
                     <div class="space-y-4">
-                        <div class="grid grid-cols-1 gap-2">
+                        <div class="grid grid-cols-2 gap-2">
                             <div>
                                 <div class="flex items-center space-x-2">
                                     <i class="pi pi-id-card text-green-700"></i>
                                     <label class="block text-sm font-medium text-gray-700 mb-1">GST</label>
                                 </div>
-                                <input type="number" pInputText class="w-full border border-gray-300 rounded-lg p-3"
-                                    placeholder="GST Number">
+                                <input type="text" pInputText
+                                    class="w-full border border-gray-300 rounded-lg p-3 text-uppercase uppercase"
+                                    placeholder="GST Number" formControlName="gst">
+                                <!-- GST Invalid -->
+                                <span *ngIf="form.get('gst')?.touched && form.get('gst')?.errors?.['pattern']"
+                                    class="text-sm text-red-600">
+                                    Please enter a valid GST number (15 characters, format: 22AAAAA0000A1Z5).
+                                </span>
                             </div>
                             <div>
                                 <div class="flex items-center space-x-2">
                                     <i class="pi pi-id-card text-green-700"></i>
                                     <label class="block text-sm font-medium text-gray-700 mb-1">PAN</label>
                                 </div>
-                                <input type="number" pInputText class="w-full border border-gray-300 rounded-lg p-3"
-                                    placeholder="PAN Number">
+                                <input type="text" pInputText
+                                    class="w-full border border-gray-300 rounded-lg p-3 text-uppercase uppercase"
+                                    placeholder="PAN Number" formControlName="pan">
+                                <span *ngIf="form.get('pan')?.touched && form.get('pan')?.errors?.['pattern']"
+                                    class="text-sm text-red-600">
+                                    Enter a valid PAN (e.g., ABCDE1234F).
+                                </span>
+
                             </div>
                         </div>
                     </div>
@@ -171,23 +225,38 @@
                         <h2 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b border-sky-400">
                             <i class="pi pi-envelope mr-2 text-red-900"></i>EMAIL (SMTP) INFORMATION
                         </h2>
-                        <div class="grid grid-cols-2 gap-2">
+                        <div class="grid grid-cols-1 gap-2">
                             <div>
                                 <div class="flex items-center space-x-2">
                                     <i class="pi pi-server text-green-700"></i>
                                     <label class="block text-sm font-medium text-gray-700 mb-1">SMTP Host</label>
                                 </div>
                                 <input type="text" pInputText class="w-full border border-gray-300 rounded-lg p-3"
-                                    placeholder="SMTP Host">
-                            </div>
+                                    placeholder="SMTP Host" formControlName="smtp_host">
+                                <span
+                                    *ngIf="form.get('smtp_host')?.touched && form.get('smtp_host')?.errors?.['required']"
+                                    class="text-sm text-red-600">SMTP Host is required.</span>
+                                <span
+                                    *ngIf="form.get('smtp_host')?.touched && form.get('smtp_host')?.errors?.['pattern']"
+                                    class="text-sm text-red-600">Invalid host name.</span>
 
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
                             <div>
                                 <div class="flex items-center space-x-2">
                                     <i class="pi pi-user text-green-700"></i>
                                     <label class="block text-sm font-medium text-gray-700 mb-1">SMTP Username</label>
                                 </div>
                                 <input type="text" pInputText class="w-full border border-gray-300 rounded-lg p-3"
-                                    placeholder="SMTP Username">
+                                    placeholder="SMTP Username" formControlName="smtp_username">
+                                <span
+                                    *ngIf="form.get('smtp_username')?.touched && form.get('smtp_username')?.errors?.['required']"
+                                    class="text-sm text-red-600">SMTP Username is required.</span>
+                                <span
+                                    *ngIf="form.get('smtp_username')?.touched && form.get('smtp_username')?.errors?.['pattern']"
+                                    class="text-sm text-red-600">Enter a valid email format.</span>
+
                             </div>
 
                             <div>
@@ -196,7 +265,14 @@
                                     <label class="block text-sm font-medium text-gray-700 mb-1">SMTP Password</label>
                                 </div>
                                 <input type="text" pInputText class="w-full border border-gray-300 rounded-lg p-3"
-                                    placeholder="SMTP Password">
+                                    placeholder="SMTP Password" formControlName="smtp_password">
+                                <span
+                                    *ngIf="form.get('smtp_password')?.touched && form.get('smtp_password')?.errors?.['required']"
+                                    class="text-sm text-red-600">SMTP Password is required.</span>
+                                <span
+                                    *ngIf="form.get('smtp_password')?.touched && form.get('smtp_password')?.errors?.['minlength']"
+                                    class="text-sm text-red-600">Password must be at least 6 characters.</span>
+
                             </div>
 
                             <div>
@@ -205,14 +281,38 @@
                                     <label class="block text-sm font-medium text-gray-700 mb-1">SMTP Port </label>
                                 </div>
                                 <input type="text" pInputText class="w-full border border-gray-300 rounded-lg p-3"
-                                    placeholder="SMTP Port">
+                                    placeholder="SMTP Port" formControlName="smtp_port">
+                                <span
+                                    *ngIf="form.get('smtp_port')?.touched && form.get('smtp_port')?.errors?.['required']"
+                                    class="text-sm text-red-600">SMTP Port is required.</span>
+                                <span *ngIf="form.get('smtp_port')?.touched && form.get('smtp_port')?.errors?.['min']"
+                                    class="text-sm text-red-600">Port must be at least 1.</span>
+                                <span *ngIf="form.get('smtp_port')?.touched && form.get('smtp_port')?.errors?.['max']"
+                                    class="text-sm text-red-600">Port cannot exceed 65535.</span>
+
                             </div>
 
                             <div>
                                 <div class="flex items-center space-x-2">
+                                    <i class="pi pi-sliders-h text-green-700"></i>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">SMTP Email </label>
+                                </div>
+                                <input type="text" pInputText class="w-full border border-gray-300 rounded-lg p-3"
+                                    placeholder="SMTP Email" formControlName="smtp_email">
+                                <span
+                                    *ngIf="form.get('smtp_email')?.touched && form.get('smtp_email')?.errors?.['required']"
+                                    class="text-sm text-red-600">SMTP Email is required.</span>
+                                <span
+                                    *ngIf="form.get('smtp_email')?.touched && form.get('smtp_email')?.errors?.['email']"
+                                    class="text-sm text-red-600">Enter a valid SMTP email.</span>
+
+
+                            </div>
+                            <div>
+                                <div class="flex items-center space-x-2">
                                     <i class="pi pi-shield text-green-700"></i>
                                     <label class="block text-sm font-medium text-gray-700 mb-1">SMTP SSL</label>
-                                    <p-checkbox binary="true"></p-checkbox>
+                                    <p-checkbox binary="true" formControlName="smtp_ssl"></p-checkbox>
                                 </div>
                             </div>
                         </div>
@@ -233,10 +333,18 @@
                                 <div>
                                     <div class="flex items-center space-x-2">
                                         <i class="pi pi-whatsapp text-green-700"></i>
-                                        <label class="block text-sm font-medium text-gray-700 mb-1">WHATSAPP TOKEN</label>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">WHATSAPP
+                                            TOKEN</label>
                                     </div>
                                     <input type="text" pInputText class="w-full border border-gray-300 rounded-lg p-3"
-                                        placeholder="WhatsApp Token">
+                                        placeholder="WhatsApp Token" formControlName="wp_token">
+                                    <span
+                                        *ngIf="form.get('wp_token')?.touched && form.get('wp_token')?.errors?.['required']"
+                                        class="text-sm text-red-600">WhatsApp Token is required.</span>
+                                    <span
+                                        *ngIf="form.get('wp_token')?.touched && form.get('wp_token')?.errors?.['minlength']"
+                                        class="text-sm text-red-600">Minimum 10 characters required.</span>
+
                                 </div>
 
                                 <div>
@@ -246,7 +354,14 @@
                                         </label>
                                     </div>
                                     <input type="text" pInputText class="w-full border border-gray-300 rounded-lg p-3"
-                                        placeholder="SMS Username">
+                                        placeholder="SMS Username" formControlName="sms_username">
+                                    <span
+                                        *ngIf="form.get('sms_username')?.touched && form.get('sms_username')?.errors?.['required']"
+                                        class="text-sm text-red-600">SMS Username is required.</span>
+                                    <span
+                                        *ngIf="form.get('sms_username')?.touched && form.get('sms_username')?.errors?.['pattern']"
+                                        class="text-sm text-red-600">Invalid SMS Username.</span>
+
                                 </div>
                             </div>
                             <div class="grid grid-cols-2 gap-2">
@@ -256,7 +371,14 @@
                                         <label class="block text-sm font-medium text-gray-700 mb-1">SMS Password</label>
                                     </div>
                                     <input type="text" pInputText class="w-full border border-gray-300 rounded-lg p-3"
-                                        placeholder="SMS Password">
+                                        placeholder="SMS Password" formControlName="sms_password">
+                                    <span
+                                        *ngIf="form.get('sms_password')?.touched && form.get('sms_password')?.errors?.['required']"
+                                        class="text-sm text-red-600">SMS Password is required.</span>
+                                    <span
+                                        *ngIf="form.get('sms_password')?.touched && form.get('sms_password')?.errors?.['minlength']"
+                                        class="text-sm text-red-600">Password must be at least 6 characters.</span>
+
                                 </div>
 
                                 <div>
@@ -265,7 +387,20 @@
                                         <label class="block text-sm font-medium text-gray-700 mb-1">SMS SENDER</label>
                                     </div>
                                     <input type="text" pInputText class="w-full border border-gray-300 rounded-lg p-3"
-                                        placeholder="SMS Sender">
+                                        placeholder="SMS Sender" formControlName="sms_sender">
+                                    <span
+                                        *ngIf="form.get('sms_sender')?.touched && form.get('sms_sender')?.errors?.['required']"
+                                        class="text-sm text-red-600">SMS Sender is required.</span>
+                                    <span
+                                        *ngIf="form.get('sms_sender')?.touched && form.get('sms_sender')?.errors?.['minlength']"
+                                        class="text-sm text-red-600">Minimum 3 characters required.</span>
+                                    <span
+                                        *ngIf="form.get('sms_sender')?.touched && form.get('sms_sender')?.errors?.['maxlength']"
+                                        class="text-sm text-red-600">Maximum 6 characters allowed.</span>
+                                    <span
+                                        *ngIf="form.get('sms_sender')?.touched && form.get('sms_sender')?.errors?.['pattern']"
+                                        class="text-sm text-red-600">Only letters and numbers allowed.</span>
+
                                 </div>
                             </div>
                         </div>
@@ -279,13 +414,7 @@
         <!-- Footer with Submit Button -->
         <div class="bg-sky-400 px-6 py-3 border-t border-gray-200 flex justify-end gap-3">
             <button type="submit" [disabled]="form.invalid"
-                class="px-6 py-3 bg-sky-600 text-white font-medium rounded-lg shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
-                Save
-            </button>
-
-            <button type="submit" [disabled]="form.invalid"
-                class="px-6 py-3 bg-sky-600 text-white font-medium rounded-lg shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
-                Save and Add Another
+                class="px-6 py-3 bg-sky-600 text-white font-medium rounded-lg shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">Save
             </button>
         </div>
     </form>
