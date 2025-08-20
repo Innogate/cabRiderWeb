@@ -167,7 +167,7 @@ export class CompanyMasterComponent implements OnInit, OnDestroy, AfterViewInit 
       ...this.form.value,
       
     }
-    //  this.guestlistMasterService.createGuest(payload)
+     this.companyMasterService.createUpdateCompany(payload)
    
   }
 
