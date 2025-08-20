@@ -21,19 +21,30 @@
         <!-- Main Form Content -->
         <div class="bg-sky-200 p-6 grid grid-cols-1 lg:grid-cols-1 gap-10">
             <div class="bg-sky-100 p-7 rounded-lg border border-sky-400 shadow-xl">
-                <div>
-                    <div class="flex items-center space-x-2">
-                        <i class="pi pi-building text-yellow-500"></i>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Company</label>
+                <div class="grid grid-cols-2 gap-4">
+
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <i class="pi pi-building text-yellow-500"></i>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Company</label>
+                        </div>
+                        <p-autoComplete field="CompanyName" placeholder="Select Company" [dropdown]="true"
+                            class="w-full border border-indigo-200 rounded-md mb-4" styleClass="w-full">
+                        </p-autoComplete>
                     </div>
-                    <p-autoComplete field="CompanyName"  placeholder="Select Company"
-                    
-                        class="w-full border border-indigo-200 rounded-md">
-                    </p-autoComplete>
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <i class="pi pi-building text-yellow-500"></i>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Branch</label>
+                        </div>
+                        <p-autoComplete field="CompanyName" placeholder="Select Branch" [dropdown]="true"
+                            class="w-full border border-indigo-200 rounded-md mb-4" styleClass="w-full">
+                        </p-autoComplete>
+                    </div>
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <div class="flex items-center space-x-2 mb-1">
+                        <div class="flex items-center space-x-2 mb-1 mt-4">
                             <i class="pi pi-hashtag text-green-600"></i>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Voucher No</label>
                         </div>
@@ -41,7 +52,7 @@
                             placeholder="Enter Voucher No">
                     </div>
                     <div>
-                        <div class="flex items-center space-x-2 mb-1">
+                        <div class="flex items-center space-x-2 mb-1 mt-4">
                             <i class="pi pi-calendar text-orange-500"></i>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Voucher Date</label>
                         </div>
@@ -60,6 +71,88 @@
             </div>
 
         </div>
+        <!-- table card -->
+        <div class="bg-sky-200 p-6 grid grid-cols-1 lg:grid-cols-1 gap-10">
+            <div class="bg-sky-100 p-7 rounded-lg border border-sky-400 shadow-xl">
+
+                <table class="w-full">
+                    <tbody>
+                        <tr>
+                            <th class="text-left "><label class="block text-sm font-medium text-gray-700 mb-1"><i
+                                        class="pi pi-map mr-2 text-yellow-500"></i>SLNo</label></th>
+                            <th class="text-left "><label class="block text-sm font-medium text-gray-700 mb-1"><i
+                                        class="pi pi-map-marker mr-2 text-orange-500"></i>Ledger Type</label></th>
+                            <th class="text-left "><label class="block text-sm font-medium text-gray-700 mb-1"><i
+                                        class="pi pi-pen-to-square mr-2 text-blue-600"></i>Ledger Name</label></th>
+                            <th class="text-left "><label class="block text-sm font-medium text-gray-700 mb-1"><i
+                                        class="pi pi-pen-to-square mr-2 text-blue-600"></i>Debit amount</label></th>
+                            <th class="text-left "><label class="block text-sm font-medium text-gray-700 mb-1"><i
+                                        class="pi pi-pen-to-square mr-2 text-blue-600"></i>Credit Amount</label></th>
+                            <th class="text-left "><label class="block text-sm font-medium text-gray-700 mb-1"><i
+                                        class="pi pi-pen-to-square mr-2 text-blue-600"></i>Actions</label></th>
+
+                        </tr>
+                        <tr>
+                            <td class=" px-1 py-2">
+                                        <input type="text" pInputText 
+                                            class="w-full border border-gray-300 rounded-lg p-3 text-uppercase"
+                                            placeholder="SLNo">
+                                    </td>
+                                    <td class=" px-1 py-2">
+                                        <input type="text"  pInputText
+                                            class="w-full border border-gray-300 rounded-lg p-3 text-uppercase"
+                                            placeholder="Party">
+                                    </td>
+                                    <td class=" px-1 py-2">
+                                        <input type="text"  pInputText
+                                            class="w-full border border-gray-300 rounded-lg p-3 text-uppercase"
+                                            placeholder="Instas Pharma">
+                                    </td>
+                                    <td class=" px-1 py-2">
+                                        <input type="text" pInputText
+                                            class="w-full border border-gray-300 rounded-lg p-3 text-uppercase"
+                                            placeholder="Debit Amount">
+                                    </td>
+                                    <td class=" px-1 py-2">
+                                        <input type="text"  pInputText
+                                            class="w-full border border-gray-300 rounded-lg p-3 text-uppercase"
+                                            placeholder="Credit Amount">
+                                    </td>
+                                    <td class="text-center px-4 py-2">
+                                        <button type="submit"
+                                            class="px-6 py-3 bg-sky-600  text-white font-medium rounded-lg shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
+                                            Save
+                                        </button>
+                                    </td>
+                        </tr>
+                        <tr>
+                            <td class=" px-1 py-2">
+                                        
+                                    </td>
+                                    <td class=" px-1 py-2">
+                                        
+                                    </td>
+                                    <td class=" px-1 py-2">
+                                        
+                                    </td>
+                                    <td class=" px-1 py-2">
+                                        
+                                    </td>
+                                    <td class=" px-1 py-2">
+                                        
+                                    </td>
+                                    <td class="text-center px-4 py-2">
+                                        <button type="submit"
+                                            class="px-6 py-3 bg-sky-600  text-white font-medium rounded-lg shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
+                                            Add
+                                        </button>
+                                    </td>
+                        </tr>
+
+                </table>
+            </div>
+        </div>
+
 
 
         <!-- Footer with Submit Button -->

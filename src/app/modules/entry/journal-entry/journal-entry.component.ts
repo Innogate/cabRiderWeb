@@ -5,10 +5,11 @@ import { Router } from '@angular/router';
 import { DynamicTableComponent } from '../../../components/dynamic-table/dynamic-table.component';
 import { InputTextModule } from 'primeng/inputtext';
 import { DropdownModule } from 'primeng/dropdown';
+import { AutoComplete, AutoCompleteModule } from 'primeng/autocomplete';
 
 @Component({
   selector: 'app-journal-entry',
-  imports: [CommonModule,DynamicTableComponent,ReactiveFormsModule,InputTextModule,DropdownModule],
+  imports: [CommonModule,DynamicTableComponent,ReactiveFormsModule,InputTextModule,AutoCompleteModule],
   templateUrl: './journal-entry.component.html',
   styleUrl: './journal-entry.component.css'
 })
