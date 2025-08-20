@@ -3,11 +3,12 @@ import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } 
 import { DropdownModule } from 'primeng/dropdown';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-add-fuel-entry',
   standalone: true,
-  imports: [DropdownModule, FormsModule, ReactiveFormsModule, InputSwitchModule],
+  imports: [DropdownModule, FormsModule, ReactiveFormsModule, InputSwitchModule, CommonModule],
   templateUrl: './add-fuel-entry.component.html',
   styleUrls: ['./add-fuel-entry.component.css']
 })
@@ -31,7 +32,7 @@ export class AddFuelEntryComponent {
       ReferenceNo: [''],
       City: ['', Validators.required],
       PaidBy: ['', Validators.required],
-      FullTank: [false],
+      FullTank: [false], 
       PayMode: ['', Validators.required],
       AttFile: [null],
     });
