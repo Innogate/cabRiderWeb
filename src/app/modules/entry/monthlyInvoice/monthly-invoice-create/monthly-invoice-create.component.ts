@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import {
   FormBuilder,
+  FormControl,
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
@@ -67,6 +68,88 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
     private _activatedRoute: ActivatedRoute
   ) { }
 
+  // Company Drop Down Needed
+  companies: any[] = [];
+  selected_company: any[] = [];
+  filtered_companies: any[] = [];
+  filterCompany(event: any) {
+    if (!this.companies) return;
+    const query = event.query.toLowerCase();
+    this.filtered_companies = this.companies.filter((companies) =>
+      companies.Name.toLowerCase().includes(query)
+    );
+  }
+
+  // Branch Drop Down Needed
+  branches: any[] = [];
+  brunch_suggestions: any[] = [];
+  selected_branch: any = null;
+  filterBranches(event: any) {
+    if (!this.branches) return;
+    const query = event.query.toLowerCase();
+    this.brunch_suggestions = this.branches.filter((branch) =>
+      branch.branch_name.toLowerCase().includes(query)
+    );
+  }
+
+
+  // Party Drop Down Needed
+  parties: any[] = [];
+  party_suggestions: any[] = [];
+  selected_party: any = null;
+  filterPartyName(event: any) {
+    const query = event.query?.toLowerCase() || '';
+    this.party_suggestions = this.parties.filter((party) => {
+      const name = party.party_name?.toLowerCase() || '';
+      return name.includes(query);
+    });
+  }
+
+
+
+  // City Drop Down Needed
+  cities: any[] = [];
+  city_suggestions: any[] = [];
+  selected_city: any = null;
+  filterCities(event: any) {
+    if (!this.cities) return;
+    const query = event.query.toLowerCase();
+    this.city_suggestions = this.cities.filter((city) =>
+      city.CityName.toLowerCase().includes(query)
+    );
+  }
+
+
+  // Selected Setup Code
+  setup_code_suggestions: any[] = [];
+  selected_monthly_setup_code: any[] = [];
+  monthly_duty_setup_codes: any[] = [];
+  filterDutySetupCodes(event: any) {
+    const query = event.query?.toLowerCase() || '';
+    if (!this.monthly_duty_setup_codes || !Array.isArray(this.monthly_duty_setup_codes)) {
+      this.city_suggestions = [];
+      return;
+    }
+    this.city_suggestions = this.monthly_duty_setup_codes.filter((codeObj) =>
+      codeObj.DutyNo?.toLowerCase().includes(query)
+    );
+  }
+
+  invoiceForm: FormGroup = new FormGroup({
+    id: new FormControl(''),
+    duty_type: new FormControl(''),
+    branch_id: new FormControl(''),
+    company_id: new FormControl(''),
+    party_id: new FormControl(''),
+    city_id: new FormControl(''),
+    BillNo: new FormControl('NEW'),
+    BillDate: new FormControl(new Date()),
+    taxtype: new FormControl('cgst'),
+  });
+
+
+
+
   sleetedBookingIds: any[] = [];
   taxtype: any = 'cgst';
   addDutyTableRowSize = 10;
@@ -89,7 +172,7 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
           this.branches = msg.data;
           rt = true;
         } else if (msg.for === 'partyDropdown') {
-          this.PartyName = msg.data;
+          this.parties = msg.data;
           rt = true;
         } else if (msg.for === 'companyDropdown') {
           this.companies = msg.data;
@@ -103,7 +186,7 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
           this.cdr.detectChanges();
           rt = true;
         } else if (msg.for === 'minvoice.getMonthlySetupCode') {
-          this.monthlySetupData = msg.data;
+          this.monthly_duty_setup_codes = msg.data;
           rt = true;
         } else if (msg.for === 'getPartyById') {
           this.partyInfo = msg.data;
@@ -179,19 +262,16 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
     { label: 'DROP', value: '4' },
   ];
 
-  invoiceForm!: FormGroup;
 
   charges = [
     { name: 'Fuel Surcharge', amount: 200 },
     { name: 'Driver Allowance', amount: 100 },
   ];
 
-  companies: any[] = [];
-  branches: any[] = [];
-  parties: any[] = [];
-  cities: any[] = [];
+  
+  // parties: any[] = [];
+  
   carTypes: any[] = [];
-  monthlySetupData: any[] = [];
 
   dutyTableData: any[] = [];
   tableLoading = false;
@@ -227,35 +307,7 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
     },
   ];
 
-  init() {
-    if (this.isEditMode) return;
-    this.invoiceForm = this.fb.group({
-      id: [''],
-      City: [''],
-      duty_type: [''],
-      branch_id: [''],
-      company_id: [''],
-      branch: [''],
-      party_id: [''],
-      city_id: [''],
-      BillNo: ['NEW'],
-      BillDate: [new Date()],
-      taxtype: ['cgst'],
-      rcm: ['no'],
-      GrossAmount: ['0'],
-      OtherCharges: ['0'],
-      Discount: [''],
-      CGSTPer: [''],
-      CGST: ['0'],
-      SGSTPer: [''],
-      SGST: ['0'],
-      OtherCharges2: ['0'],
-      RoundOff: ['0'],
-      NetAmount: ['0'],
-      Advance: [''],
-      SetupCode: [''],
-    });
-  }
+  init() {}
 
   private mapCarAndDutyTypesToDutyData() {
     if (!this.dutyTableData?.length) return;
@@ -332,22 +384,19 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
 
   isEditMode: boolean = false;
 
-  selectedBranchModel: any = null;
-  selectedPartyModel: any = null;
-  selectedCityModel: any = null;
 
   patchInvoice(invoice: any) {
     const foundBranch = this.branches.find(
       (branch) => branch.branch_name == invoice.branch
     );
-    const foundParty = this.PartyName.find(
+    const foundParty = this.parties.find(
       (p) => p.value === invoice.party_name
     );
     const foundCity = this.cities.find((c) => c.value === invoice.City);
 
-    this.selectedBranchModel = foundBranch || null;
-    this.selectedPartyModel = foundParty || null;
-    this.selectedCityModel = foundCity || null;
+    this.selected_branch = foundBranch || null;
+    this.selected_party = foundParty || null;
+    this.selected_city = foundCity || null;
 
     this.invoiceForm.patchValue({
       id: invoice.id || '',
@@ -363,76 +412,14 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
         ? new Date(invoice.BillDate.replace(/-/g, '/'))
         : new Date(),
       taxtype: invoice.taxtype ?? 'cgst',
-      rcm: invoice.rcm ?? 'yes',
-      GrossAmount: invoice.GrossAmount || '0',
-      OtherCharges: invoice.OtherCharges || '0',
-      Discount: invoice.Discount || '',
-      CGSTPer: invoice.CGSTPer || '',
-      CGST: invoice.CGST || '0',
-      SGSTPer: invoice.SGSTPer || '',
-      SGST: invoice.SGST || '0',
-      OtherCharges2: invoice.OtherCharges2 || '0',
-      RoundOff: invoice.RoundOff || '0',
-      NetAmount: invoice.NetAmount || '0',
-      Advance: invoice.Advance || '',
     });
   }
 
   // AutoComplete
-  PartyName: any[] = []; // original full list
-  filteredPartyName: any[] = []; // used by the autocomplete
-  filteredCities: any[] = [];
+  
   companyList: any[] = [];
-  filteredCompanies: any[] = [];
 
-  filterPartyName(event: any) {
-    const query = event.query?.toLowerCase() || '';
-    this.filteredPartyName = this.PartyName.filter((party) => {
-      const name = party.party_name?.toLowerCase() || '';
-      return name.includes(query);
-    });
-  }
-
-  filterCities(event: any) {
-    if (!this.cities) return;
-    const query = event.query.toLowerCase();
-    this.filteredCities = this.cities.filter((city) =>
-      city.CityName.toLowerCase().includes(query)
-    );
-  }
-
-  filteredBranches: any[] = [];
-
-  filterBranches(event: any) {
-    if (!this.branches) return;
-    const query = event.query.toLowerCase();
-    this.filteredBranches = this.branches.filter((branch) =>
-      branch.branch_name.toLowerCase().includes(query)
-    );
-  }
-
-  filteredCodes: any[] = [];
-  selectedCode: any[] = [];
-  selectedCompany: any[] = [];
-
-  filterCodes(event: any) {
-    const query = event.query?.toLowerCase() || '';
-    if (!this.monthlySetupData || !Array.isArray(this.monthlySetupData)) {
-      this.filteredCodes = [];
-      return;
-    }
-    this.filteredCodes = this.monthlySetupData.filter((codeObj) =>
-      codeObj.DutyNo?.toLowerCase().includes(query)
-    );
-  }
-
-  filterCompany(event: any) {
-    if (!this.companies) return;
-    const query = event.query.toLowerCase();
-    this.filteredCompanies = this.companies.filter((companies) =>
-      companies.Name.toLowerCase().includes(query)
-    );
-  }
+  
 
   // API CALLS
 
@@ -691,22 +678,22 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
     });
 
     await this.waitForFetch(() => this.companies);
-    this.selectedCompany = this.companies.find(
+    this.selected_company = this.companies.find(
       (company) => {
         return company.Id == invoice.company_id;
       }
     ).Name;
     this.getAllBranches();
     await this.waitForFetch(() => this.branches);
-    this.selectedBranchModel = this.branches.find(
+    this.selected_branch = this.branches.find(
       (branch) => {
         return branch.id == invoice.branch_id;
       }
     )
 
     this.getAllParty();
-    await this.waitForFetch(() => this.PartyName);
-    this.selectedPartyModel = this.PartyName.find(
+    await this.waitForFetch(() => this.parties);
+    this.selected_party = this.parties.find(
       (party) => {
         return party.id == invoice.party_id;
       }
@@ -718,14 +705,14 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
     });
 
     await this.waitForFetch(() => this.cities);
-    this.selectedCityModel = this.cities.find(
+    this.selected_city = this.cities.find(
       (city) => {
         return city.Id == invoice.city_id;
       }
     )
 
-    await this.waitForFetch(() => this.monthlySetupData);
-    this.selectedCode = this.monthlySetupData.find(
+    await this.waitForFetch(() => this.monthly_duty_setup_codes);
+    this.selected_monthly_setup_code = this.monthly_duty_setup_codes.find(
       (code) => {
         return code.id == invoice.monthly_duty_id;
       }
