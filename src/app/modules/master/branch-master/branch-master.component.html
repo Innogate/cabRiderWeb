@@ -226,93 +226,98 @@
                             <i class="pi pi-envelope mr-2 text-red-900"></i>EMAIL (SMTP) INFORMATION
                         </h2>
                         <div class="grid grid-cols-1 gap-2">
-                            <div>
-                                <div class="flex items-center space-x-2">
-                                    <i class="pi pi-server text-green-700"></i>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">SMTP Host</label>
+                            <div class="grid grid-cols-1 gap-2">
+                                <div>
+                                    <div class="flex items-center space-x-2">
+                                        <i class="pi pi-server text-green-700"></i>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">SMTP Host</label>
+                                    </div>
+                                    <input type="text" pInputText class="w-full border border-gray-300 rounded-lg p-3"
+                                        placeholder="SMTP Host" formControlName="smtp_host">
+                                    <span
+                                        *ngIf="form.get('smtp_host')?.touched && form.get('smtp_host')?.errors?.['required']"
+                                        class="text-sm text-red-600">SMTP Host is required.</span>
+                                    <span
+                                        *ngIf="form.get('smtp_host')?.touched && form.get('smtp_host')?.errors?.['pattern']"
+                                        class="text-sm text-red-600">Invalid host name.</span>
                                 </div>
-                                <input type="text" pInputText class="w-full border border-gray-300 rounded-lg p-3"
-                                    placeholder="SMTP Host" formControlName="smtp_host">
-                                <span
-                                    *ngIf="form.get('smtp_host')?.touched && form.get('smtp_host')?.errors?.['required']"
-                                    class="text-sm text-red-600">SMTP Host is required.</span>
-                                <span
-                                    *ngIf="form.get('smtp_host')?.touched && form.get('smtp_host')?.errors?.['pattern']"
-                                    class="text-sm text-red-600">Invalid host name.</span>
-
                             </div>
-                        </div>
-                        <div class="grid grid-cols-2 gap-2">
-                            <div>
-                                <div class="flex items-center space-x-2">
-                                    <i class="pi pi-user text-green-700"></i>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">SMTP Username</label>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div>
+                                    <div class="flex items-center space-x-2">
+                                        <i class="pi pi-user text-green-700"></i>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">SMTP
+                                            Username</label>
+                                    </div>
+                                    <input type="text" pInputText class="w-full border border-gray-300 rounded-lg p-3"
+                                        placeholder="SMTP Username" formControlName="smtp_username">
+                                    <span
+                                        *ngIf="form.get('smtp_username')?.touched && form.get('smtp_username')?.errors?.['required']"
+                                        class="text-sm text-red-600">SMTP Username is required.</span>
+                                    <span
+                                        *ngIf="form.get('smtp_username')?.touched && form.get('smtp_username')?.errors?.['pattern']"
+                                        class="text-sm text-red-600">Enter a valid email format.</span>
+
                                 </div>
-                                <input type="text" pInputText class="w-full border border-gray-300 rounded-lg p-3"
-                                    placeholder="SMTP Username" formControlName="smtp_username">
-                                <span
-                                    *ngIf="form.get('smtp_username')?.touched && form.get('smtp_username')?.errors?.['required']"
-                                    class="text-sm text-red-600">SMTP Username is required.</span>
-                                <span
-                                    *ngIf="form.get('smtp_username')?.touched && form.get('smtp_username')?.errors?.['pattern']"
-                                    class="text-sm text-red-600">Enter a valid email format.</span>
 
-                            </div>
+                                <div>
+                                    <div class="flex items-center space-x-2">
+                                        <i class="pi pi-lock text-green-700"></i>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">SMTP
+                                            Password</label>
+                                    </div>
+                                    <input type="text" pInputText class="w-full border border-gray-300 rounded-lg p-3"
+                                        placeholder="SMTP Password" formControlName="smtp_password">
+                                    <span
+                                        *ngIf="form.get('smtp_password')?.touched && form.get('smtp_password')?.errors?.['required']"
+                                        class="text-sm text-red-600">SMTP Password is required.</span>
+                                    <span
+                                        *ngIf="form.get('smtp_password')?.touched && form.get('smtp_password')?.errors?.['minlength']"
+                                        class="text-sm text-red-600">Password must be at least 6 characters.</span>
 
-                            <div>
-                                <div class="flex items-center space-x-2">
-                                    <i class="pi pi-lock text-green-700"></i>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">SMTP Password</label>
                                 </div>
-                                <input type="text" pInputText class="w-full border border-gray-300 rounded-lg p-3"
-                                    placeholder="SMTP Password" formControlName="smtp_password">
-                                <span
-                                    *ngIf="form.get('smtp_password')?.touched && form.get('smtp_password')?.errors?.['required']"
-                                    class="text-sm text-red-600">SMTP Password is required.</span>
-                                <span
-                                    *ngIf="form.get('smtp_password')?.touched && form.get('smtp_password')?.errors?.['minlength']"
-                                    class="text-sm text-red-600">Password must be at least 6 characters.</span>
 
-                            </div>
+                                <div>
+                                    <div class="flex items-center space-x-2">
+                                        <i class="pi pi-server text-green-700"></i>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">SMTP Port </label>
+                                    </div>
+                                    <input type="text" pInputText class="w-full border border-gray-300 rounded-lg p-3"
+                                        placeholder="SMTP Port" formControlName="smtp_port">
+                                    <span
+                                        *ngIf="form.get('smtp_port')?.touched && form.get('smtp_port')?.errors?.['required']"
+                                        class="text-sm text-red-600">SMTP Port is required.</span>
+                                    <span
+                                        *ngIf="form.get('smtp_port')?.touched && form.get('smtp_port')?.errors?.['min']"
+                                        class="text-sm text-red-600">Port must be at least 1.</span>
+                                    <span
+                                        *ngIf="form.get('smtp_port')?.touched && form.get('smtp_port')?.errors?.['max']"
+                                        class="text-sm text-red-600">Port cannot exceed 65535.</span>
 
-                            <div>
-                                <div class="flex items-center space-x-2">
-                                    <i class="pi pi-sliders-h text-green-700"></i>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">SMTP Port </label>
                                 </div>
-                                <input type="text" pInputText class="w-full border border-gray-300 rounded-lg p-3"
-                                    placeholder="SMTP Port" formControlName="smtp_port">
-                                <span
-                                    *ngIf="form.get('smtp_port')?.touched && form.get('smtp_port')?.errors?.['required']"
-                                    class="text-sm text-red-600">SMTP Port is required.</span>
-                                <span *ngIf="form.get('smtp_port')?.touched && form.get('smtp_port')?.errors?.['min']"
-                                    class="text-sm text-red-600">Port must be at least 1.</span>
-                                <span *ngIf="form.get('smtp_port')?.touched && form.get('smtp_port')?.errors?.['max']"
-                                    class="text-sm text-red-600">Port cannot exceed 65535.</span>
 
-                            </div>
+                                <div>
+                                    <div class="flex items-center space-x-2">
+                                        <i class="pi pi-envelope text-green-700"></i>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">SMTP Email </label>
+                                    </div>
+                                    <input type="text" pInputText class="w-full border border-gray-300 rounded-lg p-3"
+                                        placeholder="SMTP Email" formControlName="smtp_email">
+                                    <span
+                                        *ngIf="form.get('smtp_email')?.touched && form.get('smtp_email')?.errors?.['required']"
+                                        class="text-sm text-red-600">SMTP Email is required.</span>
+                                    <span
+                                        *ngIf="form.get('smtp_email')?.touched && form.get('smtp_email')?.errors?.['email']"
+                                        class="text-sm text-red-600">Enter a valid SMTP email.</span>
 
-                            <div>
-                                <div class="flex items-center space-x-2">
-                                    <i class="pi pi-sliders-h text-green-700"></i>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">SMTP Email </label>
+
                                 </div>
-                                <input type="text" pInputText class="w-full border border-gray-300 rounded-lg p-3"
-                                    placeholder="SMTP Email" formControlName="smtp_email">
-                                <span
-                                    *ngIf="form.get('smtp_email')?.touched && form.get('smtp_email')?.errors?.['required']"
-                                    class="text-sm text-red-600">SMTP Email is required.</span>
-                                <span
-                                    *ngIf="form.get('smtp_email')?.touched && form.get('smtp_email')?.errors?.['email']"
-                                    class="text-sm text-red-600">Enter a valid SMTP email.</span>
-
-
-                            </div>
-                            <div>
-                                <div class="flex items-center space-x-2">
-                                    <i class="pi pi-shield text-green-700"></i>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">SMTP SSL</label>
-                                    <p-checkbox binary="true" formControlName="smtp_ssl"></p-checkbox>
+                                <div>
+                                    <div class="flex items-center space-x-2">
+                                        <i class="pi pi-shield text-green-700"></i>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">SMTP SSL</label>
+                                        <p-checkbox binary="true" formControlName="smtp_ssl"></p-checkbox>
+                                    </div>
                                 </div>
                             </div>
                         </div>
