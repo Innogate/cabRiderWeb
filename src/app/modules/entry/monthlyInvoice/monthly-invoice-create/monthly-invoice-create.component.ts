@@ -160,6 +160,7 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
     company_id: new FormControl(''),
     party_id: new FormControl(''),
     city_id: new FormControl(''),
+    setup_code: new FormControl(''),
     BillNo: new FormControl('NEW'),
     BillDate: new FormControl(new Date()),
     taxtype: new FormControl('cgst'),
@@ -232,6 +233,7 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
         try {
           const invoiceData = JSON.parse(params['editInvoice']);
           this.invoiceData = invoiceData;
+          console.log('Edit Invoice Data:', this.invoiceData);
           this.updatePathch(invoiceData);
         } catch (error) {
           console.error('Error parsing editInvoice data:', error);
@@ -404,7 +406,7 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
     console.log(codeObj);
     this.selectedMontySetupCode = codeObj.value;
     if (this.invoiceForm) {
-      this.invoiceForm.get('SetupCode')?.setValue(codeObj.value.id);
+      this.invoiceForm.get('setup_code')?.setValue(codeObj.value.id);
     }
   }
 
@@ -494,7 +496,7 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
         this.invoiceForm.get('branch_id')?.value &&
         this.invoiceForm.get('city_id')?.value &&
         this.invoiceForm.get('party_id')?.value &&
-        this.invoiceForm.get('SetupCode')?.value &&
+        this.invoiceForm.get('setup_code')?.value &&
         this.invoiceForm.get('company_id')?.value
       )
     ) {
@@ -522,6 +524,11 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
     this.dutyTableData = event.dutyTableData;
     this.mainDutyList = event.mainDutyList;
     this.sleetedBookingIds = event.sleetedBookingIds;
+    console.log('Duty Updated:', {
+      dutyTableData: this.dutyTableData,
+      mainDutyList: this.mainDutyList,
+      sleetedBookingIds: this.sleetedBookingIds,
+    });
   }
 
 
@@ -579,7 +586,7 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
       RoundOff: [invoice.RoundOff || '0'],
       NetAmount: [invoice.NetAmount || '0'],
       Advance: [invoice.Advance || ''],
-      SetupCode: [invoice.SetupCode || ''],
+      setup_code: [invoice.setup_code || ''],
     });
 
     await this.waitForFetch(() => this.companies);
@@ -650,5 +657,7 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
       }, interval);
     });
   }
+
+
 }
 

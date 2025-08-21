@@ -156,7 +156,7 @@
   <!-- Show only after duties are added -->
   <app-mbilling *ngIf="mainDutyList.length > 0" [invoiceForm]="invoiceForm" [selectedDuties]="selectedDuties"
     [mainDutyList]="mainDutyList" [sleetedBookingIds]="sleetedBookingIds" [dutyTableData]="dutyTableData"
-    [taxType]="taxType" [partyInfo]="partyInfo" [setUpCode]="selectedMontySetupCode" [isCalculated]="isEditMode"
+    [taxType]="taxType" [partyInfo]="partyInfo" [selectedMontySetupCode]="selectedMontySetupCode" [isCalculated]="isEditMode"
     [calCulateData]="invoiceData" (dutyUpdated)="onDutyUpdated($event)">
   </app-mbilling>
 </div>

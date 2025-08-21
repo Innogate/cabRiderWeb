@@ -51,6 +51,7 @@ import { HelperService } from '../../services/helper.service';
   styleUrl: './mbilling.component.css',
 })
 export class MbillingComponent {
+  carTypes: any;
   constructor(
     private carTypeMaster: carTypeMasterService,
     private router: Router,
@@ -61,6 +62,21 @@ export class MbillingComponent {
     private _helperService: HelperService
   ) { }
   @Input() sleetedBookingIds?: any[];
+  @Input() selectedDuties: any[] = [];
+  @Input() mainDutyList: any[] = [];
+  @Input() dutyTableData: any[] = [];
+  @Input() invoiceForm!: FormGroup;
+  @Input() taxType: any;
+  @Input() partyInfo: any;
+  @Input() isCalculated: any;
+  @Input() calCulateData: any;
+  @Input() selectedMontySetupCode: any;
+
+  @Output() dutyUpdated = new EventEmitter<{
+    dutyTableData: any[];
+    mainDutyList: any[];
+    sleetedBookingIds: any[];
+  }>();
 
   // Column 1
   fixedAmount: any;
@@ -123,14 +139,24 @@ export class MbillingComponent {
   taxableSumCharges: number = 0;
   nonTaxableSumCharges: number = 0;
 
-  selectedMontySetupCode: any;
+  dutyTypes = [
+    { label: 'DISPOSAL', value: '1' },
+    { label: 'OUTSTATION', value: '2' },
+    { label: 'PICKUP', value: '3' },
+    { label: 'DROP', value: '4' },
+  ];
 
   ngOnInit(): void {
     this.carTypeMaster.registerPageHandler((msg) => {
       let rt = false;
       rt = globalRequestHandler(msg, this.router, this.messageService);
       if (msg.for) {
-        if (msg.for === 'getOtherChargesForBookingList') {
+        if (msg.for === 'CarTypeGate') {
+          this.carTypes = msg.data;
+          this.mapCarAndDutyTypesToDutyData();
+          rt = true;
+        }
+        else if (msg.for === 'getOtherChargesForBookingList') {
           this.otherCharges.taxable = msg.data.taxable;
           // sum Amount of taxable charges
           this.taxableSumCharges = this.otherCharges.taxable.reduce(
@@ -163,28 +189,49 @@ export class MbillingComponent {
     this.Cgst = this.partyInfo.CGST;
     this.Sgst = this.partyInfo.SGST;
     this.igst = this.partyInfo.IGST;
+
   }
 
-  @Input() selectedDuties: any[] = [];
-  @Input() mainDutyList: any[] = [];
-  @Input() dutyTableData: any[] = [];
-  @Input() invoiceForm!: FormGroup;
-  @Input() taxType: any;
-  @Input() partyInfo: any;
-  @Input() setUpCode: any;
-  @Input() isCalculated: any;
-  @Input() calCulateData: any;
+  private mapCarAndDutyTypesToDutyData() {
+    if (!this.dutyTableData?.length) return;
 
-  @Output() dutyUpdated = new EventEmitter<{
-    dutyTableData: any[];
-    mainDutyList: any[];
-    sleetedBookingIds: any[];
-  }>();
+    this.dutyTableData.forEach((duty: any) => {
+      //  Car Type Mapping
+      const carType = this.carTypes.find((c: any) => c.id == duty.CarType);
+      duty.CarTypeName = carType ? carType.car_type : '';
+
+      //  Duty Type Mapping
+      const dutyType = this.dutyTypes.find(
+        (d: any) => d.value == duty.DutyType
+      );
+      duty.DutyTypeName = dutyType ? dutyType.label : '';
+
+      //  Date-Time Handling
+      if (duty.GarageOutDate) {
+        const out = new Date(duty.GarageOutDate);
+        duty.fromDate = out.toISOString().split('T')[0];
+        duty.fromTime = out.toTimeString().slice(0, 5);
+      }
+
+      if (duty.GarageInDate) {
+        const inDate = new Date(duty.GarageInDate);
+        duty.toDate = inDate.toISOString().split('T')[0];
+        duty.toTime = inDate.toTimeString().slice(0, 5);
+      }
+    });
+
+    this.cdr.detectChanges();
+  }
+
+
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['mainDutyList']) {
+      this.mainDutyList = changes['mainDutyList'].currentValue;
+      console.log('Main Duty List Updated:', this.mainDutyList);
     }
     if (changes['selectedDuties']) {
+      this.selectedDuties = changes['selectedDuties'].currentValue;
     }
     if (changes['sleetedBookingIds']) {
       this.sleetedBookingIds = changes['sleetedBookingIds'].currentValue;
@@ -200,12 +247,12 @@ export class MbillingComponent {
       this.igst = this.partyInfo.IGST;
       this.calNetAmount();
     }
-    if (changes['setUpCode']) {
-      this.selectedMontySetupCode = changes['setUpCode'].currentValue;
+    if (changes['setup_Code']) {
+      this.selectedMontySetupCode = changes['setup_Code'].currentValue;
       if (this.invoiceForm) {
         this.invoiceForm
-          .get('SetupCode')
-          ?.setValue(this.selectedMontySetupCode.id);
+          .get('setup_code')
+          ?.setValue(this.selectedMontySetupCode.id ?? null);
       }
     }
     if (changes['isCalculated']) {
@@ -235,7 +282,6 @@ export class MbillingComponent {
   // AutoComplete
   filteredCodes: any[] = [];
   selectedCode: any[] = [];
-
   filterCodes(event: any) {
     const query = event.query?.toLowerCase() || '';
     if (!this.monthlySetupData || !Array.isArray(this.monthlySetupData)) {
@@ -271,7 +317,7 @@ export class MbillingComponent {
     this.showTotalHour = 0;
     this.showTotalKm = 0;
 
-    const setup = this.setUpCode;
+    const setup = this.selectedMontySetupCode;
     this.selectedMonthlyDuty = setup;
 
     if (!setup) {
@@ -409,9 +455,11 @@ export class MbillingComponent {
     const startDate = new Date(startDateInput);
     let endDate = new Date(endDateInput);
 
+    console.log('Start Date:', startDate);
+    console.log('End Date:', endDate);
     // Helper: set a time on the same date as a reference date
     const setTime = (baseDate: Date, timeStr: string): Date => {
-      const [h, m] = timeStr.split(':').map(Number);
+      const [h, m] = (timeStr ?? '00:00').split(':').map(Number);
       const d = new Date(baseDate);
       d.setHours(h, m, 0, 0);
       return d;
