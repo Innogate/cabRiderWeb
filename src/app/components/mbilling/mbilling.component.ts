@@ -158,6 +158,8 @@ export class MbillingComponent {
     if (this.isCalculated) {
       this.setInvoiceData(this.calCulateData)
     }
+
+    console.log(this.mainDutyList)
     this.Cgst = this.partyInfo.CGST;
     this.Sgst = this.partyInfo.SGST;
     this.igst = this.partyInfo.IGST;

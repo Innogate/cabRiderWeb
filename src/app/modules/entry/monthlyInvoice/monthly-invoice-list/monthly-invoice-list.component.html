@@ -93,7 +93,7 @@
           <!-- Replace static slNo with calculated serial number -->
           <td>{{ invoice.BranchShortName }}</td>
           <td>{{ invoice.BillNo }}</td>
-          <td>{{ invoice.BillDate }}</td>
+          <td>{{ invoice.BillDate | date: "dd-MM-yyyy" }}</td>
           <td>{{ invoice.PartyName}}</td>
           <td>{{ invoice.CityName }}</td>
           <td>{{ invoice.GrossAmount }}</td>

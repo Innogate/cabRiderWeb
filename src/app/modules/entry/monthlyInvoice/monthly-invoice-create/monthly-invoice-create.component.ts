@@ -457,8 +457,8 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
 
   //ADD DUTY
 
-  selectedDuties: any[] = []; // to store selected rows
-  mainDutyList: any[] = []; // this holds the final duty list shown in main UI
+  selectedDuties: any[] = [];
+  mainDutyList: any[] = [];
   sleetedBookingIds: any[] = [];
   displayDuty = false;
   saveSelectedDuties() {
