@@ -37,6 +37,7 @@ import { BranchMasterComponent } from './modules/master/branch-master/branch-mas
 import { CompanyMasterComponent } from './modules/master/company-master/company-master.component';
 import { JournalEntryComponent } from './modules/entry/journal-entry/journal-entry.component';
 import { GlMasterComponent } from './modules/master/gl-master/gl-master.component';
+import { GeneralSaleComponent } from './modules/entry/general-sale/general-sale.component';
 
 export const routes: Routes = [
     {
@@ -66,6 +67,7 @@ export const routes: Routes = [
             { path: 'openingbill-entry', component: OpeningbillEntryComponent, canActivate: [AuthGuard] },
             { path: 'network-duty', component: NetworkDutyComponent, canActivate: [AuthGuard] },
             { path: 'booking-register', component: BookingRegisterComponent, canActivate: [AuthGuard] },
+            { path: 'entry/general-sale', component: GeneralSaleComponent, canActivate: [AuthGuard] },
             { path: 'invoice-register', component: InvoiceRegisterComponent, canActivate: [AuthGuard] },
             { path: 'master/partyRate', component: PartyRateMasterComponent, canActivate: [AuthGuard] },
             { path: 'invoice-add', component: InvoiceAddComponent, canActivate: [AuthGuard] },

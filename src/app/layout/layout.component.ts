@@ -49,6 +49,7 @@ export class LayoutComponent {
       icon: 'pi pi-home',
       items: [
         { label: 'Booking', icon: 'pi pi-book', routerLink:'/booking'},
+        { label: 'General Sale', icon: 'pi pi-book', routerLink:'entry/general-sale'},
         { label: 'Full Booking', icon: 'pi pi-calendar-plus', routerLink:'/full-booking' },
         { label: 'Invoice Entry', icon: 'pi pi-file', routerLink:'/invoice-entry'},
         { label: 'Vendor Invoice Entry', icon: 'pi pi-file-edit',routerLink:'/vendor-invoice-entry' },
