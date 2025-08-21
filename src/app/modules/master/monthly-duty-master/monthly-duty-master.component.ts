@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, input, OnDestroy, OnInit } from '@angular/core';
 import { DynamicTableComponent } from '../../../components/dynamic-table/dynamic-table.component';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
@@ -12,7 +12,7 @@ import { monthlyDutyMasterService } from '../../../services/monthlyDutyMaster.se
 
 @Component({
   selector: 'app-monthly-duty-master',
-  imports: [CommonModule, DynamicTableComponent, ReactiveFormsModule, DropdownModule, AutoCompleteModule],
+  imports: [CommonModule, DynamicTableComponent, ReactiveFormsModule, DropdownModule, AutoCompleteModule,],
   templateUrl: './monthly-duty-master.component.html',
   styleUrl: './monthly-duty-master.component.css'
 })
