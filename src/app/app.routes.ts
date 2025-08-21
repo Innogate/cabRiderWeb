@@ -33,6 +33,7 @@ import { MonthlyDutyMasterComponent } from './modules/master/monthly-duty-master
 import { MonthlyInvoiceListComponent } from './modules/entry/monthlyInvoice/monthly-invoice-list/monthly-invoice-list.component';
 import { MonthlyInvoiceCreateComponent } from './modules/entry/monthlyInvoice/monthly-invoice-create/monthly-invoice-create.component';
 import { MbillingComponent } from './components/mbilling/mbilling.component';
+import { CarSaleComponent } from './modules/entry/car-sale/car-sale.component';
 import { BranchMasterComponent } from './modules/master/branch-master/branch-master.component';
 import { CompanyMasterComponent } from './modules/master/company-master/company-master.component';
 import { JournalEntryComponent } from './modules/entry/journal-entry/journal-entry.component';
@@ -50,7 +51,7 @@ export const routes: Routes = [
             { path: 'full-booking', component: BookingComponent, data: { isFullBooking: true }, canActivate: [AuthGuard] },
             { path: 'add-booking', component: BookingEntryComponent, data: { isFullBooking: true }, canActivate: [AuthGuard] },
             { path: 'invoice-entry', component: InvoiceEntryComponent, canActivate: [AuthGuard] },
-            { path: 'car-sale-entry', component: CarSaleEntryComponent, canActivate: [AuthGuard] },
+            { path: 'entry/car-sale', component: CarSaleComponent, canActivate: [AuthGuard] },
             { path: 'vendor-invoice-entry', component: VendorInvoiceEntryComponent, canActivate: [AuthGuard] },
            //added
             {path: 'add-new-vendor-invoice', component: AddNewVendorInvoiceComponent,canActivate: [AuthGuard]},

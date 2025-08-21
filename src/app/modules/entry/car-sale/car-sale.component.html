@@ -1,0 +1,5 @@
+<div class="card">
+    <app-dynamic-table [columns]="columns" [loading]="isLoading" [data]="users" [headerTitle]="'CAR SALE LIST'"
+        [rowActions]="actions" (onAction)="handleAction($event)">
+    </app-dynamic-table>
+</div>
