@@ -40,6 +40,12 @@ export class InvoiceEyesShowComponent implements OnInit {
   @Input() sleetedBookingIds?: any[];
   @Input() chargeType: 'taxable' | 'nonTaxable' = 'taxable';
   @Output() close = new EventEmitter<void>();
+  @Output() chargesUpdated = new EventEmitter<{
+    taxableCharges: any[];
+    nonTaxableCharges: any[];
+    sleetedBookingIds?: any[];
+  }>();
+
 
   display = true;
   charges: any[] = [];
@@ -123,6 +129,15 @@ getNonTaxableCharges() {
   } else {
     console.error("No selected invoice to fetch non-taxable charges for.");
   }
+}
+
+
+sendChargesToParent() {
+  this.chargesUpdated.emit({
+    taxableCharges: this.taxableCharges,
+    nonTaxableCharges: this.nonTaxableCharges,
+    sleetedBookingIds: this.sleetedBookingIds
+  });
 }
 
 }

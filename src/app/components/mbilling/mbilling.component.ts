@@ -51,7 +51,7 @@ import { HelperService } from '../../services/helper.service';
   styleUrl: './mbilling.component.css',
 })
 export class MbillingComponent {
-  carTypes: any;
+
   constructor(
     private carTypeMaster: carTypeMasterService,
     private router: Router,
@@ -71,6 +71,8 @@ export class MbillingComponent {
   @Input() isCalculated: any;
   @Input() calCulateData: any;
   @Input() selectedMontySetupCode: any;
+  @Input() isEditMode: boolean = false;
+  @Input() carTypes: any[] = [];
 
   @Output() dutyUpdated = new EventEmitter<{
     dutyTableData: any[];
@@ -153,7 +155,6 @@ export class MbillingComponent {
       if (msg.for) {
         if (msg.for === 'CarTypeGate') {
           this.carTypes = msg.data;
-          this.mapCarAndDutyTypesToDutyData();
           rt = true;
         }
         else if (msg.for === 'getOtherChargesForBookingList') {
@@ -190,37 +191,6 @@ export class MbillingComponent {
     this.Sgst = this.partyInfo.SGST;
     this.igst = this.partyInfo.IGST;
 
-  }
-
-  private mapCarAndDutyTypesToDutyData() {
-    if (!this.dutyTableData?.length) return;
-
-    this.dutyTableData.forEach((duty: any) => {
-      //  Car Type Mapping
-      const carType = this.carTypes.find((c: any) => c.id == duty.CarType);
-      duty.CarTypeName = carType ? carType.car_type : '';
-
-      //  Duty Type Mapping
-      const dutyType = this.dutyTypes.find(
-        (d: any) => d.value == duty.DutyType
-      );
-      duty.DutyTypeName = dutyType ? dutyType.label : '';
-
-      //  Date-Time Handling
-      if (duty.GarageOutDate) {
-        const out = new Date(duty.GarageOutDate);
-        duty.fromDate = out.toISOString().split('T')[0];
-        duty.fromTime = out.toTimeString().slice(0, 5);
-      }
-
-      if (duty.GarageInDate) {
-        const inDate = new Date(duty.GarageInDate);
-        duty.toDate = inDate.toISOString().split('T')[0];
-        duty.toTime = inDate.toTimeString().slice(0, 5);
-      }
-    });
-
-    this.cdr.detectChanges();
   }
 
 
@@ -292,6 +262,18 @@ export class MbillingComponent {
       codeObj.DutyNo?.toLowerCase().includes(query)
     );
   }
+
+  getDutyTypeName(id: string | number): string {
+  const found = this.dutyTypes.find(d => d.value == id);
+  return found ? found.label : '';
+}
+
+  getCartypeName(carTypeId: string | number): string {
+  const found = this.carTypes.find(c => c.id == carTypeId);
+  return found ? found.car_type : '';
+}
+
+
 
   // API CALLS
   async calculateTotals(selected: any[]) {
@@ -455,8 +437,7 @@ export class MbillingComponent {
     const startDate = new Date(startDateInput);
     let endDate = new Date(endDateInput);
 
-    console.log('Start Date:', startDate);
-    console.log('End Date:', endDate);
+
     // Helper: set a time on the same date as a reference date
     const setTime = (baseDate: Date, timeStr: string): Date => {
       const [h, m] = (timeStr ?? '00:00').split(':').map(Number);

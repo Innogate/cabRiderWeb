@@ -183,6 +183,7 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
       if (msg.for) {
         if (msg.for === 'CarTypeGate') {
           this.carTypes = msg.data;
+          console.log('Car Types:', this.carTypes);
           this.mapCarAndDutyTypesToDutyData();
           rt = true;
         } else if (msg.for === 'getAllCityDropdown') {

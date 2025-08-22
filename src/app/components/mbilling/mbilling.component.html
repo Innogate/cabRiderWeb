@@ -73,13 +73,13 @@
       <tr class="hover:bg-blue-50 transition-all text-sm">
         <td class="py-2 px-3">{{ i + 1 }}</td>
         <td class="py-2 px-3">{{ duty.SlipNo }}</td>
-        <td class="py-2 px-3">{{ duty.DutyTypeName }}</td>
+        <td class="py-2 px-3">{{ getDutyTypeName(duty.DutyType) }}</td>
         <td class="py-2 px-3">{{ duty.CarNo }}</td>
-        <td class="py-2 px-3">{{ duty.CarTypeName }}</td>
+        <td class="py-2 px-3">{{ getCartypeName(duty.CarType) }}</td>
         <td class="py-2 px-3">{{ duty.Project }}</td>
         <td class="py-2 px-3">{{ duty.BookedBy }}</td>
-        <td class="py-2 px-3">{{ duty.fromDate }}</td>
-        <td class="py-2 px-3">{{ duty.toDate }}</td>
+        <td class="py-2 px-3">{{(isEditMode ? duty.GarageOutDate : duty.fromDate) | date:'dd-MM-yyyy' }}</td>
+        <td class="py-2 px-3">{{(isEditMode ? duty.GarageInDate : duty.toDate) | date:'dd-MM-yyyy' }}</td>
         <td class="py-2 px-3">{{ duty.GarageOutTime }}</td>
         <td class="py-2 px-3">{{ duty.GarageInDate | date:'HH:mm' }}</td>
         <td class="py-2 px-3">{{ duty.GarageOutKm }}</td>
@@ -139,9 +139,10 @@
           <input readonly type="number" pInputText [(ngModel)]="fixedAmount"
             class="w-full sm:w-40 lg:w-44 text-right mt-1 sm:mt-0" />
         </div>
+
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
           <label class="font-medium text-gray-700">🕓 Extra Hours:</label>
-          <input readonly type="number" pInputText [(ngModel)]="extraHours"
+          <input readonly type="number" pInputText [ngModel]="isEditMode ? calCulateData?.extra_hours : extraHours"
             class="w-full sm:w-40 lg:w-44 text-right mt-1 sm:mt-0" />
         </div>
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
