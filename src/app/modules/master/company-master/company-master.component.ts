@@ -19,7 +19,6 @@ export class CompanyMasterComponent implements OnInit, OnDestroy, AfterViewInit 
 
   showForm: boolean = false;
   isLoading: boolean = true;
-  isEditMode: boolean = false;
   data: any[] = [];
   heading: string = '';
   form!: FormGroup;
@@ -40,13 +39,14 @@ export class CompanyMasterComponent implements OnInit, OnDestroy, AfterViewInit 
 
   createForm() {
     this.form = this.fb.group({
+      id: [0],
       active: ['Y'],
-      companyName: ['', [Validators.minLength(3),Validators.pattern('^[A-Za-z ]{3,}$')]],
-      ShortName: ['',],
+      companyName: [''],
+      ShortName: [''],
       companyAddress: [''],
       companyCity: [''],
-      companyPhone: ['', [Validators.pattern('^[6-9][0-9]{9}$')]],
-      companyEmail: ['', [Validators.email]],
+      companyPhone: [''],
+      companyEmail: [''],
       companyWebsite: [''],
       Tally_CGSTAcName: [''],
       Tally_SGSTAcName: [''],
@@ -54,22 +54,22 @@ export class CompanyMasterComponent implements OnInit, OnDestroy, AfterViewInit 
       Tally_RndOffAcName: [''],
       Tally_CarRentPurchaseAc: [''],
       Tally_CarRentSaleAc: [''],
-      companyGSTNo: ['', [Validators.pattern('^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$')]],
-      companyPANNo: ['', [Validators.pattern('^[A-Z]{5}[0-9]{4}[A-Z]{1}$')]],
-      companyCINNo: ['', [Validators.pattern('^[LU][0-9]{5}[A-Z]{2}[0-9]{4}[A-Z]{3}[0-9]{6}$')]],
+      companyGSTNo: [''],
+      companyPANNo: [''],
+      companyCINNo: [''],
       Udyam: [''],
-      HSNCode: ['', [Validators.pattern('^[0-9]{4,8}$')]],
+      HSNCode: [''],
       companyCGST: [''],
       companySGST: [''],
       companyIGST: [''],
       Tally_PurVouchType: [''],
       Tally_SaleVouchType: [''],
-      companyBenificaryName: ['', [Validators.minLength(3),Validators.pattern('^[A-Za-z ]{3,}$')]],
-      companyBankAccountNo: ['', [Validators.pattern('^[0-9]{9,18}$')]],
+      companyBenificaryName: [''],
+      companyBankAccountNo: [''],
       companyBankAddress: [''],
       companyBankName: [''],
-      companyBankIFSC: ['', [Validators.pattern('^[A-Z]{4}0[A-Z0-9]{6}$')]],
-      id: [0],
+      companyBankIFSC: [''],
+      
     });
   }
 
@@ -78,7 +78,7 @@ export class CompanyMasterComponent implements OnInit, OnDestroy, AfterViewInit 
     const payload = {
       id: 0,
       PageNo: 1,
-      PageSize: 1000,
+      PageSize: 100,
       Search: "",
     };
     this.companyMasterService.getAllCompany(payload);
@@ -112,7 +112,7 @@ ngOnInit(): void {
           this.messageService.add({ severity: 'error', summary: 'Error', detail: msg.StatusMessage });
         }
 
-      }else if (msg.for == 'deleteData') {
+      }else if (msg.for == 'deleteCompany') {
         if (msg.StatusID === 1) {
           const index = this.companylist.findIndex((v: any) => v.id == this.tablevalue.id);
           if (index !== -1) {
@@ -143,24 +143,22 @@ ngOnInit(): void {
   async handleAction(event: { action: string, data: any }) {
     switch (event.action) {
       case 'edit':
-        this.showForm = true;
-        this.isEditMode = true;
-        this.heading = 'UPDATE COMPANY';
-        this.editcompany(event.data);
+        // this.heading = 'UPDATE COMPANY';
+        this.form.reset();
+         this.editUser(event.data);
         break;
       case 'delete':
         const status = await this.swal.confirmDelete("You want to delete this !");
-        if (status) {
-                this.messageService.add({ severity: 'contrast', summary: 'Info', detail: 'Please wait processing...' });
+        // if (status) {
+        //         this.messageService.add({ severity: 'contrast', summary: 'Info', detail: 'Please wait processing...' });
 
-          this.deleteUser(event.data);
-          this.tablevalue = event.data
-        }
+        //   this.deleteUser(event.data);
+        //   this.tablevalue = event.data
+        // }
         break;
       case 'add':
         this.showForm = true;
         this.heading = 'ADD COMPANY';
-        console.log("add");
         this.form.reset();
         break;
     }
@@ -177,43 +175,45 @@ ngOnInit(): void {
       
     }
      this.companyMasterService.createUpdateCompany(payload)
+    
    
   }
-   private editcompany(data: any) {
-    if (data) {
-      this.form.reset();
-      this.form.patchValue({
-        companyName: data.Name,
-        companyAddress: data.Address,
-        companyCity: data.City,
-        companyPhone: data.Phone,
-        companyEmail: data.Email,
-        companyWebsite: data.Website,
-        companyBenificaryName: data.companyBenificaryName,
-        companyBankAccountNo: data.companyBankAccountNo,
-        companyBankAddress: data.companyBankAddress,
-        companyBankName: data.companyBankName,
-        companyBankIFSC: data.companyBankIFSC,
-        companyGSTNo: data.companyGSTNo,
-        companyPANNo: data.companyPANNo,
-        companyCINNo: data.companyCINNo,
-        
-        ...data
-      })
-    }
-  }
+  // private deleteUser(user: any) {
+  //   const payload = {
+  //     id: user.id
+  //   }
+  //   this.comonApiService.deleteData(payload)
+  // }
 
-   private deleteCompany(user: any) {
-    this.messageService.add({ severity: 'contrast', summary: 'Info', detail: 'Please wait processing...' });
-    const payload = {
-      id: user.id
-    }
-    this.comonApiService.deleteData(payload)
+  
+  private editUser(user: any) {
+  if (user) {
+    console.log("Editing user:", user);
+    this.showForm = true; 
+    this.heading = 'UPDATE COMPANY'; 
+    this.form.patchValue({
+      ...user,
+      id: user.ID,
+      companyName: user.Name,
+      companyAddress: user.Address,
+      companyPhone: user.Phone,
+      companyEmail: user.Email,
+      companyWebsite: user.Website,
+      companyCity: user.City,
+      ShortName: user.ShortName,
+      companyBenificaryName: user.BenificaryName,
+      companyBankAddress: user.BankAddress,
+      companyBankName: user.BankName,
+      companyBankIFSC: user.BankIFSC,
+      companyBankAccountNo: user.BankAccountNo,
+      companyCINNo: user.CINNo,
+      companyPANNo: user.PANNo,
+      companyGSTNo: user.GSTNo,
+      companyIGST: user.IGST,
+      companySGST: user.SGST,
+      companyCGST: user.CGST,
+    });
   }
-  private deleteUser(user: any) {
-    const payload = {
-      id: user.id
-    }
-    this.comonApiService.deleteData(payload)
-  }
+}
+
 }
