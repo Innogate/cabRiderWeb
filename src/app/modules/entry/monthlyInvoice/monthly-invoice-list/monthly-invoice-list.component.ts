@@ -187,56 +187,55 @@ export class MonthlyInvoiceListComponent implements OnInit {
     this.show_dialog = true;
   }
 
-invoiceData = {
-  companyName: 'Darwar Enterprise',
-  address: '7/1/1, Bijay Basu Road Kolkata 700025, West Bengal (WB-19)',
-  phone: '9748600670 / 9331293690 / 8113136860',
-  email: 'darwarenterprise@gmail.com',
-  invoiceNo: 'DE/584/25-26',
-  invoiceDate: '05-07-25',
-  recipient: 'STATE BANK OF INDIA (IFB KOLKATA BRANCH)',
-  addressLine1: '1, Middleton Street',
-  addressLine2: 'Kolkata : 700071',
-  carType: 'HONDA CITY',
-  category: '1500 KM/252 Hrs',
-  items: [
-    { particulars: 'Being monthly hire charges (01/06/2025 to 30/06/2025)', amount: '63000.00' },
-    { particulars: 'Extra Hour(s) 100.25 X 75', amount: '7518.75' },
-    { particulars: 'Extra KM 780 X 20', amount: '15600.00' },
-    { particulars: 'Gross Total', amount: '86818.75' },
-    { particulars: 'CGST @ 6%', amount: '5167.13' },
-    { particulars: 'SGST @ 6%', amount: '5167.13' },
-    { particulars: 'Holiday days (8 X 500)', amount: '4000.00' },
-    { particulars: 'Other Charges', amount: '9950.00' },
-    { particulars: 'Total Amount Payable', amount: '111103.00' },
-  ],
-};
+async generatePdf() {
+  const invoiceData = {
+    companyName: 'Darwar Enterprise',
+    address: '7/1/1, Bijay Basu Road Kolkata 700025, West Bengal (WB-19)',
+    phone: '9748600670 / 9331293690 / 8113136860',
+    email: 'darwarenterprise@gmail.com',
+    invoiceNo: 'DE/584/25-26',
+    invoiceDate: '05-07-25',
+    recipient: 'STATE BANK OF INDIA (IFB KOLKATA BRANCH)',
+    addressLine1: '1, Middleton Street',
+    addressLine2: 'Kolkata : 700071',
+    carType: 'HONDA CITY',
+    category: '1500 KM/252 Hrs',
+    items: [
+      { particulars: 'Being monthly hire charges (01/06/2025 to 30/06/2025)', amount: '63000.00' },
+      { particulars: 'Extra Hour(s) 100.25 X 75', amount: '7518.75' },
+      { particulars: 'Extra KM 780 X 20', amount: '15600.00' },
+      { particulars: 'Gross Total', amount: '86818.75' },
+      { particulars: 'CGST @ 6%', amount: '5167.13' },
+      { particulars: 'SGST @ 6%', amount: '5167.13' },
+      { particulars: 'Holiday days (8 X 500)', amount: '4000.00' },
+      { particulars: 'Other Charges', amount: '9950.00' },
+      { particulars: 'Total Amount Payable', amount: '111103.00' },
+    ],
+  };
 
-logRows = [
-  { carNo: '601', outDate: '01-06-25', outTime: '11:30', inDate: '01-06-25', inTime: '23:30', outKM: '62277', inKM: '62327', totalHrs: '12:00', totalKM: '50', overTime: '0', parking: '0', nightHalt: '200' },
-  { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
-  { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
-  { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
-  { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
-  { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
-  { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
-  { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
-  { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
-  { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
-  { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
-  { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
-  { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
-  { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
-  { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
-  { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
-  { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
-  { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
-  { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
-  { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
-  { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
-];
-
-async generatePdf(invoiceData = this.invoiceData, logRows = this.logRows) {
+  const logRows = [
+    { carNo: '601', outDate: '01-06-25', outTime: '11:30', inDate: '01-06-25', inTime: '23:30', outKM: '62277', inKM: '62327', totalHrs: '12:00', totalKM: '50', overTime: '0', parking: '0', nightHalt: '200' },
+    { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
+    { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
+    { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
+    { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
+    { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
+    { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
+    { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
+    { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
+    { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
+    { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
+    { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
+    { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
+    { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
+    { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
+    { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
+    { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
+    { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
+    { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
+    { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
+    { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
+  ];
   const pdfDoc = await PDFDocument.create();
 
   //
