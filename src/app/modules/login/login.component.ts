@@ -60,7 +60,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
       if (msg.message == 'success') {
         if (msg.token) {
           localStorage.setItem('auth_token', msg.token);
-          this.router.navigate(['/']);
+          this.router.navigate(['/monthly-invoice']);
         }
         return true;
       }
