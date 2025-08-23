@@ -187,138 +187,349 @@ export class MonthlyInvoiceListComponent implements OnInit {
     this.show_dialog = true;
   }
 
-async generatePdf() {
+invoiceData = {
+  companyName: 'Darwar Enterprise',
+  address: '7/1/1, Bijay Basu Road Kolkata 700025, West Bengal (WB-19)',
+  phone: '9748600670 / 9331293690 / 8113136860',
+  email: 'darwarenterprise@gmail.com',
+  invoiceNo: 'DE/584/25-26',
+  invoiceDate: '05-07-25',
+  recipient: 'STATE BANK OF INDIA (IFB KOLKATA BRANCH)',
+  addressLine1: '1, Middleton Street',
+  addressLine2: 'Kolkata : 700071',
+  carType: 'HONDA CITY',
+  category: '1500 KM/252 Hrs',
+  items: [
+    { particulars: 'Being monthly hire charges (01/06/2025 to 30/06/2025)', amount: '63000.00' },
+    { particulars: 'Extra Hour(s) 100.25 X 75', amount: '7518.75' },
+    { particulars: 'Extra KM 780 X 20', amount: '15600.00' },
+    { particulars: 'Gross Total', amount: '86818.75' },
+    { particulars: 'CGST @ 6%', amount: '5167.13' },
+    { particulars: 'SGST @ 6%', amount: '5167.13' },
+    { particulars: 'Holiday days (8 X 500)', amount: '4000.00' },
+    { particulars: 'Other Charges', amount: '9950.00' },
+    { particulars: 'Total Amount Payable', amount: '111103.00' },
+  ],
+};
+
+logRows = [
+  { carNo: '601', outDate: '01-06-25', outTime: '11:30', inDate: '01-06-25', inTime: '23:30', outKM: '62277', inKM: '62327', totalHrs: '12:00', totalKM: '50', overTime: '0', parking: '0', nightHalt: '200' },
+  { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
+  { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
+  { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
+  { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
+  { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
+  { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
+  { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
+  { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
+  { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
+  { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
+  { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
+  { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
+  { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
+  { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
+  { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
+  { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
+  { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
+  { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
+  { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
+  { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
+];
+
+async generatePdf(invoiceData = this.invoiceData, logRows = this.logRows) {
   const pdfDoc = await PDFDocument.create();
-  const page = pdfDoc.addPage([595.28, 841.89]); // A4
-  const { height, width } = page.getSize();
 
+  //
+  // FIRST PAGE – Invoice
+  //
+  const page = pdfDoc.addPage([595.28, 841.89]);
   const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+  const { width, height } = page.getSize();
 
-  // === Header (Centered) ===
-  page.drawText('Darwar Enterprise', {
-    x: width / 2 - font.widthOfTextAtSize('Darwar Enterprise', 14) / 2,
-    y: height - 50, size: 14, font, color: rgb(0, 0, 0),
+  // Header (Centered)
+  page.drawText(invoiceData.companyName, {
+    x: width / 2 - font.widthOfTextAtSize(invoiceData.companyName, 14) / 2,
+    y: height - 50,
+    size: 14,
+    font,
+    color: rgb(0, 0, 0),
   });
-  page.drawText('7/1/1, Bijay Basu Road Kolkata 700025, West Bengal (WB-19)', {
-    x: width / 2 - font.widthOfTextAtSize('7/1/1, Bijay Basu Road Kolkata 700025, West Bengal (WB-19)', 10) / 2,
-    y: height - 70, size: 10, font,
+  page.drawText(invoiceData.address, {
+    x: width / 2 - font.widthOfTextAtSize(invoiceData.address, 10) / 2,
+    y: height - 70,
+    size: 10,
+    font,
   });
-  page.drawText('Phone: 033-2466-4533 / 0885-8948-8499 / 09090-999-4488', {
-    x: width / 2 - font.widthOfTextAtSize('Phone: 033-2466-4533 / 0885-8948-8499 / 09090-999-4488', 10) / 2,
-    y: height - 85, size: 10, font,
+  page.drawText(`Phone: ${invoiceData.phone}`, {
+    x: width / 2 - font.widthOfTextAtSize(`Phone: ${invoiceData.phone}`, 10) / 2,
+    y: height - 85,
+    size: 10,
+    font,
   });
-  page.drawText('Email: info@darwarenterprise.com', {
-    x: width / 2 - font.widthOfTextAtSize('Email: info@darwarenterprise.com', 10) / 2,
-    y: height - 100, size: 10, font,
+  page.drawText(`Email: ${invoiceData.email}`, {
+    x: width / 2 - font.widthOfTextAtSize(`Email: ${invoiceData.email}`, 10) / 2,
+    y: height - 100,
+    size: 10,
+    font,
   });
 
-  // === TAX INVOICE Title (Centered with underline) ===
-  const invoiceText = 'TAX INVOICE';
-  const invoiceTextWidth = font.widthOfTextAtSize(invoiceText, 12);
-  const invoiceX = width / 2 - invoiceTextWidth / 2;
-  const invoiceY = height - 130;
-
-  page.drawText(invoiceText, { x: invoiceX, y: invoiceY, size: 12, font });
-  // underline
+  // TAX INVOICE title with underline
+  const title1 = 'TAX INVOICE';
+  const title1Width = font.widthOfTextAtSize(title1, 12);
+  const title1X = width / 2 - title1Width / 2;
+  const title1Y = height - 130;
+  page.drawText(title1, { x: title1X, y: title1Y, size: 12, font });
   page.drawLine({
-    start: { x: invoiceX - 10, y: invoiceY - 5 },
-    end: { x: invoiceX + invoiceTextWidth + 10, y: invoiceY - 5 },
+    start: { x: title1X - 10, y: title1Y - 5 },
+    end:   { x: title1X + title1Width + 10, y: title1Y - 5 },
     thickness: 1,
     color: rgb(0, 0, 0),
   });
 
-  // === Left Section ===
+  // Left “To” section
   page.drawText('To,', { x: 50, y: height - 170, size: 10, font });
-  page.drawText('STATE BANK OF INDIA (IFB KOLKATA BRANCH)', { x: 50, y: height - 185, size: 10, font });
-  page.drawText('1, Middleton Street', { x: 50, y: height - 200, size: 10, font });
-  page.drawText('Kolkata : 700071', { x: 50, y: height - 215, size: 10, font });
+  page.drawText(invoiceData.recipient, { x: 50, y: height - 185, size: 10, font });
+  page.drawText(invoiceData.addressLine1, { x: 50, y: height - 200, size: 10, font });
+  page.drawText(invoiceData.addressLine2, { x: 50, y: height - 215, size: 10, font });
 
-  // === Right Section (Boxed Details) ===
-  const infoBoxX = 350;
-  const infoBoxY = height - 170;
-  const infoBoxW = 200;
-  const infoBoxH = 100;
-
-  page.drawRectangle({
-    x: infoBoxX, y: infoBoxY - infoBoxH, width: infoBoxW, height: infoBoxH,
-    borderColor: rgb(0, 0, 0), borderWidth: 1,
+  // Right invoice details (no border)
+  const infoX = 350;
+  const infoY = height - 170;
+  [
+    `Tax Invoice No.: ${invoiceData.invoiceNo}`,
+    `Tax Invoice Date: ${invoiceData.invoiceDate}`,
+    `Classification: RENT-A-CAR`,
+    `Place of Supply: Kolkata`,
+    `Car Type: ${invoiceData.carType}`,
+    `Category: ${invoiceData.category}`,
+  ].forEach((text, i) => {
+    page.drawText(text, { x: infoX, y: infoY - i * 15, size: 9, font });
   });
 
-  const invoiceDetails = [
-    'Tax Invoice No.: DE/584/25-26',
-    'Tax Invoice Date: 05-07-25',
-    'Classification: RENT-A-CAR',
-    'Place of Supply: Kolkata',
-    'Car Type: HONDA CITY',
-    'Category: 1500 KMS/12 Hrs',
-  ];
-
-  invoiceDetails.forEach((text, i) => {
-    page.drawText(text, { x: infoBoxX + 5, y: infoBoxY - 15 - i * 15, size: 9, font });
-  });
-
-  // === Box Style Table (instead of rows) ===
+  // Item table rows with borders
   const tableX = 40;
   const tableY = height - 300;
   const tableWidth = 515;
-  const rowHeight = 25;
-
-  const rows = [
-    { particulars: 'Being monthly hire charges (01/06/2025 to 30/06/2025)', amount: '63000.00' },
-    { particulars: 'Extra Hour(s) 100.25 X 75', amount: '7518.75' },
-    { particulars: 'Extra KM 780 X 20', amount: '15600.00' },
-    { particulars: 'Gross Total', amount: '2000.00' },
-    { particulars: 'CGST @ 6%', amount: '300.00' },
-    { particulars: 'SGST @ 6%', amount: '324.00' },
-    { particulars: 'Holi days', amount: '3150.00' },
-    { particulars: 'Driver Washing uniform 780 X 20', amount: '4175.25' },
-    { particulars: 'Car Washing charges', amount: '500.00' },
-    { particulars: 'Driver Phone Recharge', amount: '2220.00' },
-    { particulars: 'Parking/Tolls/Permit Amount', amount: '5000.00' },
-    { particulars: 'Night Halt Amount', amount: '2000.00' },
-    { particulars: 'Night Halting Charges', amount: '300.00' },
-    { particulars: 'Round OFF', amount: '2220.00' },
-    { particulars: 'Net Amount (One lakh eleven thousand forty three only)', amount: '111043.00' },
-    { particulars: 'GST No: 16894j979j86C6P', amount: '' },
-    { particulars: 'PAN No: ABCDE1234F', amount: '' },
-    { particulars: 'SAC Code: 1234', amount: '' },
-  ];
-
-  rows.forEach((row, i) => {
-    const rowTop = tableY - i * rowHeight;
-    // Draw box per row
+  const rowH = 25;
+  invoiceData.items.forEach((row, idx) => {
+    const top = tableY - idx * rowH;
     page.drawRectangle({
-      x: tableX, y: rowTop - rowHeight, width: tableWidth, height: rowHeight,
-      borderColor: rgb(0, 0, 0), borderWidth: 0.8,
+      x: tableX,
+      y: top - rowH,
+      width: tableWidth,
+      height: rowH,
+      borderColor: rgb(0, 0, 0),
+      borderWidth: 0.8,
     });
-
-    // Text inside
-    page.drawText(row.particulars, { x: tableX + 5, y: rowTop - 17, size: 9, font });
-    page.drawText(row.amount, { x: tableX + tableWidth - 80, y: rowTop - 17, size: 9, font });
+    page.drawText(row.particulars, {
+      x: tableX + 5,
+      y: top - 17,
+      size: 9,
+      font,
+    });
+    page.drawText(row.amount, {
+      x: tableX + tableWidth - 80,
+      y: top - 17,
+      size: 9,
+      font,
+    });
   });
 
-  // === Second Page (Detail Sheet) ===
-  const detailPage = pdfDoc.addPage([595.28, 841.89]);
-  const dHeight = detailPage.getSize().height;
-
-  detailPage.drawText('DETAIL SHEET', {
-    x: width / 2 - font.widthOfTextAtSize('DETAIL SHEET', 12) / 2,
-    y: dHeight - 50, size: 12, font,
+  // Footer note
+  page.drawText('Release payment within forty one days.\nFor Darwar Enterprise', {
+    x: 50,
+    y: 70,
+    size: 10,
+    font,
   });
 
-  detailPage.drawRectangle({
-    x: 40, y: dHeight - 700, width: 515, height: 600,
-    borderColor: rgb(0, 0, 0), borderWidth: 1,
+  // SECOND PAGE – DETAIL SHEET / Logsheet
+const detailPage = pdfDoc.addPage([595.28, 841.89]);
+const dFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
+const dW = detailPage.getSize().width;
+const dH = detailPage.getSize().height;
+
+// Header centered
+detailPage.drawText(invoiceData.companyName, {
+  x: dW / 2 - dFont.widthOfTextAtSize(invoiceData.companyName, 13) / 2,
+  y: dH - 50,
+  size: 13,
+  font: dFont,
+});
+detailPage.drawText(invoiceData.address, {
+  x: dW / 2 - dFont.widthOfTextAtSize(invoiceData.address, 9) / 2,
+  y: dH - 65,
+  size: 9,
+  font: dFont,
+});
+detailPage.drawText(`Phone - ${invoiceData.phone}`, {
+  x: dW / 2 - dFont.widthOfTextAtSize(`Phone - ${invoiceData.phone}`, 9) / 2,
+  y: dH - 80,
+  size: 9,
+  font: dFont,
+});
+detailPage.drawText(`E-Mail - ${invoiceData.email}`, {
+  x: dW / 2 - dFont.widthOfTextAtSize(`E-Mail - ${invoiceData.email}`, 9) / 2,
+  y: dH - 95,
+  size: 9,
+  font: dFont,
+});
+
+// DETAIL SHEET title + underline
+const title2 = 'DETAIL SHEET';
+const title2W = dFont.widthOfTextAtSize(title2, 12);
+const title2X = dW / 2 - title2W / 2;
+const title2Y = dH - 120;
+detailPage.drawText(title2, { x: title2X, y: title2Y, size: 12, font: dFont });
+detailPage.drawLine({
+  start: { x: title2X - 10, y: title2Y - 5 },
+  end: { x: title2X + title2W + 10, y: title2Y - 5 },
+  thickness: 1,
+  color: rgb(0, 0, 0),
+});
+
+// Left "To" section
+detailPage.drawText('To,', { x: 50, y: dH - 150, size: 10, font: dFont });
+detailPage.drawText(invoiceData.recipient, { x: 50, y: dH - 165, size: 10, font: dFont });
+detailPage.drawText(invoiceData.addressLine1, { x: 50, y: dH - 180, size: 10, font: dFont });
+detailPage.drawText(invoiceData.addressLine2, { x: 50, y: dH - 195, size: 10, font: dFont });
+
+// Right invoice details
+const diX = 350;
+[
+  `Tax Invoice No. : ${invoiceData.invoiceNo}`,
+  `Tax Invoice Date : ${invoiceData.invoiceDate}`,
+  `Classification : RENT-A-CAR`,
+  `Place of Supply : Kolkata`,
+  `Car Type : ${invoiceData.carType}`,
+  `Category : ${invoiceData.category}`,
+].forEach((text, i) => {
+  detailPage.drawText(text, { x: diX, y: dH - 150 - i * 15, size: 9, font: dFont });
+});
+
+// Table setup with TIGHTER columns
+const tblX = 40;
+const tblY = dH - 240;
+const tblW = 515;
+const rowH2 = 16; // Reduced row height for tighter spacing
+const totalRows = logRows.length + 2;
+
+// Draw outer table border
+detailPage.drawRectangle({
+  x: tblX,
+  y: tblY - rowH2 * totalRows,
+  width: tblW,
+  height: rowH2 * totalRows,
+  borderColor: rgb(0, 0, 0),
+  borderWidth: 1,
+});
+
+// Define columns with MUCH TIGHTER widths like the original
+const cols = [
+  { h: 'Car No.', x: tblX, w: 35 },
+  { h: 'Out Date', x: tblX + 35, w: 45 },
+  { h: 'Out Time', x: tblX + 80, w: 40 },
+  { h: 'In Date', x: tblX + 120, w: 45 },
+  { h: 'In Time', x: tblX + 165, w: 40 },
+  { h: 'Out KM', x: tblX + 205, w: 40 },
+  { h: 'IN KM', x: tblX + 245, w: 40 },
+  { h: 'Total Hrs', x: tblX + 285, w: 45 },
+  { h: 'Total KM', x: tblX + 330, w: 40 },
+  { h: 'Over Time', x: tblX + 370, w: 45 },
+  { h: 'Parking', x: tblX + 415, w: 35 },
+  { h: 'Night Halt', x: tblX + 450, w: 45 },
+];
+
+// Draw header row with smaller font
+const headerY = tblY - rowH2;
+cols.forEach(({ h, x, w }, i) => {
+  detailPage.drawText(h, { 
+    x: x + 1, 
+    y: headerY + 4, 
+    size: 6, // Smaller font for header
+    font: dFont 
   });
+  
+  // Draw vertical lines
+  detailPage.drawLine({
+    start: { x: x + w, y: tblY },
+    end: { x: x + w, y: tblY - rowH2 * totalRows },
+    thickness: 0.3,
+    color: rgb(0, 0, 0),
+  });
+});
 
-  detailPage.drawText('Date   In Time   Out Time   KM   Halt Hrs   Parking', { x: 50, y: dHeight - 100, size: 9, font });
-  detailPage.drawLine({ start: { x: 40, y: dHeight - 110 }, end: { x: 555, y: dHeight - 110 }, thickness: 0.5, color: rgb(0, 0, 0) });
-  detailPage.drawText('01-06-25   09:00   18:00   120   1   200', { x: 50, y: dHeight - 125, size: 9, font });
+// Draw horizontal line after header
+detailPage.drawLine({
+  start: { x: tblX, y: headerY },
+  end: { x: tblX + tblW, y: headerY },
+  thickness: 0.5,
+  color: rgb(0, 0, 0),
+});
 
-  // Save
+// Draw data rows with TIGHTER spacing
+logRows.forEach((r, ri) => {
+  const currentRowY = tblY - rowH2 * (ri + 2);
+  const vals = [
+    r.carNo, r.outDate, r.outTime, r.inDate, r.inTime,
+    r.outKM, r.inKM, r.totalHrs, r.totalKM, r.overTime,
+    r.parking, r.nightHalt
+  ];
+  
+  // Draw data in each cell with smaller font and tight spacing
+  cols.forEach((c, ci) => {
+    detailPage.drawText(vals[ci] ?? '', {
+      x: c.x + 1, // Minimal padding
+      y: currentRowY + 3,
+      size: 6, // Smaller font for data
+      font: dFont
+    });
+  });
+  
+  // Draw horizontal line after each row
+  detailPage.drawLine({
+    start: { x: tblX, y: currentRowY },
+    end: { x: tblX + tblW, y: currentRowY },
+    thickness: 0.2,
+    color: rgb(0, 0, 0),
+  });
+});
+
+// Draw totals row
+const totalsY = tblY - rowH2 * totalRows;
+const totals = ['', '', '', '', '', '', '', '433:00', '2280', '100.25', '3690.00', '4200.00'];
+cols.forEach((c, ci) => {
+  if (totals[ci]) {
+    detailPage.drawText(totals[ci], {
+      x: c.x + 1,
+      y: totalsY + 3,
+      size: 6,
+      font: dFont
+    });
+  }
+});
+
+// Footer
+detailPage.drawText('for Darwar Enterprise', {
+  x: 450,
+  y: 50,
+  size: 10,
+  font: dFont,
+});
+
+
+
+  // Save & download
   const pdfBytes = await pdfDoc.save();
-  this.download(pdfBytes, 'Invoice.pdf');
+  const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = 'Invoice_DetailSheet.pdf';
+  link.click();
 }
+
+
+
 
 private download(pdfBytes: Uint8Array, fileName: string) {
   const blob = new Blob([pdfBytes], { type: 'application/pdf' });
