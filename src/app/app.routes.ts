@@ -39,7 +39,6 @@ import { CompanyMasterComponent } from './modules/master/company-master/company-
 import { JournalEntryComponent } from './modules/entry/journal-entry/journal-entry.component';
 import { GlMasterComponent } from './modules/master/gl-master/gl-master.component';
 import { GeneralSaleComponent } from './modules/entry/general-sale/general-sale.component';
-import { CarSaleEntryComponent } from './modules/entry/car-sale-entry/car-sale-entry.component';
 
 export const routes: Routes = [
     {

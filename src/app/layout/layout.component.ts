@@ -49,8 +49,6 @@ export class LayoutComponent {
       icon: 'pi pi-home',
       items: [
         { label: 'Booking', icon: 'pi pi-book', routerLink:'/booking'},
-        { label: 'General Sale Bill', icon: 'pi pi-book', routerLink:'entry/general-sale'},
-        { label: 'Car Sale Bill', icon: 'pi pi-book', routerLink:'/car-sale-entry'},
         { label: 'Full Booking', icon: 'pi pi-calendar-plus', routerLink:'/full-booking' },
         { label: 'Invoice Entry', icon: 'pi pi-file', routerLink:'/invoice-entry'},
         { label: 'Vendor Invoice Entry', icon: 'pi pi-file-edit',routerLink:'/vendor-invoice-entry' },
@@ -62,6 +60,8 @@ export class LayoutComponent {
         { label: 'Network Duty', icon: 'pi pi-sitemap', routerLink:'network-duty' },
         { label: 'Monthly Invoice', icon: 'pi pi-calendar', routerLink:'monthly-invoice' },
         { label: 'Journal Entry', icon: 'pi pi-calendar', routerLink:'entry/journal-entry' },
+        { label: 'General Sale Bill', icon: 'pi pi-book', routerLink:'entry/general-sale'},
+        { label: 'Car Sale Bill', icon: 'pi pi-book', routerLink:'entry/car-sale'},
       ],
     },
 
