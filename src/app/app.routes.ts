@@ -34,6 +34,7 @@ import { MonthlyInvoiceListComponent } from './modules/entry/monthlyInvoice/mont
 import { MonthlyInvoiceCreateComponent } from './modules/entry/monthlyInvoice/monthly-invoice-create/monthly-invoice-create.component';
 import { MbillingComponent } from './components/mbilling/mbilling.component';
 import { BranchMasterComponent } from './modules/master/branch-master/branch-master.component';
+import { CompanyMasterComponent } from './modules/master/company-master/company-master.component';
 
 export const routes: Routes = [
     {
@@ -76,6 +77,7 @@ export const routes: Routes = [
             { path: 'monthly-invoice-create', component: MonthlyInvoiceCreateComponent, canActivate: [AuthGuard] },
             { path: 'master/branch-master', component: BranchMasterComponent, canActivate: [AuthGuard]},
             { path: 'monthly-biling', component: MbillingComponent },
+            { path: 'master/company-master', component: CompanyMasterComponent, canActivate: [AuthGuard] },
         ],
         canActivate: [AuthGuard]
     },
