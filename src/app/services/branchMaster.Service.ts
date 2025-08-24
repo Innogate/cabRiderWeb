@@ -6,6 +6,16 @@ import { BaseService } from './base.service';
     providedIn: 'root',
 })
 export class branchMasterService extends BaseService {
+    reset() {
+      throw new Error('Method not implemented.');
+    }
+    value(arg0: string, value: any) {
+      throw new Error('Method not implemented.');
+    }
+    valid: any;
+    createUpdateUser(value: any) {
+      throw new Error('Method not implemented.');
+    }
     constructor(ws: WebSocketService) {
         super(ws);
     }
