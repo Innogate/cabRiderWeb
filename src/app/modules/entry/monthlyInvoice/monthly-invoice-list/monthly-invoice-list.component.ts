@@ -187,7 +187,8 @@ export class MonthlyInvoiceListComponent implements OnInit {
     this.show_dialog = true;
   }
 
-async generatePdf() {
+async generatePdf(invoice: any) {
+  console.log('Generating PDF for invoice:', invoice);
   const invoiceData = {
     companyName: 'Darwar Enterprise',
     address: '7/1/1, Bijay Basu Road Kolkata 700025, West Bengal (WB-19)',
@@ -201,20 +202,29 @@ async generatePdf() {
     carType: 'HONDA CITY',
     category: '1500 KM/252 Hrs',
     items: [
-      { particulars: 'Being monthly hire charges (01/06/2025 to 30/06/2025)', amount: '63000.00' },
-      { particulars: 'Extra Hour(s) 100.25 X 75', amount: '7518.75' },
-      { particulars: 'Extra KM 780 X 20', amount: '15600.00' },
-      { particulars: 'Gross Total', amount: '86818.75' },
-      { particulars: 'CGST @ 6%', amount: '5167.13' },
-      { particulars: 'SGST @ 6%', amount: '5167.13' },
-      { particulars: 'Holiday days (8 X 500)', amount: '4000.00' },
-      { particulars: 'Other Charges', amount: '9950.00' },
-      { particulars: 'Total Amount Payable', amount: '111103.00' },
+      { particulars: 'Being monthly hire charges (01/06/2025 to 30/06/2025)', amount: String(invoice.amount ?? 'N/A') },
+      { particulars: 'Add : Extra Hour(s)         100.25 X 75', amount: String(invoice.extra_hours ?? '0.00') },
+      { particulars: 'Add : Extra KM              780 X 20', amount: String(invoice.extra_km ?? '0.00') },
+      { particulars: 'Gross Total', amount: String(invoice.GrossAmount ?? '0.00') },
+      { particulars: `Add : CGST @ ${invoice.CGSTPer}%`, amount: String(invoice.CGST ?? '0.00') },
+      { particulars: `Add : SGST @ ${invoice.SGSTPer}%`, amount: String(invoice.SGST ?? '0.00') },
+      { particulars: 'Holiday days                8 X 500', amount: String(invoice.holiday ?? 'N/A') },
+      { particulars: 'Driver Washing Uniform ', amount: String(invoice.uniform ?? 'N/A') },
+      { particulars: 'Car Washing Charges', amount: String(invoice.washing_charges ?? 'N/A') },
+      { particulars: 'Driver Phone Recharge', amount: String(invoice.recharge ?? '0.00') },
+      { particulars: 'Add : Parking/Tools/Permit Amount', amount: String(invoice.tools ?? 'N/A') },
+      { particulars: 'Add : Night Halt Amount        8 X 500 ', amount: String(invoice.nightHalt ?? '0.00') },
+      { particulars: 'Add : Night Halting Charges        8 X 500 ', amount: String(invoice.night_amount ?? '0.00') },
+      { particulars: 'Round OFF', amount: String(invoice.round_off ?? '0.00') },
+      { particulars: `Net Amount (Rupees ${this.numberToWords(invoice.NetAmount ?? 0)})`, amount: String(invoice.NetAmount ?? '0.00') },
+      { particulars: 'GST No : 75HU8899', amount: String(invoice.GSTNo ?? '19B0FP5592C12P') },
+      { particulars: 'PAN NO : HYHH869', amount: String(invoice.PANNo ?? 'BOFP55927C') },
+      { particulars: 'SAC Code : 7589J', amount: String(invoice.SACCode ?? '996601') },
     ],
   };
 
   const logRows = [
-    { carNo: '601', outDate: '01-06-25', outTime: '11:30', inDate: '01-06-25', inTime: '23:30', outKM: '62277', inKM: '62327', totalHrs: '12:00', totalKM: '50', overTime: '0', parking: '0', nightHalt: '200' },
+    { carNo: invoice.carno, outDate: '01-06-25', outTime: '11:30', inDate: '01-06-25', inTime: '23:30', outKM: '62277', inKM: '62327', totalHrs: '12:00', totalKM: '50', overTime: '0', parking: '0', nightHalt: '200' },
     { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
     { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
     { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
@@ -442,13 +452,13 @@ const cols = [
 // Draw header row with smaller font
 const headerY = tblY - rowH2;
 cols.forEach(({ h, x, w }, i) => {
-  detailPage.drawText(h, { 
-    x: x + 1, 
-    y: headerY + 4, 
+  detailPage.drawText(h, {
+    x: x + 1,
+    y: headerY + 4,
     size: 6, // Smaller font for header
-    font: dFont 
+    font: dFont
   });
-  
+
   // Draw vertical lines
   detailPage.drawLine({
     start: { x: x + w, y: tblY },
@@ -474,7 +484,7 @@ logRows.forEach((r, ri) => {
     r.outKM, r.inKM, r.totalHrs, r.totalKM, r.overTime,
     r.parking, r.nightHalt
   ];
-  
+
   // Draw data in each cell with smaller font and tight spacing
   cols.forEach((c, ci) => {
     detailPage.drawText(vals[ci] ?? '', {
@@ -484,7 +494,7 @@ logRows.forEach((r, ri) => {
       font: dFont
     });
   });
-  
+
   // Draw horizontal line after each row
   detailPage.drawLine({
     start: { x: tblX, y: currentRowY },
@@ -528,15 +538,12 @@ detailPage.drawText('for Darwar Enterprise', {
 }
 
 
-
-
-private download(pdfBytes: Uint8Array, fileName: string) {
-  const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-  const link = document.createElement('a');
-  link.href = window.URL.createObjectURL(blob);
-  link.download = fileName;
-  link.click();
+ numberToWords(amount: number): string {
+  const units = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"];
+  return amount ? amount.toLocaleString('en-IN') : "0";
 }
+
+
 
 
 }
