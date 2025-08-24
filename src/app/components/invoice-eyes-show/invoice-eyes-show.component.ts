@@ -44,6 +44,7 @@ export class InvoiceEyesShowComponent implements OnInit {
     taxableCharges: any[];
     nonTaxableCharges: any[];
     sleetedBookingIds?: any[];
+    charges: any[];
   }>();
 
 
@@ -77,6 +78,7 @@ export class InvoiceEyesShowComponent implements OnInit {
          //  Push into common array
         this.charges = [...this.taxableCharges];
         console.log('Charges (Taxable):', this.charges);
+        this.sendChargesToParent();
         rt = true;
 
       }
@@ -96,6 +98,7 @@ export class InvoiceEyesShowComponent implements OnInit {
         // Push into common array
         this.charges = [...this.nonTaxableCharges];
         console.log('Charges (Non-Taxable):', this.charges);
+        this.sendChargesToParent();
         rt = true;
       }
     }
@@ -136,7 +139,8 @@ sendChargesToParent() {
   this.chargesUpdated.emit({
     taxableCharges: this.taxableCharges,
     nonTaxableCharges: this.nonTaxableCharges,
-    sleetedBookingIds: this.sleetedBookingIds
+    sleetedBookingIds: this.sleetedBookingIds,
+    charges: this.charges
   });
 }
 

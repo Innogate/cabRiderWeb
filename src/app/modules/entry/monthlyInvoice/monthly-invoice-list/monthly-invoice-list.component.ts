@@ -70,6 +70,11 @@ export class MonthlyInvoiceListComponent implements OnInit {
   display_dialog = false;
   show_other_charges = false;
   selectedChargeType: 'taxable' | 'nonTaxable' = 'taxable';
+  charges: any[] = [];
+  taxableCharges: any;
+  sleetedBookingIds: any;
+  nonTaxableCharges: any;
+  selectedInvoice: any;
 
   constructor(
     private _invoice: InvoiceService,
@@ -95,6 +100,16 @@ export class MonthlyInvoiceListComponent implements OnInit {
         this.cdr.detectChanges();
       } else if (msg.for === 'companyDropdown') {
         this.companies = msg.data;
+        rt = true;
+      }
+       if ((msg.for === 'getOtherTaxableChargesUsingId'))
+        {
+        this.taxableCharges = msg.data?.taxable ? [...msg.data?.taxable] : [];
+        rt = true;
+      }
+      else if ((msg.for === 'getOtherNonTaxableChargesUsingId'))
+      {
+        this.nonTaxableCharges = msg.data?.nonTaxable ? [ ...msg.data?.nonTaxable] : [];
         rt = true;
       }
 
@@ -187,8 +202,63 @@ export class MonthlyInvoiceListComponent implements OnInit {
     this.show_dialog = true;
   }
 
-async generatePdf(invoice: any) {
+  updateCharges(event: {
+  taxableCharges: any[];
+  nonTaxableCharges: any[];
+  sleetedBookingIds?: any[];
+  charges: any[];
+  }) {
+    this.charges = event.charges;
+    this.taxableCharges = event.taxableCharges;
+    this.nonTaxableCharges = event.nonTaxableCharges;
+    this.sleetedBookingIds = event.sleetedBookingIds;
+
+    console.log('Duty Updated:', {
+      charges: this.charges,
+      taxableCharges: this.taxableCharges,
+      nonTaxableCharges: this.nonTaxableCharges,
+      sleetedBookingIds: this.sleetedBookingIds,
+
+    });
+  }
+
+
+  getTaxableCharges(invoice_id:any) {
+  // this._helper.getOtherChargesForMonthlyInvoice({ booking_entry_id })
+  if (invoice_id) {
+    console.log('Fetching charges for invoice:', invoice_id);
+    this.HelperService.getTaxableOtherChargesForMonthlyInvoice({ booking_entry_id: invoice_id });
+  } else {
+    console.error("No selected invoice to fetch charges for.");
+  }
+}
+
+getNonTaxableCharges(invoice_id: any) {
+  if (invoice_id) {
+    console.log('Fetching non-taxable charges for invoice:',invoice_id);
+    this.HelperService.getNonTaxableOtherChargesForMonthlyInvoice({ booking_entry_id: invoice_id });
+  } else {
+    console.error("No selected invoice to fetch non-taxable charges for.");
+  }
+}
+
+
+
+async generatePdf(invoice: any , charges : any) {
   console.log('Generating PDF for invoice:', invoice);
+  console.log('Charges:', charges);
+
+
+  this.getTaxableCharges(invoice.id);
+  await this.waitForFetch(() => this.taxableCharges);
+  this.getNonTaxableCharges(invoice.id);
+  // await this.waitForFetch(() => this.nonTaxableCharges);
+  this.taxableCharges = this.taxableCharges ? this.taxableCharges : []
+  this.nonTaxableCharges = this.nonTaxableCharges ? this.nonTaxableCharges : []
+
+  charges = this.taxableCharges.concat(this.nonTaxableCharges)
+  console.log("Final charges: ", charges)
+
   const invoiceData = {
     companyName: 'Darwar Enterprise',
     address: '7/1/1, Bijay Basu Road Kolkata 700025, West Bengal (WB-19)',
@@ -223,29 +293,24 @@ async generatePdf(invoice: any) {
     ],
   };
 
-  const logRows = [
-    { carNo: invoice.carno, outDate: '01-06-25', outTime: '11:30', inDate: '01-06-25', inTime: '23:30', outKM: '62277', inKM: '62327', totalHrs: '12:00', totalKM: '50', overTime: '0', parking: '0', nightHalt: '200' },
-    { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
-    { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
-    { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
-    { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
-    { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
-    { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
-    { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
-    { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
-    { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
-    { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
-    { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
-    { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
-    { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
-    { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
-    { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
-    { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
-    { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
-    { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
-    { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
-    { carNo: '601', outDate: '02-06-25', outTime: '08:00', inDate: '02-06-25', inTime: '23:30', outKM: '62327', inKM: '62406', totalHrs: '15:30', totalKM: '79', overTime: '3.50', parking: '0', nightHalt: '200' },
-  ];
+
+
+  const logRows = charges.map((charge: any) => ({
+  carNo: charge.CarNo,
+  outDate: this.formatDate(charge.GarageOutDate) ,
+  outTime: charge.GarageOutTime,
+  inDate: this.formatDate(charge.GarageInDate),
+  inTime: charge.EntryTime,
+  outKM: charge.GarageOutKm,
+  inKM: charge.GarageInKm,
+  totalHrs: charge.TotalHour,
+  totalKM: charge.TotalKm,
+  overTime: charge.ExtraHrs,
+  parking: charge.charge_name,
+  nightHalt: invoice?.nightHalt ?? null
+}));
+
+  console.log(logRows)
   const pdfDoc = await PDFDocument.create();
 
   //
@@ -421,7 +486,7 @@ const tblX = 40;
 const tblY = dH - 240;
 const tblW = 515;
 const rowH2 = 16; // Reduced row height for tighter spacing
-const totalRows = logRows.length + 2;
+const totalRows = logRows.length + 1;
 
 // Draw outer table border
 detailPage.drawRectangle({
@@ -460,6 +525,10 @@ cols.forEach(({ h, x, w }, i) => {
   });
 
   // Draw vertical lines
+  // Draw vertical lines for columns except the last one
+cols.forEach(({ x, w }, i) => {
+  if (i === cols.length - 1) return; // skip the last column
+
   detailPage.drawLine({
     start: { x: x + w, y: tblY },
     end: { x: x + w, y: tblY - rowH2 * totalRows },
@@ -467,6 +536,10 @@ cols.forEach(({ h, x, w }, i) => {
     color: rgb(0, 0, 0),
   });
 });
+
+});
+
+
 
 // Draw horizontal line after header
 detailPage.drawLine({
@@ -476,23 +549,34 @@ detailPage.drawLine({
   color: rgb(0, 0, 0),
 });
 
+const lastCol = cols[cols.length - 1];
+detailPage.drawLine({
+  start: { x: tblX, y: headerY },
+  end: { x: lastCol.x + lastCol.w, y: headerY }, // stop at last header
+  thickness: 0.5,
+  color: rgb(0, 0, 0),
+});
+
 // Draw data rows with TIGHTER spacing
-logRows.forEach((r, ri) => {
+logRows.forEach((r: any, ri: number) => {
   const currentRowY = tblY - rowH2 * (ri + 2);
   const vals = [
     r.carNo, r.outDate, r.outTime, r.inDate, r.inTime,
     r.outKM, r.inKM, r.totalHrs, r.totalKM, r.overTime,
-    r.parking, r.nightHalt
+    r.parking, r.nightHalt, r.amount
   ];
 
+
   // Draw data in each cell with smaller font and tight spacing
-  cols.forEach((c, ci) => {
-    detailPage.drawText(vals[ci] ?? '', {
-      x: c.x + 1, // Minimal padding
-      y: currentRowY + 3,
-      size: 6, // Smaller font for data
-      font: dFont
-    });
+   cols.forEach((c, ci) => {
+    if (vals[ci] !== undefined && vals[ci] !== null) {
+      detailPage.drawText(String(vals[ci]), {
+        x: c.x + 1,
+        y: currentRowY + 3,
+        size: 6,
+        font: dFont,
+      });
+    }
   });
 
   // Draw horizontal line after each row
@@ -506,7 +590,7 @@ logRows.forEach((r, ri) => {
 
 // Draw totals row
 const totalsY = tblY - rowH2 * totalRows;
-const totals = ['', '', '', '', '', '', '', '433:00', '2280', '100.25', '3690.00', '4200.00'];
+const totals = ['', '', '', '', '', '', '', '', '', '', '', ''];
 cols.forEach((c, ci) => {
   if (totals[ci]) {
     detailPage.drawText(totals[ci], {
@@ -543,6 +627,33 @@ detailPage.drawText('for Darwar Enterprise', {
   return amount ? amount.toLocaleString('en-IN') : "0";
 }
 
+formatDate(dateStr: string | null): string | null {
+  if (!dateStr) return null;
+  const d = new Date(dateStr);
+  const day = String(d.getDate()).padStart(2, '0');
+  const month = String(d.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+  const year = String(d.getFullYear()).slice(-2); // last 2 digits
+  return `${day}-${month}-${year}`;
+}
+
+waitForFetch<T>(getter: () => T, interval = 50): Promise<T> {
+    return new Promise((resolve) => {
+      const timer = setInterval(() => {
+        const value = getter();
+
+        // Check if value is not undefined, null, empty string, or empty array
+        if (
+          value !== undefined &&
+          value !== null &&
+          !(typeof value === 'string' && value.trim() === '') &&
+          !(Array.isArray(value) && value.length === 0)
+        ) {
+          clearInterval(timer);
+          resolve(value);
+        }
+      }, interval);
+    });
+  }
 
 
 
