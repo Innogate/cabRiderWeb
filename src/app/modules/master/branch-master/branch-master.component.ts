@@ -121,7 +121,7 @@ export class BranchMasterComponent implements OnInit,OnDestroy,AfterViewInit {
 
       }
       else if (msg.for === "deleteData") {
-        if (msg.StatusMessage === "success") {
+        if (msg.StatusID === 1) {
           const index = this.data.findIndex((v: any) => v.id == this.tablevalue.id);
           if (index !== -1) {
             this.data.splice(index, 1);
@@ -157,10 +157,9 @@ export class BranchMasterComponent implements OnInit,OnDestroy,AfterViewInit {
         this.isEditMode = true;
         this.heading = 'UPDATE BRANCH';
         console.log("edit");
-        const  partyname = this.partyname.find(partyname =>partyname.Id == event.data.party_name);
         this.form.patchValue({
           ...event.data,
-          party_name: partyname
+
         })
         break;
       case 'delete':
@@ -191,7 +190,8 @@ export class BranchMasterComponent implements OnInit,OnDestroy,AfterViewInit {
     const payload = {
       ...this.form.value,
     }
-    console.log("form value", this.form.value);
+    console.log(payload);
+    this.BranchMasterService.createUpdateBranch(payload)
   }
 }
 

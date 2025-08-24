@@ -87,7 +87,7 @@
                                         <label class="block text-sm font-medium text-gray-700 mb-1">CITY</label>
                                     </div>
                                     <p-autoComplete field="CityName" [dropdown]="true" placeholder="Select City"
-                                        (completeMethod)="filterCity($event)"
+                                        (completeMethod)="filterCity($event)" optionValue="Id"
                                         class="w-full border border-indigo-200 rounded-md"
                                         [suggestions]="filteredCities" formControlName="city">
                                     </p-autoComplete>
@@ -110,7 +110,7 @@
                                 <i class="pi pi-hashtag text-green-700"></i>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">PIN CODE</label>
                             </div>
-                            <input type="number" pInputText class="w-full border border-gray-300 rounded-lg p-3"
+                            <input type="string" pInputText class="w-full border border-gray-300 rounded-lg p-3"
                                 placeholder="Pin Code" formControlName="pin_code">
                         </div>
                     </div>
@@ -129,7 +129,7 @@
                                     <i class="pi pi-phone text-green-700"></i>
                                     <label class="block text-sm font-medium text-gray-700 mb-1">PHONE</label>
                                 </div>
-                                <input type="number" pInputText class="w-full border border-gray-300 rounded-lg p-3"
+                                <input type="string" pInputText class="w-full border border-gray-300 rounded-lg p-3"
                                     placeholder="Phone Number" formControlName="phone">
                                 <span *ngIf="form.get('phone')?.touched && form.get('phone')?.errors?.['pattern']"
                                     class="text-sm text-red-600">
@@ -282,9 +282,9 @@
                                         <i class="pi pi-server text-green-700"></i>
                                         <label class="block text-sm font-medium text-gray-700 mb-1">SMTP Port </label>
                                     </div>
-                                    <input type="text" pInputText class="w-full border border-gray-300 rounded-lg p-3"
+                                    <input type="number" pInputText class="w-full border border-gray-300 rounded-lg p-3"
                                         placeholder="SMTP Port" formControlName="smtp_port">
-                                    <span
+                                    <!-- <span
                                         *ngIf="form.get('smtp_port')?.touched && form.get('smtp_port')?.errors?.['required']"
                                         class="text-sm text-red-600">SMTP Port is required.</span>
                                     <span
@@ -292,7 +292,7 @@
                                         class="text-sm text-red-600">Port must be at least 1.</span>
                                     <span
                                         *ngIf="form.get('smtp_port')?.touched && form.get('smtp_port')?.errors?.['max']"
-                                        class="text-sm text-red-600">Port cannot exceed 65535.</span>
+                                        class="text-sm text-red-600">Port cannot exceed 65535.</span> -->
 
                                 </div>
 
@@ -418,7 +418,7 @@
 
         <!-- Footer with Submit Button -->
         <div class="bg-sky-400 px-6 py-3 border-t border-gray-200 flex justify-end gap-3">
-            <button type="submit" [disabled]="form.invalid"
+            <button type="submit"
                 class="px-6 py-3 bg-sky-600 text-white font-medium rounded-lg shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">Save
             </button>
         </div>
