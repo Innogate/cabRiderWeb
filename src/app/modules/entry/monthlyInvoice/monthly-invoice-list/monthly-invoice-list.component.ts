@@ -244,20 +244,19 @@ getNonTaxableCharges(invoice_id: any) {
 
 
 
-async generatePdf(invoice: any , charges : any) {
+async generatePdf(invoice: any, charges: any) {
   console.log('Generating PDF for invoice:', invoice);
   console.log('Charges:', charges);
 
-
+  // Fetch charges
   this.getTaxableCharges(invoice.id);
   await this.waitForFetch(() => this.taxableCharges);
   this.getNonTaxableCharges(invoice.id);
-  // await this.waitForFetch(() => this.nonTaxableCharges);
-  this.taxableCharges = this.taxableCharges ? this.taxableCharges : []
-  this.nonTaxableCharges = this.nonTaxableCharges ? this.nonTaxableCharges : []
+  this.taxableCharges = this.taxableCharges ?? [];
+  this.nonTaxableCharges = this.nonTaxableCharges ?? [];
 
-  charges = this.taxableCharges.concat(this.nonTaxableCharges)
-  console.log("Final charges: ", charges)
+  charges = this.taxableCharges.concat(this.nonTaxableCharges);
+  console.log("Final charges: ", charges);
 
   const invoiceData = {
     companyName: 'Darwar Enterprise',
@@ -293,34 +292,29 @@ async generatePdf(invoice: any , charges : any) {
     ],
   };
 
-
-
+  // Prepare log rows
   const logRows = charges.map((charge: any) => ({
-  carNo: charge.CarNo,
-  outDate: this.formatDate(charge.GarageOutDate) ,
-  outTime: charge.GarageOutTime,
-  inDate: this.formatDate(charge.GarageInDate),
-  inTime: charge.EntryTime,
-  outKM: charge.GarageOutKm,
-  inKM: charge.GarageInKm,
-  totalHrs: charge.TotalHour,
-  totalKM: charge.TotalKm,
-  overTime: charge.ExtraHrs,
-  parking: charge.charge_name,
-  nightHalt: invoice?.nightHalt ?? null
-}));
+    carNo: charge.CarNo,
+    outDate: this.formatDate(charge.GarageOutDate),
+    outTime: charge.GarageOutTime,
+    inDate: this.formatDate(charge.GarageInDate),
+    inTime: charge.EntryTime,
+    outKM: charge.GarageOutKm,
+    inKM: charge.GarageInKm,
+    totalHrs: charge.TotalHour,
+    totalKM: charge.TotalKm,
+    overTime: charge.ExtraHrs,
+    parking: charge.charge_name,
+    nightHalt: invoice?.nightHalt ?? null,
+  }));
 
-  console.log(logRows)
   const pdfDoc = await PDFDocument.create();
-
-  //
-  // FIRST PAGE – Invoice
-  //
-  const page = pdfDoc.addPage([595.28, 841.89]);
   const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+
+  // -------------------- FIRST PAGE --------------------
+  const page = pdfDoc.addPage([595.28, 841.89]);
   const { width, height } = page.getSize();
 
-  // Header (Centered)
   page.drawText(invoiceData.companyName, {
     x: width / 2 - font.widthOfTextAtSize(invoiceData.companyName, 14) / 2,
     y: height - 50,
@@ -347,7 +341,6 @@ async generatePdf(invoice: any , charges : any) {
     font,
   });
 
-  // TAX INVOICE title with underline
   const title1 = 'TAX INVOICE';
   const title1Width = font.widthOfTextAtSize(title1, 12);
   const title1X = width / 2 - title1Width / 2;
@@ -355,18 +348,16 @@ async generatePdf(invoice: any , charges : any) {
   page.drawText(title1, { x: title1X, y: title1Y, size: 12, font });
   page.drawLine({
     start: { x: title1X - 10, y: title1Y - 5 },
-    end:   { x: title1X + title1Width + 10, y: title1Y - 5 },
+    end: { x: title1X + title1Width + 10, y: title1Y - 5 },
     thickness: 1,
     color: rgb(0, 0, 0),
   });
 
-  // Left “To” section
   page.drawText('To,', { x: 50, y: height - 170, size: 10, font });
   page.drawText(invoiceData.recipient, { x: 50, y: height - 185, size: 10, font });
   page.drawText(invoiceData.addressLine1, { x: 50, y: height - 200, size: 10, font });
   page.drawText(invoiceData.addressLine2, { x: 50, y: height - 215, size: 10, font });
 
-  // Right invoice details (no border)
   const infoX = 350;
   const infoY = height - 170;
   [
@@ -380,7 +371,7 @@ async generatePdf(invoice: any , charges : any) {
     page.drawText(text, { x: infoX, y: infoY - i * 15, size: 9, font });
   });
 
-  // Item table rows with borders
+  // Item table
   const tableX = 40;
   const tableY = height - 300;
   const tableWidth = 515;
@@ -395,21 +386,10 @@ async generatePdf(invoice: any , charges : any) {
       borderColor: rgb(0, 0, 0),
       borderWidth: 0.8,
     });
-    page.drawText(row.particulars, {
-      x: tableX + 5,
-      y: top - 17,
-      size: 9,
-      font,
-    });
-    page.drawText(row.amount, {
-      x: tableX + tableWidth - 80,
-      y: top - 17,
-      size: 9,
-      font,
-    });
+    page.drawText(row.particulars, { x: tableX + 5, y: top - 17, size: 9, font });
+    page.drawText(row.amount, { x: tableX + tableWidth - 80, y: top - 17, size: 9, font });
   });
 
-  // Footer note
   page.drawText('Release payment within forty one days.\nFor Darwar Enterprise', {
     x: 50,
     y: 70,
@@ -417,202 +397,139 @@ async generatePdf(invoice: any , charges : any) {
     font,
   });
 
-  // SECOND PAGE – DETAIL SHEET / Logsheet
-const detailPage = pdfDoc.addPage([595.28, 841.89]);
-const dFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
-const dW = detailPage.getSize().width;
-const dH = detailPage.getSize().height;
+  // -------------------- SECOND PAGE --------------------
+  const detailPage = pdfDoc.addPage([595.28, 841.89]);
+  const dFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
+  const dW = detailPage.getSize().width;
+  const dH = detailPage.getSize().height;
 
-// Header centered
-detailPage.drawText(invoiceData.companyName, {
-  x: dW / 2 - dFont.widthOfTextAtSize(invoiceData.companyName, 13) / 2,
-  y: dH - 50,
-  size: 13,
-  font: dFont,
-});
-detailPage.drawText(invoiceData.address, {
-  x: dW / 2 - dFont.widthOfTextAtSize(invoiceData.address, 9) / 2,
-  y: dH - 65,
-  size: 9,
-  font: dFont,
-});
-detailPage.drawText(`Phone - ${invoiceData.phone}`, {
-  x: dW / 2 - dFont.widthOfTextAtSize(`Phone - ${invoiceData.phone}`, 9) / 2,
-  y: dH - 80,
-  size: 9,
-  font: dFont,
-});
-detailPage.drawText(`E-Mail - ${invoiceData.email}`, {
-  x: dW / 2 - dFont.widthOfTextAtSize(`E-Mail - ${invoiceData.email}`, 9) / 2,
-  y: dH - 95,
-  size: 9,
-  font: dFont,
-});
-
-// DETAIL SHEET title + underline
-const title2 = 'DETAIL SHEET';
-const title2W = dFont.widthOfTextAtSize(title2, 12);
-const title2X = dW / 2 - title2W / 2;
-const title2Y = dH - 120;
-detailPage.drawText(title2, { x: title2X, y: title2Y, size: 12, font: dFont });
-detailPage.drawLine({
-  start: { x: title2X - 10, y: title2Y - 5 },
-  end: { x: title2X + title2W + 10, y: title2Y - 5 },
-  thickness: 1,
-  color: rgb(0, 0, 0),
-});
-
-// Left "To" section
-detailPage.drawText('To,', { x: 50, y: dH - 150, size: 10, font: dFont });
-detailPage.drawText(invoiceData.recipient, { x: 50, y: dH - 165, size: 10, font: dFont });
-detailPage.drawText(invoiceData.addressLine1, { x: 50, y: dH - 180, size: 10, font: dFont });
-detailPage.drawText(invoiceData.addressLine2, { x: 50, y: dH - 195, size: 10, font: dFont });
-
-// Right invoice details
-const diX = 350;
-[
-  `Tax Invoice No. : ${invoiceData.invoiceNo}`,
-  `Tax Invoice Date : ${invoiceData.invoiceDate}`,
-  `Classification : RENT-A-CAR`,
-  `Place of Supply : Kolkata`,
-  `Car Type : ${invoiceData.carType}`,
-  `Category : ${invoiceData.category}`,
-].forEach((text, i) => {
-  detailPage.drawText(text, { x: diX, y: dH - 150 - i * 15, size: 9, font: dFont });
-});
-
-// Table setup with TIGHTER columns
-const tblX = 40;
-const tblY = dH - 240;
-const tblW = 515;
-const rowH2 = 16; // Reduced row height for tighter spacing
-const totalRows = logRows.length + 1;
-
-// Draw outer table border
-detailPage.drawRectangle({
-  x: tblX,
-  y: tblY - rowH2 * totalRows,
-  width: tblW,
-  height: rowH2 * totalRows,
-  borderColor: rgb(0, 0, 0),
-  borderWidth: 1,
-});
-
-// Define columns with MUCH TIGHTER widths like the original
-const cols = [
-  { h: 'Car No.', x: tblX, w: 35 },
-  { h: 'Out Date', x: tblX + 35, w: 45 },
-  { h: 'Out Time', x: tblX + 80, w: 40 },
-  { h: 'In Date', x: tblX + 120, w: 45 },
-  { h: 'In Time', x: tblX + 165, w: 40 },
-  { h: 'Out KM', x: tblX + 205, w: 40 },
-  { h: 'IN KM', x: tblX + 245, w: 40 },
-  { h: 'Total Hrs', x: tblX + 285, w: 45 },
-  { h: 'Total KM', x: tblX + 330, w: 40 },
-  { h: 'Over Time', x: tblX + 370, w: 45 },
-  { h: 'Parking', x: tblX + 415, w: 35 },
-  { h: 'Night Halt', x: tblX + 450, w: 45 },
-];
-
-// Draw header row with smaller font
-const headerY = tblY - rowH2;
-cols.forEach(({ h, x, w }, i) => {
-  detailPage.drawText(h, {
-    x: x + 1,
-    y: headerY + 4,
-    size: 6, // Smaller font for header
-    font: dFont
+  detailPage.drawText(invoiceData.companyName, {
+    x: dW / 2 - dFont.widthOfTextAtSize(invoiceData.companyName, 13) / 2,
+    y: dH - 50,
+    size: 13,
+    font: dFont,
+  });
+  detailPage.drawText(invoiceData.address, {
+    x: dW / 2 - dFont.widthOfTextAtSize(invoiceData.address, 9) / 2,
+    y: dH - 65,
+    size: 9,
+    font: dFont,
+  });
+  detailPage.drawText(`Phone - ${invoiceData.phone}`, {
+    x: dW / 2 - dFont.widthOfTextAtSize(`Phone - ${invoiceData.phone}`, 9) / 2,
+    y: dH - 80,
+    size: 9,
+    font: dFont,
+  });
+  detailPage.drawText(`E-Mail - ${invoiceData.email}`, {
+    x: dW / 2 - dFont.widthOfTextAtSize(`E-Mail - ${invoiceData.email}`, 9) / 2,
+    y: dH - 95,
+    size: 9,
+    font: dFont,
   });
 
-  // Draw vertical lines
-  // Draw vertical lines for columns except the last one
-cols.forEach(({ x, w }, i) => {
-  if (i === cols.length - 1) return; // skip the last column
-
+  const title2 = 'DETAIL SHEET';
+  const title2W = dFont.widthOfTextAtSize(title2, 12);
+  const title2X = dW / 2 - title2W / 2;
+  const title2Y = dH - 120;
+  detailPage.drawText(title2, { x: title2X, y: title2Y, size: 12, font: dFont });
   detailPage.drawLine({
-    start: { x: x + w, y: tblY },
-    end: { x: x + w, y: tblY - rowH2 * totalRows },
-    thickness: 0.3,
+    start: { x: title2X - 10, y: title2Y - 5 },
+    end: { x: title2X + title2W + 10, y: title2Y - 5 },
+    thickness: 1,
     color: rgb(0, 0, 0),
   });
-});
 
-});
+  detailPage.drawText('To,', { x: 50, y: dH - 150, size: 10, font: dFont });
+  detailPage.drawText(invoiceData.recipient, { x: 50, y: dH - 165, size: 10, font: dFont });
+  detailPage.drawText(invoiceData.addressLine1, { x: 50, y: dH - 180, size: 10, font: dFont });
+  detailPage.drawText(invoiceData.addressLine2, { x: 50, y: dH - 195, size: 10, font: dFont });
 
-
-
-// Draw horizontal line after header
-detailPage.drawLine({
-  start: { x: tblX, y: headerY },
-  end: { x: tblX + tblW, y: headerY },
-  thickness: 0.5,
-  color: rgb(0, 0, 0),
-});
-
-const lastCol = cols[cols.length - 1];
-detailPage.drawLine({
-  start: { x: tblX, y: headerY },
-  end: { x: lastCol.x + lastCol.w, y: headerY }, // stop at last header
-  thickness: 0.5,
-  color: rgb(0, 0, 0),
-});
-
-// Draw data rows with TIGHTER spacing
-logRows.forEach((r: any, ri: number) => {
-  const currentRowY = tblY - rowH2 * (ri + 2);
-  const vals = [
-    r.carNo, r.outDate, r.outTime, r.inDate, r.inTime,
-    r.outKM, r.inKM, r.totalHrs, r.totalKM, r.overTime,
-    r.parking, r.nightHalt, r.amount
-  ];
-
-
-  // Draw data in each cell with smaller font and tight spacing
-   cols.forEach((c, ci) => {
-    if (vals[ci] !== undefined && vals[ci] !== null) {
-      detailPage.drawText(String(vals[ci]), {
-        x: c.x + 1,
-        y: currentRowY + 3,
-        size: 6,
-        font: dFont,
-      });
-    }
+  const diX = 350;
+  [
+    `Tax Invoice No. : ${invoiceData.invoiceNo}`,
+    `Tax Invoice Date : ${invoiceData.invoiceDate}`,
+    `Classification : RENT-A-CAR`,
+    `Place of Supply : Kolkata`,
+    `Car Type : ${invoiceData.carType}`,
+    `Category : ${invoiceData.category}`,
+  ].forEach((text, i) => {
+    detailPage.drawText(text, { x: diX, y: dH - 150 - i * 15, size: 9, font: dFont });
   });
 
-  // Draw horizontal line after each row
-  detailPage.drawLine({
-    start: { x: tblX, y: currentRowY },
-    end: { x: tblX + tblW, y: currentRowY },
-    thickness: 0.2,
-    color: rgb(0, 0, 0),
-  });
-});
+  // -------------------- DYNAMIC TABLE WITH OUTER BORDER --------------------
+  const tblX2 = 40;
+  const tblY2 = dH - 240;
+  const rowH2 = 16;
+  const colHeaders = ['Car No.', 'Out Date', 'Out Time', 'In Date', 'In Time', 'Out KM', 'IN KM', 'Total Hrs', 'Total KM', 'Over Time', 'Parking', 'Night Halt'];
+  const numCols = colHeaders.length;
+  const tblW2 = 515;
+  const colWidth = tblW2 / numCols;
 
-// Draw totals row
-const totalsY = tblY - rowH2 * totalRows;
-const totals = ['', '', '', '', '', '', '', '', '', '', '', ''];
-cols.forEach((c, ci) => {
-  if (totals[ci]) {
-    detailPage.drawText(totals[ci], {
-      x: c.x + 1,
-      y: totalsY + 3,
-      size: 6,
-      font: dFont
+  const cols = colHeaders.map((h, i) => ({ h, x: tblX2 + i * colWidth, w: colWidth }));
+  const totalRows = logRows.length + 1; // +1 for header
+  const tableHeight = rowH2 * totalRows;
+
+  // Draw outer table rectangle
+  detailPage.drawRectangle({
+    x: tblX2,
+    y: tblY2 - tableHeight,
+    width: tblW2,
+    height: tableHeight,
+    borderColor: rgb(0, 0, 0),
+    borderWidth: 1,
+  });
+
+  // Draw header
+  const headerY2 = tblY2 - rowH2;
+  cols.forEach(c => {
+    detailPage.drawText(c.h, { x: c.x + 1, y: headerY2 + 4, size: 6, font: dFont });
+  });
+
+  // Vertical lines
+  cols.forEach(c => {
+    detailPage.drawLine({
+      start: { x: c.x + c.w, y: tblY2 },
+      end: { x: c.x + c.w, y: tblY2 - tableHeight },
+      thickness: 0.3,
+      color: rgb(0, 0, 0),
     });
-  }
-});
+  });
 
-// Footer
-detailPage.drawText('for Darwar Enterprise', {
-  x: 450,
-  y: 50,
-  size: 10,
-  font: dFont,
-});
+  // Horizontal line after header
+  detailPage.drawLine({
+    start: { x: tblX2, y: headerY2 },
+    end: { x: tblX2 + tblW2, y: headerY2 },
+    thickness: 0.5,
+    color: rgb(0, 0, 0),
+  });
 
+  // Data rows
+  logRows.forEach((r:any, ri:number) => {
+    const currentY = tblY2 - rowH2 * (ri + 2);
+    const vals = [r.carNo, r.outDate, r.outTime, r.inDate, r.inTime, r.outKM, r.inKM, r.totalHrs, r.totalKM, r.overTime, r.parking, r.nightHalt];
 
+    cols.forEach((c, ci) => {
+      if (vals[ci] != null) {
+        let text = String(vals[ci]);
+        while (dFont.widthOfTextAtSize(text, 6) > c.w - 2) text = text.slice(0, -1);
+        detailPage.drawText(text, { x: c.x + 1, y: currentY + 3, size: 6, font: dFont });
+      }
+    });
 
-  // Save & download
+    // Horizontal line for row
+    detailPage.drawLine({
+      start: { x: tblX2, y: currentY },
+      end: { x: tblX2 + tblW2, y: currentY },
+      thickness: 0.2,
+      color: rgb(0, 0, 0),
+    });
+  });
+
+  // Footer
+  detailPage.drawText('for Darwar Enterprise', { x: 450, y: 50, size: 10, font: dFont });
+
+  // Save & download PDF
   const pdfBytes = await pdfDoc.save();
   const blob = new Blob([pdfBytes], { type: 'application/pdf' });
   const link = document.createElement('a');
