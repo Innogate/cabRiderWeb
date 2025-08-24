@@ -1,21 +1,29 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { DynamicTableComponent } from '../../../components/dynamic-table/dynamic-table.component';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-car-sale',
-  imports: [DynamicTableComponent],
+  imports: [DynamicTableComponent,ReactiveFormsModule,CommonModule],
   templateUrl: './car-sale.component.html',
   styleUrl: './car-sale.component.css'
 })
 export class CarSaleComponent implements OnInit, OnDestroy, AfterViewInit {
 isLoading =true;
 users : any[]=[];
-
-
+showForm: boolean= false;
+heading: string='';
+form!: FormGroup;
   constructor(
-    
+   private fb: FormBuilder,
+   private router: Router,
   ) {
-    
+   this.createForm(); 
+  }
+  createForm() {
+
   }
 
 
@@ -57,6 +65,8 @@ users : any[]=[];
       case 'delete':
         break;
       case 'add':
+        this.showForm = true;
+        this.heading= 'ADD CAR SALE'
         break
 
     }
