@@ -33,12 +33,12 @@
           <i class="pi pi-calendar text-blue-500"></i>
           <label class="text-sm font-medium text-gray-700">Start</label>
           <p-calendar [(ngModel)]="startDate" (ngModelChange)="onDateSelect($event)" dateFormat="dd-mm-yy"
-            showIcon="true"
+            [showIcon]="true"
             inputStyleClass="w-28 text-sm border border-blue-300 rounded-md focus:ring-2 focus:ring-blue-400" />
         </div>
         <div class="flex items-center gap-2">
           <label class="text-sm font-medium text-gray-700">End</label>
-          <p-calendar [(ngModel)]="endDate" (ngModelChange)="onDateSelect($event)" dateFormat="dd-mm-yy" showIcon="true"
+          <p-calendar [(ngModel)]="endDate" (ngModelChange)="onDateSelect($event)" dateFormat="dd-mm-yy" [showIcon]="true"
             inputStyleClass="w-28 text-sm border border-blue-300 rounded-md focus:ring-2 focus:ring-blue-400" />
         </div>
 

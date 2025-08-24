@@ -21,6 +21,7 @@ import { Calendar, CalendarModule } from 'primeng/calendar';
 import { InvoiceEyesShowComponent } from '../../../../components/invoice-eyes-show/invoice-eyes-show.component';
 import { userMasterService } from '../../../../services/userMaster.service';
 import { AutoComplete } from 'primeng/autocomplete';
+import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
 
 @Component({
   selector: 'app-monthly-invoice-list',
@@ -69,6 +70,11 @@ export class MonthlyInvoiceListComponent implements OnInit {
   display_dialog = false;
   show_other_charges = false;
   selectedChargeType: 'taxable' | 'nonTaxable' = 'taxable';
+  charges: any[] = [];
+  taxableCharges: any;
+  sleetedBookingIds: any;
+  nonTaxableCharges: any;
+  selectedInvoice: any;
 
   constructor(
     private _invoice: InvoiceService,
@@ -94,6 +100,16 @@ export class MonthlyInvoiceListComponent implements OnInit {
         this.cdr.detectChanges();
       } else if (msg.for === 'companyDropdown') {
         this.companies = msg.data;
+        rt = true;
+      }
+       if ((msg.for === 'getOtherTaxableChargesUsingId'))
+        {
+        this.taxableCharges = msg.data?.taxable ? [...msg.data?.taxable] : [];
+        rt = true;
+      }
+      else if ((msg.for === 'getOtherNonTaxableChargesUsingId'))
+      {
+        this.nonTaxableCharges = msg.data?.nonTaxable ? [ ...msg.data?.nonTaxable] : [];
         rt = true;
       }
 
@@ -185,4 +201,377 @@ export class MonthlyInvoiceListComponent implements OnInit {
   openDialog() {
     this.show_dialog = true;
   }
+
+  updateCharges(event: {
+  taxableCharges: any[];
+  nonTaxableCharges: any[];
+  sleetedBookingIds?: any[];
+  charges: any[];
+  }) {
+    this.charges = event.charges;
+    this.taxableCharges = event.taxableCharges;
+    this.nonTaxableCharges = event.nonTaxableCharges;
+    this.sleetedBookingIds = event.sleetedBookingIds;
+
+    console.log('Duty Updated:', {
+      charges: this.charges,
+      taxableCharges: this.taxableCharges,
+      nonTaxableCharges: this.nonTaxableCharges,
+      sleetedBookingIds: this.sleetedBookingIds,
+
+    });
+  }
+
+
+  getTaxableCharges(invoice_id:any) {
+  // this._helper.getOtherChargesForMonthlyInvoice({ booking_entry_id })
+  if (invoice_id) {
+    console.log('Fetching charges for invoice:', invoice_id);
+    this.HelperService.getTaxableOtherChargesForMonthlyInvoice({ booking_entry_id: invoice_id });
+  } else {
+    console.error("No selected invoice to fetch charges for.");
+  }
+}
+
+getNonTaxableCharges(invoice_id: any) {
+  if (invoice_id) {
+    console.log('Fetching non-taxable charges for invoice:',invoice_id);
+    this.HelperService.getNonTaxableOtherChargesForMonthlyInvoice({ booking_entry_id: invoice_id });
+  } else {
+    console.error("No selected invoice to fetch non-taxable charges for.");
+  }
+}
+
+
+
+async generatePdf(invoice: any, charges: any) {
+  console.log('Generating PDF for invoice:', invoice);
+  console.log('Charges:', charges);
+
+  // Fetch charges
+  this.getTaxableCharges(invoice.id);
+  await this.waitForFetch(() => this.taxableCharges);
+  this.getNonTaxableCharges(invoice.id);
+  this.taxableCharges = this.taxableCharges ?? [];
+  this.nonTaxableCharges = this.nonTaxableCharges ?? [];
+
+  charges = this.taxableCharges.concat(this.nonTaxableCharges);
+  console.log("Final charges: ", charges);
+
+  const invoiceData = {
+    companyName: 'Darwar Enterprise',
+    address: '7/1/1, Bijay Basu Road Kolkata 700025, West Bengal (WB-19)',
+    phone: '9748600670 / 9331293690 / 8113136860',
+    email: charges.Email,
+    invoiceNo: invoice.BillNo,
+    invoiceDate: this.formatDate(invoice.BillDate),
+    recipient: 'STATE BANK OF INDIA (IFB KOLKATA BRANCH)',
+    addressLine1: '1, Middleton Street',
+    addressLine2: 'Kolkata : 700071',
+    carType: 'HONDA CITY',
+    category: '1500 KM/252 Hrs',
+    items: [
+      { particulars: 'Being monthly hire charges (01/06/2025 to 30/06/2025)', amount: String(invoice.amount ?? 'N/A') },
+      { particulars: 'Add : Extra Hour(s)         100.25 X 75', amount: String(invoice.extra_hours ?? '0.00') },
+      { particulars: 'Add : Extra KM              780 X 20', amount: String(invoice.extra_km ?? '0.00') },
+      { particulars: 'Gross Total', amount: String(invoice.GrossAmount ?? '0.00') },
+      { particulars: `Add : CGST @ ${invoice.CGSTPer}%`, amount: String(invoice.CGST ?? '0.00') },
+      { particulars: `Add : SGST @ ${invoice.SGSTPer}%`, amount: String(invoice.SGST ?? '0.00') },
+      { particulars: 'Holiday days                8 X 500', amount: String(invoice.holiday ?? 'N/A') },
+      { particulars: 'Driver Washing Uniform ', amount: String(invoice.uniform ?? 'N/A') },
+      { particulars: 'Car Washing Charges', amount: String(invoice.washing_charges ?? 'N/A') },
+      { particulars: 'Driver Phone Recharge', amount: String(invoice.recharge ?? '0.00') },
+      { particulars: 'Add : Parking/Tools/Permit Amount', amount: String(invoice.tools ?? 'N/A') },
+      { particulars: 'Add : Night Halt Amount        8 X 500 ', amount: String(invoice.nightHalt ?? '0.00') },
+      { particulars: 'Add : Night Halting Charges        8 X 500 ', amount: String(invoice.night_amount ?? '0.00') },
+      { particulars: 'Round OFF', amount: String(invoice.round_off ?? '0.00') },
+      { particulars: `Net Amount (Rupees ${this.numberToWords(invoice.NetAmount ?? 0)})`, amount: String(invoice.NetAmount ?? '0.00') },
+      { particulars: 'GST No : 75HU8899', amount: String(invoice.GSTNo ?? '19B0FP5592C12P') },
+      { particulars: 'PAN NO : HYHH869', amount: String(invoice.PANNo ?? 'BOFP55927C') },
+      { particulars: 'SAC Code : 7589J', amount: String(invoice.SACCode ?? '996601') },
+    ],
+  };
+
+  // Prepare log rows
+  const logRows = charges.map((charge: any) => ({
+    carNo: charge.CarNo,
+    outDate: this.formatDate(charge.GarageOutDate),
+    outTime: charge.GarageOutTime,
+    inDate: this.formatDate(charge.GarageInDate),
+    inTime: charge.EntryTime,
+    outKM: charge.GarageOutKm,
+    inKM: charge.GarageInKm,
+    totalHrs: charge.TotalHour,
+    totalKM: charge.TotalKm,
+    overTime: charge.ExtraHrs,
+    parking: charge.charge_name,
+    nightHalt: invoice?.nightHalt ?? null,
+  }));
+
+  const pdfDoc = await PDFDocument.create();
+  const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+
+  // -------------------- FIRST PAGE --------------------
+  const page = pdfDoc.addPage([595.28, 841.89]);
+  const { width, height } = page.getSize();
+
+  page.drawText(invoiceData.companyName, {
+    x: width / 2 - font.widthOfTextAtSize(invoiceData.companyName, 14) / 2,
+    y: height - 50,
+    size: 14,
+    font,
+    color: rgb(0, 0, 0),
+  });
+  page.drawText(invoiceData.address, {
+    x: width / 2 - font.widthOfTextAtSize(invoiceData.address, 10) / 2,
+    y: height - 70,
+    size: 10,
+    font,
+  });
+  page.drawText(`Phone: ${invoiceData.phone}`, {
+    x: width / 2 - font.widthOfTextAtSize(`Phone: ${invoiceData.phone}`, 10) / 2,
+    y: height - 85,
+    size: 10,
+    font,
+  });
+  page.drawText(`Email: ${invoiceData.email}`, {
+    x: width / 2 - font.widthOfTextAtSize(`Email: ${invoiceData.email}`, 10) / 2,
+    y: height - 100,
+    size: 10,
+    font,
+  });
+
+  const title1 = 'TAX INVOICE';
+  const title1Width = font.widthOfTextAtSize(title1, 12);
+  const title1X = width / 2 - title1Width / 2;
+  const title1Y = height - 130;
+  page.drawText(title1, { x: title1X, y: title1Y, size: 12, font });
+  page.drawLine({
+    start: { x: title1X - 10, y: title1Y - 5 },
+    end: { x: title1X + title1Width + 10, y: title1Y - 5 },
+    thickness: 1,
+    color: rgb(0, 0, 0),
+  });
+
+  page.drawText('To,', { x: 50, y: height - 170, size: 10, font });
+  page.drawText(invoiceData.recipient, { x: 50, y: height - 185, size: 10, font });
+  page.drawText(invoiceData.addressLine1, { x: 50, y: height - 200, size: 10, font });
+  page.drawText(invoiceData.addressLine2, { x: 50, y: height - 215, size: 10, font });
+
+  const infoX = 350;
+  const infoY = height - 170;
+  [
+    `Tax Invoice No.: ${invoiceData.invoiceNo}`,
+    `Tax Invoice Date: ${invoiceData.invoiceDate}`,
+    `Classification: RENT-A-CAR`,
+    `Place of Supply: Kolkata`,
+    `Car Type: ${invoiceData.carType}`,
+    `Category: ${invoiceData.category}`,
+  ].forEach((text, i) => {
+    page.drawText(text, { x: infoX, y: infoY - i * 15, size: 9, font });
+  });
+
+  // Item table
+  const tableX = 40;
+  const tableY = height - 300;
+  const tableWidth = 515;
+  const rowH = 25;
+  invoiceData.items.forEach((row, idx) => {
+    const top = tableY - idx * rowH;
+    page.drawRectangle({
+      x: tableX,
+      y: top - rowH,
+      width: tableWidth,
+      height: rowH,
+      borderColor: rgb(0, 0, 0),
+      borderWidth: 0.8,
+    });
+    page.drawText(row.particulars, { x: tableX + 5, y: top - 17, size: 9, font });
+    page.drawText(row.amount, { x: tableX + tableWidth - 80, y: top - 17, size: 9, font });
+  });
+
+  page.drawText('Release payment within forty one days.\nFor Darwar Enterprise', {
+    x: 50,
+    y: 70,
+    size: 10,
+    font,
+  });
+
+  // -------------------- SECOND PAGE --------------------
+  const detailPage = pdfDoc.addPage([595.28, 841.89]);
+  const dFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
+  const dW = detailPage.getSize().width;
+  const dH = detailPage.getSize().height;
+
+  detailPage.drawText(invoiceData.companyName, {
+    x: dW / 2 - dFont.widthOfTextAtSize(invoiceData.companyName, 13) / 2,
+    y: dH - 50,
+    size: 13,
+    font: dFont,
+  });
+  detailPage.drawText(invoiceData.address, {
+    x: dW / 2 - dFont.widthOfTextAtSize(invoiceData.address, 9) / 2,
+    y: dH - 65,
+    size: 9,
+    font: dFont,
+  });
+  detailPage.drawText(`Phone - ${invoiceData.phone}`, {
+    x: dW / 2 - dFont.widthOfTextAtSize(`Phone - ${invoiceData.phone}`, 9) / 2,
+    y: dH - 80,
+    size: 9,
+    font: dFont,
+  });
+  detailPage.drawText(`E-Mail - ${invoiceData.email}`, {
+    x: dW / 2 - dFont.widthOfTextAtSize(`E-Mail - ${invoiceData.email}`, 9) / 2,
+    y: dH - 95,
+    size: 9,
+    font: dFont,
+  });
+
+  const title2 = 'DETAIL SHEET';
+  const title2W = dFont.widthOfTextAtSize(title2, 12);
+  const title2X = dW / 2 - title2W / 2;
+  const title2Y = dH - 120;
+  detailPage.drawText(title2, { x: title2X, y: title2Y, size: 12, font: dFont });
+  detailPage.drawLine({
+    start: { x: title2X - 10, y: title2Y - 5 },
+    end: { x: title2X + title2W + 10, y: title2Y - 5 },
+    thickness: 1,
+    color: rgb(0, 0, 0),
+  });
+
+  detailPage.drawText('To,', { x: 50, y: dH - 150, size: 10, font: dFont });
+  detailPage.drawText(invoiceData.recipient, { x: 50, y: dH - 165, size: 10, font: dFont });
+  detailPage.drawText(invoiceData.addressLine1, { x: 50, y: dH - 180, size: 10, font: dFont });
+  detailPage.drawText(invoiceData.addressLine2, { x: 50, y: dH - 195, size: 10, font: dFont });
+
+  const diX = 350;
+  [
+    `Tax Invoice No. : ${invoiceData.invoiceNo}`,
+    `Tax Invoice Date : ${invoiceData.invoiceDate}`,
+    `Classification : RENT-A-CAR`,
+    `Place of Supply : Kolkata`,
+    `Car Type : ${invoiceData.carType}`,
+    `Category : ${invoiceData.category}`,
+  ].forEach((text, i) => {
+    detailPage.drawText(text, { x: diX, y: dH - 150 - i * 15, size: 9, font: dFont });
+  });
+
+  // -------------------- DYNAMIC TABLE WITH OUTER BORDER --------------------
+  const tblX2 = 40;
+  const tblY2 = dH - 240;
+  const rowH2 = 16;
+  const colHeaders = ['Car No.', 'Out Date', 'Out Time', 'In Date', 'In Time', 'Out KM', 'IN KM', 'Total Hrs', 'Total KM', 'Over Time', 'Parking', 'Night Halt'];
+  const numCols = colHeaders.length;
+  const tblW2 = 515;
+  const colWidth = tblW2 / numCols;
+
+  const cols = colHeaders.map((h, i) => ({ h, x: tblX2 + i * colWidth, w: colWidth }));
+  const totalRows = logRows.length + 1; // +1 for header
+  const tableHeight = rowH2 * totalRows;
+
+  // Draw outer table rectangle
+  detailPage.drawRectangle({
+    x: tblX2,
+    y: tblY2 - tableHeight,
+    width: tblW2,
+    height: tableHeight,
+    borderColor: rgb(0, 0, 0),
+    borderWidth: 1,
+  });
+
+  // Draw header
+  const headerY2 = tblY2 - rowH2;
+  cols.forEach(c => {
+    detailPage.drawText(c.h, { x: c.x + 1, y: headerY2 + 4, size: 6, font: dFont });
+  });
+
+  // Vertical lines
+  cols.forEach(c => {
+    detailPage.drawLine({
+      start: { x: c.x + c.w, y: tblY2 },
+      end: { x: c.x + c.w, y: tblY2 - tableHeight },
+      thickness: 0.3,
+      color: rgb(0, 0, 0),
+    });
+  });
+
+  // Horizontal line after header
+  detailPage.drawLine({
+    start: { x: tblX2, y: headerY2 },
+    end: { x: tblX2 + tblW2, y: headerY2 },
+    thickness: 0.5,
+    color: rgb(0, 0, 0),
+  });
+
+  // Data rows
+  logRows.forEach((r:any, ri:number) => {
+    const currentY = tblY2 - rowH2 * (ri + 2);
+    const vals = [r.carNo, r.outDate, r.outTime, r.inDate, r.inTime, r.outKM, r.inKM, r.totalHrs, r.totalKM, r.overTime, r.parking, r.nightHalt];
+
+    cols.forEach((c, ci) => {
+      if (vals[ci] != null) {
+        let text = String(vals[ci]);
+        while (dFont.widthOfTextAtSize(text, 6) > c.w - 2) text = text.slice(0, -1);
+        detailPage.drawText(text, { x: c.x + 1, y: currentY + 3, size: 6, font: dFont });
+      }
+    });
+
+    // Horizontal line for row
+    detailPage.drawLine({
+      start: { x: tblX2, y: currentY },
+      end: { x: tblX2 + tblW2, y: currentY },
+      thickness: 0.2,
+      color: rgb(0, 0, 0),
+    });
+  });
+
+  // Footer
+  detailPage.drawText('for Darwar Enterprise', { x: 450, y: 50, size: 10, font: dFont });
+
+  // Save & download PDF
+  const pdfBytes = await pdfDoc.save();
+  const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = 'Invoice_DetailSheet.pdf';
+  link.click();
+}
+
+
+ numberToWords(amount: number): string {
+  const units = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"];
+  return amount ? amount.toLocaleString('en-IN') : "0";
+}
+
+formatDate(dateStr: string | null): string | null {
+  if (!dateStr) return null;
+  const d = new Date(dateStr);
+  const day = String(d.getDate()).padStart(2, '0');
+  const month = String(d.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+  const year = String(d.getFullYear()).slice(-2); // last 2 digits
+  return `${day}-${month}-${year}`;
+}
+
+waitForFetch<T>(getter: () => T, interval = 50): Promise<T> {
+    return new Promise((resolve) => {
+      const timer = setInterval(() => {
+        const value = getter();
+
+        // Check if value is not undefined, null, empty string, or empty array
+        if (
+          value !== undefined &&
+          value !== null &&
+          !(typeof value === 'string' && value.trim() === '') &&
+          !(Array.isArray(value) && value.length === 0)
+        ) {
+          clearInterval(timer);
+          resolve(value);
+        }
+      }, interval);
+    });
+  }
+
+
+
 }

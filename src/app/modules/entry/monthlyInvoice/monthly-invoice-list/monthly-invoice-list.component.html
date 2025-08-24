@@ -145,7 +145,7 @@
                 class="p-button-sm p-button-rounded p-button-success"></button>
               <button pButton pTooltip="XML" icon="pi pi-code"
                 class="p-button-sm p-button-rounded p-button-secondary"></button>
-              <button pButton pTooltip="PDF" icon="pi pi-file-pdf"
+              <button pButton pTooltip="PDF" (click)="generatePdf(invoice,charges)" icon="pi pi-file-pdf"
                 class="p-button-sm p-button-rounded p-button-help"></button>
             </div>
 
@@ -158,7 +158,7 @@
 </div>
 
 <app-invoice-eyes-show *ngIf="show_other_charges" [selectedInvoice]="selected_invoice" [id]="invoices"
-  (close)="show_other_charges = false" [chargeType]="selectedChargeType"></app-invoice-eyes-show>
+  (close)="show_other_charges = false" (chargesUpdated)="updateCharges($event)" [chargeType]="selectedChargeType"></app-invoice-eyes-show>
 
 <!-- payment-received.component.html -->
 <p-dialog header="Payment Received" [(visible)]="show_dialog" [modal]="true" [closable]="true"
