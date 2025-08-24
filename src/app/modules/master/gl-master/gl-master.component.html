@@ -1,5 +1,5 @@
 <div class="card" >
-    <app-dynamic-table [columns]="columns" [loading]="isLoading" [data]="data" [headerTitle]="'GL LIST'"
+    <app-dynamic-table [columns]="columns" [loading]="isLoading" [data]="users" [headerTitle]="'GL LIST'"
         [rowActions]="actions" (onAction)="handleAction($event)">
     </app-dynamic-table>
 </div>
@@ -22,10 +22,13 @@
       <div>
         <label for="GLName" class="flex items-center gap-2 mb-1 text-slate-950 text-sm font-medium">
           <i class="pi pi-car text-green-400"></i>
-          Gl Name
+          Gl Name <span class="text-red-500">*</span>
         </label>
         <input id="GLName" pInputText type="text" placeholder="Enter GL Name" formControlName="GLName"
           class="w-full border border-indigo-200 rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-300 focus:ring-opacity-50 text-uppercase uppercase" />
+          <span *ngIf="form.get('GLName')?.touched && form.get('GLName')?.errors?.['required']" class="text-sm text-red-600">
+            Gl Name is required.
+          </span>
       </div>
 
       <!-- Gl Type -->
@@ -34,10 +37,14 @@
           <i class="pi pi-sort-numeric-up text-yellow-300"></i>
           Gl Type <span class="text-red-500">*</span>
         </label>
-        <p-autocomplete field="GLType"  [dropdown]="true" [suggestions]="filteredGl"
+        <p-autocomplete field="GLType"  [dropdown]="true" [suggestions]="filteredGl" optionValue="GlShortName"
             (completeMethod)="filterGl($event)"  placeholder="SELECT GL" formControlName="GLType"
             class="w-full border border-indigo-200 rounded-md focus:border-indigo-500 focus:ring-indigo-500" inputStyleClass="w-full" panelStyleClass="w-full" styleClass="w-full">
         </p-autocomplete>
+                  <span *ngIf="form.get('GLType')?.touched && form.get('GLType')?.errors?.['required']" class="text-sm text-red-600">
+            Gl Name is required.
+          </span>
+
     </div>
       
     </form>
@@ -45,7 +52,7 @@
     <!-- Drawer Footer -->
     <div class="flex justify-end gap-2 p-4 border-t border-gray-200 sticky bottom-0 bg-white">
       <button pButton type="button" label="Cancel" class="p-button-secondary" (click)="showForm = false"></button>
-      <button pButton type="submit" label="Save" ></button>
+      <button pButton type="submit" label="Save" (click)="onSubmit()" ></button>
     </div>
   </div>
 </p-sidebar>

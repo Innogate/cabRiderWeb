@@ -30,7 +30,9 @@ export class glMasterService extends BaseService {
   updateGlmaster(payload: any) {
     this.call('master.updateGlMaster', payload);
   }
-
+  deleteGlMaster(id: number){
+    
+  }
   protected handleMessage(msg: any): boolean {
     return false;
   }
