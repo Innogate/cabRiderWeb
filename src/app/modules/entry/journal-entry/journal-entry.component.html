@@ -28,7 +28,7 @@
                             <i class="pi pi-building text-yellow-500"></i>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Company</label>
                         </div>
-                        <p-autoComplete field="CompanyName" placeholder="Select Company" [dropdown]="true"
+                        <p-autoComplete field="CompanyName" formControlName="seletedCompany" placeholder="Select Company" [dropdown]="true"
                             class="w-full border border-indigo-200 rounded-md mb-4" styleClass="w-full">
                         </p-autoComplete>
                     </div>
@@ -37,7 +37,7 @@
                             <i class="pi pi-briefcase text-blue-500"></i>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Branch</label>
                         </div>
-                        <p-autoComplete field="CompanyName" placeholder="Select Branch" [dropdown]="true"
+                        <p-autoComplete field="CompanyName" formControlName="branchId" placeholder="Select Branch" [dropdown]="true"
                             class="w-full border border-indigo-200 rounded-md mb-4" styleClass="w-full">
                         </p-autoComplete>
                     </div>
@@ -48,7 +48,7 @@
                             <i class="pi pi-hashtag text-green-600"></i>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Voucher No</label>
                         </div>
-                        <input type="number" pInputText class="w-full border border-gray-300 rounded-lg p-3 mb-4"
+                        <input type="number" formControlName="vouchNo" pInputText class="w-full border border-gray-300 rounded-lg p-3 mb-4"
                             placeholder="Enter Voucher No">
                     </div>
                     <div>
@@ -56,7 +56,7 @@
                             <i class="pi pi-calendar text-orange-500"></i>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Voucher Date</label>
                         </div>
-                        <input type="date" pInputText class="w-full border border-gray-300 rounded-lg p-3 mb-4">
+                        <input type="date" formControlName="vouchDate" pInputText class="w-full border border-gray-300 rounded-lg p-3 mb-4">
                     </div>
                 </div>
                 <div>
@@ -65,7 +65,7 @@
                         <label class="block text-sm font-medium text-gray-700 mb-1">Narration</label>
                     </div>
                     <textarea pInputTextarea class="w-full border border-gray-300 rounded-lg p-3 mb-4"
-                        placeholder="Enter Narration" rows="3">
+                        formControlName="narr" placeholder="Enter Narration" rows="3">
                     </textarea>
                 </div>
             </div>
@@ -94,27 +94,27 @@
                         </tr>
                         <tr>
                             <td class=" px-1 py-2 border border-gray-400 px-4 py-2">
-                                        <input type="text" pInputText 
+                                        <input type="text" pInputText formControlName="" 
                                             class="w-full border border-gray-300 rounded-lg p-3 text-uppercase"
                                             placeholder="SLNo">
                                     </td>
                                     <td class=" px-1 py-2 border border-gray-400 px-4 py-2">
-                                        <input type="text"  pInputText
+                                        <input type="text"  pInputText formControlName="ledgerType"
                                             class="w-full border border-gray-300 rounded-lg p-3 text-uppercase"
                                             placeholder="Party">
                                     </td>
                                     <td class=" px-1 py-2 border border-gray-400 px-4 py-2">
-                                        <input type="text"  pInputText
+                                        <input type="text"  pInputText formControlName=""
                                             class="w-full border border-gray-300 rounded-lg p-3 text-uppercase"
                                             placeholder="Instas Pharma">
                                     </td>
                                     <td class=" px-1 py-2 border border-gray-400 px-4 py-2">
-                                        <input type="text" pInputText
+                                        <input type="text" pInputText formControlName="totalDebitAmt"
                                             class="w-full border border-gray-300 rounded-lg p-3 text-uppercase"
                                             placeholder="Debit Amount">
                                     </td>
                                     <td class=" px-1 py-2 border border-gray-400 px-4 py-2">
-                                        <input type="text"  pInputText
+                                        <input type="text"  pInputText formControlName="totalCreditAmt"
                                             class="w-full border border-gray-300 rounded-lg p-3 text-uppercase"
                                             placeholder="Credit Amount">
                                     </td>
