@@ -21,7 +21,7 @@ export class branchMasterService extends BaseService {
     }
 
     getAllbranch(payload: any) {
-        this.call('master.gatAllBranchMaster', payload);
+        this.call('master.getAllBranchMaster', payload);
     }
 
     //    {

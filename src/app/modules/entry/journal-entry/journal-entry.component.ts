@@ -85,7 +85,6 @@ export class JournalEntryComponent implements OnInit, OnDestroy, AfterViewInit {
   }
   ngOnDestroy(): void {
     this.journalEntryService.unregisterPageHandler();
-    this.comonApiService.unregisterPageHandler();
   }
   ngOnInit(): void {
     this.journalEntryService.registerPageHandler((msg) => {

@@ -90,7 +90,7 @@ export class BranchMasterComponent implements OnInit,OnDestroy,AfterViewInit {
     this.commonService.GatAllCityDropDown({});
   }
   ngOnDestroy(): void {
-    throw new Error('Method not implemented.');
+        this.BranchMasterService.unregisterPageHandler();
   }
   ngOnInit(): void {
     this.BranchMasterService.registerPageHandler((msg) => {

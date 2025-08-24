@@ -85,7 +85,6 @@ export class CompanyMasterComponent implements OnInit, OnDestroy, AfterViewInit 
   }
   ngOnDestroy(): void {
     this.companyMasterService.unregisterPageHandler();
-    this.comonApiService.unregisterPageHandler();
   }
 ngOnInit(): void {
     this.companyMasterService.registerPageHandler((msg) => {
