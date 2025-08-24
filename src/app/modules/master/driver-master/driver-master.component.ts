@@ -17,6 +17,8 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
 import { FileUploadModule } from 'primeng/fileupload';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
+import { SweetAlertService } from '../../../services/sweet-alert.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-driver-master',
@@ -31,6 +33,7 @@ import { HttpClientModule } from '@angular/common/http';
     FileUploadModule,
     CommonModule,
     HttpClientModule],
+  providers: [DatePipe],
   templateUrl: './driver-master.component.html',
   styleUrl: './driver-master.component.css'
 })
@@ -38,9 +41,10 @@ export class DriverMasterComponent implements OnInit, OnDestroy, AfterViewInit {
   users: any[] = [];
   showForm: boolean = false;
   form!: FormGroup;
-  header: string = ''
+  header: string = '';
   isLoading = true;
   filteredCities: any[] = [];
+  tablevalue: any;
   
 
   cityList: any[] = [
@@ -53,6 +57,7 @@ export class DriverMasterComponent implements OnInit, OnDestroy, AfterViewInit {
     { label: 'CURRENT', value: 'CURRENT' },
     { label: 'SALARY', value: 'SALARY' },
   ];
+  
 
 
 
@@ -61,24 +66,26 @@ export class DriverMasterComponent implements OnInit, OnDestroy, AfterViewInit {
     private commonService: commonService,
     private messageService: MessageService,
     private router: Router,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private swal: SweetAlertService,
+    private Datepipe: DatePipe
   ) {
     this.form = this.fb.group({
       id: [],
-      drv_name: ['', Validators.required],
+      drv_name: ['', [Validators.required, Validators.minLength(3), Validators.pattern(/^[A-Za-z\s]+$/)]],
       address: [''],
       city_id: [''],
-      pin_code: [''],
-      mobileno: ['', Validators.required],
-      whatsappno: [''],
-      drv_licenseno: [''],
+      pin_code: ['', [Validators.pattern(/^[1-9][0-9]{5}$/)]],
+      mobileno: ['', [Validators.required, Validators.pattern(/^[6-9]\d{9}$/)]],
+      whatsappno: ['', [Validators.pattern(/^[6-9]\d{9}$/)]],
+      drv_licenseno: ['', [Validators.pattern(/^[A-Z]{2}\d{2}\d{4}\d{7}$/)]],
       drv_license_expdate: [''],
-      aadhar_cardno: [''],
-      bank_name: [''],
-      bank_branch: [''],
-      bank_acno: [''],
+      aadhar_cardno: ['', [Validators.pattern(/^[2-9]\d{11}$/)]],
+      bank_name: ['', [Validators.pattern(/^[A-Za-z\s]+$/)]],
+      bank_branch: ['', [Validators.pattern(/^[A-Za-z\s]+$/)]],
+      bank_acno: ['', [Validators.pattern(/^\d{9,18}$/)]],
       bank_actype: [''],
-      bank_ifsc: [''],
+      bank_ifsc: ['', [Validators.pattern(/^[A-Z]{4}0[A-Z0-9]{6}$/)]],
       active: 1,
       ref_by: 0,
       licensePath: [''],
@@ -103,16 +110,43 @@ export class DriverMasterComponent implements OnInit, OnDestroy, AfterViewInit {
       } else if (msg.for == 'getAllCityDropdown') {
         this.cityList = msg.data;
       } else if (msg.for == 'CreateUpdateDriver') {
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: msg.StatusMessage })
+        if (msg.StatusID === 1) {
+          const updated = msg.data[0];  // access the first item in data array
+
+          // this.messageService.add({ severity: 'success', summary: 'Success', detail: msg.StatusMessage });
+          this.showForm = false;
+          this.form.reset();
+
+          const index = this.users.findIndex((v: any) => v.id == updated.id);
+          if (index !== -1) {
+            this.users[index] = { ...updated };
+          } else {
+            this.users.push(updated)
+          }
+        } else {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: msg.StatusMessage });
+        }
       } else if (msg.for === "deleteData") {
-        if (msg.StatusMessage === "success") {
-          this.messageService.add({ severity: 'success', summary: 'Success', detail: msg.StatusMessage })
+        if (msg.StatusID === 1) {
+          const index = this.users.findIndex((v: any) => v.id == this.tablevalue.id);
+          if (index !== -1) {
+            this.users.splice(index, 1);
+          } 
+          // this.messageService.add({ severity: 'success', summary: 'Success', detail: msg.StatusMessage })
         } else {
           this.messageService.add({ severity: 'error', summary: 'Error', detail: "Cannot Delete data" })
         }
       }
       return true;
     });
+    this.form.get('enable_login')?.valueChanges.subscribe(checked => {
+    if (!checked) {
+      this.form.patchValue({
+        username: '',
+        password: ''
+      });
+    }
+  });
   }
 
 
@@ -132,7 +166,7 @@ export class DriverMasterComponent implements OnInit, OnDestroy, AfterViewInit {
     const data = {
     }
     this.driverMasterService.GatAllDriver(payload);
-    this.commonService.GatAllCityDropDown(data);
+    this.commonService.GatAllCityDropDown({});
   }
 
   filterCity(event: any) {
@@ -164,13 +198,19 @@ export class DriverMasterComponent implements OnInit, OnDestroy, AfterViewInit {
   ];
 
   // Handle action events
-  handleAction(event: { action: string, data: any }) {
+  async handleAction(event: { action: string, data: any }) {
     switch (event.action) {
       case 'edit':
         this.editUser(event.data);
         break;
       case 'delete':
-        this.deleteUser(event.data);
+        const status = await this.swal.confirmDelete("You want to delete this !");
+        if (status) {
+                this.messageService.add({ severity: 'contrast', summary: 'Info', detail: 'Please wait processing...' });
+
+          this.deleteUser(event.data);
+          this.tablevalue = event.data
+        }
         break;
       case 'add':
         this.add(event.data);
@@ -188,9 +228,13 @@ export class DriverMasterComponent implements OnInit, OnDestroy, AfterViewInit {
         ref_by: this.form.value.ref_by ?? '0',
         whatsappno: String(this.form.value.whatsappno ?? ''),
         mobileno: String(this.form.value.mobileno ?? ''),
-        bank_actype: this.form.value.bank_actype?.value || null,
-
+        bank_actype: this.form.value.bank_actype,
+        enable_login: this.form.value.enable_login ? 1 : 0
       };
+      if (!this.form.value.enable_login) {
+      value.username = '';
+      value.password = '';
+    }
       this.messageService.add({ severity: 'contrast', summary: 'Info', detail: 'Please wait processing...' });
       console.log("Value", value)
       this.driverMasterService.CreateUpdateDriver(value);
@@ -202,18 +246,25 @@ export class DriverMasterComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private editUser(user: any) {
     if (user) {
+      console.log(user)
       this.header = 'Update Driver'
       this.showForm = !this.showForm;
       const city = this.cityList.find(c => c.Id === user.city_id);
       this.form.patchValue({
         ...user,
-        city_id: city
-      })
+        city_id: city,
+        drv_license_expdate: this.Datepipe.transform(user.drv_license_expdate, 'dd-MM-yyyy'),
+        enable_login: user.enable_login === 1 || user.enable_login === true || user.enable_login === 'true',
+        username: user.username,
+        password: user.password
+      }) 
     }
   }
 
+  
+
   private deleteUser(user: any) {
-    this.messageService.add({ severity: 'contrast', summary: 'Info', detail: 'Please wait processing...' });
+    // this.messageService.add({ severity: 'contrast', summary: 'Info', detail: 'Please wait processing...' });
     const payload = {
       table_name: "driver_mast",
       column_name: "id",
