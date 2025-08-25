@@ -75,6 +75,8 @@ export class MonthlyInvoiceListComponent implements OnInit {
   sleetedBookingIds: any;
   nonTaxableCharges: any;
   selectedInvoice: any;
+  party_info: any;
+
 
   constructor(
     private _invoice: InvoiceService,
@@ -110,6 +112,11 @@ export class MonthlyInvoiceListComponent implements OnInit {
       else if ((msg.for === 'getOtherNonTaxableChargesUsingId'))
       {
         this.nonTaxableCharges = msg.data?.nonTaxable ? [ ...msg.data?.nonTaxable] : [];
+        rt = true;
+      }
+      else if ((msg.for ==='partyinfo')){
+        this.party_info = msg.data;
+        console.log("party_info:",this.party_info)
         rt = true;
       }
 
@@ -244,30 +251,44 @@ getNonTaxableCharges(invoice_id: any) {
 
 
 
-async generatePdf(invoice: any, charges: any) {
+getPartyinfoForPdf(invoice_id:any){
+    this.HelperService.getPartyinfoForPdf({invoice_id:(invoice_id)});
+}
+
+
+
+async generatePdf(invoice: any, charges: any, party_info:any) {
   console.log('Generating PDF for invoice:', invoice);
   console.log('Charges:', charges);
 
   // Fetch charges
   this.getTaxableCharges(invoice.id);
   await this.waitForFetch(() => this.taxableCharges);
+  this.getPartyinfoForPdf(invoice.id);
+  await this.waitForFetch(() => this.party_info);
   this.getNonTaxableCharges(invoice.id);
   this.taxableCharges = this.taxableCharges ?? [];
   this.nonTaxableCharges = this.nonTaxableCharges ?? [];
+  this.party_info = this.party_info ?? [];
 
   charges = this.taxableCharges.concat(this.nonTaxableCharges);
+  party_info = this.party_info
+  const party = (this.party_info && this.party_info[0]) || {};
   console.log("Final charges: ", charges);
+  console.log("party:", party_info);
 
   const invoiceData = {
-    companyName: 'Darwar Enterprise',
-    address: '7/1/1, Bijay Basu Road Kolkata 700025, West Bengal (WB-19)',
-    phone: '9748600670 / 9331293690 / 8113136860',
-    email: charges.Email,
-    invoiceNo: invoice.BillNo,
+    companyName: party.Company_Name ?? '',
+    address: (party.partyaddress ?? '').replace(/\t/g, '').replace(/\r?\n/g, ''),
+    phone: party.Branch_PhoneNo ?? '',
+    email: party.Branch_Email ?? '',
+    invoiceNo: invoice.BillNo ?? '',
     invoiceDate: this.formatDate(invoice.BillDate),
-    recipient: 'STATE BANK OF INDIA (IFB KOLKATA BRANCH)',
-    addressLine1: '1, Middleton Street',
-    addressLine2: 'Kolkata : 700071',
+    recipient: ` ${party.BankName} ( ${party.BankIFSC})`,
+    addressLine1: party.branch_address ?? '',
+    addressLine2: party.BankAddress ?? '',
+    state_code: party.Party_StateName ?? '',
+    partygstNo: party.PartyGSTNo ?? '',
     carType: 'HONDA CITY',
     category: '1500 KM/252 Hrs',
     items: [
@@ -275,20 +296,18 @@ async generatePdf(invoice: any, charges: any) {
       { particulars: 'Add : Extra Hour(s)         100.25 X 75', amount: String(invoice.extra_hours ?? '0.00') },
       { particulars: 'Add : Extra KM              780 X 20', amount: String(invoice.extra_km ?? '0.00') },
       { particulars: 'Gross Total', amount: String(invoice.GrossAmount ?? '0.00') },
+      { particulars: `Other Charges Taxable`, amount: String('0.00') },
+      { particulars: 'Parking', amount: String('0.00') },
+      { particulars: 'Night Halt', amount: String(invoice.nightHalt ??'0.00') },
       { particulars: `Add : CGST @ ${invoice.CGSTPer}%`, amount: String(invoice.CGST ?? '0.00') },
       { particulars: `Add : SGST @ ${invoice.SGSTPer}%`, amount: String(invoice.SGST ?? '0.00') },
-      { particulars: 'Holiday days                8 X 500', amount: String(invoice.holiday ?? 'N/A') },
-      { particulars: 'Driver Washing Uniform ', amount: String(invoice.uniform ?? 'N/A') },
-      { particulars: 'Car Washing Charges', amount: String(invoice.washing_charges ?? 'N/A') },
-      { particulars: 'Driver Phone Recharge', amount: String(invoice.recharge ?? '0.00') },
-      { particulars: 'Add : Parking/Tools/Permit Amount', amount: String(invoice.tools ?? 'N/A') },
-      { particulars: 'Add : Night Halt Amount        8 X 500 ', amount: String(invoice.nightHalt ?? '0.00') },
-      { particulars: 'Add : Night Halting Charges        8 X 500 ', amount: String(invoice.night_amount ?? '0.00') },
+      { particulars: 'Other Charges NonTaxable Table', amount: String('0.00') },
+      { particulars: 'Driver Halt', amount: String('0.00') },
       { particulars: 'Round OFF', amount: String(invoice.round_off ?? '0.00') },
-      { particulars: `Net Amount (Rupees ${this.numberToWords(invoice.NetAmount ?? 0)})`, amount: String(invoice.NetAmount ?? '0.00') },
-      { particulars: 'GST No : 75HU8899', amount: String(invoice.GSTNo ?? '19B0FP5592C12P') },
-      { particulars: 'PAN NO : HYHH869', amount: String(invoice.PANNo ?? 'BOFP55927C') },
-      { particulars: 'SAC Code : 7589J', amount: String(invoice.SACCode ?? '996601') },
+      { particulars: `Net Amount (Rupees ${party.AmtInWords ?? ''})`, amount: String(invoice.NetAmount ?? '0.00') },
+      { particulars: `GST No : ${party.PartyGSTNo}`, amount: '' },
+      { particulars: `PAN NO : ${party.PartyPanNo }`, amount:'' },
+      { particulars: 'SAC Code : 7589J', amount:'' },
     ],
   };
 
@@ -357,6 +376,9 @@ async generatePdf(invoice: any, charges: any) {
   page.drawText(invoiceData.recipient, { x: 50, y: height - 185, size: 10, font });
   page.drawText(invoiceData.addressLine1, { x: 50, y: height - 200, size: 10, font });
   page.drawText(invoiceData.addressLine2, { x: 50, y: height - 215, size: 10, font });
+
+  page.drawText(invoiceData.state_code, { x: 50, y: height - 230, size: 10, font });
+  page.drawText(invoiceData.partygstNo, { x: 50, y: height - 245, size: 10, font });
 
   const infoX = 350;
   const infoY = height - 170;
@@ -444,6 +466,9 @@ async generatePdf(invoice: any, charges: any) {
   detailPage.drawText(invoiceData.recipient, { x: 50, y: dH - 165, size: 10, font: dFont });
   detailPage.drawText(invoiceData.addressLine1, { x: 50, y: dH - 180, size: 10, font: dFont });
   detailPage.drawText(invoiceData.addressLine2, { x: 50, y: dH - 195, size: 10, font: dFont });
+
+  detailPage.drawText(invoiceData.state_code, { x: 50, y: dH - 210, size: 10, font: dFont });
+  detailPage.drawText(invoiceData.partygstNo, { x: 50, y: dH - 220, size: 10, font: dFont });
 
   const diX = 350;
   [
@@ -537,6 +562,10 @@ async generatePdf(invoice: any, charges: any) {
   link.download = 'Invoice_DetailSheet.pdf';
   link.click();
 }
+
+
+
+
 
 
  numberToWords(amount: number): string {

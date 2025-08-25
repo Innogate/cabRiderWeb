@@ -24,6 +24,15 @@ export class HelperService extends BaseService {
         this.call('helper.getCompanyDropdown', {});
     }
 
+   getPartyinfoForPdf(invoice_id: any){
+  // Ensure invoice_id is a number
+  const invoiceNumber = typeof invoice_id === 'object' ? invoice_id.invoice_id : invoice_id;
+
+  this.call('helper.getPartyinfoForPdf', {
+    invoice_id: Number(invoiceNumber)
+  });
+}
+
     getPartyById(party_id: number) {
         this.call('helper.getPartyById', {
             party_id: party_id
