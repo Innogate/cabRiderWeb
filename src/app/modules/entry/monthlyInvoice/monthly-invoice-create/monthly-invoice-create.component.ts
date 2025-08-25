@@ -428,13 +428,16 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
 
 
   // Search Functionality
-   searchText: any;
+   searchText: any; // GustName
   searchInvoices() {
     console.log('Searching invoices with text:', this.searchText);
     if (this.searchText) {
       this.dutyTableData = this.dutyTableDataView.filter((invoice: any) => {
         return (
           invoice.SlipNo.toLowerCase().includes(
+            this.searchText.toLowerCase() || ''
+          ) || 
+          invoice.GustName.toLowerCase().includes(
             this.searchText.toLowerCase() || ''
           ) ||
           invoice.DutyTypeName.toLowerCase().includes(
