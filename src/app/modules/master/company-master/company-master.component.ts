@@ -41,12 +41,12 @@ export class CompanyMasterComponent implements OnInit, OnDestroy, AfterViewInit 
     this.form = this.fb.group({
       id: [0],
       active: ['Y'],
-      companyName:  ['', [Validators.minLength(3),Validators.pattern('^[A-Za-z ]{3,}$')]],
+      companyName: ['', [Validators.minLength(3), Validators.pattern('^[A-Za-z ]{3,}$')]],
       ShortName: [''],
       companyAddress: [''],
       companyCity: [''],
       companyPhone: ['', [Validators.pattern('^[6-9][0-9]{9}$')]],
-      companyEmail:  ['', [Validators.email]],
+      companyEmail: ['', [Validators.email]],
       companyWebsite: [''],
       Tally_CGSTAcName: [''],
       Tally_SGSTAcName: [''],
@@ -64,12 +64,12 @@ export class CompanyMasterComponent implements OnInit, OnDestroy, AfterViewInit 
       companyIGST: [''],
       Tally_PurVouchType: [''],
       Tally_SaleVouchType: [''],
-      companyBenificaryName: ['', [Validators.minLength(3),Validators.pattern('^[A-Za-z ]{3,}$')]],
+      companyBenificaryName: ['', [Validators.minLength(3), Validators.pattern('^[A-Za-z ]{3,}$')]],
       companyBankAccountNo: ['', [Validators.pattern('^[0-9]{9,18}$')]],
       companyBankAddress: [''],
       companyBankName: [''],
-       companyBankIFSC: ['', [Validators.pattern('^[A-Z]{4}0[A-Z0-9]{6}$')]],
-      
+      companyBankIFSC: ['', [Validators.pattern('^[A-Z]{4}0[A-Z0-9]{6}$')]],
+
     });
   }
 
@@ -86,7 +86,7 @@ export class CompanyMasterComponent implements OnInit, OnDestroy, AfterViewInit 
   ngOnDestroy(): void {
     this.companyMasterService.unregisterPageHandler();
   }
-ngOnInit(): void {
+  ngOnInit(): void {
     this.companyMasterService.registerPageHandler((msg) => {
       console.log(msg);
       globalRequestHandler(msg, this.router, this.messageService);
@@ -111,7 +111,7 @@ ngOnInit(): void {
           this.messageService.add({ severity: 'error', summary: 'Error', detail: msg.StatusMessage });
         }
 
-      }else if (msg.for == 'deleteCompany') {
+      } else if (msg.for == 'deleteCompany') {
         if (msg.StatusID === 1) {
           const index = this.companylist.findIndex((v: any) => v.id == this.tablevalue.id);
           if (index !== -1) {
@@ -144,16 +144,14 @@ ngOnInit(): void {
       case 'edit':
         // this.heading = 'UPDATE COMPANY';
         this.form.reset();
-         this.editUser(event.data);
+        this.editUser(event.data);
         break;
       case 'delete':
         const status = await this.swal.confirmDelete("You want to delete this !");
-        // if (status) {
-        //         this.messageService.add({ severity: 'contrast', summary: 'Info', detail: 'Please wait processing...' });
-
-        //   this.deleteUser(event.data);
-        //   this.tablevalue = event.data
-        // }
+        if (status) {
+          this.messageService.add({ severity: 'contrast', summary: 'Info', detail: 'Please wait processing...' });
+          this.companyMasterService.deleteCompany(event.data.ID);
+        }
         break;
       case 'add':
         this.showForm = true;
@@ -171,11 +169,11 @@ ngOnInit(): void {
     }
     const payload = {
       ...this.form.value,
-      
+
     }
-     this.companyMasterService.createUpdateCompany(payload)
-    
-   
+    this.companyMasterService.createUpdateCompany(payload)
+
+
   }
   // private deleteUser(user: any) {
   //   const payload = {
@@ -184,35 +182,35 @@ ngOnInit(): void {
   //   this.comonApiService.deleteData(payload)
   // }
 
-  
+
   private editUser(user: any) {
-  if (user) {
-    console.log("Editing user:", user);
-    this.showForm = true; 
-    this.heading = 'UPDATE COMPANY'; 
-    this.form.patchValue({
-      ...user,
-      id: user.ID,
-      companyName: user.Name,
-      companyAddress: user.Address,
-      companyPhone: user.Phone,
-      companyEmail: user.Email,
-      companyWebsite: user.Website,
-      companyCity: user.City,
-      ShortName: user.ShortName,
-      companyBenificaryName: user.BenificaryName,
-      companyBankAddress: user.BankAddress,
-      companyBankName: user.BankName,
-      companyBankIFSC: user.BankIFSC,
-      companyBankAccountNo: user.BankAccountNo,
-      companyCINNo: user.CINNo,
-      companyPANNo: user.PANNo,
-      companyGSTNo: user.GSTNo,
-      companyIGST: user.IGST,
-      companySGST: user.SGST,
-      companyCGST: user.CGST,
-    });
+    if (user) {
+      console.log("Editing user:", user);
+      this.showForm = true;
+      this.heading = 'UPDATE COMPANY';
+      this.form.patchValue({
+        ...user,
+        id: user.ID,
+        companyName: user.Name,
+        companyAddress: user.Address,
+        companyPhone: user.Phone,
+        companyEmail: user.Email,
+        companyWebsite: user.Website,
+        companyCity: user.City,
+        ShortName: user.ShortName,
+        companyBenificaryName: user.BenificaryName,
+        companyBankAddress: user.BankAddress,
+        companyBankName: user.BankName,
+        companyBankIFSC: user.BankIFSC,
+        companyBankAccountNo: user.BankAccountNo,
+        companyCINNo: user.CINNo,
+        companyPANNo: user.PANNo,
+        companyGSTNo: user.GSTNo,
+        companyIGST: user.IGST,
+        companySGST: user.SGST,
+        companyCGST: user.CGST,
+      });
+    }
   }
-}
 
 }
