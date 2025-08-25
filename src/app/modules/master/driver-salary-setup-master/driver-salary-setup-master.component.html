@@ -5,7 +5,7 @@
 
 </div>
 
-<div class="min-h-screen bg-gray-100 p-4" *ngIf="showForm">
+<div class="min-h-screen p-4" *ngIf="showForm">
     <form [formGroup]="form" (ngSubmit)="onSubmit()"
         class="max-w-7xl mx-auto bg-white rounded-xl shadow-md overflow-hidden">
         <!-- Header -->
@@ -36,7 +36,7 @@
                         <p-autoComplete formControlName="DriverId" [suggestions]="filteredDrivers"
                             (completeMethod)="filterDrivers($event)" field="drv_name" [dropdown]="true"
                             placeholder="Search driver..."
-                            class="w-full border border-gray-300 rounded-lg p-3 shadow-sm">
+                            class="w-full border border-gray-300 rounded-lg shadow-sm" styleClass="w-full">
                         </p-autoComplete>
                     </div>
 
