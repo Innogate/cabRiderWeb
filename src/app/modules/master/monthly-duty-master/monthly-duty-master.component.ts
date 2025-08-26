@@ -61,42 +61,42 @@ export class MonthlyDutyMasterComponent implements OnInit, OnDestroy, AfterViewI
       id: 0,
       BranchID: [''],
       PartyID: [''],
-      UsedBy: "Admin",
+      UsedBy: [''],
       CityID: [''],
-      CarTypeID: [],
-      CarNo: ['', [Validators.pattern(/^[A-Z]{2}-\d{2}-[A-Z]{1,2}-\d{4}$/)]],
-      SetupType: "Monthly",
-      DutyAmt: 1000.0,
-      NoofDays: 25,
-      ExceptDay: "Sunday",
-      OutStationDuty: "Y",
-      ExtraDayHrRate: 50,
-      ExtraDayKMRate: 10,
-      ExtraDayMinHr: 4,
-      CompareKMTime: "false",
-      FromTime: "08:00:00",
-      ToTime: "20:00:00",
-      TotHrs: 12,
-      ExtraMonthHrsRate: 200,
-      TotalKM: 3000,
-      KMRate: 5,
-      OTRate: 100,
-      NightAmt: 150,
-      OutNightRt: 200,
-      FuelRt: 90,
-      MobilRt: 20,
-      FuelAvrg: 12,
-      MobilAvrg: 15,
-      NHaltTime: "02:00:00",
-      GrgOutTime: "07:30:00",
-      GrgInTime: "21:00:00",
-      GrgOutKM: 10,
-      GrgInKM: 20,
-      CalcOnRptTime: "false",
-      OutStationAmt: 500,
-      ExtraDesc: "Festival Duty",
-      ExtraAmt: 100,
-      PerDayAmt: 400,
+      CarTypeID: [''],
+      CarNo: [''],
+      SetupType: [''],
+      DutyAmt: [''],
+      NoofDays: [''],
+      ExceptDay: [''],
+      OutStationDuty: [''],
+      ExtraDayHrRate: [''],
+      ExtraDayKMRate: [''],
+      ExtraDayMinHr: [''],
+      CompareKMTime: [''],
+      FromTime: [''],
+      ToTime: [''],
+      TotHrs: [''],
+      ExtraMonthHrsRate: [''],
+      TotalKM: [''],
+      KMRate: [''],
+      OTRate: [''],
+      NightAmt: [''],
+      OutNightRt: [''],
+      FuelRt: [''],
+      MobilRt: [''],
+      FuelAvrg: [''],
+      MobilAvrg: [''],
+      NHaltTime: [''],
+      GrgOutTime: [''],
+      GrgInTime: [''],
+      GrgOutKM: [''],
+      GrgInKM: [''],
+      CalcOnRptTime: [''],
+      OutStationAmt: [''],
+      ExtraDesc: [''],
+      ExtraAmt: [''],
+      PerDayAmt: [''],
 
     });
   }
@@ -134,14 +134,10 @@ export class MonthlyDutyMasterComponent implements OnInit, OnDestroy, AfterViewI
     const payload = {
       id: 0,
       PageNo: 1,
-      PageSize: 1000,
+      PageSize: 100,
       Search: "",
     };
     this.monthlyDutyMasterService.getAllMonthlyDuty(payload);
-    this.commonService.GatAllCityDropDown({});
-    this.commonService.GatAllBranchDropDown(payload);
-    this.commonService.gateAllPartyNameDropdown();
-    this.commonService.getallCartype();
   }
 
 
@@ -153,14 +149,6 @@ export class MonthlyDutyMasterComponent implements OnInit, OnDestroy, AfterViewI
     { header: 'ID', field: 'id' },
     { header: 'Duty NO', field: 'DutyNo', icon: 'pi pi-list', styleClass: 'text-green-600' },
     { header: 'Car No', field: 'CarNo', icon: 'pi pi-car', styleClass: 'text-indigo-500' },
-    // { header: 'City', field: 'CityName', icon: 'pi pi-map-marker', styleClass: 'text-yellow-600' },
-    // { header: 'Pin Code', field: 'pin_code', icon: 'pi pi-slack' },
-    // { header: 'Mobile No', field: 'mobileno', icon: 'pi pi-slack' },
-    // { header: 'Driver Licenseno', field: 'drv_licenseno', icon: 'pi pi-slack' },
-    // { header: 'Bank Name', field: 'bank_name', icon: 'pi pi-slack' },
-    // { header: 'Bank Branch', field: 'bank_branch', icon: 'pi pi-slack' },
-    // { header: 'Bank Account No', field: 'bank_acno', icon: 'pi pi-slack' },
-    // { header: 'Bank Account Type', field: 'bank_actype', icon: 'pi pi-slack' },
   ];
 
   actions = [
@@ -174,12 +162,20 @@ export class MonthlyDutyMasterComponent implements OnInit, OnDestroy, AfterViewI
     switch (event.action) {
       case 'edit':
         this.showForm = true;
+        this.commonService.GatAllCityDropDown({});
+        this.commonService.GatAllBranchDropDown({});
+        this.commonService.gateAllPartyNameDropdown();
+        this.commonService.getallCartype();
         this.heading = 'EDIT CAR TYPE'
         break;
       case 'delete':
         break;
       case 'add':
         this.showForm = true;
+        this.commonService.GatAllCityDropDown({});
+        this.commonService.GatAllBranchDropDown({});
+        this.commonService.gateAllPartyNameDropdown();
+        this.commonService.getallCartype();
         this.heading = 'ADD CAR TYPE'
         break
     }
@@ -237,6 +233,17 @@ export class MonthlyDutyMasterComponent implements OnInit, OnDestroy, AfterViewI
   ];
 
 
-
+   saveMonthly() {
+    if (this.form.invalid) {
+      this.form.touched
+      this.messageService.add({ severity: "warning", summary: "warning", detail: 'Invalid Form Data' })
+      return;
+    }
+    const payload = {
+      ...this.form.value,
+    }
+    // this.monthlyDutyMasterService.createUpdateMonthlyDuty(payload)
+    console.log(payload)
+  }
 }
 
