@@ -201,6 +201,7 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
         } else if (msg.for === 'minvoice.getMonthlyBookingList') {
           this.dutyTableDataView = msg.data || [];
           this.dutyTableData = this.dutyTableDataView;
+          console.log("dutytabledata",this.dutyTableData)
           this.totalRecords = msg.total || 0;
           this.mapCarAndDutyTypesToDutyData();
           this.tableLoading = false;
@@ -436,7 +437,7 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
         return (
           invoice.SlipNo.toLowerCase().includes(
             this.searchText.toLowerCase() || ''
-          ) || 
+          ) ||
           invoice.GustName.toLowerCase().includes(
             this.searchText.toLowerCase() || ''
           ) ||

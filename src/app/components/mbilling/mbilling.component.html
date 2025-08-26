@@ -33,11 +33,21 @@
         <th class="py-3 px-4" style="min-width: 100px;">
           <i class="pi pi-cog text-gray-700 mr-1"></i> Car Type
         </th>
+
+        <th class="py-3 px-4" style="min-width: 100px;">
+          <i class="pi pi-cog text-gray-700 mr-1"></i> Booked BY
+        </th>
         <th class="py-3 px-4" style="min-width: 120px;">
           <i class="pi pi-building text-pink-600 mr-1"></i> Project
         </th>
         <th class="py-3 px-4" style="min-width: 150px;">
           <i class="pi pi-user text-indigo-600 mr-1"></i> Guest Name
+        </th>
+        <th class="py-3 px-4" style="min-width: 100px;">
+          <i class="pi pi-cog text-gray-700 mr-1"></i> From City
+        </th>
+        <th class="py-3 px-4" style="min-width: 100px;">
+          <i class="pi pi-cog text-gray-700 mr-1"></i> To City
         </th>
         <th class="py-3 px-4" style="min-width: 100px;">
           <i class="pi pi-calendar text-teal-600 mr-1"></i> From Date
@@ -73,17 +83,20 @@
       <tr class="hover:bg-blue-50 transition-all text-sm">
         <td class="py-2 px-3">{{ i + 1 }}</td>
         <td class="py-2 px-3">{{ duty.SlipNo }}</td>
-        <td class="py-2 px-3">{{ getDutyTypeName(duty.DutyType) }}</td>
+        <td class="py-2 px-3">{{ duty.DutyType }}</td>
         <td class="py-2 px-3">{{ duty.CarNo }}</td>
-        <td class="py-2 px-3">{{ getCartypeName(duty.CarType) }}</td>
-        <td class="py-2 px-3">{{ duty.Project }}</td>
+        <td class="py-2 px-3">{{ duty.Car_Type }}</td>
         <td class="py-2 px-3">{{ duty.BookedBy }}</td>
-        <td class="py-2 px-3">{{(isEditMode ? duty.GarageOutDate : duty.fromDate) | date:'dd-MM-yyyy' }}</td>
-        <td class="py-2 px-3">{{(isEditMode ? duty.GarageInDate : duty.toDate) | date:'dd-MM-yyyy' }}</td>
+        <td class="py-2 px-3">{{ duty.Project }}</td>
+        <td class="py-2 px-3">{{ duty.GuestName }}</td>
+        <td class="py-2 px-3">{{ duty.FromCity }}</td>
+        <td class="py-2 px-3">{{ duty.ToCity }}</td>
+        <td class="py-2 px-3">{{ duty.StartDate }}</td>
+        <td class="py-2 px-3">{{ duty.EndDate }}</td>
+        <td class="py-2 px-3">{{ duty.GarageInTime }}</td>
         <td class="py-2 px-3">{{ duty.GarageOutTime }}</td>
-        <td class="py-2 px-3">{{ duty.GarageInDate | date:'HH:mm' }}</td>
-        <td class="py-2 px-3">{{ duty.GarageOutKm }}</td>
         <td class="py-2 px-3">{{ duty.GarageInKm }}</td>
+        <td class="py-2 px-3">{{ duty.GarageOutKm }}</td>
         <td class="py-2 px-3">{{ duty.TotalHour }}</td>
         <td class="py-2 px-3">{{ duty.TotalKm }}</td>
         <td class="py-2 px-3">
