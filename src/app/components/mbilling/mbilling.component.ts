@@ -277,8 +277,9 @@ export class MbillingComponent {
 
   // API CALLS
   async calculateTotals(selected: any[]) {
+    console.log(selected);
     const setupCode = this.selectedMontySetupCode;
-
+    console.log(setupCode);
     if (!setupCode) {
       this.messageService.add({
         severity: 'warn',
@@ -287,6 +288,7 @@ export class MbillingComponent {
       });
       return;
     }
+    
 
     let totalDays = 0;
     let totalAmount = 0;
@@ -315,16 +317,16 @@ export class MbillingComponent {
 
     // ** CALCULATE ALL Table Row
     await selected.forEach(async (item: any) => {
-      const fromDate = new Date(item.fromDate);
-      const toDate = new Date(item.toDate);
+      const StartDate = new Date(item.StartDate);
+      const EndDate = new Date(item.EndDate);
       //  Day calculation
-      if (!isNaN(fromDate.getTime()) && !isNaN(toDate.getTime())) {
-        const dateKey = `${fromDate.toDateString()}_${toDate.toDateString()}`;
+      if (!isNaN(StartDate.getTime()) && !isNaN(EndDate.getTime())) {
+        const dateKey = `${StartDate.toDateString()}_${EndDate.toDateString()}`;
 
         if (!seenDateRanges.has(dateKey)) {
           seenDateRanges.add(dateKey); // Mark as seen
 
-          const diffTime = toDate.getTime() - fromDate.getTime();
+          const diffTime = EndDate.getTime() - StartDate.getTime();
           const days = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
 
           totalDays += days;
@@ -603,7 +605,7 @@ export class MbillingComponent {
       const igstAmount = amount * (igstPercentage / 100);
       this.totalPaybleIGSTAmount = igstAmount.toFixed(2);
     } else {
-      this.totalPaybleIGSTAmount = 0; // If no IGST percentage provided, return 0
+      this.totalPaybleIGSTAmount = 0;
     }
   }
 

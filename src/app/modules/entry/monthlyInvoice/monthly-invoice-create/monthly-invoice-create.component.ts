@@ -486,7 +486,7 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
   this.sleetedBookingIds = Array.from(
     new Set([
       ...this.sleetedBookingIds,
-      ...selected.map((item: any) => item.SlipNo),
+      ...selected.map((item: any) => item.BookingID),
     ])
   );
   await this.waitForFetch(() => this.sleetedBookingIds);
