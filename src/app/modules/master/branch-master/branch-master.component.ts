@@ -11,6 +11,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { CheckboxModule } from 'primeng/checkbox';
 import { commonService } from '../../../services/comonApi.service';
+import { SweetAlertService } from '../../../services/sweet-alert.service';
 
 @Component({
   selector: 'app-branch-master',
@@ -25,13 +26,13 @@ import { commonService } from '../../../services/comonApi.service';
   styleUrl: './branch-master.component.css'
 })
 
-export class BranchMasterComponent implements OnInit,OnDestroy,AfterViewInit {
-  
-  showForm: boolean= false;
-  isLoading: boolean= true;
+export class BranchMasterComponent implements OnInit, OnDestroy, AfterViewInit {
+
+  showForm: boolean = false;
+  isLoading: boolean = true;
   isEditMode: boolean = false;
   data: any[] = [];
-  heading: string='';
+  heading: string = '';
   form!: FormGroup;
   partyname: any[] = [];
   cities: any[] = [];
@@ -40,19 +41,18 @@ export class BranchMasterComponent implements OnInit,OnDestroy,AfterViewInit {
   tablevalue: any;
 
   constructor(
-    private BranchMasterService: branchMasterService, 
+    private BranchMasterService: branchMasterService,
     private router: Router,
     private messageService: MessageService,
     private fb: FormBuilder,
     private commonService: commonService,
+    private swal: SweetAlertService
+  ) {
+    this.createForm();
+  }
 
-    
-  ){
-      this.createForm();
-    }
-
-    createForm(){
-      this.form = this.fb.group({
+  createForm() {
+    this.form = this.fb.group({
       active: ['Y'],
       branch_name: ['', [Validators.required, Validators.minLength(3), Validators.pattern(/^[a-zA-Z0-9 ]+$/)]],
       address: [''],
@@ -67,17 +67,17 @@ export class BranchMasterComponent implements OnInit,OnDestroy,AfterViewInit {
       smtp_host: [''],
       smtp_username: [''],
       smtp_password: [''],
-      smtp_email: ['', [ Validators.email]],
+      smtp_email: ['', [Validators.email]],
       smtp_port: [''],
       smtp_ssl: [true],
       wp_token: [''],
       sms_username: [''],
-      sms_password: [''], 
-      sms_sender: [''], 
-      footer: [''], 
+      sms_password: [''],
+      sms_sender: [''],
+      footer: [''],
       id: [0],
-      })
-    }
+    })
+  }
 
   ngAfterViewInit(): void {
     const payload = {
@@ -90,18 +90,18 @@ export class BranchMasterComponent implements OnInit,OnDestroy,AfterViewInit {
     this.commonService.GatAllCityDropDown({});
   }
   ngOnDestroy(): void {
-        this.BranchMasterService.unregisterPageHandler();
+    this.BranchMasterService.unregisterPageHandler();
   }
   ngOnInit(): void {
     this.BranchMasterService.registerPageHandler((msg) => {
-       console.log(msg);
-        globalRequestHandler(msg, this.router, this.messageService);
-        if (msg.for === "getAllBranch") {
-          this.isLoading = false
-          this.data = msg.data
-        }  else if (msg.for == 'getAllCityDropdown') {
+      console.log(msg);
+      globalRequestHandler(msg, this.router, this.messageService);
+      if (msg.for === "getAllBranch") {
+        this.isLoading = false
+        this.data = msg.data
+      } else if (msg.for == 'getAllCityDropdown') {
         this.cityList = msg.data;
-       }else if (msg.for == 'createUpdateBranch') {
+      } else if (msg.for == 'createUpdateBranch') {
         if (msg.StatusID === 1) {
           const updated = msg.data[0];  // access the first item in data array
 
@@ -125,16 +125,16 @@ export class BranchMasterComponent implements OnInit,OnDestroy,AfterViewInit {
           const index = this.data.findIndex((v: any) => v.id == this.tablevalue.id);
           if (index !== -1) {
             this.data.splice(index, 1);
-          } 
+          }
           this.messageService.add({ severity: 'success', summary: 'Success', detail: msg.StatusMessage })
         } else {
           this.messageService.add({ severity: 'error', summary: 'Error', detail: "Cannot Delete data" })
         }
       }
       return true;
-      });
+    });
   }
-        // Define the columns for the dynamic table
+  // Define the columns for the dynamic table
 
 
   columns = [
@@ -143,14 +143,14 @@ export class BranchMasterComponent implements OnInit,OnDestroy,AfterViewInit {
     { header: 'WALLET AMOUNT', field: 'Wallet', icon: 'pi pi-wallet', styleClass: 'text-red-800' },
     { header: 'CITY NAME', field: 'city', icon: 'pi pi-map-marker', styleClass: 'text-red-800' },
     { header: 'STATE NAME', field: 'state', icon: 'pi pi-map', styleClass: 'text-red-800' },
-    { header: 'STATE CODE', field: 'state', icon: 'pi pi-envelope', styleClass: 'text-red-800' },    
+    { header: 'STATE CODE', field: 'state', icon: 'pi pi-envelope', styleClass: 'text-red-800' },
   ];
 
   actions = [
     { icon: 'pi pi-pencil', action: 'edit', styleClass: 'p-button-warning' },
     { icon: 'pi pi-trash', action: 'delete', styleClass: 'p-button-danger' }
   ];
-  handleAction(event: { action: string, data: any }) {
+  async handleAction(event: { action: string, data: any }) {
     switch (event.action) {
       case 'edit':
         this.showForm = true;
@@ -163,7 +163,12 @@ export class BranchMasterComponent implements OnInit,OnDestroy,AfterViewInit {
         })
         break;
       case 'delete':
-        console.log("delete")
+        const status = await this.swal.confirmDelete("You want to delete this !");
+        if (status) {
+          this.messageService.add({ severity: 'contrast', summary: 'Info', detail: 'Please wait processing...' });
+          this.BranchMasterService.deleteBranch(event.data.Id);
+        }
+        console.log(event.data)
         break;
       case 'add':
         this.showForm = true;
@@ -171,7 +176,7 @@ export class BranchMasterComponent implements OnInit,OnDestroy,AfterViewInit {
         this.isEditMode = false;
         console.log("add");
         this.form.reset();
-      break;
+        break;
     }
   }
   filterCity(event: any) {
@@ -181,7 +186,7 @@ export class BranchMasterComponent implements OnInit,OnDestroy,AfterViewInit {
     );
   }
 
-    saveBranch() {
+  saveBranch() {
     if (this.form.invalid) {
       this.form.touched
       this.messageService.add({ severity: "warning", summary: "warning", detail: 'Invalid Form Data' })

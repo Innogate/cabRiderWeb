@@ -22,8 +22,6 @@ export class companyMasterService extends BaseService {
     this.call('master.deleteCompanyMaster', {id});
   }
 
-
-
   //   "body": {
   //   "Id": 141,
   //   "companyName": "Test Company Pvt Ltd bbb ghjj hh bb  gh",

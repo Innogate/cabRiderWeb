@@ -64,6 +64,11 @@ export class branchMasterService extends BaseService {
     //     }   
     // }
 
+    deleteBranch(id: number) {
+        this.call('master.deleteBranchMaster', { id });
+    }
+
+
     protected handleMessage(msg: any): boolean {
         return false;
     }
