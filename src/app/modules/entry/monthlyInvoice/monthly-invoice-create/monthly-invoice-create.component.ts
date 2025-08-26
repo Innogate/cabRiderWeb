@@ -468,31 +468,43 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
   mainDutyList: any[] = [];
   sleetedBookingIds: any[] = [];
   displayDuty = false;
-  saveSelectedDuties() {
-    const selected = this.dutyTableData.filter((item: any) => item.selected);
+  async saveSelectedDuties() {
+  const selected = this.dutyTableData.filter((item: any) => item.selected);
 
-    // Avoid duplicates in mainDutyList using ID check
-    selected.forEach((sel) => {
-      const exists = this.mainDutyList.some((duty: any) => duty.id === sel.id);
-      if (!exists) {
-        this.mainDutyList.push({ ...sel });
-      }
-    });
+  console.log("Step one ...................");
+  // Don’t reset mainDutyList, just add new
+  selected.forEach((sel) => {
+    if (!this.mainDutyList.some((d) => d.SlipNo === sel.SlipNo)) {
+      this.mainDutyList.push({ ...sel });
+    }
+  });
+  console.log("Main Duty List Updated:", this.mainDutyList);
 
-    console.log('Selected Duties:', this.mainDutyList);
-    // Mark them as disabled
-    this.dutyTableData = this.dutyTableData.map((item: any) => ({
+  await this.waitForFetch(() => this.mainDutyList);
+
+  console.log("Step two ...................");
+  this.sleetedBookingIds = Array.from(
+    new Set([
+      ...this.sleetedBookingIds,
+      ...selected.map((item: any) => item.SlipNo),
+    ])
+  );
+  await this.waitForFetch(() => this.sleetedBookingIds);
+  console.log("Selected Duties ID:", this.sleetedBookingIds);
+
+  console.log("Step three ...................");
+  this.dutyTableData = this.dutyTableData.map((item: any) => {
+    const isSelected = this.mainDutyList.some((sel: any) => sel.SlipNo === item.SlipNo);
+    return {
       ...item,
-      disabled: selected.some((sel: any) => sel.id === item.id),
-    }));
-    this.displayDuty = false;
-    this.sleetedBookingIds = Array.from(
-      new Set([
-        ...this.sleetedBookingIds,
-        ...selected.map((item: any) => item.id),
-      ])
-    );
-  }
+      disabled: item.disabled || isSelected,
+    };
+  });
+
+  console.log("Step four ...................");
+  this.displayDuty = false;
+}
+
 
   addDutySection() {
     // check all parameter are filled
