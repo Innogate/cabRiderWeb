@@ -69,7 +69,9 @@ export class CompanyMasterComponent implements OnInit, OnDestroy, AfterViewInit 
       companyBankAddress: [''],
       companyBankName: [''],
       companyBankIFSC: ['', [Validators.pattern('^[A-Z]{4}0[A-Z0-9]{6}$')]],
-
+      PaymentQR: [''],
+      Logo: [''],
+      Signature: [''],
     });
   }
 

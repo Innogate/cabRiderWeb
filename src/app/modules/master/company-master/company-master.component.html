@@ -334,7 +334,7 @@
                                     reader.onload=e=>{logoPreview.src=e.target.result; logoPreview.classList.remove('hidden');}; 
                                     reader.readAsDataURL(file);} "
                                     class="w-full border border-gray-300 rounded-lg p-3 text-uppercase"
-                                    formControlName="">
+                                    formControlName="Logo">
                                 <img id="logoPreview" class="w-32 h-32 rounded border object-cover hidden" />
                             </div>
                         </div>
@@ -349,7 +349,7 @@
                                     reader.onload=e=>{signaturePreview.src=e.target.result; signaturePreview.classList.remove('hidden');}; 
                                     reader.readAsDataURL(file);} "
                                     class="w-full border border-gray-300 rounded-lg p-3 text-uppercase"
-                                    formControlName="">
+                                    formControlName="Signature">
                                 <img id="signaturePreview" class="w-32 h-32 rounded border object-cover hidden" />
                             </div>
                         </div>
@@ -364,7 +364,7 @@
                                     reader.onload=e=>{qrPreview.src=e.target.result; qrPreview.classList.remove('hidden');}; 
                                     reader.readAsDataURL(file);} "
                                     class="w-full border border-gray-300 rounded-lg p-3 text-uppercase"
-                                    formControlName="">
+                                    formControlName="PaymentQR">
                                 <img id="qrPreview" class="w-32 h-32 rounded border object-cover hidden" />
                             </div>
                         </div>
