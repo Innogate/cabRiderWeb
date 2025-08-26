@@ -80,15 +80,12 @@ export class GlMasterComponent implements OnInit, OnDestroy, AfterViewInit {
           this.messageService.add({ severity: 'error', summary: 'Error', detail: msg.StatusMessage });
         }
 
-      }else if (msg.for === "deleteData") {
+      }else if (msg.for === "deleteGl") {
         if (msg.StatusID === 1) {
-          const index = this.users.findIndex((v: any) => v.id == this.tablevalue.id);
+          const index = this.users.findIndex((v: any) => v.id == msg.data.id);
           if (index !== -1) {
             this.users.splice(index, 1);
           } 
-          this.messageService.add({ severity: 'success', summary: 'Success', detail: msg.StatusMessage })
-        } else {
-          this.messageService.add({ severity: 'error', summary: 'Error', detail: "Cannot Delete data" })
         }
       }else if(msg.for === "updateGl"){
         if (msg.StatusID === 1) {
