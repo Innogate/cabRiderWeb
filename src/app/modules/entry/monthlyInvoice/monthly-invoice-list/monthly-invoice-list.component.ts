@@ -258,9 +258,6 @@ getPartyinfoForPdf(invoice_id:any){
 
 
 async generatePdf(invoice: any, charges: any, party_info:any) {
-  console.log('Generating PDF for invoice:', invoice);
-  console.log('Charges:', charges);
-
   // Fetch charges
   this.getTaxableCharges(invoice.id);
   await this.waitForFetch(() => this.taxableCharges);
@@ -284,11 +281,11 @@ async generatePdf(invoice: any, charges: any, party_info:any) {
     email: party.Branch_Email ?? '',
     invoiceNo: invoice.BillNo ?? '',
     invoiceDate: this.formatDate(invoice.BillDate),
-    recipient: ` ${party.BankName} ( ${party.BankIFSC})`,
-    addressLine1: party.branch_address ?? '',
-    addressLine2: party.BankAddress ?? '',
-    state_code: party.Party_StateName ?? '',
-    partygstNo: party.PartyGSTNo ?? '',
+    recipient: ` ${party.Party_Name}`,
+    addressLine1: (party.brunch_address ?? '').replace(/\t/g, '').replace(/\r?\n/g, ''),
+    addressLine2: `${party.PartyCity }: ${party.PartyPinCode}`,
+    state_code: `State Code: ${party.StateCode} ${party.Party_StateName } `,
+    partygstNo: `Party GST NO: ${party.PartyGSTNo }`,
     carType: 'HONDA CITY',
     category: '1500 KM/252 Hrs',
     items: [
