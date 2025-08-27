@@ -438,7 +438,7 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
           invoice.SlipNo.toLowerCase().includes(
             this.searchText.toLowerCase() || ''
           ) ||
-          invoice.GustName.toLowerCase().includes(
+          invoice.GuestName.toLowerCase().includes(
             this.searchText.toLowerCase() || ''
           ) ||
           invoice.DutyTypeName.toLowerCase().includes(

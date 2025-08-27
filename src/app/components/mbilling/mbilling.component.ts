@@ -609,7 +609,7 @@ export class MbillingComponent {
   logBillingFormValues() {
     const payload = {
       ...this.getBillingFormData(),
-      duty_ids: this.mainDutyList.map((d) => d.id),
+      duty_ids: this.mainDutyList.map((d) => d.BookingID),
     };
 
     this._minvoice.createMonthlyBilling(payload);
