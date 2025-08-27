@@ -108,7 +108,7 @@ export class DriverSalarySetupMasterComponent implements OnInit, OnDestroy, Afte
       globalRequestHandler(msg, this.router, this.messageService);
       if (msg.for == 'getalldriversalarysetup') {
         this.users = msg.data;
-        this.isLoading = false
+        this.isLoading = false;
       } else if (msg.for == 'getAllDriverDropdown') {
         this.driverList = msg.data;
       } else if (msg.for == 'CreateUpdateDriver') {

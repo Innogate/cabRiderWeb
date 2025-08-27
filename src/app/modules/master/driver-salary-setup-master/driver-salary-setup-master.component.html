@@ -22,9 +22,9 @@
         </div>
 
         <!-- Main Form Content -->
-        <div class="p-6 grid grid-cols-1 lg:grid-cols-2 gap-8 bg-sky-200">
+        <div class="p-6 grid grid-cols-1 lg:grid-cols-2 gap-4 bg-sky-200">
             <!-- Left Column -->
-            <div class="space-y-6">
+            <div class="space-y-4">
                 <!-- Driver Selection -->
                 <div class="flex gap-4">
                     <!-- Select Driver -->
@@ -58,7 +58,9 @@
                         <i class="pi pi-wallet mr-2 text-rose-900"></i>Salary Configuration
                     </h2>
                     <div class="space-y-4">
-                        <div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
                             <div class="flex items-center space-x-2">
                                 <i class="pi pi-dollar text-orange-600"></i>
                                 <label class="text-sm font-medium text-slate-950">Salary Type</label>
@@ -71,26 +73,6 @@
 
                         </div>
 
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <div class="flex items-center space-x-2">
-                                    <i class="pi pi-indian-rupee text-green-700"></i>
-                                    <label class="block text-sm font-medium text-slate-950 mb-1">Base Amount</label>
-                                </div>
-                                <input type="number" formControlName="BasicSalary" pInputText
-                                    class="w-full border border-gray-300 rounded-lg p-3" placeholder="0.00">
-                            </div>
-                            <div>
-                                <div class="flex items-center space-x-2">
-                                    <i class="pi pi-file-edit text-green-700"></i>
-                                <label class="block text-sm font-medium text-slate-950 mb-1">Calculation Days</label>
-                                </div>
-                                <input type="number" formControlName="SalaryCalcOnDays" pInputText
-                                    class="w-full border border-gray-300 rounded-lg p-3">
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-2 gap-4">
                             <div>
                                 <div class="flex items-center space-x-2">
                                     <i class="pi pi-file text-fuchsia-600"></i>
@@ -101,7 +83,25 @@
                                     class="w-full border border-gray-300 rounded-lg">
                                 </p-dropdown>
                             </div>
+                        </div>
 
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <div class="flex items-center space-x-2">
+                                    <i class="pi pi-indian-rupee text-green-700"></i>
+                                    <label class="block text-sm font-medium text-slate-950 mb-1">Base Amount</label>
+                                </div>
+                                <input type="number" formControlName="BasicSalary" pInputText
+                                    class="w-full border border-gray-300 rounded-lg p-3" placeholder="0">
+                            </div>
+                            <div>
+                                <div class="flex items-center space-x-2">
+                                    <i class="pi pi-file-edit text-green-700"></i>
+                                <label class="block text-sm font-medium text-slate-950 mb-1">Calculation Days</label>
+                                </div>
+                                <input type="number" formControlName="SalaryCalcOnDays" pInputText
+                                    class="w-full border border-gray-300 rounded-lg p-3">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -171,7 +171,7 @@
             </div>
 
             <!-- Right Column -->
-            <div class="space-y-6">
+            <div class="space-y-4">
                 <!-- Allowances Card -->
                 <div class="bg-sky-100 p-5 rounded-lg border border-sky-400">
                     <h2 class="text-lg font-semibold text-slate-950 mb-4 pb-2 border-b border-sky-400">
