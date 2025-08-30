@@ -4,7 +4,8 @@
     </app-dynamic-table>
 </div>
 <div class="min-h-screen  p-4" *ngIf="showForm">
-    <form class="max-w-7xl mx-auto bg-white rounded-xl shadow-md overflow-hidden" [formGroup]="form" (ngSubmit)="saveMonthly()">
+    <form class="max-w-7xl mx-auto bg-white rounded-xl shadow-md overflow-hidden" [formGroup]="form"
+        (ngSubmit)="saveMonthly()">
         <!-- Header -->
         <div class="bg-sky-700 px-6 py-4 rounded-t-lg flex justify-between items-center">
             <h1 class="text-2xl font-semibold text-white">
@@ -90,17 +91,12 @@
                             <input type="text" pInputText class="w-full mb-2 border border-gray-300 rounded-lg p-3"
                                 placeholder="XX-XX-X-XXXX" formControlName="CarNo" />
 
-                            <!-- Error for required -->
-                            <span *ngIf="form.get('CarNo')?.touched && form.get('CarNo')?.errors?.['required']"
-                                class="text-red-500">
-                                Car number is required.
+                            <span *ngIf="form.get('CarNo')?.invalid 
+                                      && form.get('CarNo')?.touched 
+                                      && form.get('CarNo')?.errors?.['pattern']" class="text-red-500 text-sm">
+                                Enter a valid car number
                             </span>
-
-                            <!-- Error for pattern -->
-                            <span *ngIf="form.get('CarNo')?.touched && form.get('CarNo')?.errors?.['pattern']"
-                                class="text-red-500">
-                                Invalid Car Number format. Use WB-12-A-1234.
-                            </span>
+                            
                         </div>
 
                         <div>
@@ -124,7 +120,7 @@
 
                         </div>
                         <input type="text" pInputText class="w-full mb-2 border border-gray-300 rounded-lg p-3"
-                            formControlName="UsedBy">
+                            formControlName="UsedBy" placeholder="Used By">
                     </div>
                     <div class="grid grid-cols-3 gap-4">
 
@@ -185,11 +181,7 @@
                                 </div>
                                 <input type="time" pInputText class="w-full border border-gray-300 rounded-lg p-3"
                                     formControlName="ToTime">
-                                <!-- <span
-                                    *ngIf="form.get('bank_branch')?.touched && form.get('bank_branch')?.errors?.['pattern']"
-                                    class="text-sm text-red-600">
-                                    Only letters and spaces are allowed.
-                                </span> -->
+                               
                             </div>
                         </div>
                         <div class="grid grid-cols-2 gap-4">
@@ -208,11 +200,7 @@
                                 </div>
                                 <input type="number" pInputText class="w-full border border-gray-300 rounded-lg p-3"
                                     placeholder="0" formControlName="TotalKM">
-                                <!-- <span
-                                    *ngIf="form.get('bank_branch')?.touched && form.get('bank_branch')?.errors?.['pattern']"
-                                    class="text-sm text-red-600">
-                                    Only letters and spaces are allowed.
-                                </span> -->
+                               
                             </div>
                         </div>
 

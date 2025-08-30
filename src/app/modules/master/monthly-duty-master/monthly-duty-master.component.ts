@@ -9,10 +9,11 @@ import { DropdownModule } from 'primeng/dropdown';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { commonService } from '../../../services/comonApi.service';
 import { monthlyDutyMasterService } from '../../../services/monthlyDutyMaster.service';
+import { InputTextModule } from 'primeng/inputtext';
 
 @Component({
   selector: 'app-monthly-duty-master',
-  imports: [CommonModule, DynamicTableComponent, ReactiveFormsModule, DropdownModule, AutoCompleteModule,],
+  imports: [CommonModule, DynamicTableComponent, ReactiveFormsModule, DropdownModule, AutoCompleteModule,InputTextModule,],
   templateUrl: './monthly-duty-master.component.html',
   styleUrl: './monthly-duty-master.component.css'
 })
@@ -44,6 +45,7 @@ export class MonthlyDutyMasterComponent implements OnInit, OnDestroy, AfterViewI
   ];
 
   filteredDays: any[] = [];
+  tablevalue: any;
 
 
 
@@ -64,7 +66,7 @@ export class MonthlyDutyMasterComponent implements OnInit, OnDestroy, AfterViewI
       UsedBy: [''],
       CityID: [''],
       CarTypeID: [''],
-      CarNo: [''],
+      CarNo: ['', [Validators.pattern(/^[A-Z]{2}-\d{2}-[A-Z]{1,2}-\d{1,4}$/)]],
       SetupType: [''],
       DutyAmt: [''],
       NoofDays: [''],
@@ -119,6 +121,33 @@ export class MonthlyDutyMasterComponent implements OnInit, OnDestroy, AfterViewI
         this.partyList = msg.data;
       } else if(msg.for === 'getAllCartypeMasterDropdown'){
         this.carTypeList = msg.data;
+      } else if (msg.for == 'createUpdateMonthlyDutyMaster') {
+        if (msg.StatusID === 1) {
+          const updated = msg.data[0]; 
+
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: msg.StatusMessage });
+          this.showForm = false;
+          this.form.reset();
+
+          const index = this.data.findIndex((v: any) => v.id == updated.id);
+          if (index !== -1) {
+            this.data[index] = { ...updated };
+          } else {
+            this.data.push(updated)
+          }
+        } else {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: msg.StatusMessage });
+        }
+      } else if (msg.for === "deleteData") {
+        if (msg.StatusMessage === "success") {
+          const index = this.data.findIndex((v: any) => v.id == this.tablevalue.id);
+          if (index !== -1) {
+            this.data.splice(index, 1);
+          } 
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: msg.StatusMessage })
+        } else {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: "Cannot Delete data" })
+        }
       }
       return true;
     });
@@ -172,6 +201,7 @@ export class MonthlyDutyMasterComponent implements OnInit, OnDestroy, AfterViewI
         break;
       case 'add':
         this.showForm = true;
+        this.form.reset();
         this.commonService.GatAllCityDropDown({});
         this.commonService.GatAllBranchDropDown({});
         this.commonService.gateAllPartyNameDropdown();
