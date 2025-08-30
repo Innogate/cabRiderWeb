@@ -12,6 +12,7 @@ import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
 import { commonService } from '../../../services/comonApi.service';
 import { StyleClass } from 'primeng/styleclass';
+import { SweetAlertService } from '../../../services/sweet-alert.service';
 
 @Component({
   selector: 'app-party-master',
@@ -35,6 +36,7 @@ export class PartyMasterComponent implements OnInit, OnDestroy, AfterViewInit {
   cityList: any[] = [{ Id: 0, CityName: '' }];
   tax: boolean = true;
   header: string = '';
+  tablevalue: any;
 
 
 
@@ -53,7 +55,8 @@ export class PartyMasterComponent implements OnInit, OnDestroy, AfterViewInit {
     private router: Router,
     private messageService: MessageService,
     private fb: FormBuilder,
-    private commonService: commonService
+    private commonService: commonService,
+    private swal: SweetAlertService
   ) {
     this.createForm();
   }
@@ -99,15 +102,28 @@ export class PartyMasterComponent implements OnInit, OnDestroy, AfterViewInit {
       } else if (msg.for == 'getAllCityDropdown') {
         this.cityList = msg.data;
       } else if (msg.for == 'createUpdateParty') {
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: msg.StatusMessage });
-        this.showForm = false;
-        this.form.reset();
-        console.log("data", msg.data)
-      } else if (msg.for === "deleteData") {
-        if (msg.StatusMessage === "success") {
-          this.messageService.add({ severity: 'success', summary: 'Success', detail: msg.StatusMessage })
+        if (msg.StatusID === 1) {
+          const updated = msg.data[0];  // access the first item in data array
+
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: msg.StatusMessage });
+          this.showForm = false;
+          this.form.reset();
+
+          const index = this.data.findIndex((v: any) => v.id == updated.id);
+          if (index !== -1) {
+            this.data[index] = { ...updated };
+          } else {
+            this.data.push(updated)
+          }
         } else {
-          this.messageService.add({ severity: 'error', summary: 'Error', detail: "Cannot Delete data" })
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: msg.StatusMessage });
+        }
+      } else if (msg.for === "deleteData") {
+        if (msg.StatusID === 1) {
+          const index = this.data.findIndex((v: any) => v.id == this.tablevalue.id);
+          if (index !== -1) {
+            this.data.splice(index, 1);
+          } 
         }
       }
       return true;
@@ -153,7 +169,7 @@ export class PartyMasterComponent implements OnInit, OnDestroy, AfterViewInit {
   ];
 
 
-  handleAction(event: { action: string, data: any }) {
+  async handleAction(event: { action: string, data: any }) {
     switch (event.action) {
       case 'edit':
         this.header = 'UPDATE PARTY'
@@ -164,9 +180,15 @@ export class PartyMasterComponent implements OnInit, OnDestroy, AfterViewInit {
           ...event.data,
           city_id: city
         });
+        this.changeTaxType({ value: event.data.tax_type });
         break;
       case 'delete':
-        this.deleteParty(event.data);
+        const status = await this.swal.confirmDelete("You want to delete this !");
+        if (status) {
+                this.messageService.add({ severity: 'contrast', summary: 'Info', detail: 'Please wait processing...' });
+          this.deleteParty(event.data);
+          this.tablevalue = event.data
+        }
         break;
       case 'add':
         this.createForm();
@@ -225,7 +247,6 @@ export class PartyMasterComponent implements OnInit, OnDestroy, AfterViewInit {
 
 
   private deleteParty(party: any) {
-    this.messageService.add({ severity: 'contrast', summary: 'Info', detail: 'Please wait processing...' });
     const payload = {
       table_name: "party_mast",
       column_name: "id",

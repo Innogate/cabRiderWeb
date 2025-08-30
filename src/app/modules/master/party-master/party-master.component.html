@@ -3,7 +3,7 @@
         [rowActions]="actions" (onAction)="handleAction($event)">
     </app-dynamic-table>
 </div>
-<div class="min-h-screen bg-gray-100 p-4" *ngIf="showForm">
+<div class="min-h-screen p-4" *ngIf="showForm">
     <form [formGroup]="form" (ngSubmit)="saveParty()"
         class="max-w-7xl mx-auto bg-white rounded-xl shadow-md overflow-hidden">
         <!-- Header -->
@@ -33,15 +33,17 @@
                         <div>
                             <div class="flex items-center space-x-2">
                                 <i class="pi pi-crown text-yellow-300"></i>
-                            <label class="block text-sm font-medium text-slate-950 mb-1">Party Name*</label>
+                            <label class="block text-sm font-medium text-slate-950 mb-1">
+                                Party Name <span class="text-red-700">*</span>
+                            </label>
                             </div>
                             <input type="text" formControlName="party_name" pInputText (blur)="aliasName()"
-                                class="w-full border border-gray-300 rounded-lg p-3 text-uppercase" placeholder="Enter Party Name">
+                                class="w-full border border-gray-300 rounded-lg p-3 text-uppercase uppercase" placeholder="Enter Party Name">
                         </div>
                         <div>
                             <div class="flex items-center space-x-2">
                                 <i class="pi pi-database text-green-400"></i>
-                            <label class="block text-sm font-medium text-slate-950 mb-1">Alias</label>
+                            <label class="block text-sm font-medium text-slate-950 mb-1 text-uppercase uppercase">Alias</label>
                             </div>
                             <input type="text" formControlName="alias" pInputText
                                 class="w-full border border-gray-300 rounded-lg p-3 text-uppercase" placeholder="Enter Alias">
@@ -87,7 +89,9 @@
                             <div>
                                 <div class="flex items-center space-x-2">
                                 <i class="pi pi-phone text-indigi-200"></i>
-                                <label class="block text-sm font-medium text-slate-950 mb-1">Mobile No*</label>
+                                <label class="block text-sm font-medium text-slate-950 mb-1">
+                                    Mobile No <span class="text-red-700">*</span>
+                                </label>
                                 </div>
                                 <input type="number" formControlName="mobileno" pInputText
                                     class="w-full border border-gray-300 rounded-lg p-3" placeholder="Mobile No">
