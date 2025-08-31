@@ -73,12 +73,15 @@ export class MbillingComponent {
   @Input() selectedMontySetupCode: any;
   @Input() isEditMode: boolean = false;
   @Input() carTypes: any[] = [];
+  @Input() setup_Code: any;
 
   @Output() dutyUpdated = new EventEmitter<{
     dutyTableData: any[];
     mainDutyList: any[];
     sleetedBookingIds: any[];
   }>();
+
+
 
   // Column 1
   fixedAmount: any;
@@ -178,7 +181,6 @@ export class MbillingComponent {
         }
       }
       if (rt == false) {
-        console.log(msg);
       }
       return rt;
     });
@@ -186,7 +188,6 @@ export class MbillingComponent {
       this.setInvoiceData(this.calCulateData)
     }
 
-    console.log(this.mainDutyList)
     this.Cgst = this.partyInfo.CGST;
     this.Sgst = this.partyInfo.SGST;
     this.igst = this.partyInfo.IGST;
@@ -198,7 +199,6 @@ export class MbillingComponent {
   ngOnChanges(changes: SimpleChanges) {
     if (changes['mainDutyList']) {
       this.mainDutyList = changes['mainDutyList'].currentValue;
-      console.log('Main Duty List Updated:', this.mainDutyList);
     }
     if (changes['selectedDuties']) {
       this.selectedDuties = changes['selectedDuties'].currentValue;
@@ -277,9 +277,7 @@ export class MbillingComponent {
 
   // API CALLS
   async calculateTotals(selected: any[]) {
-    console.log(selected);
     const setupCode = this.selectedMontySetupCode;
-    console.log(setupCode);
     if (!setupCode) {
       this.messageService.add({
         severity: 'warn',
@@ -320,17 +318,11 @@ export class MbillingComponent {
     };
 
     // ** CALCULATE ALL Table Row
-    await selected.forEach(async (item: any) => {
-      console.log("---------------------------------------------------");
-      console.log(`  Raw StartDate: ${item.StartDate}`);
-      console.log(`  Raw EndDate  : ${item.EndDate}`);
+    selected.forEach(async (item: any) => {
 
       const StartDate = parseDate(item.StartDate);
       const EndDate = parseDate(item.EndDate);
-
-      console.log(`  Parsed StartDate: ${StartDate.toDateString()}`);
-      console.log(`  Parsed EndDate  : ${EndDate.toDateString()}`);
-
+      let result = 0;
       if (!isNaN(StartDate.getTime()) && !isNaN(EndDate.getTime())) {
         const dateKey = `${StartDate.toDateString()}_${EndDate.toDateString()}`;
 
@@ -340,7 +332,6 @@ export class MbillingComponent {
           const diffTime = EndDate.getTime() - StartDate.getTime();
           const days = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
 
-          console.log(`✅ Day Difference: ${days} days`);
 
           totalDays += days;
 
@@ -348,27 +339,27 @@ export class MbillingComponent {
           const amount = Number(((dutyAmt / 30) * days).toFixed(2));
           totalAmount += amount;
           groseAmount = dutyAmt;
-
-          console.log(`💰 DutyAmt: ${dutyAmt}`);
-          console.log(`💰 Amount for this period: ${amount}`);
-          console.log(`📊 Running Total Days: ${totalDays}`);
-          console.log(`📊 Running Total Amount: ${totalAmount}`);
         }
 
         const extraDayHrsRate = setup?.OTRate;
         extraHourRate = extraDayHrsRate;
         const workStartTimeDate = this.getDbTimeString(setup.FromTime);
         const workEndTimeDate = this.getDbTimeString(setup.ToTime);
-
-        if (item.GarageOutTime && item.GarageInTime) {
-          let diffTime = await this.calculateExtraHours(
-            item.GarageOutTime,
-            item.GarageInTime,
-            workStartTimeDate,
-            workEndTimeDate
-          );
-          this.totalExtraHour += diffTime;
+        if (setup.TotHrs == 0) {
+          if (item.GarageOutTime && item.GarageInTime) {
+            let diffTime = await this.calculateExtraHours(
+              item.GarageOutTime,
+              item.GarageInTime,
+              workStartTimeDate,
+              workEndTimeDate
+            );
+            this.totalExtraHour += diffTime;
+          }
+        } else if (setup.TotHrs != 0) {
+          result = this.calculateExtraHoursByTotalHours(item.GarageOutTime, item.GarageInTime, setup.TotHrs);
+          this.totalExtraHour += result;
         }
+
 
         this.showTotalHour += item.TotalHour;
         this.showTotalKm += item.TotalKm;
@@ -382,7 +373,6 @@ export class MbillingComponent {
     this.extrakm = 0;
     if (this.showTotalKm > this.selectedMonthlyDuty.TotalKM) {
       this.extrakm = this.showTotalKm - this.selectedMonthlyDuty.TotalKM;
-      console.log('Extra KM: ', this.extrakm);
     }
 
     // 📊 Final calculations
@@ -428,83 +418,85 @@ export class MbillingComponent {
     this.totalextraKmRate = extraKmRate;
     this.totalSelectedKm = this.showTotalKm;
   }
-
   calculateExtraHours(
-    startDateInput: string,
-    endDateInput: string,
-    workStartTime: string, // "08:00"
-    workEndTime: string    // "20:00"
+    garageOutTime: string,
+    garageInTime: string,
+    workStartTime: string,
+    workEndTime: string
   ): number {
-    console.log("---------------------------------------------------");
-    console.log(`📌 Input:`);
-    console.log(`  startDateInput: ${startDateInput}`);
-    console.log(`  endDateInput:   ${endDateInput}`);
-    console.log(`  workStartTime:  ${workStartTime}`);
-    console.log(`  workEndTime:    ${workEndTime}`);
+    // Convert "HH:mm" strings into Date objects
+    const baseDate = new Date().toDateString();
 
-    const parseTime = (timeStr: string, referenceDate: Date): Date => {
-      const [h, m] = (timeStr ?? "00:00").split(":").map(Number);
-      const d = new Date(referenceDate);
+    const parseTime = (timeStr: string, addDay: boolean = false): Date => {
+      const [h, m] = timeStr.split(":").map(Number);
+      const d = new Date(baseDate);
       d.setHours(h, m, 0, 0);
+      if (addDay) d.setDate(d.getDate() + 1);
       return d;
     };
 
-    const today = new Date();
-    const startDate = parseTime(startDateInput, today);
-    let endDate = parseTime(endDateInput, today);
+    let garageOut = parseTime(garageOutTime);
+    let garageIn = parseTime(garageInTime);
 
-    // Overnight shift → push endDate to next day
-    if (endDate <= startDate) {
-      console.log("⚠️ End time before start time → overnight shift");
-      endDate.setDate(endDate.getDate() + 1);
+    // Handle overnight trip (in-time next day)
+    if (garageIn <= garageOut) {
+      garageIn = parseTime(garageInTime, true);
     }
 
-    const workStart = parseTime(workStartTime, startDate);
-    const workEnd = parseTime(workEndTime, startDate);
-
-    console.log("---------------------------------------------------");
-    console.log("📅 Reference times:");
-    console.log(`  Shift Start : ${startDate}`);
-    console.log(`  Shift End   : ${endDate}`);
-    console.log(`  Work Start  : ${workStart}`);
-    console.log(`  Work End    : ${workEnd}`);
+    const dutyStart = parseTime(workStartTime);
+    let dutyEnd = parseTime(workEndTime);
+    if (dutyEnd <= dutyStart) {
+      dutyEnd = parseTime(workEndTime, true);
+    }
 
     let extraHours = 0;
 
-    if (endDate <= workStart || startDate >= workEnd) {
-      extraHours = (endDate.getTime() - startDate.getTime()) / 3600000;
-      console.log("✅ Entire shift outside work hours → All overtime");
-    } else {
-      if (startDate < workStart) {
-        const hrs = (workStart.getTime() - startDate.getTime()) / 3600000;
-        extraHours += hrs;
-        console.log(`✅ Started before work hours → +${hrs.toFixed(2)} hrs`);
-      }
-      if (endDate > workEnd) {
-        const hrs = (endDate.getTime() - workEnd.getTime()) / 3600000;
-        extraHours += hrs;
-        console.log(`✅ Continued after work hours → +${hrs.toFixed(2)} hrs`);
-      }
-      const nextWorkStart = parseTime(workStartTime, endDate);
-      if (endDate <= nextWorkStart && endDate.getDate() !== startDate.getDate()) {
-        const hrs = (nextWorkStart.getTime() - endDate.getTime()) / 3600000;
-        extraHours += hrs;
-        console.log(`✅ Ended before next day’s work start → +${hrs.toFixed(2)} hrs`);
-      }
+    // Case 1: Started before duty start
+    if (garageOut < dutyStart) {
+      extraHours += (dutyStart.getTime() - garageOut.getTime()) / (1000 * 60 * 60);
     }
 
-    extraHours = parseFloat(extraHours.toFixed(2));
-    console.log("---------------------------------------------------");
-    console.log(`🎯 Final Overtime Hours = ${extraHours} hrs`);
-    console.log("---------------------------------------------------");
+    // Case 2: Returned after duty end
+    if (garageIn > dutyEnd) {
+      extraHours += (garageIn.getTime() - dutyEnd.getTime()) / (1000 * 60 * 60);
+    }
 
-    return extraHours;
+    // console.log("extraHours", garageOutTime, "+", garageInTime, "=", extraHours);
+
+    return parseFloat(extraHours.toFixed(2));
+  }
+  calculateExtraHoursByTotalHours(
+    workStartTime: string,
+    workEndTime: string,
+    totalHours: number
+  ): number {
+    if (!workStartTime || !workEndTime || totalHours <= 0) return 0;
+
+    // Parse "HH:mm" into minutes
+    const [startH, startM] = workStartTime.split(":").map(Number);
+    const [endH, endM] = workEndTime.split(":").map(Number);
+
+    const startMinutes = startH * 60 + startM;
+    let endMinutes = endH * 60 + endM;
+
+    // Handle overnight (when end time is on the next day)
+    if (endMinutes < startMinutes) {
+      endMinutes += 24 * 60;
+    }
+
+    // Actual worked time in hours
+    const actualHours = (endMinutes - startMinutes) / 60;
+
+    // Extra hours beyond totalHours
+    const extraHours = actualHours - totalHours;
+
+    // Return only positive overtime
+    return extraHours > 0 ? Number(extraHours.toFixed(2)) : 0;
   }
 
 
-
-
   async calculateBillAndLog() {
+    console.log("setup_Code", this.setup_Code)
     this.totalKmAmount = 0;
     this.totalPaybleAmaunt = 0;
     this.totalPaybleGSTAmount = 0;
@@ -533,6 +525,8 @@ export class MbillingComponent {
       Number(this.extaHAmount || 0) +
       Number(this.totalKmAmount || 0);
     this.totalPaybleAmaunt = Number(this.totalPaybleAmaunt.toFixed(2));
+
+    // console.log("total extra ", this.extraHours)
 
     await this.calNetAmount();
     this.isCalculated = true;
@@ -759,6 +753,7 @@ export class MbillingComponent {
   }
 
   setInvoiceData(data: any) {
+    // console.log("data", data)
     // --- Patch form values ---
     this.invoiceForm.get('BillDate')?.setValue(data.BillDate ?? new Date());
     this.invoiceForm.get('taxtype')?.setValue(data.taxtype === 1 ? 'cgst' : 'igst');

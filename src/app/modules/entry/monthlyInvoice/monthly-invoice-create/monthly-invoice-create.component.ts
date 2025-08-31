@@ -175,6 +175,7 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
   carTypes: any[] = [];
   invoiceData: any = {};
   isEditMode: boolean = false;
+  setup_Code: any;
 
  async ngOnInit() {
     this.commonApiService.registerPageHandler((msg) => {
@@ -405,8 +406,9 @@ export class MonthlyInvoiceCreateComponent implements OnInit {
 
   selectedMontySetupCode: any;
   onCodeSelect(codeObj: any) {
-    console.log(codeObj);
+    console.log("code", codeObj);
     this.selectedMontySetupCode = codeObj.value;
+    this.setup_Code = codeObj.value;
     if (this.invoiceForm) {
       this.invoiceForm.get('setup_code')?.setValue(codeObj.value.id);
     }

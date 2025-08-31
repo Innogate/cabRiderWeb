@@ -158,7 +158,7 @@
   <app-mbilling *ngIf="mainDutyList.length > 0" [invoiceForm]="invoiceForm" [selectedDuties]="selectedDuties"
     [mainDutyList]="mainDutyList" [sleetedBookingIds]="sleetedBookingIds" [dutyTableData]="dutyTableData"
     [taxType]="taxType" [partyInfo]="partyInfo" [selectedMontySetupCode]="selectedMontySetupCode" [isCalculated]="isEditMode"
-    [calCulateData]="invoiceData" (dutyUpdated)="onDutyUpdated($event)" [isEditMode]="isEditMode" [carTypes]="carTypes" >
+    [calCulateData]="invoiceData" (dutyUpdated)="onDutyUpdated($event)" [isEditMode]="isEditMode" [carTypes]="carTypes" [setup_Code]="setup_Code">
   </app-mbilling>
 
 </div>
@@ -207,7 +207,7 @@
       <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-lg">
         <p-table [value]="dutyTableData" [(selection)]="selectedDuties" selectionMode="multiple" dataKey="BookingID"
           (onPage)="onPageChange($event)" [paginator]="true" [rows]="addDutyTableRowSize" [responsiveLayout]="'scroll'"
-          class="p-datatable-gridlines">
+          class="p-datatable-gridlines" >
           <!-- Table Header -->
           <ng-template pTemplate="header">
             <tr class="bg-blue-100 text-gray-800 text-sm font-semibold">
