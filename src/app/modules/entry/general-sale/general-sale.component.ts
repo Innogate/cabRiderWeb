@@ -1,21 +1,46 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { DynamicTableComponent } from '../../../components/dynamic-table/dynamic-table.component';
+import { CommonModule } from '@angular/common';
+import { DropdownModule } from 'primeng/dropdown';
+import { AutoCompleteModule } from 'primeng/autocomplete';
+import { InputTextModule } from 'primeng/inputtext';
+import { Router } from '@angular/router';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { MessageService } from 'primeng/api';
+import { commonService } from '../../../services/comonApi.service';
 
 @Component({
   selector: 'app-general-sale',
-  imports: [DynamicTableComponent],
+  imports: [DynamicTableComponent,CommonModule,DropdownModule,AutoCompleteModule,InputTextModule,ReactiveFormsModule],
   templateUrl: './general-sale.component.html',
   styleUrl: './general-sale.component.css'
 })
 export class GeneralSaleComponent implements OnInit, OnDestroy, AfterViewInit {
 isLoading = true;
 users: any[]= [];
+showForm = false;
+heading = '';
+form!: FormGroup;
+
+
+
 
 
   constructor(
+    private router: Router,
+    private fb: FormBuilder,
+    private messageService: MessageService,
+    private commonService: commonService,
+    
     
   ) {
+    this.createForm();
     
+  }
+  createForm(){
+    this.form = this.fb.group({
+
+    })
   }
 
 
@@ -45,6 +70,7 @@ users: any[]= [];
 
   // Handle search events
   handleSearch(searchTerm: string) {
+
   }
 
   // Handle action events
@@ -53,10 +79,14 @@ users: any[]= [];
       case 'view':
         break;
       case 'edit':
+        this.showForm = true;
+        this.heading = 'UPDATE GENERAL'
         break;
       case 'delete':
         break;
       case 'add':
+        this.showForm = true;
+        this.heading = 'ADD GENERAL'
         break
 
     }
