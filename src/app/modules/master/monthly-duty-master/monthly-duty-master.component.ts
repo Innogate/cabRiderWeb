@@ -10,11 +10,13 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
 import { commonService } from '../../../services/comonApi.service';
 import { monthlyDutyMasterService } from '../../../services/monthlyDutyMaster.service';
 import { InputTextModule } from 'primeng/inputtext';
+import { Checkbox, CheckboxModule } from 'primeng/checkbox';
 
 @Component({
   selector: 'app-monthly-duty-master',
-  imports: [CommonModule, DynamicTableComponent, ReactiveFormsModule, DropdownModule, AutoCompleteModule,InputTextModule,],
+  imports: [CommonModule, DynamicTableComponent, ReactiveFormsModule, DropdownModule, AutoCompleteModule,InputTextModule,CheckboxModule],
   templateUrl: './monthly-duty-master.component.html',
+
   styleUrl: './monthly-duty-master.component.css'
 })
 export class MonthlyDutyMasterComponent implements OnInit, OnDestroy, AfterViewInit {
@@ -66,7 +68,7 @@ export class MonthlyDutyMasterComponent implements OnInit, OnDestroy, AfterViewI
       UsedBy: [''],
       CityID: [''],
       CarTypeID: [''],
-      CarNo: ['', [Validators.pattern(/^[A-Z]{2}-\d{2}-[A-Z]{1,2}-\d{1,4}$/)]],
+      CarNo: ['', ],
       SetupType: [''],
       DutyAmt: [''],
       NoofDays: [''],
