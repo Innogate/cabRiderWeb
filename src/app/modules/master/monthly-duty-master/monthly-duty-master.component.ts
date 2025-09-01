@@ -272,7 +272,11 @@ export class MonthlyDutyMasterComponent implements OnInit, OnDestroy, AfterViewI
       return;
     }
     const payload = {
-      ...this.form.value,
+            ...this.form.value,
+        BranchID: this.form.value.BranchID?.Id,
+        PartyID: this.form.value.PartyID?.id,
+        CarTypeID: this.form.value.CarTypeID?.id,
+        id: this.form.value.id
     }
     // this.monthlyDutyMasterService.createUpdateMonthlyDuty(payload)
     console.log(payload)
