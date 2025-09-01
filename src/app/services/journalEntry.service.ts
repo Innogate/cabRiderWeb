@@ -12,9 +12,10 @@ export class JournalEntryService extends BaseService {
   }
 
   getJournal(payload: any){
-    this.call('', payload);
+    this.call('entry.getAllJournal', payload);
   }
 
+  
   createJournal(payload: any){
     this.call('entry.createJournalEntry', payload);
   }
