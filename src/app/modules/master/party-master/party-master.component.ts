@@ -37,6 +37,7 @@ export class PartyMasterComponent implements OnInit, OnDestroy, AfterViewInit {
   tax: boolean = true;
   header: string = '';
   tablevalue: any;
+  partyInfo: any;
 
 
 
@@ -94,7 +95,6 @@ export class PartyMasterComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnInit(): void {
     this.partyMasterService.registerPageHandler((msg) => {
-      console.log(msg);
       globalRequestHandler(msg, this.router, this.messageService);
       if (msg.for === "getAllParty") {
         this.data = msg.data;
@@ -105,16 +105,22 @@ export class PartyMasterComponent implements OnInit, OnDestroy, AfterViewInit {
         if (msg.StatusID === 1) {
           const updated = msg.data[0];  // access the first item in data array
 
-          this.messageService.add({ severity: 'success', summary: 'Success', detail: msg.StatusMessage });
           this.showForm = false;
           this.form.reset();
 
+          const city = this.cityList.find(c => c.Id == updated.city_id);
+          const updatedWithCity = {
+            ...updated,
+            CityName: city?.CityName || ''
+          };
+
           const index = this.data.findIndex((v: any) => v.id == updated.id);
           if (index !== -1) {
-            this.data[index] = { ...updated };
+            this.data[index] = updatedWithCity;
           } else {
-            this.data.push(updated)
+            this.data.push(updatedWithCity);
           }
+
         } else {
           this.messageService.add({ severity: 'error', summary: 'Error', detail: msg.StatusMessage });
         }
@@ -123,7 +129,7 @@ export class PartyMasterComponent implements OnInit, OnDestroy, AfterViewInit {
           const index = this.data.findIndex((v: any) => v.id == this.tablevalue.id);
           if (index !== -1) {
             this.data.splice(index, 1);
-          } 
+          }
         }
       }
       return true;
@@ -185,9 +191,9 @@ export class PartyMasterComponent implements OnInit, OnDestroy, AfterViewInit {
       case 'delete':
         const status = await this.swal.confirmDelete("You want to delete this !");
         if (status) {
-                this.messageService.add({ severity: 'contrast', summary: 'Info', detail: 'Please wait processing...' });
+          this.messageService.add({ severity: 'contrast', summary: 'Info', detail: 'Please wait processing...' });
           this.deleteParty(event.data);
-          this.tablevalue = event.data
+          this.tablevalue = event.data;
         }
         break;
       case 'add':
@@ -205,6 +211,11 @@ export class PartyMasterComponent implements OnInit, OnDestroy, AfterViewInit {
     if (!alias) {
       this.form.get('alias')?.setValue(partyName);
     }
+  }
+
+  autoFillNo() {
+    const whatsappno = this.form.get("mobileno")?.value;
+    this.form.get('whatsappno')?.setValue(whatsappno);
   }
 
 
@@ -241,7 +252,6 @@ export class PartyMasterComponent implements OnInit, OnDestroy, AfterViewInit {
     payload.pin_code = "" + payload.pin_code;
     payload.mobileno = "" + payload.mobileno;
     payload.whatsappno = "" + payload.whatsappno;
-    console.log(payload);
     this.partyMasterService.CreateUpdateParty(payload);
   }
 
@@ -252,6 +262,7 @@ export class PartyMasterComponent implements OnInit, OnDestroy, AfterViewInit {
       column_name: "id",
       column_value: "" + party.id,
     }
+    this.partyInfo = party;
     this.commonService.deleteData(payload)
   }
 }
