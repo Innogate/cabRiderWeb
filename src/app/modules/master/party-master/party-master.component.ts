@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DynamicTableComponent } from '../../../components/dynamic-table/dynamic-table.component';
 import { partyMasterService } from '../../../services/partyMaster.service';
 import { MessageService } from 'primeng/api';
@@ -64,19 +64,19 @@ export class PartyMasterComponent implements OnInit, OnDestroy, AfterViewInit {
   createForm() {
     this.form = this.fb.group({
       id: [0],
-      party_name: [''],
+      party_name: ['', Validators.required],
       address: [''],
       city_id: [],
-      pin_code: [''],
-      mobileno: [''],
-      whatsappno: [''],
-      gstno: [''],
-      panno: [''],
+      pin_code: ['', [Validators.pattern(/^[1-9][0-9]{5}$/)]],
+      mobileno: ['', [Validators.required, Validators.pattern(/^[6-9]\d{9}$/)]],
+      whatsappno: ['', [Validators.pattern(/^[6-9]\d{9}$/)]],
+      gstno: ['', [Validators.pattern(/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/)]],
+      panno: ['', [Validators.pattern(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/)]],
       refby: [''],
       active: ['Y'],
       crdays: [''],
       crlimit: [''],
-      email: [''],
+      email: ['', [Validators.email]],
       CGST: [''],
       SGST: [''],
       IGST: [''],
