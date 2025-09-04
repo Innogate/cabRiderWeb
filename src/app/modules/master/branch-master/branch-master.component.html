@@ -133,7 +133,7 @@
                                     placeholder="Phone Number" formControlName="phone">
                                 <span *ngIf="form.get('phone')?.touched && form.get('phone')?.errors?.['pattern']"
                                     class="text-sm text-red-600">
-                                    Enter a valid phone number (10 digits, optional +).
+                                    Enter a valid phone number (10 digits)
                                 </span>
 
                             </div>
@@ -196,7 +196,7 @@
                                 <!-- GST Invalid -->
                                 <span *ngIf="form.get('gst')?.touched && form.get('gst')?.errors?.['pattern']"
                                     class="text-sm text-red-600">
-                                    Please enter a valid GST number (15 characters, format: 22AAAAA0000A1Z5).
+                                    Please enter a valid GST number
                                 </span>
                             </div>
                             <div>
@@ -209,7 +209,7 @@
                                     placeholder="PAN Number" formControlName="pan">
                                 <span *ngIf="form.get('pan')?.touched && form.get('pan')?.errors?.['pattern']"
                                     class="text-sm text-red-600">
-                                    Enter a valid PAN (e.g., ABCDE1234F).
+                                    Enter a valid PAN
                                 </span>
 
                             </div>
@@ -236,10 +236,14 @@
                                         placeholder="SMTP Host" formControlName="smtp_host">
                                     <span
                                         *ngIf="form.get('smtp_host')?.touched && form.get('smtp_host')?.errors?.['required']"
-                                        class="text-sm text-red-600">SMTP Host is required.</span>
+                                        class="text-sm text-red-600">
+                                        SMTP Host is required.
+                                    </span>
                                     <span
                                         *ngIf="form.get('smtp_host')?.touched && form.get('smtp_host')?.errors?.['pattern']"
-                                        class="text-sm text-red-600">Invalid host name.</span>
+                                        class="text-sm text-red-600">
+                                        Only letters, numbers, and hyphens are allowed.
+                                    </span>
                                 </div>
                             </div>
                             <div class="grid grid-cols-2 gap-2">
@@ -284,7 +288,7 @@
                                     </div>
                                     <input type="number" pInputText class="w-full border border-gray-300 rounded-lg p-3"
                                         placeholder="SMTP Port" formControlName="smtp_port">
-                                    <!-- <span
+                                    <span
                                         *ngIf="form.get('smtp_port')?.touched && form.get('smtp_port')?.errors?.['required']"
                                         class="text-sm text-red-600">SMTP Port is required.</span>
                                     <span
@@ -292,7 +296,7 @@
                                         class="text-sm text-red-600">Port must be at least 1.</span>
                                     <span
                                         *ngIf="form.get('smtp_port')?.touched && form.get('smtp_port')?.errors?.['max']"
-                                        class="text-sm text-red-600">Port cannot exceed 65535.</span> -->
+                                        class="text-sm text-red-600">Port cannot exceed 65535.</span>
 
                                 </div>
 
@@ -345,10 +349,21 @@
                                         placeholder="WhatsApp Token" formControlName="wp_token">
                                     <span
                                         *ngIf="form.get('wp_token')?.touched && form.get('wp_token')?.errors?.['required']"
-                                        class="text-sm text-red-600">WhatsApp Token is required.</span>
+                                        class="text-sm text-red-600">
+                                        WhatsApp Token is required.
+                                    </span>
+
+                                    <span
+                                        *ngIf="form.get('wp_token')?.touched && form.get('wp_token')?.errors?.['pattern']"
+                                        class="text-sm text-red-600">
+                                        WhatsApp Token must contain only numbers.
+                                    </span>
+
                                     <span
                                         *ngIf="form.get('wp_token')?.touched && form.get('wp_token')?.errors?.['minlength']"
-                                        class="text-sm text-red-600">Minimum 10 characters required.</span>
+                                        class="text-sm text-red-600">
+                                        WhatsApp Token must be at least 10 digits long.
+                                    </span>
 
                                 </div>
 
