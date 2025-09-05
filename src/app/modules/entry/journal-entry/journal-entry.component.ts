@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DynamicTableComponent } from '../../../components/dynamic-table/dynamic-table.component';
 import { InputTextModule } from 'primeng/inputtext';
@@ -18,6 +18,8 @@ import { JournalEntryService } from '../../../services/journalEntry.service';
     ReactiveFormsModule,
     InputTextModule,
     AutoCompleteModule,
+    DropdownModule,
+    FormsModule,
   ],
   templateUrl: './journal-entry.component.html',
   styleUrl: './journal-entry.component.css',
@@ -31,6 +33,7 @@ export class JournalEntryComponent implements OnInit, OnDestroy, AfterViewInit {
   tablevalue: any;
   comonApiService: any;
   journalentrylist: any[] = [];
+  rows: any[] = [];
 
   constructor(
     private journalEntryService: JournalEntryService,
@@ -73,42 +76,32 @@ export class JournalEntryComponent implements OnInit, OnDestroy, AfterViewInit {
       ],
     });
   }
-  ngAfterViewInit(): void {
+
+  
+  ngOnInit(): void {
+    this.journalEntryService.registerPageHandler((msg) => {
+      console.log(msg);
+      globalRequestHandler(msg, this.router, this.messageService);
+      
+      if(){
+        
+      }
+      return true;
+    });
+  }
+  ngOnDestroy(): void {
+    this.journalEntryService.unregisterPageHandler();
+  }
+    ngAfterViewInit(): void {
     const payload = {
       id: 0,
       PageNo: 1,
       PageSize: 100,
       Search: '',
     };
-    this.journalEntryService.getJournal(payload);
-    this.journalEntryService.createJournal(payload);
-  }
-  ngOnDestroy(): void {
-    this.journalEntryService.unregisterPageHandler();
-  }
-  ngOnInit(): void {
-    this.journalEntryService.registerPageHandler((msg) => {
-      globalRequestHandler(msg, this.router, this.messageService);
-      if (msg.for === 'getJournal') {
-        this.isLoading = false;
-        this.data = msg.data;
-      } else if (msg.for == 'createJournal') {
-        if (msg.StatusID === 1) {
-          const updated = msg.data[0];
-          this.showForm = false;
-          this.form.reset();
-          const index = this.data.findIndex((v: any) => v.id == updated.id);
-          if (index !== -1) {
-            this.data[index] = { ...updated };
-          } else {
-            this.data.push(updated);
-          }
-        }
-      }
-      return true;
-    });
-  }
+this.journalEntryService.getJournal(payload);
 
+  }
   // Define the columns for the dynamic table
 
   columns = [
@@ -142,5 +135,34 @@ export class JournalEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         this.form.reset();
         break;
     }
+  }
+  addRow() {
+    this.rows.push({
+      slno: '',
+      description: '',
+      unit: '',
+      quantity: '',
+      rate: '',
+      amount: '',
+      isEditing: true
+    });
+  }
+
+  deleteRow(index: number) {
+    this.rows.splice(index, 1);
+  }
+enableEdit(row: any) {
+    // Disable editing on all other rows
+    this.rows.forEach(r => r.isEditing = false);
+    row.isEditing = true;
+  }
+
+  saveRow(row: any) {
+    // Calculate amount (optional logic, remove if not needed)
+    if (!isNaN(row.quantity) && !isNaN(row.rate)) {
+      row.amount = row.quantity * row.rate;
+    }
+
+    row.isEditing = false;
   }
 }
