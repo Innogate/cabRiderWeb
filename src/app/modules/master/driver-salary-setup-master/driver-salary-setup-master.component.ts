@@ -74,7 +74,7 @@ export class DriverSalarySetupMasterComponent implements OnInit, OnDestroy, Afte
       // create driver salary setup form
       id: [0],
       branch_id: [0],
-      DriverId: [],
+      DriverID: [],
       SetupDate: [null],
       SalaryCalcOnDaysInMonth: [null],
       SalaryCalcOnDays: [null],
@@ -111,7 +111,7 @@ export class DriverSalarySetupMasterComponent implements OnInit, OnDestroy, Afte
         this.isLoading = false;
       } else if (msg.for == 'getAllDriverDropdown') {
         this.driverList = msg.data;
-      } else if (msg.for == 'CreateUpdateDriver') {
+      } else if (msg.for == 'createDriverSalarySetupList') {
         this.messageService.add({ severity: 'success', summary: 'Success', detail: msg.StatusMessage })
       } else if (msg.for === "deleteData") {
         if (msg.StatusMessage === "success") {
@@ -210,7 +210,7 @@ columns = [
         ref_by: this.form.value.ref_by ?? '0',
         whatsappno: String(this.form.value.whatsappno ?? ''),
         mobileno: String(this.form.value.mobileno ?? ''),
-        DriverId: this.form.value.DriverId?.id || null,
+        DriverID: this.form.value.DriverID?.id || null,
 
       };
       this.messageService.add({ severity: 'contrast', summary: 'Info', detail: 'Please wait processing...' });
