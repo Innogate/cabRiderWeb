@@ -78,14 +78,14 @@ export class JournalEntryComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.journalEntryService.registerPageHandler((msg) => {
       console.log(msg);
       globalRequestHandler(msg, this.router, this.messageService);
-      
-      if(){
-        
-      }
+      if (msg.for == 'getalldriversalarysetup') {
+        this.data = msg.data;
+        this.isLoading = false
+      } 
       return true;
     });
   }
