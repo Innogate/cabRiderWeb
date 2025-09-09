@@ -12,7 +12,7 @@ export class JournalEntryService extends BaseService {
   }
 
   getJournal(payload: any) {
-    this.call('entry.getAllJournalHeaders', payload);
+    this.call('entry.getAllJournal', payload);
   }
 
   //  "body": {
