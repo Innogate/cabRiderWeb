@@ -552,15 +552,22 @@ async generatePdf(invoice: any, charges: any, party_info:any) {
   });
 
   // Footer
-  detailPage.drawText('for Darwar Enterprise', { x: 450, y: 50, size: 10, font: dFont });
+  // detailPage.drawText('for Darwar Enterprise', { x: 450, y: 50, size: 10, font: dFont });
 
   // Save & download PDF
+  // const pdfBytes = await pdfDoc.save();
+  // const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+  // const link = document.createElement('a');
+  // link.href = URL.createObjectURL(blob);
+  // link.download = 'Invoice_DetailSheet.pdf';
+  // link.click();
   const pdfBytes = await pdfDoc.save();
-  const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-  const link = document.createElement('a');
-  link.href = URL.createObjectURL(blob);
-  link.download = 'Invoice_DetailSheet.pdf';
-  link.click();
+const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+const url = URL.createObjectURL(blob);
+
+// Open in new tab instead of downloading
+window.open(url, '_blank');
+
 }
 
 
