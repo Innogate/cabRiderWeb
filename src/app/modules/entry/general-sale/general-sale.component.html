@@ -28,8 +28,8 @@
                             <i class="pi pi-building text-yellow-500"></i>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Company</label>
                         </div>
-                        <p-autoComplete field="CompanyName" formControlName="seletedCompany"
-                            placeholder="Select Company" [dropdown]="true"
+                        <p-autoComplete field="ShortName" formControlName="company_id" [suggestions]="filteredCompany"
+                            placeholder="Select Company" [dropdown]="true" (completeMethod)="filterCompany($event)"
                             class="w-full border border-indigo-200 rounded-md mb-4" styleClass="w-full">
                         </p-autoComplete>
                     </div>
@@ -38,8 +38,8 @@
                             <i class="pi pi-briefcase text-blue-500"></i>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Branch</label>
                         </div>
-                        <p-autoComplete field="CompanyName" formControlName="branchId" placeholder="Select Branch"
-                            [dropdown]="true" class="w-full border border-indigo-200 rounded-md mb-4"
+                        <p-autoComplete field="branch_name" formControlName="BranchID" placeholder="Select Branch" [suggestions]="filteredBranch"
+                            [dropdown]="true" (completeMethod)="filterBranch($event)" class="w-full border border-indigo-200 rounded-md mb-4"
                             styleClass="w-full">
                         </p-autoComplete>
                     </div>
@@ -51,8 +51,8 @@
                             <i class="pi pi-building text-yellow-500"></i>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Party</label>
                         </div>
-                        <p-autoComplete field="CompanyName" formControlName="seletedCompany"
-                            placeholder="Select Company" [dropdown]="true"
+                        <p-autoComplete field="party_name" formControlName="PartyID" [suggestions]="filteredParty"
+                            placeholder="Select Company" [dropdown]="true" (completeMethod)="filterParty($event)"
                             class="w-full border border-indigo-200 rounded-md mb-4" styleClass="w-full">
                         </p-autoComplete>
                     </div>
@@ -61,8 +61,8 @@
                             <i class="pi pi-briefcase text-blue-500"></i>
                             <label class="block text-sm font-medium text-gray-700 mb-1">City</label>
                         </div>
-                        <p-autoComplete field="CompanyName" formControlName="branchId" placeholder="Select Branch"
-                            [dropdown]="true" class="w-full border border-indigo-200 rounded-md mb-4"
+                        <p-autoComplete field="CityName" formControlName="CityID" placeholder="Select Branch" [suggestions]="filteredCity"
+                            [dropdown]="true" (completeMethod)="filterCity($event)" class="w-full border border-indigo-200 rounded-md mb-4"
                             styleClass="w-full">
                         </p-autoComplete>
                     </div>
