@@ -13,7 +13,7 @@ export class generalSalebillService extends BaseService {
 
   createGeneralSalebill(payload: any) {
     this.call('entry.createGeneralSaleBill', payload);
-//  {
+// {
 //       "company_id": 1,
 //       "BranchID": 10,
 //       "CityID": 22,
@@ -35,9 +35,15 @@ export class generalSalebillService extends BaseService {
 //       "IGSTAmt": 0,
 //       "RndOffAmt": -1,
 //       "NetAmt": 5605,
-//       "UserID": 101,
-//       "EntryDate": "2025-09-10T12:15:00Z",
 //       "AmtAdjusted": 0,
+//       "TaxChargesName1": "other", 
+//       "TaxChargeAmt1": 500,
+//       "TaxChargesName2": "other",
+//        "TaxChargeAmt2": 5000,
+//        "NonTaxChargeName1": "other", 
+//        "NonTaxChargeAmt1": 2500, 
+//        "NonTaxChargeName2" : "other", 
+//        "NonTaxChargeAmt2": 4800,
 //      "transactions": [
 //   {
 //     "Description": "Product A",
@@ -55,6 +61,7 @@ export class generalSalebillService extends BaseService {
 // ]
 
 //   }
+
   }
 
 
