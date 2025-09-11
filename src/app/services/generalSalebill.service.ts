@@ -10,7 +10,11 @@ export class generalSalebillService extends BaseService {
     super(ws);
   }
 
-
+  getAllGeneralSalebill(payload: any) {
+    this.call('entry.getAllgeneralSaleBill', payload);
+      //  "page": 1,
+  //     "pageSize": 10
+  }
   createGeneralSalebill(payload: any) {
     this.call('entry.createGeneralSaleBill', payload);
 // {
