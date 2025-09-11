@@ -28,7 +28,8 @@
                             <i class="pi pi-building text-yellow-500"></i>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Company</label>
                         </div>
-                        <p-autoComplete field="CompanyName" formControlName="seletedCompany" placeholder="Select Company" [dropdown]="true"
+                        <p-autoComplete field="CompanyName" formControlName="seletedCompany"
+                            placeholder="Select Company" [dropdown]="true"
                             class="w-full border border-indigo-200 rounded-md mb-4" styleClass="w-full">
                         </p-autoComplete>
                     </div>
@@ -37,19 +38,21 @@
                             <i class="pi pi-briefcase text-blue-500"></i>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Branch</label>
                         </div>
-                        <p-autoComplete field="CompanyName" formControlName="branchId" placeholder="Select Branch" [dropdown]="true"
-                            class="w-full border border-indigo-200 rounded-md mb-4" styleClass="w-full">
+                        <p-autoComplete field="CompanyName" formControlName="branchId" placeholder="Select Branch"
+                            [dropdown]="true" class="w-full border border-indigo-200 rounded-md mb-4"
+                            styleClass="w-full">
                         </p-autoComplete>
                     </div>
                 </div>
-                                <div class="grid grid-cols-2 gap-4">
+                <div class="grid grid-cols-2 gap-4">
 
                     <div>
                         <div class="flex items-center space-x-2">
                             <i class="pi pi-building text-yellow-500"></i>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Party</label>
                         </div>
-                        <p-autoComplete field="CompanyName" formControlName="seletedCompany" placeholder="Select Company" [dropdown]="true"
+                        <p-autoComplete field="CompanyName" formControlName="seletedCompany"
+                            placeholder="Select Company" [dropdown]="true"
                             class="w-full border border-indigo-200 rounded-md mb-4" styleClass="w-full">
                         </p-autoComplete>
                     </div>
@@ -58,27 +61,29 @@
                             <i class="pi pi-briefcase text-blue-500"></i>
                             <label class="block text-sm font-medium text-gray-700 mb-1">City</label>
                         </div>
-                        <p-autoComplete field="CompanyName" formControlName="branchId" placeholder="Select Branch" [dropdown]="true"
-                            class="w-full border border-indigo-200 rounded-md mb-4" styleClass="w-full">
+                        <p-autoComplete field="CompanyName" formControlName="branchId" placeholder="Select Branch"
+                            [dropdown]="true" class="w-full border border-indigo-200 rounded-md mb-4"
+                            styleClass="w-full">
                         </p-autoComplete>
                     </div>
                 </div>
-                
+
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <div class="flex items-center space-x-2 mb-1 mt-4">
                             <i class="pi pi-hashtag text-green-600"></i>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Bill No</label>
                         </div>
-                        <input type="number" formControlName="vouchNo" pInputText class="w-full border border-gray-300 rounded-lg p-3 mb-4"
-                            placeholder="Enter Voucher No">
+                        <input type="number" formControlName="vouchNo" pInputText
+                            class="w-full border border-gray-300 rounded-lg p-3 mb-4" placeholder="Enter Voucher No">
                     </div>
                     <div>
                         <div class="flex items-center space-x-2 mb-1 mt-4">
                             <i class="pi pi-calendar text-orange-500"></i>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Bill Date</label>
                         </div>
-                        <input type="date" formControlName="vouchDate" pInputText class="w-full border border-gray-300 rounded-lg p-3 mb-4">
+                        <input type="date" formControlName="vouchDate" pInputText
+                            class="w-full border border-gray-300 rounded-lg p-3 mb-4">
                     </div>
                 </div>
                 <div>
@@ -96,96 +101,109 @@
         <!-- table card -->
         <div class="bg-sky-200 p-6 grid grid-cols-1 lg:grid-cols-1 gap-10">
             <div class="bg-sky-100 p-7 rounded-lg border border-sky-400 shadow-xl">
-
                 <table class="table-auto border border-gray-400 border-collapse w-full">
+                    <thead>
+                        <tr>
+                            <th class="text-left border border-gray-400 px-4 py-2">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                    <i class="pi pi-map mr-2 text-yellow-500"></i>SLNo
+                                </label>
+                            </th>
+                            <th class="text-left border border-gray-400 px-4 py-2">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                    <i class="pi pi-map-marker mr-2 text-orange-500"></i>Description
+                                </label>
+                            </th>
+                            <th class="text-left border border-gray-400 px-4 py-2">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                    <i class="pi pi-pen-to-square mr-2 text-blue-600"></i>Unit
+                                </label>
+                            </th>
+                            <th class="text-left border border-gray-400 px-4 py-2">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                    <i class="pi pi-pen-to-square mr-2 text-blue-600"></i>Quantity
+                                </label>
+                            </th>
+                            <th class="text-left border border-gray-400 px-4 py-2">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                    <i class="pi pi-pen-to-square mr-2 text-blue-600"></i>Rate
+                                </label>
+                            </th>
+                            <th class="text-left border border-gray-400 px-4 py-2">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                    <i class="pi pi-pen-to-square mr-2 text-blue-600"></i>Amount
+                                </label>
+                            </th>
+                            <th class="text-left border border-gray-400 px-4 py-2">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                    <i class="pi pi-pen-to-square mr-2 text-blue-600"></i>Actions
+                                </label>
+                            </th>
+                        </tr>
+                    </thead>
                     <tbody>
-                        <tr>
-                            <th class="text-left border border-gray-400 px-4 py-2 "><label class="block text-sm font-medium text-gray-700 mb-1"><i
-                                        class="pi pi-map mr-2 text-yellow-500"></i>SLNo</label></th>
-                            <th class="text-left border border-gray-400 px-4 py-2"><label class="block text-sm font-medium text-gray-700 mb-1"><i
-                                        class="pi pi-map-marker mr-2 text-orange-500"></i>Description</label></th>
-                            <th class="text-left border border-gray-400 px-4 py-2"><label class="block text-sm font-medium text-gray-700 mb-1"><i
-                                        class="pi pi-pen-to-square mr-2 text-blue-600"></i>Unit</label></th>
-                            <th class="text-left border border-gray-400 px-4 py-2"><label class="block text-sm font-medium text-gray-700 mb-1"><i
-                                        class="pi pi-pen-to-square mr-2 text-blue-600"></i>Quantity</label></th>
-                            <th class="text-left border border-gray-400 px-4 py-2"><label class="block text-sm font-medium text-gray-700 mb-1"><i
-                                        class="pi pi-pen-to-square mr-2 text-blue-600"></i>Rate</label></th>
-                            <th class="text-left border border-gray-400 px-4 py-2"><label class="block text-sm font-medium text-gray-700 mb-1"><i
-                                        class="pi pi-pen-to-square mr-2 text-blue-600"></i>Amount</label></th>
-                            
-                            <th class="text-left border border-gray-400 px-4 py-2"><label class="block text-sm font-medium text-gray-700 mb-1"><i
-                                        class="pi pi-pen-to-square mr-2 text-blue-600"></i>Actions</label></th>
+                        <tr *ngFor="let row of rows; let i = index">
+                            <td class="border border-gray-400 px-4 py-2">
+                                <input type="text" pInputText [(ngModel)]="row.slno"
+                                    class="w-full border border-gray-300 rounded-lg p-3 text-uppercase"
+                                    placeholder="SLNo" [disabled]="!row.isEditing" />
+                            </td>
+                            <td class="border border-gray-400 px-4 py-2">
+                                <input type="text" pInputText [(ngModel)]="row.description"
+                                    class="w-full border border-gray-300 rounded-lg p-3 text-uppercase"
+                                    placeholder="Description" [disabled]="!row.isEditing" />
+                            </td>
+                            <td class="border border-gray-400 px-4 py-2">
+                                <input type="text" pInputText [(ngModel)]="row.unit"
+                                    class="w-full border border-gray-300 rounded-lg p-3 text-uppercase"
+                                    placeholder="Unit" [disabled]="!row.isEditing" />
+                            </td>
+                            <td class="border border-gray-400 px-4 py-2">
+                                <input type="number" pInputText [(ngModel)]="row.quantity"
+                                    class="w-full border border-gray-300 rounded-lg p-3" placeholder="Qty"
+                                    [disabled]="!row.isEditing" />
+                            </td>
+                            <td class="border border-gray-400 px-4 py-2">
+                                <input type="number" pInputText [(ngModel)]="row.rate"
+                                    class="w-full border border-gray-300 rounded-lg p-3" placeholder="Rate"
+                                    [disabled]="!row.isEditing" />
+                            </td>
+                            <td class="border border-gray-400 px-4 py-2">
+                                <input type="number" pInputText [(ngModel)]="row.amount"
+                                    class="w-full border border-gray-300 rounded-lg p-3" placeholder="Amount"
+                                    [disabled]="!row.isEditing" />
+                            </td>
+                            <td class="border border-gray-400 px-4 py-2 text-center">
+                                <div class="flex justify-center items-center gap-2">
+                                    <button type="button" *ngIf="!row.isEditing" (click)="enableEdit(row)"
+                                        class="bg-amber-500 text-white p-2 rounded hover:bg-amber-600 transition">
+                                        <i class="pi pi-pencil"></i>
+                                    </button>
 
-                        </tr>
-                        <tr>
-                            <td class=" px-1 py-2 border border-gray-400 px-4 py-2">
-                                        <input type="text" pInputText formControlName="" 
-                                            class="w-full border border-gray-300 rounded-lg p-3 text-uppercase"
-                                            placeholder="SLNo">
-                                    </td>
-                                    <td class=" px-1 py-2 border border-gray-400 px-4 py-2">
-                                        <input type="text"  pInputText formControlName="ledgerType"
-                                            class="w-full border border-gray-300 rounded-lg p-3 text-uppercase"
-                                            placeholder="Party">
-                                    </td>
-                                    <td class=" px-1 py-2 border border-gray-400 px-4 py-2">
-                                        <input type="text"  pInputText formControlName=""
-                                            class="w-full border border-gray-300 rounded-lg p-3 text-uppercase"
-                                            placeholder="Instas Pharma">
-                                    </td>
-                                    <td class=" px-1 py-2 border border-gray-400 px-4 py-2">
-                                        <input type="text" pInputText formControlName="totalDebitAmt"
-                                            class="w-full border border-gray-300 rounded-lg p-3 text-uppercase"
-                                            placeholder="Debit Amount">
-                                    </td>
-                                    <td class=" px-1 py-2 border border-gray-400 px-4 py-2">
-                                        <input type="text"  pInputText formControlName="totalCreditAmt"
-                                            class="w-full border border-gray-300 rounded-lg p-3 text-uppercase"
-                                            placeholder="Credit Amount">
-                                    </td>
-                                    <td class=" px-1 py-2 border border-gray-400 px-4 py-2">
-                                        <input type="text"  pInputText formControlName="totalCreditAmt"
-                                            class="w-full border border-gray-300 rounded-lg p-3 text-uppercase"
-                                            placeholder="Credit Amount">
-                                    </td>
-                                    <td class="text-center px-4 py-2 border border-gray-400 px-4 py-2">
-                                        <button type="submit"
-                                            class="px-6 py-3 bg-sky-600  text-white font-medium rounded-lg shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
-                                            Save
-                                        </button>
-                                    </td>
-                        </tr>
-                        <tr>
-                            <td class=" px-1 py-2">
-                                        
-                                    </td>
-                                    <td class=" px-1 py-2 border border-gray-400 px-4 py-2">
-                                        
-                                    </td>
-                                    <td class=" px-1 py-2 border border-gray-400 px-4 py-2">
-                                        
-                                    </td>
-                                    <td class=" px-1 py-2 border border-gray-400 px-4 py-2">
-                                        
-                                    </td>
-                                    <td class=" px-1 py-2 border border-gray-400 px-4 py-2">
-                                        
-                                    </td>
-                                    <td class=" px-1 py-2 border border-gray-400 px-4 py-2">
-                                        
-                                    </td>
-                                    <td class="text-center px-4 py-2 border border-gray-400 px-4 py-2">
-                                        <button type="submit"
-                                            class="px-6 py-3 bg-sky-600  text-white font-medium rounded-lg shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
-                                            Add
-                                        </button>
-                                    </td>
-                        </tr>
+                                    <button type="button" *ngIf="row.isEditing" (click)="saveRow(row)"
+                                        class="bg-green-600 text-white p-2 rounded hover:bg-green-700 transition">
+                                        <i class="pi pi-check"></i>
+                                    </button>
 
+                                    <button type="button" (click)="deleteRow(i)"
+                                        class="bg-red-600 text-white p-2 rounded hover:bg-red-700 transition">
+                                        <i class="pi pi-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
                 </table>
+
+                <!-- Add button -->
+                <div class="mt-4 text-right">
+                    <button type="button" (click)="addRow()"
+                        class="px-6 py-3 bg-sky-600 text-white font-medium rounded-lg shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
+                        Add
+                    </button>
+                </div>
             </div>
         </div>
-
 
 
         <!-- Footer with Submit Button -->

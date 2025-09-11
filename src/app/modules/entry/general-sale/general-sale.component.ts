@@ -5,13 +5,13 @@ import { DropdownModule } from 'primeng/dropdown';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { InputTextModule } from 'primeng/inputtext';
 import { Router } from '@angular/router';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { commonService } from '../../../services/comonApi.service';
 
 @Component({
   selector: 'app-general-sale',
-  imports: [DynamicTableComponent,CommonModule,DropdownModule,AutoCompleteModule,InputTextModule,ReactiveFormsModule],
+  imports: [DynamicTableComponent,CommonModule,DropdownModule,AutoCompleteModule,InputTextModule,ReactiveFormsModule,FormsModule],
   templateUrl: './general-sale.component.html',
   styleUrl: './general-sale.component.css'
 })
@@ -21,6 +21,8 @@ users: any[]= [];
 showForm = false;
 heading = '';
 form!: FormGroup;
+rows: any[] = [];
+
 
 
 
@@ -91,4 +93,34 @@ form!: FormGroup;
 
     }
   }
+  addRow() {
+    this.rows.push({
+      slno: '',
+      description: '',
+      unit: '',
+      quantity: '',
+      rate: '',
+      amount: '',
+      isEditing: true
+    });
+  }
+
+  deleteRow(index: number) {
+    this.rows.splice(index, 1);
+  }
+enableEdit(row: any) {
+    // Disable editing on all other rows
+    this.rows.forEach(r => r.isEditing = false);
+    row.isEditing = true;
+  }
+
+  saveRow(row: any) {
+    // Calculate amount (optional logic, remove if not needed)
+    if (!isNaN(row.quantity) && !isNaN(row.rate)) {
+      row.amount = row.quantity * row.rate;
+    }
+
+    row.isEditing = false;
+  }
+
 }
