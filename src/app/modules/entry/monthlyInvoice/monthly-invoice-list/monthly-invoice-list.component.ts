@@ -22,6 +22,9 @@ import { InvoiceEyesShowComponent } from '../../../../components/invoice-eyes-sh
 import { userMasterService } from '../../../../services/userMaster.service';
 import { AutoComplete } from 'primeng/autocomplete';
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
+import pdfMake from 'pdfmake/build/pdfmake';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
+(pdfMake as any).vfs = (pdfFonts as any).vfs;
 
 @Component({
   selector: 'app-monthly-invoice-list',
@@ -55,21 +58,19 @@ export class MonthlyInvoiceListComponent implements OnInit {
 
   companies: any[] = [];
   selected_company: any = null;
-  search_text: string = '';
+  search_text: string = ``;
   selected_invoice: any = null;
-
 
   data_count: number = 10;
   table_loading: boolean = true;
 
-
-  branches = ['Lodging...'];
-  parties = ['Lodging...'];
-  cities = ['Lodging...'];
+  branches = [`Lodging...`];
+  parties = [`Lodging...`];
+  cities = [`Lodging...`];
 
   display_dialog = false;
   show_other_charges = false;
-  selectedChargeType: 'taxable' | 'nonTaxable' = 'taxable';
+  selectedChargeType: `taxable` | `nonTaxable` = `taxable`;
   charges: any[] = [];
   taxableCharges: any;
   sleetedBookingIds: any;
@@ -77,46 +78,44 @@ export class MonthlyInvoiceListComponent implements OnInit {
   selectedInvoice: any;
   party_info: any;
 
-
   constructor(
     private _invoice: InvoiceService,
     private router: Router,
     private messageService: MessageService,
     private cdr: ChangeDetectorRef,
-    private HelperService: HelperService
+    private HelperService: HelperService,
+    private userMasterService: userMasterService
   ) {}
 
   ngOnInit(): void {
     this.HelperService.registerPageHandler((msg) => {
       let rt = false;
       rt = globalRequestHandler(msg, this.router, this.messageService);
-      if (msg.for === 'minvoice.getMonthlyInvoiceList') {
+      if (msg.for === `minvoice.getMonthlyInvoiceList`) {
         this.invoices = Array.isArray(msg.data)
           ? msg.data
           : msg.data?.data || [];
-        console.log('Invoices loaded:', this.invoices);
+        console.log(`Invoices loaded:`, this.invoices);
 
         this.invoices_count = msg.total ?? this.invoices.length;
         this.is_lazy_load = true;
         this.table_loading = false;
         this.cdr.detectChanges();
-      } else if (msg.for === 'companyDropdown') {
+      } else if (msg.for === `companyDropdown`) {
         this.companies = msg.data;
         rt = true;
       }
-       if ((msg.for === 'getOtherTaxableChargesUsingId'))
-        {
+      if (msg.for === `getOtherTaxableChargesUsingId`) {
         this.taxableCharges = msg.data?.taxable ? [...msg.data?.taxable] : [];
         rt = true;
-      }
-      else if ((msg.for === 'getOtherNonTaxableChargesUsingId'))
-      {
-        this.nonTaxableCharges = msg.data?.nonTaxable ? [ ...msg.data?.nonTaxable] : [];
+      } else if (msg.for === `getOtherNonTaxableChargesUsingId`) {
+        this.nonTaxableCharges = msg.data?.nonTaxable
+          ? [...msg.data?.nonTaxable]
+          : [];
         rt = true;
-      }
-      else if ((msg.for ==='partyinfo')){
+      } else if (msg.for === `partyinfo`) {
         this.party_info = msg.data;
-        console.log("party_info:",this.party_info)
+        console.log(`party_info:`, this.party_info);
         rt = true;
       }
 
@@ -141,7 +140,7 @@ export class MonthlyInvoiceListComponent implements OnInit {
     this.table_loading = true;
     const payload = {
       for_company_id: this.selected_company ?? 0,
-      search: this.search_text || '',
+      search: this.search_text || ``,
       current_page: this.page_no,
       page_size: this.data_count,
     };
@@ -155,7 +154,7 @@ export class MonthlyInvoiceListComponent implements OnInit {
   }
 
   resetFilters() {
-    this.search_text = '';
+    this.search_text = ``;
     this.selected_company = [];
     this.page_no = 1;
     this.data_count = 10;
@@ -163,20 +162,18 @@ export class MonthlyInvoiceListComponent implements OnInit {
   }
 
   openCreateUI() {
-    this.router.navigate(['/monthly-invoice-create']);
+    this.router.navigate([`/monthly-invoice-create`]);
   }
 
-
-  openOtherCharges(invoice: any, type: 'taxable' | 'nonTaxable') {
+  openOtherCharges(invoice: any, type: `taxable` | `nonTaxable`) {
     this.selected_invoice = { ...invoice };
     this.selectedChargeType = type;
     this.show_other_charges = true;
   }
 
-
   editInvoice(invoice: any) {
-    this.router.navigate(['/monthly-invoice-create'], {
-      queryParams: { editInvoice:  JSON.stringify(invoice) },
+    this.router.navigate([`/monthly-invoice-create`], {
+      queryParams: { editInvoice: JSON.stringify(invoice) },
     });
   }
 
@@ -188,16 +185,16 @@ export class MonthlyInvoiceListComponent implements OnInit {
   show_dialog = false;
 
   rows = 10;
-  globalFilter = '';
+  globalFilter = ``;
   entryOptions = [
-    { label: '5', value: 5 },
-    { label: '10', value: 10 },
-    { label: '20', value: 20 },
+    { label: `5`, value: 5 },
+    { label: `10`, value: 10 },
+    { label: `20`, value: 20 },
   ];
 
   payments = [
     {
-      voucherNo: 'V123',
+      voucherNo: `V123`,
       amount: 5000,
       paymentReceived: 4500,
       tdsAmount: 200,
@@ -210,386 +207,906 @@ export class MonthlyInvoiceListComponent implements OnInit {
   }
 
   updateCharges(event: {
-  taxableCharges: any[];
-  nonTaxableCharges: any[];
-  sleetedBookingIds?: any[];
-  charges: any[];
+    taxableCharges: any[];
+    nonTaxableCharges: any[];
+    sleetedBookingIds?: any[];
+    charges: any[];
   }) {
     this.charges = event.charges;
     this.taxableCharges = event.taxableCharges;
     this.nonTaxableCharges = event.nonTaxableCharges;
     this.sleetedBookingIds = event.sleetedBookingIds;
 
-    console.log('Duty Updated:', {
+    console.log(`Duty Updated:`, {
       charges: this.charges,
       taxableCharges: this.taxableCharges,
       nonTaxableCharges: this.nonTaxableCharges,
       sleetedBookingIds: this.sleetedBookingIds,
-
     });
   }
 
-
-  getTaxableCharges(invoice_id:any) {
-  // this._helper.getOtherChargesForMonthlyInvoice({ booking_entry_id })
-  if (invoice_id) {
-    console.log('Fetching charges for invoice:', invoice_id);
-    this.HelperService.getTaxableOtherChargesForMonthlyInvoice({ booking_entry_id: invoice_id });
-  } else {
-    console.error("No selected invoice to fetch charges for.");
+  getTaxableCharges(invoice_id: any) {
+    // this._helper.getOtherChargesForMonthlyInvoice({ booking_entry_id })
+    if (invoice_id) {
+      console.log(`Fetching charges for invoice:`, invoice_id);
+      this.HelperService.getTaxableOtherChargesForMonthlyInvoice({
+        booking_entry_id: invoice_id,
+      });
+    } else {
+      console.error(`No selected invoice to fetch charges for.`);
+    }
   }
-}
 
-getNonTaxableCharges(invoice_id: any) {
-  if (invoice_id) {
-    console.log('Fetching non-taxable charges for invoice:',invoice_id);
-    this.HelperService.getNonTaxableOtherChargesForMonthlyInvoice({ booking_entry_id: invoice_id });
-  } else {
-    console.error("No selected invoice to fetch non-taxable charges for.");
+  getNonTaxableCharges(invoice_id: any) {
+    if (invoice_id) {
+      console.log(`Fetching non-taxable charges for invoice:`, invoice_id);
+      this.HelperService.getNonTaxableOtherChargesForMonthlyInvoice({
+        booking_entry_id: invoice_id,
+      });
+    } else {
+      console.error(`No selected invoice to fetch non-taxable charges for.`);
+    }
   }
-}
 
+  getPartyinfoForPdf(invoice_id: any) {
+    this.HelperService.getPartyinfoForPdf({ invoice_id: invoice_id });
+  }
+  async generatePdf(invoice: any, charges: any, party_info: any) {
+    // Fetch charges
+    this.getTaxableCharges(invoice.id);
+    await this.waitForFetch(() => this.taxableCharges);
+    this.getPartyinfoForPdf(invoice.id);
+    await this.waitForFetch(() => this.party_info);
+    this.getNonTaxableCharges(invoice.id);
+    this.taxableCharges = this.taxableCharges ?? [];
+    this.nonTaxableCharges = this.nonTaxableCharges ?? [];
+    this.party_info = this.party_info ?? [];
 
+    charges = this.taxableCharges.concat(this.nonTaxableCharges);
+    party_info = this.party_info;
+    const party = (this.party_info && this.party_info[0]) || {};
+    console.log(`Final charges: `, charges);
+    console.log(`party:`, party);
+    console.log(`invoice:`, invoice);
 
-getPartyinfoForPdf(invoice_id:any){
-    this.HelperService.getPartyinfoForPdf({invoice_id:(invoice_id)});
-}
+    const documentDefinition: any = {
+      pageSize: `A4`,
+      pageMargins: [40, 30, 40, 30],
+      content: [
+        // ========== PAGE 1: INVOICE ==========
+        {
+          stack: [
+            { text: `${party.Company_Name}`, style: `company` },
+            {
+              text: `${party.branch_address},${party.branch_cityname},${party.branch_pincode}`,
+              fontSize: 9,
+              alignment: `center`,
+            },
+            {
+              text: `Phone - ${party.Branch_PhoneNo} / ${party.mobileno}`,
+              fontSize: 9,
+              alignment: `center`,
+            },
+            {
+              text: `E-Mail - ${party.Branch_Email}`,
+              fontSize: 9,
+              alignment: `center`,
+            },
+            { text: `\n`, margin: [0, 5] },
+            {
+              canvas: [
+                { type: `line`, x1: 0, y1: 0, x2: 515, y2: 0, lineWidth: 1 },
+              ],
+            },
+            {
+              text: `TAX INVOICE`,
+              style: `header`,
+              alignment: `center`,
+              margin: [0, 5],
+            },
+            {
+              canvas: [
+                { type: `line`, x1: 0, y1: 0, x2: 515, y2: 0, lineWidth: 1 },
+              ],
+            },
+          ],
+        },
 
+        {
+          columns: [
+            [
+              { text: `To,`, bold: true },
+              { text: `${party.Party_Name}` },
+              { text: `${party.partyaddress}` },
+              { text: `Party GST No.: ${party.PartyGSTNo}` },
+              { text: `Party Pan No.: ${party.PartyPanNo}` },
 
+              { text: `State Code: ${party.StateCode}` },
+            ],
+            [
+              {
+                text: `Tax Invoice No.: ${invoice.BillNo}`,
+                alignment: `right`,
+                bold: true,
+                color: `black`,
+                background: `yellow`,
+              },
+              {
+                text: `Tax Invoice Date: ${this.formatDate(invoice.BillDate)}`,
+                alignment: `right`,
+              },
+              { text: `Classification: RENT-A-CAR`, alignment: `right` },
+              { text: `Place of Supply: Kolkata`, alignment: `right` },
+              { text: `Car Type: ${invoice.CarType}`, alignment: `right` },
+              {
+                text: `Category:  KMS/10 Hrs`,
+                alignment: `right`,
+                background: `yellow`,
+              },
+            ],
+          ],
+          margin: [0, 10, 0, 10],
+        },
 
-async generatePdf(invoice: any, charges: any, party_info:any) {
-  console.log('Generating PDF for invoice:', invoice);
-  console.log('Charges:', charges);
+        {
+          table: {
+            widths: [`*`, `auto`],
+            body: [
+              [
+                { text: `Particulars`, bold: true },
+                { text: `Amount`, bold: true },
+              ],
+              [
+                `Being monthly hire charges for the vehicle (01/07/2025 to 31/07/2025)`,
+                `52000.00`,
+              ],
+              [`Add : Extra Hour(s) 74.25 x 150`, `11137.50`],
+              [`Add : Extra KM 0 x 15`, `0.00`],
+              [`Gross Total :`, `63137.50`],
+              [`Add : CGST 6%`, `3788.25`],
+              [`Add : SGST 6%`, `3788.25`],
+              [`Holiday Days : Nill`, `0.00`],
+              [`Add : Parking/Tolls/Permit Amount`, `1090.00`],
+              [`Add : Night Halt Amount 1 x 200`, `200.00`],
+              [`Round Off`, `0.00`],
+              [
+                { text: `Net Amount :`, bold: true },
+                { text: `72004.00`, bold: true },
+              ],
+            ],
+          },
+          layout: `lightHorizontalLines`,
+          margin: [0, 10, 0, 10],
+        },
 
-  // Fetch charges
-  this.getTaxableCharges(invoice.id);
-  await this.waitForFetch(() => this.taxableCharges);
-  this.getPartyinfoForPdf(invoice.id);
-  await this.waitForFetch(() => this.party_info);
-  this.getNonTaxableCharges(invoice.id);
-  this.taxableCharges = this.taxableCharges ?? [];
-  this.nonTaxableCharges = this.nonTaxableCharges ?? [];
-  this.party_info = this.party_info ?? [];
+        {
+          text: `Rupees One Lakh Five Thousand Six only.`,
+          italics: true,
+          margin: [0, 0, 0, 10],
+        },
+        {
+          text: `GST No. 19BOFPS5927C1ZP | PAN No. BOFPS5927C | SAC Code: 996601`,
+          fontSize: 9,
+        },
+        {
+          columns: [
+            { text: `Encl: Detail Sheet`, fontSize: 9 },
+            {
+              text: `for Darwar Enterprise`,
+              alignment: `right`,
+              margin: [0, 20, 0, 0],
+            },
+          ],
+        },
 
-  charges = this.taxableCharges.concat(this.nonTaxableCharges);
-  party_info = this.party_info
-  const party = (this.party_info && this.party_info[0]) || {};
-  console.log("Final charges: ", charges);
-  console.log("party:", party_info);
+        { text: `\n\n`, pageBreak: `after` },
 
-  const invoiceData = {
-    companyName: party.Company_Name ?? '',
-    address: (party.partyaddress ?? '').replace(/\t/g, '').replace(/\r?\n/g, ''),
-    phone: party.Branch_PhoneNo ?? '',
-    email: party.Branch_Email ?? '',
-    invoiceNo: invoice.BillNo ?? '',
-    invoiceDate: this.formatDate(invoice.BillDate),
-    recipient: ` ${party.BankName} ( ${party.BankIFSC})`,
-    addressLine1: party.branch_address ?? '',
-    addressLine2: party.BankAddress ?? '',
-    state_code: party.Party_StateName ?? '',
-    partygstNo: party.PartyGSTNo ?? '',
-    carType: 'HONDA CITY',
-    category: '1500 KM/252 Hrs',
-    items: [
-      { particulars: 'Being monthly hire charges (01/06/2025 to 30/06/2025)', amount: String(invoice.amount ?? 'N/A') },
-      { particulars: 'Add : Extra Hour(s)         100.25 X 75', amount: String(invoice.extra_hours ?? '0.00') },
-      { particulars: 'Add : Extra KM              780 X 20', amount: String(invoice.extra_km ?? '0.00') },
-      { particulars: 'Gross Total', amount: String(invoice.GrossAmount ?? '0.00') },
-      { particulars: `Other Charges Taxable`, amount: String('0.00') },
-      { particulars: 'Parking', amount: String('0.00') },
-      { particulars: 'Night Halt', amount: String(invoice.nightHalt ??'0.00') },
-      { particulars: `Add : CGST @ ${invoice.CGSTPer}%`, amount: String(invoice.CGST ?? '0.00') },
-      { particulars: `Add : SGST @ ${invoice.SGSTPer}%`, amount: String(invoice.SGST ?? '0.00') },
-      { particulars: 'Other Charges NonTaxable Table', amount: String('0.00') },
-      { particulars: 'Driver Halt', amount: String('0.00') },
-      { particulars: 'Round OFF', amount: String(invoice.round_off ?? '0.00') },
-      { particulars: `Net Amount (Rupees ${party.AmtInWords ?? ''})`, amount: String(invoice.NetAmount ?? '0.00') },
-      { particulars: `GST No : ${party.PartyGSTNo}`, amount: '' },
-      { particulars: `PAN NO : ${party.PartyPanNo }`, amount:'' },
-      { particulars: 'SAC Code : 7589J', amount:'' },
-    ],
-  };
+        // ========== PAGE 2: DETAIL SHEET ==========
+        {
+          stack: [
+            { text: `${party.Company_Name}`, style: `company` },
+            {
+              text: `${party.branch_address},${party.branch_cityname},${party.branch_pincode}`,
+              fontSize: 9,
+              alignment: `center`,
+            },
+            {
+              text: `Phone - ${party.Branch_PhoneNo} / ${party.mobileno}`,
+              fontSize: 9,
+              alignment: `center`,
+            },
+            {
+              text: `E-Mail - ${party.Branch_Email}`,
+              fontSize: 9,
+              alignment: `center`,
+            },
+            { text: `\n`, margin: [0, 5] },
+            {
+              canvas: [
+                { type: `line`, x1: 0, y1: 0, x2: 515, y2: 0, lineWidth: 1 },
+              ],
+            },
+            {
+              text: `TAX INVOICE`,
+              style: `header`,
+              alignment: `center`,
+              margin: [0, 5],
+            },
+            {
+              canvas: [
+                { type: `line`, x1: 0, y1: 0, x2: 515, y2: 0, lineWidth: 1 },
+              ],
+            },
+          ],
+        },
 
-  // Prepare log rows
-  const logRows = charges.map((charge: any) => ({
-    carNo: charge.CarNo,
-    outDate: this.formatDate(charge.GarageOutDate),
-    outTime: charge.GarageOutTime,
-    inDate: this.formatDate(charge.GarageInDate),
-    inTime: charge.EntryTime,
-    outKM: charge.GarageOutKm,
-    inKM: charge.GarageInKm,
-    totalHrs: charge.TotalHour,
-    totalKM: charge.TotalKm,
-    overTime: charge.ExtraHrs,
-    parking: charge.charge_name,
-    nightHalt: invoice?.nightHalt ?? null,
-  }));
+        {
+          columns: [
+            [
+              { text: `To,`, bold: true },
+              { text: `STATE BANK OF INDIA (IFB KOLKATA BRANCH)` },
+              { text: `1, Middleton Street, Kolkata : 700071` },
+              { text: `Party GST No.: 19AACCS8577K3ZK` },
+              { text: `State Code: 19 West Bengal` },
+            ],
+            [
+              {
+                text: `Tax Invoice No.: DE/Same Serial/25-26`,
+                alignment: `right`,
+                bold: true,
+                background: `yellow`,
+              },
+              { text: `Tax Invoice Date: 23/08/2025`, alignment: `right` },
+              { text: `Classification: RENT-A-CAR`, alignment: `right` },
+              { text: `Place of Supply: Kolkata`, alignment: `right` },
+              { text: `Car Type: DZIRE`, alignment: `right` },
+              {
+                text: `Category: 2500 KMS/10 Hrs`,
+                alignment: `right`,
+                background: `yellow`,
+              },
+            ],
+          ],
+          margin: [0, 10, 0, 10],
+        },
 
-  const pdfDoc = await PDFDocument.create();
-  const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+        {
+          table: {
+            headerRows: 1,
+            widths: [
+              `auto`,
+              `auto`,
+              `auto`,
+              `auto`,
+              `auto`,
+              `auto`,
+              `auto`,
+              `auto`,
+              `auto`,
+              `auto`,
+              `auto`,
+              `auto`,
+            ],
+            body: [
+              [
+                { text: `Car No.`, bold: true },
+                { text: `Out Date`, bold: true },
+                { text: `Out Time`, bold: true },
+                { text: `In Date`, bold: true },
+                { text: `In Time`, bold: true },
+                { text: `Out KM`, bold: true },
+                { text: `In KM`, bold: true },
+                { text: `Total Hrs.`, bold: true },
+                { text: `Total KM`, bold: true },
+                { text: `Over Time`, bold: true },
+                { text: `Parking`, bold: true },
+                { text: `Night Halt`, bold: true },
+              ],
+              [
+                `DZIRE WB04G 1827`,
+                `04/07/2025`,
+                `08:00`,
+                `04/07/2025`,
+                `21:30`,
+                `76059`,
+                `76139`,
+                `13.5`,
+                `80`,
+                `3.5`,
+                `0`,
+                `0`,
+              ],
+              [
+                `DZIRE WB05A 3892`,
+                `05/07/2025`,
+                `07:30`,
+                `05/07/2025`,
+                `19:30`,
+                `32387`,
+                `32462`,
+                `12`,
+                `75`,
+                `2`,
+                `0`,
+                `0`,
+              ],
+              [
+                `DZIRE WB05A 3892`,
+                `07/07/2025`,
+                `07:45`,
+                `07/07/2025`,
+                `21:15`,
+                `32478`,
+                `32549`,
+                `13.5`,
+                `71`,
+                `3.5`,
+                `0`,
+                `0`,
+              ],
+              [
+                `DZIRE WB05A 3892`,
+                `08/07/2025`,
+                `07:45`,
+                `08/07/2025`,
+                `21:00`,
+                `32549`,
+                `32617`,
+                `13.25`,
+                `68`,
+                `3.25`,
+                `0`,
+                `0`,
+              ],
+              [
+                `DZIRE WB05A 3892`,
+                `09/07/2025`,
+                `07:45`,
+                `09/07/2025`,
+                `16:30`,
+                `32617`,
+                `32666`,
+                `8.75`,
+                `49`,
+                `0.25`,
+                `0`,
+                `0`,
+              ],
+              // Totals Row
+              [
+                { text: `TOTAL`, bold: true, colSpan: 7 },
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                { text: `311.5`, bold: true },
+                { text: `1899`, bold: true },
+                { text: `74.25`, bold: true },
+                { text: `0`, bold: true },
+                { text: `200.00`, bold: true },
+              ],
+            ],
+          },
+          layout: `lightHorizontalLines`,
+          fontSize: 8,
+          margin: [0, 10, 0, 0],
+        },
 
-  // -------------------- FIRST PAGE --------------------
-  const page = pdfDoc.addPage([595.28, 841.89]);
-  const { width, height } = page.getSize();
+        {
+          text: `GST No. 19BOFPS5927C1ZP | PAN No. BOFPS5927C`,
+          fontSize: 9,
+          margin: [0, 5],
+        },
+        {
+          text: `for Darwar Enterprise`,
+          alignment: `right`,
+          margin: [0, 20, 0, 0],
+        },
+      ],
+      styles: {
+        header: { fontSize: 13, bold: true },
+        company: { fontSize: 12, bold: true, alignment: `center` },
+      },
+      defaultStyle: {
+        font: `Roboto`,
+      },
+    };
 
-  page.drawText(invoiceData.companyName, {
-    x: width / 2 - font.widthOfTextAtSize(invoiceData.companyName, 14) / 2,
-    y: height - 50,
-    size: 14,
-    font,
-    color: rgb(0, 0, 0),
-  });
-  page.drawText(invoiceData.address, {
-    x: width / 2 - font.widthOfTextAtSize(invoiceData.address, 10) / 2,
-    y: height - 70,
-    size: 10,
-    font,
-  });
-  page.drawText(`Phone: ${invoiceData.phone}`, {
-    x: width / 2 - font.widthOfTextAtSize(`Phone: ${invoiceData.phone}`, 10) / 2,
-    y: height - 85,
-    size: 10,
-    font,
-  });
-  page.drawText(`Email: ${invoiceData.email}`, {
-    x: width / 2 - font.widthOfTextAtSize(`Email: ${invoiceData.email}`, 10) / 2,
-    y: height - 100,
-    size: 10,
-    font,
-  });
+    pdfMake.createPdf(documentDefinition).open();
+  }
 
-  const title1 = 'TAX INVOICE';
-  const title1Width = font.widthOfTextAtSize(title1, 12);
-  const title1X = width / 2 - title1Width / 2;
-  const title1Y = height - 130;
-  page.drawText(title1, { x: title1X, y: title1Y, size: 12, font });
-  page.drawLine({
-    start: { x: title1X - 10, y: title1Y - 5 },
-    end: { x: title1X + title1Width + 10, y: title1Y - 5 },
-    thickness: 1,
-    color: rgb(0, 0, 0),
-  });
+  // async generatePdf(invoice: any, charges: any, party_info: any) {
+  //   console.log(`Generating PDF for invoice:`, invoice);
+  //   console.log(`Charges:`, charges);
 
-  page.drawText('To,', { x: 50, y: height - 170, size: 10, font });
-  page.drawText(invoiceData.recipient, { x: 50, y: height - 185, size: 10, font });
-  page.drawText(invoiceData.addressLine1, { x: 50, y: height - 200, size: 10, font });
-  page.drawText(invoiceData.addressLine2, { x: 50, y: height - 215, size: 10, font });
+  //   // Fetch charges
+  //   this.getTaxableCharges(invoice.id);
+  //   await this.waitForFetch(() => this.taxableCharges);
+  //   this.getPartyinfoForPdf(invoice.id);
+  //   await this.waitForFetch(() => this.party_info);
+  //   this.getNonTaxableCharges(invoice.id);
+  //   this.taxableCharges = this.taxableCharges ?? [];
+  //   this.nonTaxableCharges = this.nonTaxableCharges ?? [];
+  //   this.party_info = this.party_info ?? [];
 
-  page.drawText(invoiceData.state_code, { x: 50, y: height - 230, size: 10, font });
-  page.drawText(invoiceData.partygstNo, { x: 50, y: height - 245, size: 10, font });
+  //   charges = this.taxableCharges.concat(this.nonTaxableCharges);
+  //   party_info = this.party_info;
+  //   const party = (this.party_info && this.party_info[0]) || {};
+  //   console.log(`Final charges: `, charges);
+  //   console.log(`party:`, party_info);
 
-  const infoX = 350;
-  const infoY = height - 170;
-  [
-    `Tax Invoice No.: ${invoiceData.invoiceNo}`,
-    `Tax Invoice Date: ${invoiceData.invoiceDate}`,
-    `Classification: RENT-A-CAR`,
-    `Place of Supply: Kolkata`,
-    `Car Type: ${invoiceData.carType}`,
-    `Category: ${invoiceData.category}`,
-  ].forEach((text, i) => {
-    page.drawText(text, { x: infoX, y: infoY - i * 15, size: 9, font });
-  });
+  //   const invoiceData = {
+  //     companyName: party.Company_Name ?? ``,
+  //     address: (party.partyaddress ?? ``)
+  //       .replace(/\t/g, ``)
+  //       .replace(/\r?\n/g, ``),
+  //     phone: party.Branch_PhoneNo ?? ``,
+  //     email: party.Branch_Email ?? ``,
+  //     invoiceNo: invoice.BillNo ?? ``,
+  //     invoiceDate: this.formatDate(invoice.BillDate),
+  //     recipient: ` ${party.BankName} ( ${party.BankIFSC})`,
+  //     addressLine1: party.branch_address ?? ``,
+  //     addressLine2: party.BankAddress ?? ``,
+  //     state_code: party.Party_StateName ?? ``,
+  //     partygstNo: party.PartyGSTNo ?? ``,
+  //     carType: `HONDA CITY`,
+  //     category: `1500 KM/252 Hrs`,
+  //     items: [
+  //       {
+  //         particulars: `Being monthly hire charges (01/06/2025 to 30/06/2025)`,
+  //         amount: String(invoice.amount ?? `N/A`),
+  //       },
+  //       {
+  //         particulars: `Add : Extra Hour(s)         100.25 X 75`,
+  //         amount: String(invoice.extra_hours ?? `0.00`),
+  //       },
+  //       {
+  //         particulars: `Add : Extra KM              780 X 20`,
+  //         amount: String(invoice.extra_km ?? `0.00`),
+  //       },
+  //       {
+  //         particulars: `Gross Total`,
+  //         amount: String(invoice.GrossAmount ?? `0.00`),
+  //       },
+  //       { particulars: `Other Charges Taxable`, amount: String(`0.00`) },
+  //       { particulars: `Parking`, amount: String(`0.00`) },
+  //       {
+  //         particulars: `Night Halt`,
+  //         amount: String(invoice.nightHalt ?? `0.00`),
+  //       },
+  //       {
+  //         particulars: `Add : CGST @ ${invoice.CGSTPer}%`,
+  //         amount: String(invoice.CGST ?? `0.00`),
+  //       },
+  //       {
+  //         particulars: `Add : SGST @ ${invoice.SGSTPer}%`,
+  //         amount: String(invoice.SGST ?? `0.00`),
+  //       },
+  //       {
+  //         particulars: `Other Charges NonTaxable Table`,
+  //         amount: String(`0.00`),
+  //       },
+  //       { particulars: `Driver Halt`, amount: String(`0.00`) },
+  //       {
+  //         particulars: `Round OFF`,
+  //         amount: String(invoice.round_off ?? `0.00`),
+  //       },
+  //       {
+  //         particulars: `Net Amount (Rupees ${party.AmtInWords ?? ``})`,
+  //         amount: String(invoice.NetAmount ?? `0.00`),
+  //       },
+  //       { particulars: `GST No : ${party.PartyGSTNo}`, amount: `` },
+  //       { particulars: `PAN NO : ${party.PartyPanNo}`, amount: `` },
+  //       { particulars: `SAC Code : 7589J`, amount: `` },
+  //     ],
+  //   };
 
-  // Item table
-  const tableX = 40;
-  const tableY = height - 300;
-  const tableWidth = 515;
-  const rowH = 25;
-  invoiceData.items.forEach((row, idx) => {
-    const top = tableY - idx * rowH;
-    page.drawRectangle({
-      x: tableX,
-      y: top - rowH,
-      width: tableWidth,
-      height: rowH,
-      borderColor: rgb(0, 0, 0),
-      borderWidth: 0.8,
-    });
-    page.drawText(row.particulars, { x: tableX + 5, y: top - 17, size: 9, font });
-    page.drawText(row.amount, { x: tableX + tableWidth - 80, y: top - 17, size: 9, font });
-  });
+  //   // Prepare log rows
+  //   const logRows = charges.map((charge: any) => ({
+  //     carNo: charge.CarNo,
+  //     outDate: this.formatDate(charge.GarageOutDate),
+  //     outTime: charge.GarageOutTime,
+  //     inDate: this.formatDate(charge.GarageInDate),
+  //     inTime: charge.EntryTime,
+  //     outKM: charge.GarageOutKm,
+  //     inKM: charge.GarageInKm,
+  //     totalHrs: charge.TotalHour,
+  //     totalKM: charge.TotalKm,
+  //     overTime: charge.ExtraHrs,
+  //     parking: charge.charge_name,
+  //     nightHalt: invoice?.nightHalt ?? null,
+  //   }));
 
-  page.drawText('Release payment within forty one days.\nFor Darwar Enterprise', {
-    x: 50,
-    y: 70,
-    size: 10,
-    font,
-  });
+  //   const pdfDoc = await PDFDocument.create();
+  //   const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+  //   const boldFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
 
-  // -------------------- SECOND PAGE --------------------
-  const detailPage = pdfDoc.addPage([595.28, 841.89]);
-  const dFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
-  const dW = detailPage.getSize().width;
-  const dH = detailPage.getSize().height;
+  //   // -------------------- FIRST PAGE --------------------
+  //   const page = pdfDoc.addPage([595.28, 841.89]);
+  //   const { width, height } = page.getSize();
 
-  detailPage.drawText(invoiceData.companyName, {
-    x: dW / 2 - dFont.widthOfTextAtSize(invoiceData.companyName, 13) / 2,
-    y: dH - 50,
-    size: 13,
-    font: dFont,
-  });
-  detailPage.drawText(invoiceData.address, {
-    x: dW / 2 - dFont.widthOfTextAtSize(invoiceData.address, 9) / 2,
-    y: dH - 65,
-    size: 9,
-    font: dFont,
-  });
-  detailPage.drawText(`Phone - ${invoiceData.phone}`, {
-    x: dW / 2 - dFont.widthOfTextAtSize(`Phone - ${invoiceData.phone}`, 9) / 2,
-    y: dH - 80,
-    size: 9,
-    font: dFont,
-  });
-  detailPage.drawText(`E-Mail - ${invoiceData.email}`, {
-    x: dW / 2 - dFont.widthOfTextAtSize(`E-Mail - ${invoiceData.email}`, 9) / 2,
-    y: dH - 95,
-    size: 9,
-    font: dFont,
-  });
+  //   page.drawText(invoiceData.companyName, {
+  //     x:
+  //       width / 2 - boldFont.widthOfTextAtSize(invoiceData.companyName, 12) / 2,
+  //     y: height - 50,
+  //     size: 12,
+  //     font: boldFont,
+  //     color: rgb(0, 0, 0),
+  //   });
+  //   page.drawText(invoiceData.address, {
+  //     x: width / 2 - font.widthOfTextAtSize(invoiceData.address, 10) / 2,
+  //     y: height - 70,
+  //     size: 10,
+  //     font,
+  //   });
+  //   page.drawText(`Phone: ${invoiceData.phone}`, {
+  //     x:
+  //       width / 2 -
+  //       font.widthOfTextAtSize(`Phone: ${invoiceData.phone}`, 10) / 2,
+  //     y: height - 85,
+  //     size: 10,
+  //     font,
+  //   });
+  //   page.drawText(`Email: ${invoiceData.email}`, {
+  //     x:
+  //       width / 2 -
+  //       font.widthOfTextAtSize(`Email: ${invoiceData.email}`, 10) / 2,
+  //     y: height - 100,
+  //     size: 10,
+  //     font,
+  //   });
 
-  const title2 = 'DETAIL SHEET';
-  const title2W = dFont.widthOfTextAtSize(title2, 12);
-  const title2X = dW / 2 - title2W / 2;
-  const title2Y = dH - 120;
-  detailPage.drawText(title2, { x: title2X, y: title2Y, size: 12, font: dFont });
-  detailPage.drawLine({
-    start: { x: title2X - 10, y: title2Y - 5 },
-    end: { x: title2X + title2W + 10, y: title2Y - 5 },
-    thickness: 1,
-    color: rgb(0, 0, 0),
-  });
+  //   const title1 = `TAX INVOICE`;
+  //   const title1Width = font.widthOfTextAtSize(title1, 12);
+  //   const title1X = width / 2 - title1Width / 2;
+  //   const title1Y = height - 130;
+  //   page.drawText(title1, { x: title1X, y: title1Y, size: 12, font });
+  //   page.drawLine({
+  //     start: { x: title1X - 10, y: title1Y - 5 },
+  //     end: { x: title1X + title1Width + 10, y: title1Y - 5 },
+  //     thickness: 1,
+  //     color: rgb(0, 0, 0),
+  //   });
 
-  detailPage.drawText('To,', { x: 50, y: dH - 150, size: 10, font: dFont });
-  detailPage.drawText(invoiceData.recipient, { x: 50, y: dH - 165, size: 10, font: dFont });
-  detailPage.drawText(invoiceData.addressLine1, { x: 50, y: dH - 180, size: 10, font: dFont });
-  detailPage.drawText(invoiceData.addressLine2, { x: 50, y: dH - 195, size: 10, font: dFont });
+  //   page.drawText(`To,`, { x: 50, y: height - 170, size: 10, font });
+  //   page.drawText(invoiceData.recipient, {
+  //     x: 50,
+  //     y: height - 185,
+  //     size: 10,
+  //     font,
+  //   });
+  //   page.drawText(invoiceData.addressLine1, {
+  //     x: 50,
+  //     y: height - 200,
+  //     size: 10,
+  //     font,
+  //   });
+  //   page.drawText(invoiceData.addressLine2, {
+  //     x: 50,
+  //     y: height - 215,
+  //     size: 10,
+  //     font,
+  //   });
 
-  detailPage.drawText(invoiceData.state_code, { x: 50, y: dH - 210, size: 10, font: dFont });
-  detailPage.drawText(invoiceData.partygstNo, { x: 50, y: dH - 220, size: 10, font: dFont });
+  //   page.drawText(invoiceData.state_code, {
+  //     x: 50,
+  //     y: height - 230,
+  //     size: 10,
+  //     font,
+  //   });
+  //   page.drawText(invoiceData.partygstNo, {
+  //     x: 50,
+  //     y: height - 245,
+  //     size: 10,
+  //     font,
+  //   });
 
-  const diX = 350;
-  [
-    `Tax Invoice No. : ${invoiceData.invoiceNo}`,
-    `Tax Invoice Date : ${invoiceData.invoiceDate}`,
-    `Classification : RENT-A-CAR`,
-    `Place of Supply : Kolkata`,
-    `Car Type : ${invoiceData.carType}`,
-    `Category : ${invoiceData.category}`,
-  ].forEach((text, i) => {
-    detailPage.drawText(text, { x: diX, y: dH - 150 - i * 15, size: 9, font: dFont });
-  });
+  //   const infoX = 350;
+  //   const infoY = height - 170;
+  //   [
+  //     `Tax Invoice No.: ${invoiceData.invoiceNo}`,
+  //     `Tax Invoice Date: ${invoiceData.invoiceDate}`,
+  //     `Classification: RENT-A-CAR`,
+  //     `Place of Supply: Kolkata`,
+  //     `Car Type: ${invoiceData.carType}`,
+  //     `Category: ${invoiceData.category}`,
+  //   ].forEach((text, i) => {
+  //     page.drawText(text, { x: infoX, y: infoY - i * 15, size: 9, font });
+  //   });
 
-  // -------------------- DYNAMIC TABLE WITH OUTER BORDER --------------------
-  const tblX2 = 40;
-  const tblY2 = dH - 240;
-  const rowH2 = 16;
-  const colHeaders = ['Car No.', 'Out Date', 'Out Time', 'In Date', 'In Time', 'Out KM', 'IN KM', 'Total Hrs', 'Total KM', 'Over Time', 'Parking', 'Night Halt'];
-  const numCols = colHeaders.length;
-  const tblW2 = 515;
-  const colWidth = tblW2 / numCols;
+  //   // Item table
+  //   const tableX = 40;
+  //   const tableY = height - 300;
+  //   const tableWidth = 515;
+  //   const rowH = 25;
+  //   invoiceData.items.forEach((row, idx) => {
+  //     const top = tableY - idx * rowH;
+  //     page.drawRectangle({
+  //       x: tableX,
+  //       y: top - rowH,
+  //       width: tableWidth,
+  //       height: rowH,
+  //       borderColor: rgb(0, 0, 0),
+  //       borderWidth: 0.8,
+  //     });
+  //     page.drawText(row.particulars, {
+  //       x: tableX + 5,
+  //       y: top - 17,
+  //       size: 9,
+  //       font,
+  //     });
+  //     page.drawText(row.amount, {
+  //       x: tableX + tableWidth - 80,
+  //       y: top - 17,
+  //       size: 9,
+  //       font,
+  //     });
+  //   });
 
-  const cols = colHeaders.map((h, i) => ({ h, x: tblX2 + i * colWidth, w: colWidth }));
-  const totalRows = logRows.length + 1; // +1 for header
-  const tableHeight = rowH2 * totalRows;
+  //   page.drawText(
+  //     `Release payment within forty one days.\nFor Darwar Enterprise`,
+  //     {
+  //       x: 50,
+  //       y: 70,
+  //       size: 10,
+  //       font,
+  //     }
+  //   );
 
-  // Draw outer table rectangle
-  detailPage.drawRectangle({
-    x: tblX2,
-    y: tblY2 - tableHeight,
-    width: tblW2,
-    height: tableHeight,
-    borderColor: rgb(0, 0, 0),
-    borderWidth: 1,
-  });
+  //   // -------------------- SECOND PAGE --------------------
+  //   const detailPage = pdfDoc.addPage([595.28, 841.89]);
+  //   const dW = detailPage.getSize().width;
+  //   const dH = detailPage.getSize().height;
 
-  // Draw header
-  const headerY2 = tblY2 - rowH2;
-  cols.forEach(c => {
-    detailPage.drawText(c.h, { x: c.x + 1, y: headerY2 + 4, size: 6, font: dFont });
-  });
+  //   detailPage.drawText(invoiceData.companyName, {
+  //     x: dW / 2 - boldFont.widthOfTextAtSize(invoiceData.companyName, 13) / 2,
+  //     y: dH - 50,
+  //     size: 13,
+  //     font: boldFont,
+  //   });
+  //   detailPage.drawText(invoiceData.address, {
+  //     x: dW / 2 - font.widthOfTextAtSize(invoiceData.address, 9) / 2,
+  //     y: dH - 65,
+  //     size: 9,
+  //     font: font,
+  //   });
+  //   detailPage.drawText(`Phone - ${invoiceData.phone}`, {
+  //     x: dW / 2 - font.widthOfTextAtSize(`Phone - ${invoiceData.phone}`, 9) / 2,
+  //     y: dH - 80,
+  //     size: 9,
+  //     font: font,
+  //   });
+  //   detailPage.drawText(`E-Mail - ${invoiceData.email}`, {
+  //     x:
+  //       dW / 2 - font.widthOfTextAtSize(`E-Mail - ${invoiceData.email}`, 9) / 2,
+  //     y: dH - 95,
+  //     size: 9,
+  //     font: font,
+  //   });
 
-  // Vertical lines
-  cols.forEach(c => {
-    detailPage.drawLine({
-      start: { x: c.x + c.w, y: tblY2 },
-      end: { x: c.x + c.w, y: tblY2 - tableHeight },
-      thickness: 0.3,
-      color: rgb(0, 0, 0),
-    });
-  });
+  //   const title2 = `DETAIL SHEET`;
+  //   const title2W = font.widthOfTextAtSize(title2, 12);
+  //   const title2X = dW / 2 - title2W / 2;
+  //   const title2Y = dH - 120;
+  //   detailPage.drawText(title2, {
+  //     x: title2X,
+  //     y: title2Y,
+  //     size: 12,
+  //     font: font,
+  //   });
+  //   detailPage.drawLine({
+  //     start: { x: title2X - 10, y: title2Y - 5 },
+  //     end: { x: title2X + title2W + 10, y: title2Y - 5 },
+  //     thickness: 1,
+  //     color: rgb(0, 0, 0),
+  //   });
 
-  // Horizontal line after header
-  detailPage.drawLine({
-    start: { x: tblX2, y: headerY2 },
-    end: { x: tblX2 + tblW2, y: headerY2 },
-    thickness: 0.5,
-    color: rgb(0, 0, 0),
-  });
+  //   detailPage.drawText(`To,`, { x: 50, y: dH - 150, size: 10, font: font });
+  //   detailPage.drawText(invoiceData.recipient, {
+  //     x: 50,
+  //     y: dH - 165,
+  //     size: 10,
+  //     font: font,
+  //   });
+  //   detailPage.drawText(invoiceData.addressLine1, {
+  //     x: 50,
+  //     y: dH - 180,
+  //     size: 10,
+  //     font: font,
+  //   });
+  //   detailPage.drawText(invoiceData.addressLine2, {
+  //     x: 50,
+  //     y: dH - 195,
+  //     size: 10,
+  //     font: font,
+  //   });
 
-  // Data rows
-  logRows.forEach((r:any, ri:number) => {
-    const currentY = tblY2 - rowH2 * (ri + 2);
-    const vals = [r.carNo, r.outDate, r.outTime, r.inDate, r.inTime, r.outKM, r.inKM, r.totalHrs, r.totalKM, r.overTime, r.parking, r.nightHalt];
+  //   detailPage.drawText(invoiceData.state_code, {
+  //     x: 50,
+  //     y: dH - 210,
+  //     size: 10,
+  //     font: font,
+  //   });
+  //   detailPage.drawText(invoiceData.partygstNo, {
+  //     x: 50,
+  //     y: dH - 220,
+  //     size: 10,
+  //     font: font,
+  //   });
 
-    cols.forEach((c, ci) => {
-      if (vals[ci] != null) {
-        let text = String(vals[ci]);
-        while (dFont.widthOfTextAtSize(text, 6) > c.w - 2) text = text.slice(0, -1);
-        detailPage.drawText(text, { x: c.x + 1, y: currentY + 3, size: 6, font: dFont });
-      }
-    });
+  //   const diX = 350;
+  //   [
+  //     `Tax Invoice No. : ${invoiceData.invoiceNo}`,
+  //     `Tax Invoice Date : ${invoiceData.invoiceDate}`,
+  //     `Classification : RENT-A-CAR`,
+  //     `Place of Supply : Kolkata`,
+  //     `Car Type : ${invoiceData.carType}`,
+  //     `Category : ${invoiceData.category}`,
+  //   ].forEach((text, i) => {
+  //     detailPage.drawText(text, {
+  //       x: diX,
+  //       y: dH - 150 - i * 15,
+  //       size: 9,
+  //       font: font,
+  //     });
+  //   });
 
-    // Horizontal line for row
-    detailPage.drawLine({
-      start: { x: tblX2, y: currentY },
-      end: { x: tblX2 + tblW2, y: currentY },
-      thickness: 0.2,
-      color: rgb(0, 0, 0),
-    });
-  });
+  //   // -------------------- DYNAMIC TABLE WITH OUTER BORDER --------------------
+  //   const tblX2 = 40;
+  //   const tblY2 = dH - 240;
+  //   const rowH2 = 16;
+  //   const colHeaders = [
+  //     `Car No.`,
+  //     `Out Date`,
+  //     `Out Time`,
+  //     `In Date`,
+  //     `In Time`,
+  //     `Out KM`,
+  //     `IN KM`,
+  //     `Total Hrs`,
+  //     `Total KM`,
+  //     `Over Time`,
+  //     `Parking`,
+  //     `Night Halt`,
+  //   ];
+  //   const numCols = colHeaders.length;
+  //   const tblW2 = 515;
+  //   const colWidth = tblW2 / numCols;
 
-  // Footer
-  // detailPage.drawText('for Darwar Enterprise', { x: 450, y: 50, size: 10, font: dFont });
+  //   const cols = colHeaders.map((h, i) => ({
+  //     h,
+  //     x: tblX2 + i * colWidth,
+  //     w: colWidth,
+  //   }));
+  //   const totalRows = logRows.length + 1; // +1 for header
+  //   const tableHeight = rowH2 * totalRows;
 
-  // Save & download PDF
-  // const pdfBytes = await pdfDoc.save();
-  // const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-  // const link = document.createElement('a');
-  // link.href = URL.createObjectURL(blob);
-  // link.download = 'Invoice_DetailSheet.pdf';
-  // link.click();
-  const pdfBytes = await pdfDoc.save();
-const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-const url = URL.createObjectURL(blob);
+  //   // Draw outer table rectangle
+  //   detailPage.drawRectangle({
+  //     x: tblX2,
+  //     y: tblY2 - tableHeight,
+  //     width: tblW2,
+  //     height: tableHeight,
+  //     borderColor: rgb(0, 0, 0),
+  //     borderWidth: 1,
+  //   });
 
-// Open in new tab instead of downloading
-window.open(url, '_blank');
+  //   // Draw header
+  //   const headerY2 = tblY2 - rowH2;
+  //   cols.forEach((c) => {
+  //     detailPage.drawText(c.h, {
+  //       x: c.x + 1,
+  //       y: headerY2 + 4,
+  //       size: 6,
+  //       font: font,
+  //     });
+  //   });
 
-}
+  //   // Vertical lines
+  //   cols.forEach((c) => {
+  //     detailPage.drawLine({
+  //       start: { x: c.x + c.w, y: tblY2 },
+  //       end: { x: c.x + c.w, y: tblY2 - tableHeight },
+  //       thickness: 0.3,
+  //       color: rgb(0, 0, 0),
+  //     });
+  //   });
 
+  //   // Horizontal line after header
+  //   detailPage.drawLine({
+  //     start: { x: tblX2, y: headerY2 },
+  //     end: { x: tblX2 + tblW2, y: headerY2 },
+  //     thickness: 0.5,
+  //     color: rgb(0, 0, 0),
+  //   });
 
+  //   // Data rows
+  //   logRows.forEach((r: any, ri: number) => {
+  //     const currentY = tblY2 - rowH2 * (ri + 2);
+  //     const vals = [
+  //       r.carNo,
+  //       r.outDate,
+  //       r.outTime,
+  //       r.inDate,
+  //       r.inTime,
+  //       r.outKM,
+  //       r.inKM,
+  //       r.totalHrs,
+  //       r.totalKM,
+  //       r.overTime,
+  //       r.parking,
+  //       r.nightHalt,
+  //     ];
 
+  //     cols.forEach((c, ci) => {
+  //       if (vals[ci] != null) {
+  //         let text = String(vals[ci]);
+  //         while (font.widthOfTextAtSize(text, 6) > c.w - 2)
+  //           text = text.slice(0, -1);
+  //         detailPage.drawText(text, {
+  //           x: c.x + 1,
+  //           y: currentY + 3,
+  //           size: 6,
+  //           font: font,
+  //         });
+  //       }
+  //     });
 
+  //     // Horizontal line for row
+  //     detailPage.drawLine({
+  //       start: { x: tblX2, y: currentY },
+  //       end: { x: tblX2 + tblW2, y: currentY },
+  //       thickness: 0.2,
+  //       color: rgb(0, 0, 0),
+  //     });
+  //   });
 
+  //   // Footer
+  //   // detailPage.drawText(`for Darwar Enterprise`, { x: 450, y: 50, size: 10, font: dFont });
 
- numberToWords(amount: number): string {
-  const units = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"];
-  return amount ? amount.toLocaleString('en-IN') : "0";
-}
+  //   // Save & download PDF
+  //   // const pdfBytes = await pdfDoc.save();
+  //   // const blob = new Blob([pdfBytes], { type: `application/pdf` });
+  //   // const link = document.createElement(`a`);
+  //   // link.href = URL.createObjectURL(blob);
+  //   // link.download = `Invoice_DetailSheet.pdf`;
+  //   // link.click();
+  //   const pdfBytes = await pdfDoc.save();
+  //   const blob = new Blob([pdfBytes], { type: `application/pdf` });
+  //   const url = URL.createObjectURL(blob);
 
-formatDate(dateStr: string | null): string | null {
-  if (!dateStr) return null;
-  const d = new Date(dateStr);
-  const day = String(d.getDate()).padStart(2, '0');
-  const month = String(d.getMonth() + 1).padStart(2, '0'); // Months are 0-based
-  const year = String(d.getFullYear()).slice(-2); // last 2 digits
-  return `${day}-${month}-${year}`;
-}
+  //   // Open in new tab instead of downloading
+  //   window.open(url, `_blank`);
+  // }
 
-waitForFetch<T>(getter: () => T, interval = 50): Promise<T> {
+  numberToWords(amount: number): string {
+    const units = [
+      ``,
+      `One`,
+      `Two`,
+      `Three`,
+      `Four`,
+      `Five`,
+      `Six`,
+      `Seven`,
+      `Eight`,
+      `Nine`,
+    ];
+    return amount ? amount.toLocaleString(`en-IN`) : `0`;
+  }
+
+  formatDate(dateStr: string | null): string | null {
+    if (!dateStr) return null;
+    const d = new Date(dateStr);
+    const day = String(d.getDate()).padStart(2, `0`);
+    const month = String(d.getMonth() + 1).padStart(2, `0`); // Months are 0-based
+    const year = String(d.getFullYear()).slice(-2); // last 2 digits
+    return `${day}-${month}-${year}`;
+  }
+
+  waitForFetch<T>(getter: () => T, interval = 50): Promise<T> {
     return new Promise((resolve) => {
       const timer = setInterval(() => {
         const value = getter();
@@ -598,7 +1115,7 @@ waitForFetch<T>(getter: () => T, interval = 50): Promise<T> {
         if (
           value !== undefined &&
           value !== null &&
-          !(typeof value === 'string' && value.trim() === '') &&
+          !(typeof value === `string` && value.trim() === ``) &&
           !(Array.isArray(value) && value.length === 0)
         ) {
           clearInterval(timer);
@@ -607,7 +1124,4 @@ waitForFetch<T>(getter: () => T, interval = 50): Promise<T> {
       }, interval);
     });
   }
-
-
-
 }
