@@ -89,6 +89,7 @@ export class MonthlyInvoiceListComponent implements OnInit {
 
   ngOnInit(): void {
     this.HelperService.registerPageHandler((msg) => {
+      console.log("msg", msg);
       let rt = false;
       rt = globalRequestHandler(msg, this.router, this.messageService);
       if (msg.for === `minvoice.getMonthlyInvoiceList`) {
@@ -251,7 +252,7 @@ export class MonthlyInvoiceListComponent implements OnInit {
   getPartyinfoForPdf(invoice_id: any) {
     this.HelperService.getPartyinfoForPdf({ invoice_id: invoice_id });
   }
-  async generatePdf(invoice: any, charges: any, party_info: any) {
+  async generatePdf(invoice: any, charges: any) {
     // Fetch charges
     this.getTaxableCharges(invoice.id);
     await this.waitForFetch(() => this.taxableCharges);
@@ -260,14 +261,10 @@ export class MonthlyInvoiceListComponent implements OnInit {
     this.getNonTaxableCharges(invoice.id);
     this.taxableCharges = this.taxableCharges ?? [];
     this.nonTaxableCharges = this.nonTaxableCharges ?? [];
-    this.party_info = this.party_info ?? [];
-
     charges = this.taxableCharges.concat(this.nonTaxableCharges);
-    party_info = this.party_info;
-    const party = (this.party_info && this.party_info[0]) || {};
-    console.log(`Final charges: `, charges);
+    const party = this.party_info?.[0] || {};
     console.log(`party:`, party);
-    console.log(`invoice:`, invoice);
+
 
     const documentDefinition: any = {
       pageSize: `A4`,
@@ -325,21 +322,21 @@ export class MonthlyInvoiceListComponent implements OnInit {
             ],
             [
               {
-                text: `Tax Invoice No.: ${invoice.BillNo}`,
+                text: `Tax Invoice No.: ${party.BillNo}`,
                 alignment: `right`,
                 bold: true,
                 color: `black`,
                 background: `yellow`,
               },
               {
-                text: `Tax Invoice Date: ${this.formatDate(invoice.BillDate)}`,
+                text: `Tax Invoice Date: ${this.formatDate(party.BillDate)}`,
                 alignment: `right`,
               },
               { text: `Classification: RENT-A-CAR`, alignment: `right` },
               { text: `Place of Supply: Kolkata`, alignment: `right` },
               { text: `Car Type: ${invoice.CarType}`, alignment: `right` },
               {
-                text: `Category:  KMS/10 Hrs`,
+                text: `Category:  ${party.TotalKM}KMS/10 Hrs`,
                 alignment: `right`,
                 background: `yellow`,
               },
