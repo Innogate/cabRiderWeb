@@ -17,6 +17,7 @@ import { FileUploadModule } from 'primeng/fileupload';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { driverSalarySetupMasterService } from '../../../services/driverSalarySetupMaster.service'
+import { SweetAlertService } from '../../../services/sweet-alert.service';
 @Component({
   selector: 'app-driver-salary-setup-master',
   imports: [DynamicTableComponent,
@@ -47,7 +48,7 @@ export class DriverSalarySetupMasterComponent implements OnInit, OnDestroy, Afte
     { Id: 0, CityName: '' },
   ];
   SalaryCalculate = [
-    { label: 'Actual Days of Mounth', value: 'Actual Days of Mounth' },
+    { label: 'Actual Days of Month', value: 'Actual Days of Month' },
     { label: 'Company Working Days', value: 'Company Working Days' }
   ];
 
@@ -59,6 +60,7 @@ export class DriverSalarySetupMasterComponent implements OnInit, OnDestroy, Afte
   OtTime = [
     { label: 'Fixed Time', value: 'Fixed Time' },
     { label: 'Total Hours', value: 'Total Hours' },]
+  tablevalue: any;
 
 
 
@@ -68,34 +70,35 @@ export class DriverSalarySetupMasterComponent implements OnInit, OnDestroy, Afte
     private driverSalaryService: driverSalarySetupMasterService,
     private messageService: MessageService,
     private router: Router,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private swal: SweetAlertService
   ) {
     this.form = this.fb.group({
       // create driver salary setup form
       id: [0],
       branch_id: [0],
-      DriverID: [],
-      SetupDate: [null],
-      SalaryCalcOnDaysInMonth: [null],
-      SalaryCalcOnDays: [null],
-      SalaryType: [null],
-      SalaryPerDay: [null],
-      BasicSalary: [null],
-      SundayAmt: [null],
-      WashingAmt: [null],
-      MobileAmt: [null],
-      DayTotalWorkHours: [null],
-      WorkStartTime: [null],
-      WorkEndTime: [null],
-      OTRate: [null],
-      KMRun: [null],
-      KMRunAmt: [null],
-      KhurakiStartTime: [null],
-      KhurakiEndTime: [null],
-      KhurakiAmt: [null],
-      LocalNightAmt: [null],
-      OutStationNightAmt: [null],
-      OverTimeType: [null]
+      DriverID: [null],
+      SetupDate: [''],
+      SalaryCalcOnDaysInMonth: [''],
+      SalaryCalcOnDays: [''],
+      SalaryType: [''],
+      SalaryPerDay: [''],
+      BasicSalary: [''],
+      SundayAmt: [''],
+      WashingAmt: [''],
+      MobileAmt: [''],
+      DayTotalWorkHours: [''],
+      WorkStartTime: [''],
+      WorkEndTime: [''],
+      OTRate: [''],
+      KMRun: [''],
+      KMRunAmt: [''],
+      KhurakiStartTime: [''],
+      KhurakiEndTime: [''],
+      KhurakiAmt: [''],
+      LocalNightAmt: [''],
+      OutStationNightAmt: [''],
+      OverTimeType: ['']
     });
   }
 
@@ -112,9 +115,29 @@ export class DriverSalarySetupMasterComponent implements OnInit, OnDestroy, Afte
       } else if (msg.for == 'getAllDriverDropdown') {
         this.driverList = msg.data;
       } else if (msg.for == 'createDriverSalarySetupList') {
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: msg.StatusMessage })
+        if (msg.StatusID === 1) {
+          const updated = msg.data[0];  // access the first item in data array
+
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: msg.StatusMessage });
+          this.showForm = false;
+          this.form.reset();
+
+          const index = this.users.findIndex((v: any) => v.id == updated.id);
+          if (index !== -1) {
+            this.users[index] = { ...updated };
+          } else {
+            this.users.push(updated)
+          }
+        } else {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: msg.StatusMessage });
+        }
+
       } else if (msg.for === "deleteData") {
-        if (msg.StatusMessage === "success") {
+        if (msg.StatusID === 1) {
+          const index = this.users.findIndex((v: any) => v.id == this.tablevalue.id);
+          if (index !== -1) {
+            this.users.splice(index, 1);
+          }
           this.messageService.add({ severity: 'success', summary: 'Success', detail: msg.StatusMessage })
         } else {
           this.messageService.add({ severity: 'error', summary: 'Error', detail: "Cannot Delete data" })
@@ -141,14 +164,14 @@ export class DriverSalarySetupMasterComponent implements OnInit, OnDestroy, Afte
 
   async ngAfterViewInit(): Promise<void> {
     const payload = {
-    id: 0,
-    PageNo: 1,
-    PageSize: 1000,
-    Search: '',
-  };
+      id: 0,
+      PageNo: 1,
+      PageSize: 1000,
+      Search: '',
+    };
 
     this.driverSalaryService.getAllDriverSalary(payload);
-    this.commonService.GatAllDriverDropDown({ vendor_id: 0})
+    this.commonService.GatAllDriverDropDown({ vendor_id: 0 })
   }
 
   filterCity(event: any) {
@@ -158,21 +181,21 @@ export class DriverSalarySetupMasterComponent implements OnInit, OnDestroy, Afte
     );
   }
 
-columns = [
-  { header: 'ID', field: 'id', icon: 'pi pi-hashtag', styleClass: 'text-gray-600' },
-  { header: 'Driver Name', field: 'DriverName', icon: 'pi pi-user', styleClass: 'text-blue-600' },
-  { header: 'Month & Year', field: 'SetupDateFormat', icon: 'pi pi-calendar', styleClass: 'text-green-600' },
-  { header: 'Salary Type', field: 'SalaryType', icon: 'pi pi-briefcase', styleClass: 'text-purple-600' },
-  { header: 'Salary Amount', field: 'BasicSalary', icon: 'pi pi-wallet', styleClass: 'text-emerald-600' },
-  { header: 'Mobile Expenses', field: 'MobileAmt', icon: 'pi pi-mobile', styleClass: 'text-indigo-600' },
-  { header: 'Washing Expenses', field: 'WashingAmt', icon: 'pi pi-refresh', styleClass: 'text-cyan-600' },
-  { header: 'Sunday Amount', field: 'SundayAmt', icon: 'pi pi-sun', styleClass: 'text-amber-500' },
-  { header: 'Over Time', field: 'OverTimeType', icon: 'pi pi-clock', styleClass: 'text-pink-600' },
-  { header: 'OT Rate', field: 'OTRate', icon: 'pi pi-percentage', styleClass: 'text-orange-600' },
-  { header: 'Khuraki Time', field: 'KhurakiStartTime', icon: 'pi pi-stopwatch', styleClass: 'text-fuchsia-600' },
-  { header: 'Khuraki Amount', field: 'KhurakiAmt', icon: 'pi pi-dollar', styleClass: 'text-lime-600' },
-  { header: 'Local Night Amount', field: 'LocalNightAmt', icon: 'pi pi-moon', styleClass: 'text-sky-600' },
-];
+  columns = [
+    { header: 'ID', field: 'id', icon: 'pi pi-hashtag', styleClass: 'text-gray-600' },
+    { header: 'Driver Name', field: 'DriverName', icon: 'pi pi-user', styleClass: 'text-blue-600' },
+    { header: 'Month & Year', field: 'SetupDateFormat', icon: 'pi pi-calendar', styleClass: 'text-green-600' },
+    { header: 'Salary Type', field: 'SalaryType', icon: 'pi pi-briefcase', styleClass: 'text-purple-600' },
+    { header: 'Salary Amount', field: 'BasicSalary', icon: 'pi pi-wallet', styleClass: 'text-emerald-600' },
+    { header: 'Mobile Expenses', field: 'MobileAmt', icon: 'pi pi-mobile', styleClass: 'text-indigo-600' },
+    { header: 'Washing Expenses', field: 'WashingAmt', icon: 'pi pi-refresh', styleClass: 'text-cyan-600' },
+    { header: 'Sunday Amount', field: 'SundayAmt', icon: 'pi pi-sun', styleClass: 'text-amber-500' },
+    { header: 'Over Time', field: 'OverTimeType', icon: 'pi pi-clock', styleClass: 'text-pink-600' },
+    { header: 'OT Rate', field: 'OTRate', icon: 'pi pi-percentage', styleClass: 'text-orange-600' },
+    { header: 'Khuraki Time', field: 'KhurakiStartTime', icon: 'pi pi-stopwatch', styleClass: 'text-fuchsia-600' },
+    { header: 'Khuraki Amount', field: 'KhurakiAmt', icon: 'pi pi-dollar', styleClass: 'text-lime-600' },
+    { header: 'Local Night Amount', field: 'LocalNightAmt', icon: 'pi pi-moon', styleClass: 'text-sky-600' },
+  ];
 
 
 
@@ -185,14 +208,20 @@ columns = [
   ];
 
   // Handle action events
-  handleAction(event: { action: string, data: any }) {
+  async handleAction(event: { action: string, data: any }) {
     switch (event.action) {
       case 'edit':
         console.log("Edit event", event.data);
         this.editUser(event.data);
         break;
       case 'delete':
-        this.deleteUser(event.data);
+        const status = await this.swal.confirmDelete("You want to delete this !");
+        if (status) {
+                this.messageService.add({ severity: 'contrast', summary: 'Info', detail: 'Please wait processing...' });
+
+          this.deleteUser(event.data);
+          this.tablevalue = event.data
+        }
         break;
       case 'add':
         this.add(event.data);
@@ -223,15 +252,47 @@ columns = [
 
 
   private editUser(data: any) {
-    if (data) {
-      this.header = 'UPDATE DRIVER SALARY & OT SETUP'
-      this.showForm = !this.showForm;
-      const driver = this.driverList.find(c => c.id == data.DriverID);
-      this.form.patchValue({
-        ...data,
-        DriverId: driver
-      })
-    }
+    if (!data) return;
+
+    this.header = 'UPDATE DRIVER SALARY & OT SETUP';
+    this.showForm = true;
+
+    const driver = this.driverList.find(c => c.id == data.DriverID);
+
+    this.form.patchValue({
+      id: data.id ?? 0,
+      branch_id: data.branch_id ?? 0,
+
+      DriverID: driver,
+
+      // Format SetupDate to YYYY-MM-DD if it exists
+      SetupDate: data.SetupDate ? this.formatDate(data.SetupDate) : '',
+
+      SalaryCalcOnDaysInMonth: data.SalaryCalcOnDaysInMonth ?? '',
+      SalaryCalcOnDays: data.LocalNightAmt ?? '',
+      SalaryType: data.SalaryType ?? '',
+      SalaryPerDay: data.SalaryPerDay ?? '',
+      BasicSalary: data.BasicSalary ?? '',
+
+      SundayAmt: data.SundayAmt ?? '',
+      WashingAmt: data.WashingAmt ?? '',
+      MobileAmt: data.MobileAmt ?? '',
+
+      DayTotalWorkHours: data.DayTotalWorkHours ?? '',
+      WorkStartTime: data.WorkStartTime ?? '',
+      WorkEndTime: data.WorkEndTime ?? '',
+      OTRate: data.OTRate ?? '',
+
+      KMRun: data.KMRun ?? '',
+      KMRunAmt: data.KMRunAmt ?? '',
+      KhurakiStartTime: data.KhurakiStartTime ?? '',
+      KhurakiEndTime: data.KhurakiEndTime ?? '',
+      KhurakiAmt: data.KhurakiAmt ?? '',
+
+      LocalNightAmt: data.LocalNightAmt ?? '',
+      OutStationNightAmt: data.OutStationNightAmt ?? '',
+      OverTimeType: data.OverTimeType ?? ''
+    });
   }
 
   private deleteUser(user: any) {
@@ -242,6 +303,7 @@ columns = [
       column_value: "" + user.id,
     }
     this.commonService.deleteData(payload)
+    console.log(payload)
   }
 
   private add(data: any) {
@@ -260,4 +322,10 @@ columns = [
       // store or process aadhar file
     }
   }
+
+  private formatDate(dateStr: string): string {
+    const date = new Date(dateStr);
+    return date.toISOString().split('T')[0]; // returns 'YYYY-MM-DD'
+  }
+
 }
